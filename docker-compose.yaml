@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  lt-client:
+    build: ./lt-client
+    container_name: lt-client
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./lt-client:/app
+      - ./app/node_modules
+    depends_on:
+      - lt-server
+  lt-server:
+    build: ./lt-server
+    container_name: lt-server
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./lt-server:/app
+      - ./app/node_modules
+    depends_on:
+      - mongo
+  mongo:
+    container_name: lt-mongo
+    image: mongo
+    volumes:
+      - ./data:/data
+    ports:
+      - "27017:27017"
+   
