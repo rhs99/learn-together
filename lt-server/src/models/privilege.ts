@@ -5,7 +5,7 @@ interface IPrivilege {
   name: string;
 }
 
-const privilegeSchema = new Schema<IPrivilege >({
+const privilegeSchema = new Schema<IPrivilege>({
   name: { type: String, required: true, unique: true },
 });
 privilegeSchema.plugin(uniqueValidator);
