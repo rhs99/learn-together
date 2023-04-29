@@ -4,6 +4,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 
 import classRouter from './routes/class';
+import privilegeRouter from './routes/privilege';
 
 const app: Application = express();
 
@@ -12,6 +13,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/classes', classRouter);
+app.use('/privileges', privilegeRouter);
 
 const PORT = 5000;
 
