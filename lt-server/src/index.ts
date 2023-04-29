@@ -3,17 +3,15 @@ import mongoose, { ConnectOptions } from 'mongoose';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 
+import classRouter from './routes/class';
+
 const app: Application = express();
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/', async (req: Request, res: Response): Promise<Response> => {
-  return res.status(200).send({
-    message: 'Hello World!',
-  });
-});
+app.use('/classes', classRouter);
 
 const PORT = 5000;
 
