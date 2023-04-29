@@ -9,7 +9,7 @@
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
     "pretty": "prettier --write \"src/**/*.ts\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha -r ts-node/register src/test/**/*-spec.ts"
   },
   "keywords": [],
   "author": "",
@@ -29,9 +29,14 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "@types/chai": "^4.3.5",
+    "@types/mocha": "^10.0.1",
     "body-parser": "^1.20.2",
+    "chai": "^4.3.7",
     "cors": "^2.8.5",
     "express": "^4.18.2",
-    "mongoose": "^7.0.4"
+    "mocha": "^10.2.0",
+    "mongoose": "^7.0.4",
+    "ts-node": "^10.9.1"
   }
 }
