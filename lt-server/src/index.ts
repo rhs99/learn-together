@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 
 import classRouter from './routes/class';
 import privilegeRouter from './routes/privilege';
+import subjectRouter from './routes/subject';
 
 const app: Application = express();
 
@@ -14,6 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/classes', classRouter);
 app.use('/privileges', privilegeRouter);
+app.use('/subjects', subjectRouter);
 
 const PORT = 5000;
 
