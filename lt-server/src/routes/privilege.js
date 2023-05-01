@@ -1,9 +1,9 @@
-import express from 'express';
+const express = require('express');
 const router = express.Router();
 
-import PrivilegeController from '../controllers/privilege';
+const PrivilegeController = require('../controllers/privilege');
 
 router.get('/list', PrivilegeController.getPrivileges);
 router.post('/create', PrivilegeController.addNewPrivilege);
 
-export default router;
+module.exports = router;

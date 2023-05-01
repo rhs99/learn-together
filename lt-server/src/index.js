@@ -1,14 +1,14 @@
-import express, { Application, Request, Response } from 'express';
-import mongoose, { ConnectOptions } from 'mongoose';
-import cors from 'cors';
-import bodyParser from 'body-parser';
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
-import classRouter from './routes/class';
-import privilegeRouter from './routes/privilege';
-import subjectRouter from './routes/subject';
-import chapterRouter from './routes/chapter';
+const classRouter = require('./routes/class');
+const privilegeRouter = require('./routes/privilege');
+const subjectRouter = require('./routes/subject');
+const chapterRouter = require('./routes/chapter');
 
-const app: Application = express();
+const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -22,7 +22,7 @@ app.use('/chapters', chapterRouter);
 const PORT = 5000;
 
 try {
-  app.listen(PORT, (): void => {
+  app.listen(PORT, () => {
     console.log(`Connected successfully on port ${PORT}`);
   });
 } catch (error) {
@@ -38,7 +38,7 @@ const connectDB = async () => {
     .connect(DB_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-    } as ConnectOptions)
+    })
     .then(() => console.log('Mongo connected successfully'))
     .catch((e) => {
       console.log(e.message);
