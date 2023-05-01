@@ -5,6 +5,7 @@ const chapterSchema = new mongoose.Schema({
   subject: { type: mongoose.Types.ObjectId, ref: 'Subject' },
 });
 
+chapterSchema.index({ name: 1, subject: 1 }, { unique: true });
 const Chapter = mongoose.model('Chapter', chapterSchema);
 
 module.exports = Chapter;
