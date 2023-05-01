@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import Subject from '../models/subejct';
+import Subject from '../models/subject';
 
 type reqBody = {
   name: string;
