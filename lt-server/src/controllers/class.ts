@@ -19,4 +19,13 @@ const addNewClass = async (req: Request, res: Response) => {
   }
 };
 
-export default { getClasses, addNewClass };
+const softDeleteClass = async (req: Request, res: Response) => {
+  try {
+    const classes = await ClassService.softDeleteClass(req.body);
+    res.status(200).json(classes);
+  } catch (e) {
+    if (e instanceof Error) res.status(400).json({ message: e.message });
+  }
+};
+
+export default { getClasses, addNewClass, softDeleteClass };

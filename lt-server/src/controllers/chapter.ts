@@ -19,4 +19,13 @@ const addNewChapter = async (req: Request, res: Response) => {
   }
 };
 
-export default { getChapters, addNewChapter };
+const softDeleteChapter = async (req: Request, res: Response) => {
+  try {
+    const chapters = await ChapterService.softDeleteChapter(req.body);
+    res.status(200).json(chapters);
+  } catch (e) {
+    if (e instanceof Error) res.status(400).json({ message: e.message });
+  }
+};
+
+export default { getChapters, addNewChapter, softDeleteChapter };
