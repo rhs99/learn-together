@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const subjectSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  class: { type: mongoose.Types.ObjectId, ref: 'Class' },
+    name: { type: String, required: true },
+    class: { type: mongoose.Types.ObjectId, ref: 'Class' },
 });
 
 subjectSchema.index({ name: 1, class: 1 }, { unique: true });

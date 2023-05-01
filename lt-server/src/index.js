@@ -22,27 +22,27 @@ app.use('/chapters', chapterRouter);
 const PORT = 5000;
 
 try {
-  app.listen(PORT, () => {
-    console.log(`Connected successfully on port ${PORT}`);
-  });
+    app.listen(PORT, () => {
+        console.log(`Connected successfully on port ${PORT}`);
+    });
 } catch (error) {
-  if (error instanceof Error) {
-    console.error(`Error occured: ${error.message}`);
-  }
+    if (error instanceof Error) {
+        console.error(`Error occured: ${error.message}`);
+    }
 }
 
 const DB_URL = 'mongodb://mongo:27017/lt-db';
 
 const connectDB = async () => {
-  await mongoose
-    .connect(DB_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
-    .then(() => console.log('Mongo connected successfully'))
-    .catch((e) => {
-      console.log(e.message);
-    });
+    await mongoose
+        .connect(DB_URL, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        })
+        .then(() => console.log('Mongo connected successfully'))
+        .catch((e) => {
+            console.log(e.message);
+        });
 };
 
 connectDB();
