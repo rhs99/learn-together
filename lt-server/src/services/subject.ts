@@ -3,7 +3,7 @@ import Subject from '../models/subejct';
 
 type reqBody = {
   name: string;
-  className: Types.ObjectId 
+  class: Types.ObjectId;
 };
 
 const getSubjects = async () => {
