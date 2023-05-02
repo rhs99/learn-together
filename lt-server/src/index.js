@@ -7,6 +7,7 @@ const classRouter = require('./routes/class');
 const privilegeRouter = require('./routes/privilege');
 const subjectRouter = require('./routes/subject');
 const chapterRouter = require('./routes/chapter');
+const userRouter = require('./routes/user');
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use('/classes', classRouter);
 app.use('/privileges', privilegeRouter);
 app.use('/subjects', subjectRouter);
 app.use('/chapters', chapterRouter);
+app.use('/users', userRouter);
 
 const PORT = 5000;
 
