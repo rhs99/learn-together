@@ -8,6 +8,7 @@ const privilegeRouter = require('./routes/privilege');
 const subjectRouter = require('./routes/subject');
 const chapterRouter = require('./routes/chapter');
 const userRouter = require('./routes/user');
+const questionRouter = require('./routes/question');
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use('/privileges', privilegeRouter);
 app.use('/subjects', subjectRouter);
 app.use('/chapters', chapterRouter);
 app.use('/users', userRouter);
+app.use('/questions', questionRouter);
 
 const PORT = 5000;
 
