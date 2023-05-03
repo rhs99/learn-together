@@ -2,7 +2,7 @@ const Chapter = require('../models/chapter');
 
 const getChapters = async () => {
     try {
-        const chapters = await Chapter.find();
+        const chapters = await Chapter.find({ isDeleted: false });
         return chapters;
     } catch (e) {
         console.log(e.message);
@@ -18,4 +18,16 @@ const addNewChapter = async (body) => {
     }
 };
 
-module.exports = { getChapters, addNewChapter };
+const softDeleteChapter = async (body) => {
+    try {
+        const subjects = await Chapter.findOneAndUpdate(
+            { name: body.name, subject: body.subject },
+            { isDeleted: true },
+        );
+        return subjects;
+    } catch (e) {
+        if (e instanceof Error) console.log(e.message);
+    }
+};
+
+export default { getChapters, addNewChapter, softDeleteChapter };
