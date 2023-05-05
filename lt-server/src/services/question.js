@@ -11,11 +11,23 @@ const addNewQuestion = async (body) => {
 
 const getAllQuestions = async () => {
     try {
-        const questions = Question.find().exec();
+        const questions = Question.find({ isDeleted: false }).exec();
         return questions;
     } catch (e) {
         console.log(e.message);
     }
 };
 
-module.exports = { addNewQuestion, getAllQuestions };
+const softDeleteQuestion = async (body) => {
+    try {
+        const subjects = await Question.findOneAndUpdate(
+            { name: body.name, subject: body.subject },
+            { isDeleted: true },
+        );
+        return subjects;
+    } catch (e) {
+        if (e instanceof Error) console.log(e.message);
+    }
+};
+
+module.exports = { addNewQuestion, getAllQuestions, softDeleteQuestion };
