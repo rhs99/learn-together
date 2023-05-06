@@ -20,8 +20,8 @@ const addNewClass = async (req, res) => {
 
 const softDeleteClass = async (req, res) => {
     try {
-        const classes = await ClassService.softDeleteClass(req.body);
-        res.status(200).json(classes);
+        const classe = await ClassService.softDeleteClass(req.params._id);
+        res.status(200).json(classe);
     } catch (e) {
         if (e instanceof Error) res.status(400).json({ message: e.message });
     }

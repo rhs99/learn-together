@@ -20,8 +20,8 @@ const addNewChapter = async (req, res) => {
 
 const softDeleteChapter = async (req, res) => {
     try {
-        const chapters = await ChapterService.softDeleteChapter(req.body);
-        res.status(200).json(chapters);
+        const chapter = await ChapterService.softDeleteChapter(req.params._id);
+        res.status(200).json(chapter);
     } catch (e) {
         if (e instanceof Error) res.status(400).json({ message: e.message });
     }

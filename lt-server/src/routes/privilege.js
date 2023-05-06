@@ -5,6 +5,6 @@ const PrivilegeController = require('../controllers/privilege');
 
 router.get('/list', PrivilegeController.getPrivileges);
 router.post('/create', PrivilegeController.addNewPrivilege);
-router.post('/softDelete', PrivilegeController.softDeletePrivilege);
+router.delete('/_id', PrivilegeController.softDeletePrivilege);
 
 module.exports = router;

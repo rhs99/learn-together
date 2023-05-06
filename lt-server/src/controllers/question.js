@@ -18,4 +18,13 @@ const addNewQuestion = async (req, res) => {
     }
 };
 
-module.exports = { getAllQuestions, addNewQuestion };
+const softDeleteQuestion = async (req, res) => {
+    try {
+        const question = await QuestionService.softDeleteQuestion(req.params._id);
+        res.status(200).json(question);
+    } catch (e) {
+        if (e instanceof Error) res.status(400).json({ message: e.message });
+    }
+};
+
+module.exports = { getAllQuestions, addNewQuestion, softDeleteQuestion };
