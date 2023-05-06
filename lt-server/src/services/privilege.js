@@ -18,10 +18,16 @@ const addNewPrivilege = async (body) => {
     }
 };
 
-const softDeletePrivilege = async (body) => {
+const softDeletePrivilege = async (_id) => {
     try {
-        const subjects = await Privilege.findOneAndUpdate({ name: body.name }, { isDeleted: true });
-        return subjects;
+        const privilege = await Privilege.findOneAndUpdate(
+            { _id },
+            { isDeleted: true },
+            {
+                new: true,
+            },
+        );
+        return privilege;
     } catch (e) {
         if (e instanceof Error) console.log(e.message);
     }

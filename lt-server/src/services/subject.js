@@ -18,10 +18,16 @@ const addNewSubject = async (body) => {
     }
 };
 
-const softDeleteSubject = async (body) => {
+const softDeleteSubject = async (_id) => {
     try {
-        const subjects = await Subject.findOneAndUpdate({ name: body.name, class: body.class }, { isDeleted: true });
-        return subjects;
+        const subject = await Subject.findOneAndUpdate(
+            { _id },
+            { isDeleted: true },
+            {
+                new: true,
+            },
+        );
+        return subject;
     } catch (e) {
         if (e instanceof Error) console.log(e.message);
     }

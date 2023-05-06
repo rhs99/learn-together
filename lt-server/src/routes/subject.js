@@ -5,6 +5,6 @@ const SubjectController = require('../controllers/subject');
 
 router.get('/list', SubjectController.getSubjects);
 router.post('/create', SubjectController.addNewSubject);
-router.post('/softDelete', SubjectController.softDeleteSubject);
+router.delete('/_id', SubjectController.softDeleteSubject);
 
 module.exports = router;

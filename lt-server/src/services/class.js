@@ -18,10 +18,16 @@ const addNewClass = async (body) => {
     }
 };
 
-const softDeleteClass = async (body) => {
+const softDeleteClass = async (_id) => {
     try {
-        const subjects = await Class.findOneAndUpdate({ name: body.name }, { isDeleted: true });
-        return subjects;
+        const _class = await Class.findOneAndUpdate(
+            { _id },
+            { isDeleted: true },
+            {
+                new: true,
+            },
+        );
+        return _class;
     } catch (e) {
         if (e instanceof Error) console.log(e.message);
     }

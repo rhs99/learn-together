@@ -20,8 +20,8 @@ const addNewPrivilege = async (req, res) => {
 
 const softDeletePrivilege = async (req, res) => {
     try {
-        const privileges = await PrivilegeService.softDeletePrivilege(req.body);
-        res.status(200).json(privileges);
+        const privilege = await PrivilegeService.softDeletePrivilege(req.params._id);
+        res.status(200).json(privilege);
     } catch (e) {
         if (e instanceof Error) res.status(400).json({ message: e.message });
     }

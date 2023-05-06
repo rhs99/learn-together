@@ -18,13 +18,16 @@ const addNewChapter = async (body) => {
     }
 };
 
-const softDeleteChapter = async (body) => {
+const softDeleteChapter = async (_id) => {
     try {
-        const subjects = await Chapter.findOneAndUpdate(
-            { name: body.name, subject: body.subject },
+        const chapter = await Chapter.findOneAndUpdate(
+            { _id },
             { isDeleted: true },
+            {
+                new: true,
+            },
         );
-        return subjects;
+        return chapter;
     } catch (e) {
         if (e instanceof Error) console.log(e.message);
     }

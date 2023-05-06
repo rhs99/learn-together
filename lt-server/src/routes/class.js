@@ -5,6 +5,6 @@ const ClassController = require('../controllers/class');
 
 router.get('/list', ClassController.getClasses);
 router.post('/create', ClassController.addNewClass);
-router.post('/softDelete', ClassController.softDeleteClass);
+router.delete('/:_id', ClassController.softDeleteClass);
 
 module.exports = router;

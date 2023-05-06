@@ -20,8 +20,8 @@ const addNewAnswer = async (req, res) => {
 
 const softDeleteAnswer = async (req, res) => {
     try {
-        const privileges = await AnswerService.softDeleteAnswer(req.body);
-        res.status(200).json(privileges);
+        const answer = await AnswerService.softDeleteAnswer(req.params._id);
+        res.status(200).json(answer);
     } catch (e) {
         if (e instanceof Error) res.status(400).json({ message: e.message });
     }

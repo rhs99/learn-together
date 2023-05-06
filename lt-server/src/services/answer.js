@@ -18,10 +18,16 @@ const getAllAnswers = async () => {
     }
 };
 
-const softDeleteAnswer = async (body) => {
+const softDeleteAnswer = async (_id) => {
     try {
-        const subjects = await Answer.findOneAndUpdate({ name: body.name, subject: body.subject }, { isDeleted: true });
-        return subjects;
+        const answer = await Answer.findOneAndUpdate(
+            { _id },
+            { isDeleted: true },
+            {
+                new: true,
+            },
+        );
+        return answer;
     } catch (e) {
         if (e instanceof Error) console.log(e.message);
     }

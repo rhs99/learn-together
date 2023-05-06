@@ -18,13 +18,16 @@ const getAllQuestions = async () => {
     }
 };
 
-const softDeleteQuestion = async (body) => {
+const softDeleteQuestion = async (_id) => {
     try {
-        const subjects = await Question.findOneAndUpdate(
-            { name: body.name, subject: body.subject },
+        const question = await Question.findOneAndUpdate(
+            { _id },
             { isDeleted: true },
+            {
+                new: true,
+            },
         );
-        return subjects;
+        return question;
     } catch (e) {
         if (e instanceof Error) console.log(e.message);
     }
