@@ -27,4 +27,4 @@ const softDeleteSubject = async (req, res) => {
     }
 };
 
-export default { getSubjects, addNewSubject, softDeleteSubject };
+module.exports = { getSubjects, addNewSubject, softDeleteSubject };

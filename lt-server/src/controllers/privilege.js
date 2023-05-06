@@ -27,4 +27,4 @@ const softDeletePrivilege = async (req, res) => {
     }
 };
 
-export default { getPrivileges, addNewPrivilege, softDeletePrivilege };
+module.exports = { getPrivileges, addNewPrivilege, softDeletePrivilege };
