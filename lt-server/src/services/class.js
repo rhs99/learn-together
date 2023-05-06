@@ -27,4 +27,4 @@ const softDeleteClass = async (body) => {
     }
 };
 
-export default { getClasses, addNewClass, softDeleteClass };
+module.exports = { getClasses, addNewClass, softDeleteClass };

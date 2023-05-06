@@ -26,5 +26,4 @@ const softDeleteSubject = async (body) => {
         if (e instanceof Error) console.log(e.message);
     }
 };
-
-export default { getSubjects, addNewSubject, softDeleteSubject };
+module.exports = { getSubjects, addNewSubject, softDeleteSubject };

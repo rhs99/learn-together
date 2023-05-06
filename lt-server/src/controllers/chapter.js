@@ -27,4 +27,4 @@ const softDeleteChapter = async (req, res) => {
     }
 };
 
-export default { getChapters, addNewChapter, softDeleteChapter };
+module.exports = { getChapters, addNewChapter, softDeleteChapter };

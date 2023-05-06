@@ -30,4 +30,4 @@ const softDeleteChapter = async (body) => {
     }
 };
 
-export default { getChapters, addNewChapter, softDeleteChapter };
+module.exports = { getChapters, addNewChapter, softDeleteChapter };

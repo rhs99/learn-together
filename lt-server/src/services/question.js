@@ -13,7 +13,7 @@ const getAllQuestions = async () => {
     try {
         const questions = Question.find().exec();
         return questions;
-    } catch (error) {
+    } catch (e) {
         console.log(e.message);
     }
 };

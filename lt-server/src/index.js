@@ -9,6 +9,7 @@ const subjectRouter = require('./routes/subject');
 const chapterRouter = require('./routes/chapter');
 const userRouter = require('./routes/user');
 const questionRouter = require('./routes/question');
+const answerRouter = require('./routes/answer');
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use('/subjects', subjectRouter);
 app.use('/chapters', chapterRouter);
 app.use('/users', userRouter);
 app.use('/questions', questionRouter);
+app.use('/answers', answerRouter);
 
 const PORT = 5000;
 
