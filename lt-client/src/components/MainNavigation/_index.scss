@@ -1,0 +1,29 @@
+.cl-mainNavigation {
+  .container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: space-between;
+    background-color: rgb(94, 198, 118);
+    height: 50px;
+  }
+
+  .container li {
+    list-style: none;
+    margin-left: 10px;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  .pending {
+    opacity: 0.5;
+  }
+
+  .active {
+    color: blue;
+  }
+}
