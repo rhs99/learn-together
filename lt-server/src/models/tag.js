@@ -7,9 +7,9 @@ const tagSchema = new mongoose.Schema({
     isDeleted: { type: Boolean, default: false },
 });
 
-tagSchema.index({ name: 1, subject: 1 }, { unique: true });
+tagSchema.index({ name: 1, question: 1 }, { unique: true });
 tagSchema.plugin(uniqueValidator);
 
-const Tag = mongoose.model('Chapter', tagSchema);
+const Tag = mongoose.model('Tag', tagSchema);
 
 module.exports = Tag;
