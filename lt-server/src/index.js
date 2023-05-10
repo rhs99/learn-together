@@ -10,6 +10,7 @@ const chapterRouter = require('./routes/chapter');
 const userRouter = require('./routes/user');
 const questionRouter = require('./routes/question');
 const answerRouter = require('./routes/answer');
+const tagRouter = require('./routes/tag');
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use('/chapters', chapterRouter);
 app.use('/users', userRouter);
 app.use('/questions', questionRouter);
 app.use('/answers', answerRouter);
+app.use('/tags', tagRouter);
 
 const PORT = 5000;
 
