@@ -1,8 +1,18 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, redirect } from 'react-router-dom';
+import { useContext } from 'react';
+import AuthContext from '../../store/auth';
 
 import './_index.scss';
 
 const MainNavigation = () => {
+  const authCtx = useContext(AuthContext);
+  const { isLoggedIn } = authCtx;
+
+  const logoutHandler = () => {
+    authCtx.logout();
+    redirect('/');
+  };
+
   return (
     <nav className="cl-mainNavigation">
       <ul className="container">
@@ -23,12 +33,21 @@ const MainNavigation = () => {
             About
           </NavLink>
         </li>
-        <li>
-          <NavLink to="/users/login">Login</NavLink>
-        </li>
-        <li className="item">
-          <NavLink to="/users/signup">Signup</NavLink>
-        </li>
+        {!isLoggedIn && (
+          <li>
+            <NavLink to="/users/login">Login</NavLink>
+          </li>
+        )}
+        {!isLoggedIn && (
+          <li className="item">
+            <NavLink to="/users/signup">Signup</NavLink>
+          </li>
+        )}
+        {isLoggedIn && (
+          <li>
+            <button onClick={logoutHandler}>Logout</button>
+          </li>
+        )}
       </ul>
     </nav>
   );
