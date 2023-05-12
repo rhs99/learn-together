@@ -5,7 +5,11 @@ const addNewUser = async (body) => {
         const user = new User(body);
         await user.save();
     } catch (error) {
-        console.log(error.message);
+        if (error.code === 11000) {
+            throw new Error('Username Exists');
+        } else {
+            console.log(error.message);
+        }
     }
 };
 
