@@ -22,6 +22,12 @@ const questionSchema = new mongoose.Schema(
             type: mongoose.Types.ObjectId,
             ref: 'Chapter',
         },
+        tags: [
+            {
+                type: mongoose.Types.ObjectId,
+                ref: 'Tag',
+            },
+        ],
         isDeleted: {
             type: Boolean,
             default: false,
