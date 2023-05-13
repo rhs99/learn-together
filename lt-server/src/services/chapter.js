@@ -1,8 +1,8 @@
 const Chapter = require('../models/chapter');
 
-const getChapters = async () => {
+const getChapters = async (subjectId) => {
     try {
-        const chapters = await Chapter.find({ isDeleted: false });
+        const chapters = await Chapter.find({ subject: subjectId, isDeleted: false });
         return chapters;
     } catch (e) {
         console.log(e.message);

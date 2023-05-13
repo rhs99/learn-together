@@ -6,6 +6,7 @@ import ErrorPage from './pages/Errorpage';
 import SignupPage, { loader as ClassLoader, action as SignupAction } from './pages/Signup/Signup';
 import LoginPage from './pages/Login/Login';
 import ClassDetail from './pages/ClassDetail/ClassDetail';
+import SubjectDetail from './pages/SubjectDetail/SubjectDetail';
 import { AuthContextProvider } from './store/auth';
 
 const router = createBrowserRouter([
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
           {
             path: '/classes/:classId',
             element: <ClassDetail />,
+          },
+          {
+            path: '/subjects/:subjectId',
+            element: <SubjectDetail />,
           },
         ],
       },

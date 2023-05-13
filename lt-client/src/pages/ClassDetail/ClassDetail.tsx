@@ -16,13 +16,17 @@ const ClassDetail = () => {
     });
   }, [classId]);
 
+  const handleSubjectClick = (id: string) => {
+    navigate(`/subjects/${id}`);
+  };
+
   return (
     <div>
       <p>Let&apos;s Learn Together</p>
       <p>List of Subjects</p>
       {subjects.map((subject) => (
         <div key={subject._id}>
-          <button>{subject.name}</button>
+          <button onClick={() => handleSubjectClick(subject._id)}>{subject.name}</button>
         </div>
       ))}
     </div>
