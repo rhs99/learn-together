@@ -14,9 +14,9 @@ const HoomePage = () => {
       <p>Let&apos;s Learn Together</p>
       <p>List of Classes</p>
       {(classes as Class[]).map((_class) => (
-        <button key={_class._id} onClick={() => handleClassChange(_class._id)}>
-          {_class.name}
-        </button>
+        <div key={_class._id}>
+          <button onClick={() => handleClassChange(_class._id)}>{_class.name}</button>
+        </div>
       ))}
     </div>
   );
