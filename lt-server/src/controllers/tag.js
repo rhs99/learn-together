@@ -11,8 +11,8 @@ const getAllTags = async (req, res) => {
 
 const addNewTag = async (req, res) => {
     try {
-        await TagService.addNewTag(req.body);
-        res.status(201).json();
+        const tag = await TagService.addNewTag(req.body);
+        res.status(201).json({ _id: tag._id });
     } catch (e) {
         res.status(400).json({ message: e.message });
     }

@@ -8,6 +8,7 @@ import LoginPage from './pages/Login/Login';
 import ClassDetail from './pages/ClassDetail/ClassDetail';
 import SubjectDetail from './pages/SubjectDetail/SubjectDetail';
 import ChapterDetail from './pages/ChapterDetail/ChapterDetail';
+import AskQuestion from './pages/AskQuestion';
 import { AuthContextProvider } from './store/auth';
 
 const router = createBrowserRouter([
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
           {
             path: '/chapters/:chapterId',
             element: <ChapterDetail />,
+          },
+          {
+            path: '/chapters/:chapterId/ask',
+            element: <AskQuestion />,
           },
         ],
       },
