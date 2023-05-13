@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Util from '../../utils';
-import { Subject } from '../../types';
+import { Chapter } from '../../types';
 
 const SubjectDetail = () => {
-  const [chapters, setChapters] = useState<Subject[]>([]);
+  const [chapters, setChapters] = useState<Chapter[]>([]);
   const navigate = useNavigate();
   const { subjectId } = useParams();
 
@@ -16,13 +16,17 @@ const SubjectDetail = () => {
     });
   }, [subjectId]);
 
+  const handleChapterOpen = (id: string) => {
+    navigate(`/chapters/${id}`);
+  };
+
   return (
     <div>
       <p>Let&apos;s Learn Together</p>
       <p>List of Chapters</p>
       {chapters.map((chapter) => (
         <div key={chapter._id}>
-          <button>{chapter.name}</button>
+          <button onClick={() => handleChapterOpen(chapter._id)}>{chapter.name}</button>
         </div>
       ))}
     </div>

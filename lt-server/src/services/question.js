@@ -9,9 +9,9 @@ const addNewQuestion = async (body) => {
     }
 };
 
-const getAllQuestions = async () => {
+const getAllQuestions = async (chapterId) => {
     try {
-        const questions = Question.find({ isDeleted: false }).exec();
+        const questions = Question.find({ chapter: chapterId, isDeleted: false }).exec();
         return questions;
     } catch (e) {
         console.log(e.message);
