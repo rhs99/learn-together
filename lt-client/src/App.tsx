@@ -5,6 +5,7 @@ import HoomePage from './pages/Homepage';
 import ErrorPage from './pages/Errorpage';
 import SignupPage, { loader as ClassLoader, action as SignupAction } from './pages/Signup/Signup';
 import LoginPage from './pages/Login/Login';
+import ClassDetail from './pages/ClassDetail/ClassDetail';
 import { AuthContextProvider } from './store/auth';
 
 const router = createBrowserRouter([
@@ -16,7 +17,7 @@ const router = createBrowserRouter([
       {
         errorElement: <ErrorPage />,
         children: [
-          { index: true, element: <HoomePage /> },
+          { index: true, element: <HoomePage />, loader: ClassLoader },
           { path: '/about', element: <ErrorPage /> },
           {
             path: '/users/signup',
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
           {
             path: '/users/login',
             element: <LoginPage />,
+          },
+          {
+            path: '/classes/:classId',
+            element: <ClassDetail />,
           },
         ],
       },

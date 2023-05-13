@@ -1,15 +1,11 @@
 import { Form, redirect, useLoaderData } from 'react-router-dom';
 import { useState } from 'react';
+import { Class } from '../../types';
 import axios from 'axios';
 
 import Util from '../../utils';
 
 import './_index.scss';
-
-type Class = {
-  name: string;
-  _id: string;
-};
 
 export async function loader() {
   const URL = Util.CONSTANTS.SERVER_URL + '/classes/list';

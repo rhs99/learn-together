@@ -1,8 +1,8 @@
 const Subject = require('../models/subject');
 
-const getSubjects = async () => {
+const getSubjects = async (classId) => {
     try {
-        const subjects = await Subject.find({ isDeleted: false });
+        const subjects = await Subject.find({class: classId, isDeleted: false });
         return subjects;
     } catch (e) {
         console.log(e.message);

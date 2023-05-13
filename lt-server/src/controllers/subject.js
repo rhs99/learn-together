@@ -2,7 +2,7 @@ const SubjectService = require('../services/subject');
 
 const getSubjects = async (req, res) => {
     try {
-        const subjects = await SubjectService.getSubjects();
+        const subjects = await SubjectService.getSubjects(req.query.classId);
         res.status(200).json(subjects);
     } catch (e) {
         res.status(400).json({ message: e.message });
