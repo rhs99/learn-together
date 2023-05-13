@@ -43,9 +43,9 @@ const SignupPage = () => {
 
   return (
     <div className="cl-Signup">
-      <h2>Create an Account</h2>
-      <Form method="post">
-        <div className="form-group">
+      <div className="signup-form-container">
+        <h2>Create an Account</h2>
+        <Form method="post">
           <label htmlFor="username">Username</label>
           <input
             type="text"
@@ -54,8 +54,6 @@ const SignupPage = () => {
             onChange={(event) => setUsername(event.target.value)}
             required
           />
-        </div>
-        <div className="form-group">
           <label htmlFor="password">Password</label>
           <input
             type="password"
@@ -64,8 +62,6 @@ const SignupPage = () => {
             onChange={(event) => setPassword(event.target.value)}
             required
           />
-        </div>
-        <div className="form-group">
           <label htmlFor="confirm-password">Confirm Password</label>
           <input
             type="password"
@@ -74,8 +70,6 @@ const SignupPage = () => {
             onChange={(event) => setConfirmPassword(event.target.value)}
             required
           />
-        </div>
-        <div className="form-group">
           <label htmlFor="class">Class</label>
           <select value={_class} onChange={(event) => setClass(event.target.value)} name="class">
             <option value="">Select class</option>
@@ -85,9 +79,9 @@ const SignupPage = () => {
               </option>
             ))}
           </select>
-        </div>
-        <button type="submit">Sign Up</button>
-      </Form>
+          <button type="submit">Sign Up</button>
+        </Form>
+      </div>
     </div>
   );
 };
