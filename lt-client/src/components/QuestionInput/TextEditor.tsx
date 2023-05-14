@@ -6,16 +6,43 @@ import Util from '../../utils';
 import axios from 'axios';
 import { Question } from '../../types';
 import './_index.scss';
+import * as minio from 'minio';
+import { PassThrough } from 'stream';
 
-type TextEditorProps = {
+const minioClient = new minio.Client({
+  endPoint: 'localhost',
+  port: 9000,
+  useSSL: false,
+  accessKey: '',
+  secretKey: '',
+});
+
+type QuestionInputProps = {
   chapterId: string;
 };
 
-const TextEditor = (props: TextEditorProps) => {
+const QuestionInput = (props: QuestionInputProps) => {
   const [value, setValue] = useState('');
   const [tags, setTags] = useState('');
 
   const navigate = useNavigate();
+
+  const handleFileUpload = async (event: any) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function (e: any) {
+      const buffer = e.target.result;
+      const stream = new PassThrough();
+      stream.end(Buffer.from(buffer));
+      minioClient.putObject('lt-bucket', file.name, stream, function (err: any, etag: any) {
+        if (err) {
+          return console.log(err);
+        }
+        console.log('File uploaded successfully.', etag);
+      });
+    };
+    reader.readAsArrayBuffer(file);
+  };
 
   const handleSave = async () => {
     const allTags = tags.trim().split(/\s+/);
@@ -54,6 +81,7 @@ const TextEditor = (props: TextEditorProps) => {
       <div className="tag-box">
         <input className="input-box" onChange={(e) => setTags(e.target.value)} />
       </div>
+      <input type="file" onChange={handleFileUpload} />
       <button className="save-btn" onClick={handleSave}>
         Save
       </button>
@@ -61,4 +89,4 @@ const TextEditor = (props: TextEditorProps) => {
   );
 };
 
-export default TextEditor;
+export default QuestionInput;
