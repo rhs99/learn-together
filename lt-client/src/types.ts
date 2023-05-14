@@ -13,7 +13,15 @@ export type Chapter = {
   _id: string;
 };
 
-export type Questiion = {
+export type Tags = {
+  name: string;
+  _id: string;
+  chapter: string;
+};
+
+export type Question = {
   details: string;
   _id: string;
+  tags: Partial<Tags>[];
+  chapter: string;
 };

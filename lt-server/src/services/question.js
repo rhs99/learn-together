@@ -11,7 +11,7 @@ const addNewQuestion = async (body) => {
 
 const getAllQuestions = async (chapterId) => {
     try {
-        const questions = Question.find({ chapter: chapterId, isDeleted: false }).exec();
+        const questions = Question.find({ chapter: chapterId, isDeleted: false }).populate('tags').exec();
         return questions;
     } catch (e) {
         console.log(e.message);

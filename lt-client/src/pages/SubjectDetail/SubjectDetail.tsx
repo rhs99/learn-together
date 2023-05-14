@@ -22,7 +22,6 @@ const SubjectDetail = () => {
 
   return (
     <div>
-      <p>Let&apos;s Learn Together</p>
       <p>List of Chapters</p>
       {chapters.map((chapter) => (
         <div key={chapter._id}>
