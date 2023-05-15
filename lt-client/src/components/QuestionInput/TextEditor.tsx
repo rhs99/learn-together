@@ -6,16 +6,7 @@ import Util from '../../utils';
 import axios from 'axios';
 import { Question } from '../../types';
 import './_index.scss';
-import * as minio from 'minio';
 import { PassThrough } from 'stream';
-
-const minioClient = new minio.Client({
-  endPoint: 'localhost',
-  port: 9000,
-  useSSL: false,
-  accessKey: '',
-  secretKey: '',
-});
 
 type QuestionInputProps = {
   chapterId: string;
@@ -24,22 +15,37 @@ type QuestionInputProps = {
 const QuestionInput = (props: QuestionInputProps) => {
   const [value, setValue] = useState('');
   const [tags, setTags] = useState('');
+  const [imageLocations, setImageLocations] = useState<string[]>([]);
 
   const navigate = useNavigate();
 
   const handleFileUpload = async (event: any) => {
     const file = event.target.files[0];
+    console.log(file);
+    const metadata = {
+      'Content-type': 'image',
+    };
     const reader = new FileReader();
     reader.onload = function (e: any) {
       const buffer = e.target.result;
       const stream = new PassThrough();
       stream.end(Buffer.from(buffer));
-      minioClient.putObject('lt-bucket', file.name, stream, function (err: any, etag: any) {
-        if (err) {
-          return console.log(err);
+
+      const uniqueFileName = props.chapterId + '-' + file.name;
+
+      Util.minioClient.putObject(
+        Util.CONSTANTS.MINIO_BUCKET,
+        uniqueFileName,
+        stream,
+        file.size,
+        metadata,
+        function (err: any, etag: any) {
+          if (err) {
+            return console.log(err);
+          }
+          setImageLocations((prevState) => [uniqueFileName, ...prevState]);
         }
-        console.log('File uploaded successfully.', etag);
-      });
+      );
     };
     reader.readAsArrayBuffer(file);
   };
@@ -59,6 +65,7 @@ const QuestionInput = (props: QuestionInputProps) => {
       details: value,
       chapter: props.chapterId,
       tags: [],
+      imageLocations: imageLocations,
     };
 
     const allData = await Promise.all(tagPromises);

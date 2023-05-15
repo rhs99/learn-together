@@ -24,4 +24,5 @@ export type Question = {
   _id: string;
   tags: Partial<Tags>[];
   chapter: string;
+  imageLocations: string[];
 };

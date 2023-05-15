@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Util from '../../utils';
-import parse from 'html-react-parser';
 import { Question } from '../../types';
 import QuestionCard from '../../components/QuestionCard/QuestionCard';
 

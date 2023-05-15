@@ -28,6 +28,11 @@ const questionSchema = new mongoose.Schema(
                 ref: 'Tag',
             },
         ],
+        imageLocations: [
+            {
+                type: String,
+            }
+        ],
         isDeleted: {
             type: Boolean,
             default: false,
