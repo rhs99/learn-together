@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Util from '../../utils';
@@ -8,16 +8,31 @@ import { Question } from '../../types';
 import './_index.scss';
 import { PassThrough } from 'stream';
 
+import { Button } from '@mui/material';
+
 type QuestionInputProps = {
   chapterId: string;
 };
 
 const QuestionInput = (props: QuestionInputProps) => {
-  const [value, setValue] = useState('');
+  const [description, setDescription] = useState('');
   const [tags, setTags] = useState('');
   const [imageLocations, setImageLocations] = useState<string[]>([]);
+  const [disabled, setDisabled] = useState(true);
+
+  const editorRef = useRef<ReactQuill>(null);
 
   const navigate = useNavigate();
+
+  const handleDescriptionChange = (value: string) => {
+    setDescription(value);
+
+    if (editorRef.current?.getEditor().getText().trim().length !== 0 || imageLocations.length !== 0) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  };
 
   const handleFileUpload = async (event: any) => {
     const file = event.target.files[0];
@@ -44,6 +59,7 @@ const QuestionInput = (props: QuestionInputProps) => {
             return console.log(err);
           }
           setImageLocations((prevState) => [uniqueFileName, ...prevState]);
+          setDisabled(false);
         }
       );
     };
@@ -60,9 +76,8 @@ const QuestionInput = (props: QuestionInputProps) => {
         chapter: props.chapterId,
       });
     });
-
     const question: Partial<Question> = {
-      details: value,
+      details: description,
       chapter: props.chapterId,
       tags: [],
       imageLocations: imageLocations,
@@ -80,18 +95,39 @@ const QuestionInput = (props: QuestionInputProps) => {
     navigate(`/chapters/${props.chapterId}`);
   };
 
+  const handleClose = () => {
+    navigate(`/chapters/${props.chapterId}`);
+  };
+
   return (
-    <div className="cl-TextEditor">
-      <h3>Write Question Description</h3>
-      <ReactQuill className="editor" theme="snow" value={value} onChange={setValue} />
-      <h4>Add relevant tags</h4>
-      <div className="tag-box">
-        <input className="input-box" onChange={(e) => setTags(e.target.value)} />
+    <div className="cl-QuestionInput">
+      <div className="description-heading">
+        <h3>Write Question Description</h3>
       </div>
-      <input type="file" onChange={handleFileUpload} />
-      <button className="save-btn" onClick={handleSave}>
-        Save
-      </button>
+      <ReactQuill
+        ref={editorRef}
+        className="editor"
+        theme="snow"
+        value={description}
+        onChange={handleDescriptionChange}
+      />
+      <div className="tag-heading">
+        <h5>Add Relevant Tags</h5>
+      </div>
+      <div className="tag-input-container">
+        <input className="tag-input" onChange={(e) => setTags(e.target.value)} />
+      </div>
+      <div className="file-upload">
+        <input type="file" onChange={handleFileUpload} />
+      </div>
+      <div className="btn-container">
+        <Button variant="outlined" onClick={handleClose} color="error" className="close-btn">
+          Close
+        </Button>
+        <Button variant="contained" onClick={handleSave} disabled={disabled} color="success" className="save-btn">
+          Save
+        </Button>
+      </div>
     </div>
   );
 };

@@ -43,7 +43,7 @@ const QuestionCard = (props: QuestionCardProps) => {
         </div>
         <div className="qImageContainer">{fileData && <img src={fileData} className="qImage" />}</div>
         <div className="qTags">
-          <Stack direction="row" spacing={2} divider={<Divider orientation="vertical" flexItem className='divider'/>}>
+          <Stack direction="row" spacing={2} divider={<Divider orientation="vertical" flexItem className="divider" />}>
             {props.question.tags.map((tag) => (
               <Chip key={tag._id} variant="outlined" size="small" label={tag.name} className="tag" />
             ))}

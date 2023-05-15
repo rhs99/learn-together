@@ -1,18 +1,42 @@
-.cl-TextEditor{
+.cl-QuestionInput {
     width: 80%;
     margin: auto;
-    .editor{
+    .description-heading {
+
+        margin: 10px 0;
+    }
+
+    .editor {
         height: 150px;
     }
-    h4{
-        margin-top: 50px;
+
+    .tag-heading {
+        margin-top: 80px;
     }
-    .tag-box{
-        .input-box{
+    .tag-input-container {
+        .tag-input {
             width: 100%;
         }
     }
-    .save-btn{
-        margin-top: 50px;
+
+    .file-upload {
+        margin-top: 20px;
+    }
+
+    .btn-container{
+        display: flex;
+        flex-direction: row;
+        margin-top: 20px;
+        justify-content: flex-end;
+
+    }
+
+    .close-btn {
+        width: 100px;
+    }
+
+    .save-btn {
+        width: 100px;
+        margin-left: 10px;
     }
 }
