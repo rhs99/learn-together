@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 
 import parse from 'html-react-parser';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { Divider, Chip } from '@mui/material';
@@ -36,23 +34,23 @@ const QuestionCard = (props: QuestionCardProps) => {
   }, []);
 
   return (
-    <Card variant="outlined" className="cl-QuestionCard">
-      <CardContent className="content">
-        <Typography variant="body1" color="text.primary" className="details">
-          {parse(props.question.details)}
-        </Typography>
-        {fileData && (
-          <div>
-            <img src={fileData} />
-          </div>
-        )}
-        <Stack className="tags" direction="row" spacing={2} divider={<Divider orientation="vertical" flexItem />}>
-          {props.question.tags.map((tag) => (
-            <Chip key={tag._id} variant="outlined" size="small" label={tag.name} />
-          ))}
-        </Stack>
-      </CardContent>
-    </Card>
+    <div className="cl-QuestionCard">
+      <div className="qContent">
+        <div className="qDetails">
+          <Typography variant="body1" color="text.primary">
+            {parse(props.question.details)}
+          </Typography>
+        </div>
+        <div className="qImageContainer">{fileData && <img src={fileData} className="qImage" />}</div>
+        <div className="qTags">
+          <Stack direction="row" spacing={2} divider={<Divider orientation="vertical" flexItem className='divider'/>}>
+            {props.question.tags.map((tag) => (
+              <Chip key={tag._id} variant="outlined" size="small" label={tag.name} className="tag" />
+            ))}
+          </Stack>
+        </div>
+      </div>
+    </div>
   );
 };
 

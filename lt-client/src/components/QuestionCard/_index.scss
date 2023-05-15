@@ -1,19 +1,46 @@
 .cl-QuestionCard {
-    margin: 0;
+    margin-bottom: 20px;
     padding: 0;
+    background-color: rgb(133, 151, 150);
+    width: 100%;
+    max-height: 500px;
 
-    .content {
-        margin-left: 10px;
-        padding: 0;
+    .qContent {
+        padding: 10px;
 
-        .details {
+        .qDetails {
             margin: 0;
-            padding: 0;
+            padding: 5px;
+            max-height: 150px;
         }
 
-        .tags{
-            margin-top: 20px;
-            padding: 0;
+        .qDetails:hover {
+            background-color: rgb(188, 188, 234);
+            border-radius: 5px;
+            cursor: pointer;
         }
+
+        .qImageContainer {
+            margin-top: 10px;
+
+            .qImage {
+                width: auto;
+                max-height: 100px;
+            }
+        }
+
+        .qTags {
+            margin-top: 10px;
+
+            .divider{
+                background-color: rgb(174, 129, 129);
+            }
+
+            .tag {
+                background-color: rgb(221, 236, 231);
+            }
+        }
+
     }
+
 }
