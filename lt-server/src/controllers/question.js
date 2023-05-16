@@ -9,6 +9,15 @@ const getAllQuestions = async (req, res) => {
     }
 };
 
+const getQuestion = async (req, res) => {
+    try {
+        const questions = await QuestionService.getQuestion(req.query.questionId);
+        res.status(200).json(questions);
+    } catch (e) {
+        res.status(400).json({ message: e.message });
+    }
+};
+
 const addNewQuestion = async (req, res) => {
     try {
         await QuestionService.addNewQuestion(req.body);
@@ -27,4 +36,4 @@ const softDeleteQuestion = async (req, res) => {
     }
 };
 
-module.exports = { getAllQuestions, addNewQuestion, softDeleteQuestion };
+module.exports = { getAllQuestions, addNewQuestion, softDeleteQuestion, getQuestion };

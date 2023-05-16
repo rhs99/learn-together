@@ -31,7 +31,7 @@ const questionSchema = new mongoose.Schema(
         imageLocations: [
             {
                 type: String,
-            }
+            },
         ],
         isDeleted: {
             type: Boolean,

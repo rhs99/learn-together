@@ -54,7 +54,7 @@ const QuestionInput = (props: QuestionInputProps) => {
         stream,
         file.size,
         metadata,
-        function (err: any, etag: any) {
+        function (err: any) {
           if (err) {
             return console.log(err);
           }

@@ -9,6 +9,7 @@ import ClassDetail from './pages/ClassDetail/ClassDetail';
 import SubjectDetail from './pages/SubjectDetail/SubjectDetail';
 import ChapterDetail from './pages/ChapterDetail/ChapterDetail';
 import AskQuestion from './pages/AskQuestion';
+import QuestionDetail from './pages/QuestionDetail/QuestionDetail';
 import { AuthContextProvider } from './store/auth';
 
 const router = createBrowserRouter([
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
           {
             path: '/chapters/:chapterId/ask',
             element: <AskQuestion />,
+          },
+          {
+            path: '/questions/:questionId',
+            element: <QuestionDetail />,
           },
         ],
       },

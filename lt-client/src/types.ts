@@ -19,6 +19,13 @@ export type Tags = {
   chapter: string;
 };
 
+export type Answer = {
+  _id: string;
+  details: string;
+  imageLocations: string[];
+  question: string;
+};
+
 export type Question = {
   details: string;
   _id: string;

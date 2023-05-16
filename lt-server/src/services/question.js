@@ -18,6 +18,15 @@ const getAllQuestions = async (chapterId) => {
     }
 };
 
+const getQuestion = async (questionId) => {
+    try {
+        const question = Question.findOne({ _id: questionId, isDeleted: false }).populate('tags').exec();
+        return question;
+    } catch (e) {
+        console.log(e.message);
+    }
+};
+
 const softDeleteQuestion = async (_id) => {
     try {
         const question = await Question.findOneAndUpdate(
@@ -33,4 +42,4 @@ const softDeleteQuestion = async (_id) => {
     }
 };
 
-module.exports = { addNewQuestion, getAllQuestions, softDeleteQuestion };
+module.exports = { addNewQuestion, getAllQuestions, softDeleteQuestion, getQuestion };

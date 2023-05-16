@@ -9,9 +9,9 @@ const addNewAnswer = async (body) => {
     }
 };
 
-const getAllAnswers = async () => {
+const getAllAnswers = async (questionId) => {
     try {
-        const answers = Answer.find({ isDeleted: false }).exec();
+        const answers = Answer.find({ question: questionId, isDeleted: false }).exec();
         return answers;
     } catch (e) {
         console.log(e.message);

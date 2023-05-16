@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 import parse from 'html-react-parser';
@@ -16,6 +17,8 @@ type QuestionCardProps = {
 const QuestionCard = (props: QuestionCardProps) => {
   const [fileData, setFileData] = useState(null);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     let fileName = '';
     if (props.question.imageLocations.length > 0) {
@@ -31,12 +34,16 @@ const QuestionCard = (props: QuestionCardProps) => {
       }
       setFileData(dataStream.url);
     });
-  }, []);
+  }, [props.question.imageLocations]);
+
+  const handleQuestionClick = () => {
+    navigate(`/questions/${props.question._id}`);
+  };
 
   return (
     <div className="cl-QuestionCard">
       <div className="qContent">
-        <div className="qDetails">
+        <div className="qDetails" onClick={handleQuestionClick}>
           <Typography variant="body1" color="text.primary">
             {parse(props.question.details)}
           </Typography>

@@ -22,6 +22,11 @@ const answerSchema = new mongoose.Schema(
             type: mongoose.Types.ObjectId,
             ref: 'Question',
         },
+        imageLocations: [
+            {
+                type: String,
+            },
+        ],
         isDeleted: {
             type: Boolean,
             default: false,
