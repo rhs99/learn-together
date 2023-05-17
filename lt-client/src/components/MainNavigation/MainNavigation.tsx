@@ -1,4 +1,4 @@
-import { Link, redirect } from 'react-router-dom';
+import { NavLink, redirect } from 'react-router-dom';
 import { useContext } from 'react';
 import { Stack } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
@@ -26,25 +26,22 @@ const MainNavigation = () => {
         <Toolbar>
           <Stack direction="row" spacing={2}>
             <SchoolRoundedIcon fontSize="large" />
-            <Button color="inherit" component={Link} to="/">
+            <NavLink
+              to="/"
+              className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : '')}
+              end
+            >
               Home
-            </Button>
-            <Button color="inherit" component={Link} to="/about">
-              About
-            </Button>
+            </NavLink>
+            <NavLink
+              to="/about"
+              className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : '')}
+            >About</NavLink>
           </Stack>
 
           <Stack direction="row" spacing={2} sx={{ mr: 2, ml: 'auto' }}>
-            {!isLoggedIn && (
-              <Button color="inherit" component={Link} to="/users/login">
-                Login
-              </Button>
-            )}
-            {!isLoggedIn && (
-              <Button color="inherit" component={Link} to="/users/signup">
-                Signup
-              </Button>
-            )}
+            {!isLoggedIn && <NavLink to="/users/login">Login</NavLink>}
+            {!isLoggedIn && <NavLink to="/users/signup">Signup</NavLink>}
             {isLoggedIn && (
               <Button color="inherit" onClick={logoutHandler}>
                 Logout
