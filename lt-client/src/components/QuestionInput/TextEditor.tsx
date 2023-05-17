@@ -68,9 +68,11 @@ const QuestionInput = (props: QuestionInputProps) => {
   };
 
   const handleSave = async () => {
-    const allTags = tags.trim().split(/\s+/);
+    let allTags: string[] = [];
+    if (tags.trim().length !== 0) {
+      allTags = tags.trim().split(/\s+/);
+    }
     const tagURL = `${Util.CONSTANTS.SERVER_URL}/tags/create`;
-
     const tagPromises = allTags.map((tag) => {
       return axios.post(tagURL, {
         name: tag,
