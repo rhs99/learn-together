@@ -8,6 +8,7 @@ import './_index.scss';
 function LoginPage() {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [err, setErr] = useState(false);
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
 
@@ -32,6 +33,8 @@ function LoginPage() {
     if (data.token) {
       authCtx.login(data.token);
       navigate('/');
+    }else{
+      setErr(true);
     }
   };
 
@@ -48,6 +51,7 @@ function LoginPage() {
             Password:
             <input type="password" name="password" value={password} onChange={handlePasswordChange} required />
           </label>
+          {err && <span className='err'>Login Failed</span>}
           <button type="submit">Login</button>
         </form>
       </div>
