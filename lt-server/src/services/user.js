@@ -26,9 +26,14 @@ const logInUser = async (body) => {
     try {
         const user = await User.findOne({ userName: body.userName }).exec();
         if (!user) {
-            throw new Error('No user found');
+            return null;
         }
-        return user.comparePassword(body.password);
+        const match = await user.comparePassword(body.password);
+        if (match) {
+            return user;
+        } else {
+            return null;
+        }
     } catch (error) {
         console.log(error.message);
     }

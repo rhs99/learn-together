@@ -27,9 +27,10 @@ function LoginPage() {
       userName: username,
       password: password,
     };
-    const { status } = await axios.post(URL, userInfo);
-    if (status === 200) {
-      authCtx.login();
+    const { data } = await axios.post(URL, userInfo);
+    console.log(data);
+    if (data.token) {
+      authCtx.login(data.token);
       navigate('/');
     }
   };
