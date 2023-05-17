@@ -1,9 +1,9 @@
-const jwt =  require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 const privateKey = '69h441HbITlmUTQJ5atXpJ7Givt1utqjeSf3VrNNUfY=';
 
 const createToken = (data) => {
-    const token = jwt.sign({ foo: 'bar' }, privateKey);
+    const token = jwt.sign(data, privateKey);
     return token;
 };
 

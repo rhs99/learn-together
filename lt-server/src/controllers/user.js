@@ -1,4 +1,4 @@
-const Util = require('../utils');
+const Util = require('../common/utils');
 const UserService = require('../services/user');
 
 const getUser = async (req, res) => {

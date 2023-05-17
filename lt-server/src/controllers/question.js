@@ -20,6 +20,7 @@ const getQuestion = async (req, res) => {
 
 const addNewQuestion = async (req, res) => {
     try {
+        req.body.user = req.user;
         await QuestionService.addNewQuestion(req.body);
         res.status(201).json();
     } catch (e) {

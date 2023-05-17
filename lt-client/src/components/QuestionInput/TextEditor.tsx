@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Util from '../../utils';
@@ -7,6 +7,7 @@ import axios from 'axios';
 import { Question } from '../../types';
 import './_index.scss';
 import { PassThrough } from 'stream';
+import AuthContext from '../../store/auth';
 
 import { Button } from '@mui/material';
 
@@ -21,7 +22,7 @@ const QuestionInput = (props: QuestionInputProps) => {
   const [disabled, setDisabled] = useState(true);
 
   const editorRef = useRef<ReactQuill>(null);
-
+  const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleDescriptionChange = (value: string) => {
@@ -90,7 +91,12 @@ const QuestionInput = (props: QuestionInputProps) => {
 
     const questionURL = `${Util.CONSTANTS.SERVER_URL}/questions/create`;
 
-    await axios.post(questionURL, question);
+    await axios.post(questionURL, question, {
+      headers: {
+        Authorization: `Bearer ${authCtx.getToken()}`,
+        'Content-Type': 'application/json',
+      },
+    });
 
     navigate(`/chapters/${props.chapterId}`);
   };
@@ -98,6 +104,10 @@ const QuestionInput = (props: QuestionInputProps) => {
   const handleClose = () => {
     navigate(`/chapters/${props.chapterId}`);
   };
+
+  if(!authCtx.isLoggedIn){
+    return null;
+  }
 
   return (
     <div className="cl-QuestionInput">
