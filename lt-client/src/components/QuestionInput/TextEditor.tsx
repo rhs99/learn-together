@@ -105,7 +105,7 @@ const QuestionInput = (props: QuestionInputProps) => {
     navigate(`/chapters/${props.chapterId}`);
   };
 
-  if(!authCtx.isLoggedIn){
+  if (!authCtx.isLoggedIn) {
     return null;
   }
 

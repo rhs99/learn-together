@@ -24,6 +24,7 @@ export type Answer = {
   details: string;
   imageLocations: string[];
   question: string;
+  user: string;
 };
 
 export type Question = {
@@ -32,4 +33,5 @@ export type Question = {
   tags: Partial<Tags>[];
   chapter: string;
   imageLocations: string[];
+  user: string;
 };

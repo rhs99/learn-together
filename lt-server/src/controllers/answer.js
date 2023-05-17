@@ -11,6 +11,7 @@ const getAllAnswers = async (req, res) => {
 
 const addNewAnswer = async (req, res) => {
     try {
+        req.body.user = req.user;
         await AnswerService.addNewAnswer(req.body);
         res.status(201).json();
     } catch (e) {

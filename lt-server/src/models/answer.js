@@ -4,7 +4,6 @@ const answerSchema = new mongoose.Schema(
     {
         details: {
             type: String,
-            required: true,
         },
         upVote: {
             type: Number,
@@ -17,10 +16,12 @@ const answerSchema = new mongoose.Schema(
         user: {
             type: mongoose.Types.ObjectId,
             ref: 'User',
+            required: true,
         },
         question: {
             type: mongoose.Types.ObjectId,
             ref: 'Question',
+            required: true,
         },
         imageLocations: [
             {

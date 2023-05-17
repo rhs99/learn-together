@@ -17,10 +17,12 @@ const questionSchema = new mongoose.Schema(
         user: {
             type: mongoose.Types.ObjectId,
             ref: 'User',
+            required: true,
         },
         chapter: {
             type: mongoose.Types.ObjectId,
             ref: 'Chapter',
+            required: true,
         },
         tags: [
             {

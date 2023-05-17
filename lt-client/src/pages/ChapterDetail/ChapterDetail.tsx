@@ -11,7 +11,7 @@ const ChapterDetail = () => {
   const navigate = useNavigate();
   const { chapterId } = useParams();
 
-  const {isLoggedIn} = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext);
 
   useEffect(() => {
     const URL = `${Util.CONSTANTS.SERVER_URL}/questions/list?chapterId=${chapterId}`;

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Question, Answer } from '../../types';
@@ -7,6 +7,7 @@ import ReactQuill from 'react-quill';
 import AnswerCard from '../../components/AnswerCard/AnswerCard';
 import { Button } from '@mui/material';
 import { PassThrough } from 'stream';
+import AuthContext from '../../store/auth';
 import Util from '../../utils';
 
 import './_index.scss';
@@ -19,6 +20,8 @@ const QuestionDetail = () => {
   const [disabled, setDisabled] = useState(true);
   const editorRef = useRef<ReactQuill>(null);
   const { questionId } = useParams();
+
+  const { isLoggedIn, getToken } = useContext(AuthContext);
 
   const [inputRef, setInputRef] = useState<{ value: '' }>();
 
@@ -91,7 +94,12 @@ const QuestionDetail = () => {
     };
     const URL = `${Util.CONSTANTS.SERVER_URL}/answers/create`;
 
-    await axios.post(URL, answer);
+    await axios.post(URL, answer, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+        'Content-Type': 'application/json',
+      },
+    });
     fetchAnswers().then((data) => setAnswers(data));
     if (inputRef) {
       inputRef.value = '';
@@ -110,24 +118,28 @@ const QuestionDetail = () => {
   return (
     <div className="cl-QuestionDetail">
       <QuestionCard question={question} />
-      <div className="aHeader">
-        <h3>Write Your Answer</h3>
-      </div>
-      <ReactQuill
-        ref={editorRef}
-        className="editor"
-        theme="snow"
-        value={description}
-        onChange={handleDescriptionChange}
-      />
-      <div className="file-upload">
-        <input type="file" ref={(ref: any) => setInputRef(ref)} onChange={handleFileUpload} />
-      </div>
-      <div className="btn-container">
-        <Button variant="outlined" disabled={disabled} onClick={handlePostAnswer}>
-          Save
-        </Button>
-      </div>
+      {isLoggedIn && (
+        <div>
+          <div className="aHeader">
+            <h3>Write Your Answer</h3>
+          </div>
+          <ReactQuill
+            ref={editorRef}
+            className="editor"
+            theme="snow"
+            value={description}
+            onChange={handleDescriptionChange}
+          />
+          <div className="file-upload">
+            <input type="file" ref={(ref: any) => setInputRef(ref)} onChange={handleFileUpload} />
+          </div>
+          <div className="btn-container">
+            <Button variant="outlined" disabled={disabled} onClick={handlePostAnswer}>
+              Save
+            </Button>
+          </div>
+        </div>
+      )}
       {answers.map((answer) => (
         <AnswerCard key={answer._id} answer={answer} />
       ))}
