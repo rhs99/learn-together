@@ -1,5 +1,5 @@
-import { Form, redirect, useLoaderData } from 'react-router-dom';
-import { useState } from 'react';
+import { redirect, useLoaderData } from 'react-router-dom';
+import { FormEvent, useState } from 'react';
 import { Class } from '../../types';
 import axios from 'axios';
 
@@ -13,35 +13,39 @@ export async function loader() {
   return data;
 }
 
-export async function action({ request }: { request: Request }) {
-  const URL = Util.CONSTANTS.SERVER_URL + '/users/create';
-  const formData = await request.formData();
-  const userInput = Object.fromEntries(formData);
-
-  const userInfo = {
-    userName: userInput.username,
-    password: userInput.password,
-    class: userInput.class,
-  };
-
-  await axios.post(URL, userInfo);
-
-  return redirect('/users/login');
-}
-
 const SignupPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [_class, setClass] = useState('');
+  const [err, setErr] = useState(false);
 
   const classes = useLoaderData();
+
+  const handleSignup = async (event: FormEvent) => {
+    event.preventDefault();
+    if (password !== confirmPassword) {
+      setErr(true);
+      return;
+    }
+
+    const URL = Util.CONSTANTS.SERVER_URL + '/users/create';
+    const userInfo = {
+      userName: username,
+      password: password,
+      class: _class,
+    };
+
+    await axios.post(URL, userInfo);
+
+    return redirect('/users/login');
+  };
 
   return (
     <div className="cl-Signup">
       <div className="signup-form-container">
         <h2>Create an Account</h2>
-        <Form method="post">
+        <form onSubmit={handleSignup}>
           <label htmlFor="username">Username</label>
           <input
             type="text"
@@ -66,6 +70,7 @@ const SignupPage = () => {
             onChange={(event) => setConfirmPassword(event.target.value)}
             required
           />
+          {err && <span className="err">Confirm Password should match Password</span>}
           <label htmlFor="class">Class</label>
           <select value={_class} onChange={(event) => setClass(event.target.value)} name="class">
             <option value="">Select class</option>
@@ -76,7 +81,7 @@ const SignupPage = () => {
             ))}
           </select>
           <button type="submit">Sign Up</button>
-        </Form>
+        </form>
       </div>
     </div>
   );

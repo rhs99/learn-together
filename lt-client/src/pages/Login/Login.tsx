@@ -33,7 +33,7 @@ function LoginPage() {
     if (data.token) {
       authCtx.login(data.token);
       navigate('/');
-    }else{
+    } else {
       setErr(true);
     }
   };
@@ -51,7 +51,7 @@ function LoginPage() {
             Password:
             <input type="password" name="password" value={password} onChange={handlePasswordChange} required />
           </label>
-          {err && <span className='err'>Login Failed</span>}
+          {err && <span className="err">Invalid Credentials</span>}
           <button type="submit">Login</button>
         </form>
       </div>
