@@ -2,11 +2,15 @@
     text-decoration: none;
   }
 
+  .idle{
+    color: white;
+  }
+
   .pending {
     opacity: 0.5;
   }
 
   .active {
-    color: rgb(200, 200, 229);
+    color: rgb(94, 207, 179);
   }
   

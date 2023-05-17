@@ -1,4 +1,4 @@
-import { NavLink, redirect } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { Stack } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
@@ -15,9 +15,11 @@ const MainNavigation = () => {
   const authCtx = useContext(AuthContext);
   const { isLoggedIn } = authCtx;
 
+  const navigate = useNavigate();
+
   const logoutHandler = () => {
     authCtx.logout();
-    redirect('/');
+    navigate('/');
   };
 
   return (
@@ -25,29 +27,45 @@ const MainNavigation = () => {
       <AppBar position="static">
         <Toolbar>
           <Stack direction="row" spacing={2}>
-            <SchoolRoundedIcon fontSize="large" />
+            <SchoolRoundedIcon fontSize="medium" />
             <NavLink
               to="/"
-              className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : '')}
+              className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
               end
             >
               Home
             </NavLink>
             <NavLink
               to="/about"
-              className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : '')}
-            >About</NavLink>
+              className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
+            >
+              About
+            </NavLink>
           </Stack>
 
           <Stack direction="row" spacing={2} sx={{ mr: 2, ml: 'auto' }}>
-            {!isLoggedIn && <NavLink to="/users/login">Login</NavLink>}
-            {!isLoggedIn && <NavLink to="/users/signup">Signup</NavLink>}
+            {!isLoggedIn && (
+              <NavLink
+                to="/users/login"
+                className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
+              >
+                Login
+              </NavLink>
+            )}
+            {!isLoggedIn && (
+              <NavLink
+                className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
+                to="/users/signup"
+              >
+                Signup
+              </NavLink>
+            )}
             {isLoggedIn && (
               <Button color="inherit" onClick={logoutHandler}>
                 Logout
               </Button>
             )}
-            <AccountCircleRoundedIcon fontSize="large" />
+            <AccountCircleRoundedIcon fontSize="medium" />
           </Stack>
         </Toolbar>
       </AppBar>
