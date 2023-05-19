@@ -50,37 +50,20 @@ const QuestionCard = (props: QuestionCardProps) => {
     navigate(`/questions/${props.question._id}`);
   };
 
-  const qdClassName = props.qdClickable ? 'qDetailsClickable' : 'qDetails';
+  const qdClassName = props.qdClickable ? 'qDetailsClickable' : '';
   const qdOnClick = props.qdClickable ? handleQuestionClick : undefined;
 
   return (
     <div className="cl-QuestionCard">
       <div className="qContent">
         <div className={qdClassName} onClick={qdOnClick}>
-          <Typography variant="body1" color="text.primary">
-            {parse(props.question.details)}
-          </Typography>
+          <Typography variant="body1">{parse(props.question.details)}</Typography>
         </div>
+        {fileData && <Divider />}
         <div className="qImageContainer" onClick={handleInageModalOpen}>
           {fileData && <img src={fileData} className="qImage" />}
         </div>
-        {fileData && showImageModal && (
-          <Modal open={showImageModal} onClose={handleInageModalClose}>
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: '500px',
-                bgcolor: 'background.paper',
-                border: '2px solid #000',
-              }}
-            >
-              <img src={fileData} style={{ width: '100%', height: 'auto' }} />
-            </Box>
-          </Modal>
-        )}
+        {props.question.tags.length > 0 && <Divider />}
         <div className="qTags">
           <Stack direction="row" spacing={2} divider={<Divider orientation="vertical" flexItem className="divider" />}>
             {props.question.tags.map((tag) => (
@@ -89,6 +72,23 @@ const QuestionCard = (props: QuestionCardProps) => {
           </Stack>
         </div>
       </div>
+      {fileData && showImageModal && (
+        <Modal open={showImageModal} onClose={handleInageModalClose}>
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '500px',
+              bgcolor: 'background.paper',
+              border: '2px solid #000',
+            }}
+          >
+            <img src={fileData} style={{ width: '100%', height: 'auto' }} />
+          </Box>
+        </Modal>
+      )}
     </div>
   );
 };
