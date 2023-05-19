@@ -139,7 +139,7 @@ const QuestionInput = (props: QuestionInputProps) => {
         onChange={handleDescriptionChange}
       />
       <div className="tag-heading">
-        <h5>Add Relevant Tags</h5>
+        <h4>Add Relevant Tags</h4>
       </div>
       <div className="tag-input-container">
         <Autocomplete
