@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import parse from 'html-react-parser';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { Divider, Chip } from '@mui/material';
+import { Divider, Chip, Modal, Box } from '@mui/material';
 import { Question } from '../../types';
 import Util from '../../utils';
 
@@ -16,8 +16,17 @@ type QuestionCardProps = {
 
 const QuestionCard = (props: QuestionCardProps) => {
   const [fileData, setFileData] = useState(null);
+  const [showImageModal, setShowImageModal] = useState<boolean>(false);
 
   const navigate = useNavigate();
+
+  const handleInageModalOpen = () => {
+    setShowImageModal(true);
+  };
+
+  const handleInageModalClose = () => {
+    setShowImageModal(false);
+  };
 
   useEffect(() => {
     let fileName = '';
@@ -48,7 +57,26 @@ const QuestionCard = (props: QuestionCardProps) => {
             {parse(props.question.details)}
           </Typography>
         </div>
-        <div className="qImageContainer">{fileData && <img src={fileData} className="qImage" />}</div>
+        <div className="qImageContainer" onClick={handleInageModalOpen}>
+          {fileData && <img src={fileData} className="qImage" />}
+        </div>
+        {fileData && showImageModal && (
+          <Modal open={showImageModal} onClose={handleInageModalClose}>
+            <Box
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: '500px',
+                bgcolor: 'background.paper',
+                border: '2px solid #000',
+              }}
+            >
+              <img src={fileData} style={{ width: '100%', height: 'auto' }} />
+            </Box>
+          </Modal>
+        )}
         <div className="qTags">
           <Stack direction="row" spacing={2} divider={<Divider orientation="vertical" flexItem className="divider" />}>
             {props.question.tags.map((tag) => (
