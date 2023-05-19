@@ -5,7 +5,7 @@ import Util from '../../utils';
 import { Question } from '../../types';
 import QuestionCard from '../../components/QuestionCard/QuestionCard';
 import AuthContext from '../../store/auth';
-import {Typography ,Button } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 
 import './_index.scss';
 
@@ -29,8 +29,8 @@ const ChapterDetail = () => {
 
   return (
     <div className="cl-ChapterDetail">
-      <div className='heading'>
-        <Typography variant='h6'>All Questions</Typography>
+      <div className="heading">
+        <Typography variant="h6">All Questions</Typography>
         {isLoggedIn && (
           <div className="ask-btn">
             <Button variant="outlined" onClick={handleAskQuestion}>
