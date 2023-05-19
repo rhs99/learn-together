@@ -12,6 +12,7 @@ import './_index.scss';
 
 type QuestionCardProps = {
   question: Question;
+  qdClickable: boolean;
 };
 
 const QuestionCard = (props: QuestionCardProps) => {
@@ -49,10 +50,13 @@ const QuestionCard = (props: QuestionCardProps) => {
     navigate(`/questions/${props.question._id}`);
   };
 
+  const qdClassName = props.qdClickable ? 'qDetailsClickable' : 'qDetails';
+  const qdOnClick = props.qdClickable ? handleQuestionClick : undefined;
+
   return (
     <div className="cl-QuestionCard">
       <div className="qContent">
-        <div className="qDetails" onClick={handleQuestionClick}>
+        <div className={qdClassName} onClick={qdOnClick}>
           <Typography variant="body1" color="text.primary">
             {parse(props.question.details)}
           </Typography>

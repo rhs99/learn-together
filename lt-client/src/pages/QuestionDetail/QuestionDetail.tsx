@@ -117,7 +117,7 @@ const QuestionDetail = () => {
 
   return (
     <div className="cl-QuestionDetail">
-      <QuestionCard question={question} />
+      <QuestionCard question={question} qdClickable={false} />
       {isLoggedIn && (
         <div>
           <div className="aHeader">

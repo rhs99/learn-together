@@ -14,7 +14,13 @@
             max-height: 150px;
         }
 
-        .qDetails:hover {
+        .qDetailsClickable {
+            margin: 0;
+            padding: 5px;
+            max-height: 150px;
+        }
+
+        .qDetailsClickable:hover {
             background-color: rgb(115, 173, 236);
             border-radius: 5px;
             cursor: pointer;

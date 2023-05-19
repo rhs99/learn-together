@@ -29,7 +29,7 @@ const ChapterDetail = () => {
       {isLoggedIn && <button onClick={handleAskQuestion}>Ask Question</button>}
       <p>All Questions</p>
       {questions.map((question) => (
-        <QuestionCard key={question._id} question={question} />
+        <QuestionCard key={question._id} question={question} qdClickable={true} />
       ))}
     </div>
   );
