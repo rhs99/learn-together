@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import QuestionInput from '../components/QuestionInput/TextEditor';
+import QuestionInput from '../components/QuestionInput/QuestionInput';
 
 const AskQuestion = () => {
   const { chapterId } = useParams();
