@@ -1,15 +1,19 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useRef, useContext } from 'react';
+import { useState, useRef, useContext, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Util from '../../utils';
 import axios from 'axios';
 import { Question } from '../../types';
-import './_index.scss';
 import { PassThrough } from 'stream';
 import AuthContext from '../../store/auth';
-
 import { Button } from '@mui/material';
+import { Tag } from '../../types';
+import { Autocomplete, TextField, createFilterOptions } from '@mui/material';
+
+import './_index.scss';
+
+const filter = createFilterOptions<Tag>();
 
 type QuestionInputProps = {
   chapterId: string;
@@ -17,13 +21,19 @@ type QuestionInputProps = {
 
 const QuestionInput = (props: QuestionInputProps) => {
   const [description, setDescription] = useState('');
-  const [tags, setTags] = useState('');
   const [imageLocations, setImageLocations] = useState<string[]>([]);
   const [disabled, setDisabled] = useState(true);
+  const [existingTags, setExistingTags] = useState<Tag[]>([]);
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 
   const editorRef = useRef<ReactQuill>(null);
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const URL = `${Util.CONSTANTS.SERVER_URL}/tags/list?chapterId=${props.chapterId}`;
+    axios.get(URL).then((data) => setExistingTags(data.data));
+  }, [props.chapterId]);
 
   const handleDescriptionChange = (value: string) => {
     setDescription(value);
@@ -68,27 +78,32 @@ const QuestionInput = (props: QuestionInputProps) => {
   };
 
   const handleSave = async () => {
-    let allTags: string[] = [];
-    if (tags.trim().length !== 0) {
-      allTags = tags.trim().split(/\s+/);
-    }
     const tagURL = `${Util.CONSTANTS.SERVER_URL}/tags/create`;
-    const tagPromises = allTags.map((tag) => {
-      return axios.post(tagURL, {
-        name: tag,
-        chapter: props.chapterId,
-      });
-    });
-    const question: Partial<Question> = {
+    const question = {
       details: description,
       chapter: props.chapterId,
       tags: [],
       imageLocations: imageLocations,
     };
 
+    const newTags: Tag[] = [];
+
+    selectedTags.forEach((tag) => {
+      if (tag._id.length === 0) {
+        newTags.push(tag);
+      } else {
+        (question.tags as string[]).push(tag._id);
+      }
+    });
+
+    const tagPromises = newTags.map((tag) => {
+      return axios.post(tagURL, { name: tag.name, chapter: tag.chapter });
+    });
+
     const allData = await Promise.all(tagPromises);
+
     allData.forEach(({ data }) => {
-      question.tags?.push(data._id);
+      (question.tags as string[]).push(data._id);
     });
 
     const questionURL = `${Util.CONSTANTS.SERVER_URL}/questions/create`;
@@ -127,7 +142,33 @@ const QuestionInput = (props: QuestionInputProps) => {
         <h5>Add Relevant Tags</h5>
       </div>
       <div className="tag-input-container">
-        <input className="tag-input" onChange={(e) => setTags(e.target.value)} />
+        <Autocomplete
+          multiple
+          id="tags-standard"
+          onChange={(event: any, selection: Tag[]) => {
+            setSelectedTags(selection);
+          }}
+          options={existingTags}
+          filterOptions={(options, params) => {
+            const filtered = filter(options, params);
+            const { inputValue } = params;
+            const isExisting = options.some(
+              (option) => inputValue.toLocaleLowerCase() === option.name.toLocaleLowerCase()
+            );
+            if (inputValue !== '' && !isExisting) {
+              const newTag = {
+                _id: '',
+                chapter: props.chapterId,
+                name: inputValue,
+              };
+              filtered.push(newTag);
+            }
+            return filtered;
+          }}
+          getOptionLabel={(option) => option.name}
+          defaultValue={[]}
+          renderInput={(params) => <TextField {...params} variant="standard" label="All Tags" placeholder="Add Tags" />}
+        />
       </div>
       <div className="file-upload">
         <input type="file" onChange={handleFileUpload} />

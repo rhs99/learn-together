@@ -13,7 +13,7 @@ export type Chapter = {
   _id: string;
 };
 
-export type Tags = {
+export type Tag = {
   name: string;
   _id: string;
   chapter: string;
@@ -30,7 +30,7 @@ export type Answer = {
 export type Question = {
   details: string;
   _id: string;
-  tags: Partial<Tags>[];
+  tags: Tag[];
   chapter: string;
   imageLocations: string[];
   user: string;

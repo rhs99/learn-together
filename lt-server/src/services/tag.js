@@ -14,9 +14,9 @@ const addNewTag = async (body) => {
     }
 };
 
-const getAllTags = async () => {
+const getAllTags = async (chapterId) => {
     try {
-        const tags = Tag.find({ isDeleted: false }).exec();
+        const tags = Tag.find({chapter: chapterId, isDeleted: false }).exec();
         return tags;
     } catch (e) {
         console.log(e.message);
