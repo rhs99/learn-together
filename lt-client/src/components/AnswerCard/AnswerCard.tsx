@@ -7,6 +7,7 @@ import { Divider, Modal, Box, IconButton, Tooltip, Snackbar, Alert } from '@mui/
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import EditIcon from '@mui/icons-material/Edit';
 import ShareIcon from '@mui/icons-material/Share';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Answer } from '../../types';
 import Util from '../../utils';
 
@@ -89,7 +90,7 @@ const AnswerCard = (props: AnswerCardProps) => {
       </Stack>
       <div className="bottom-pane">
         <Typography variant="body2" className="author">
-          Answered by <span className="user-name">{props.answer.user.userName}</span>
+          answered by <span className="user-name">{props.answer.user.userName}</span>
         </Typography>
         <Tooltip title="share">
           <IconButton className="share" onClick={handleShareClick}>
@@ -99,6 +100,11 @@ const AnswerCard = (props: AnswerCardProps) => {
         <Tooltip title="edit">
           <IconButton className="edit">
             <EditIcon fontSize="small"></EditIcon>
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="delete">
+          <IconButton className="delete">
+            <DeleteIcon fontSize="small"></DeleteIcon>
           </IconButton>
         </Tooltip>
       </div>
