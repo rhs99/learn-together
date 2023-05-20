@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Answer } from '../types';
-import Util from '../utils';
-import AnswerCard from '../components/AnswerCard/AnswerCard';
+import { Answer } from '../../types';
+import Util from '../../utils';
+import AnswerCard from '../../components/AnswerCard/AnswerCard';
 import axios from 'axios';
+
+import './_index.scss';
 
 const AnswerPage = () => {
   const [answer, setAnswer] = useState<Answer>();
@@ -20,7 +22,11 @@ const AnswerPage = () => {
     return null;
   }
 
-  return <AnswerCard answer={answer} />;
+  return (
+    <div className="cl-AnswerPage">
+      <AnswerCard answer={answer} />;
+    </div>
+  );
 };
 
 export default AnswerPage;
