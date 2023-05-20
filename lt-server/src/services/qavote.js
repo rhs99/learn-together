@@ -5,33 +5,33 @@ const Answer = require('../models/answer');
 const updateVote = async (body) => {
     try {
         let vote = await QAVote.findOne({ qaId: body.qaId, uId: body.uId, q: body.q }).exec();
-        let delta = 0;
-        let isNew = false;
-        if (vote) {
-            if (body.up !== vote.up) {
-                vote.up = body.up;
-                delta = body.up ? 1 : -1;
-            }
-        } else {
-            vote = new QAVote(body);
-            delta = body.up ? 1 : -1;
-            isNew = true;
-        }
         const model = body.q ? Question : Answer;
-        let val = await model.findOne({ _id: body.qaId }).exec();
+        let qa = await model.findOne({ _id: body.qaId }).exec();
 
-        if (delta !== 0) {
-            if (body.up) {
-                val.upVote += 1;
-                if (!isNew) val.downVote -= 1;
-            } else {
-                if (!isNew) val.upVote -= 1;
-                val.downVote += 1;
-            }
-            val = await val.save();
+        if (!vote) {
+            vote = new QAVote({ qaId: body.qaId, uId: body.uId, q: body.q });
         }
-        await vote.save();
-        return val.upVote - val.downVote;
+
+        if (body.up && vote.cnt !== 1) {
+            vote.cnt += 1;
+            if (vote.cnt === 0) {
+                qa.downVote -= 1;
+            } else {
+                qa.upVote += 1;
+            }
+        } else if (!body.up && vote.cnt !== -1) {
+            vote.cnt -= 1;
+            if (vote.cnt === 0) {
+                qa.upVote -= 1;
+            } else {
+                qa.downVote += 1;
+            }
+        }
+
+        qa = await qa.save();
+        vote = await vote.save();
+
+        return qa.upVote - qa.downVote;
     } catch (e) {
         console.log(e.message);
     }

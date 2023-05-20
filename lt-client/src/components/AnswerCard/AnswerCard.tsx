@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 
 import parse from 'html-react-parser';
 import Typography from '@mui/material/Typography';
@@ -9,7 +9,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import ShareIcon from '@mui/icons-material/Share';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Answer } from '../../types';
+import axios from 'axios';
 import Util from '../../utils';
+import AuthContext from '../../store/auth';
 
 import './_index.scss';
 
@@ -21,6 +23,9 @@ const AnswerCard = (props: AnswerCardProps) => {
   const [fileData, setFileData] = useState(null);
   const [showImageModal, setShowImageModal] = useState<boolean>(false);
   const [showShareAlert, setShowShareAlert] = useState(false);
+  const [netCnt, setNetCnt] = useState(props.answer.upVote - props.answer.downVote);
+
+  const authCtx = useContext(AuthContext);
 
   const handleInageModalOpen = () => {
     setShowImageModal(true);
@@ -53,6 +58,40 @@ const AnswerCard = (props: AnswerCardProps) => {
     setShowShareAlert(true);
   };
 
+  const handleUpVote = async () => {
+    const url = `${Util.CONSTANTS.SERVER_URL}/votes/update`;
+    const payload = {
+      qaId: props.answer._id,
+      up: true,
+      q: false,
+    };
+
+    const { data } = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${authCtx.getToken()}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    setNetCnt(data.newCnt);
+  };
+
+  const handleDownVote = async () => {
+    const url = `${Util.CONSTANTS.SERVER_URL}/votes/update`;
+    const payload = {
+      qaId: props.answer._id,
+      up: false,
+      q: false,
+    };
+
+    const { data } = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${authCtx.getToken()}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    setNetCnt(data.newCnt);
+  };
+
   return (
     <div className="cl-AnswerCard">
       <Snackbar open={showShareAlert} autoHideDuration={1000} onClose={() => setShowShareAlert(false)}>
@@ -64,15 +103,15 @@ const AnswerCard = (props: AnswerCardProps) => {
         <div className="left-pane">
           <div className="UD-container">
             <Tooltip title="Up vote">
-              <IconButton>
+              <IconButton onClick={handleUpVote}>
                 <ChangeHistoryIcon />
               </IconButton>
             </Tooltip>
             <div className="net-cnt">
-              <Typography>{props.answer.upVote - props.answer.downVote}</Typography>
+              <Typography>{netCnt}</Typography>
             </div>
             <Tooltip title="Down vote">
-              <IconButton>
+              <IconButton onClick={handleDownVote}>
                 <ChangeHistoryIcon className="down-icon" />
               </IconButton>
             </Tooltip>
