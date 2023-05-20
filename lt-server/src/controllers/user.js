@@ -26,7 +26,7 @@ const logInUser = async (req, res) => {
             const token = Util.createToken({ _id: user._id });
             res.status(200).json({ token });
         } else {
-            res.status(200).json({ msg: 'login failed' });
+            res.status(401).json({ msg: 'login failed' });
         }
     } catch (e) {
         res.status(400).json({ message: e.message });

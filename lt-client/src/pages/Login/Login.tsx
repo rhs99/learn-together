@@ -28,14 +28,15 @@ function LoginPage() {
       userName: username,
       password: password,
     };
-    const { data } = await axios.post(URL, userInfo);
-    console.log(data);
-    if (data.token) {
-      authCtx.login(data.token);
-      navigate('/');
-    } else {
-      setErr(true);
-    }
+    axios
+      .post(URL, userInfo)
+      .then(({ data }) => {
+        authCtx.login(data.token);
+        navigate('/');
+      })
+      .catch(() => {
+        setErr(true);
+      });
   };
 
   return (
