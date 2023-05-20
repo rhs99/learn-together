@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import parse from 'html-react-parser';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { Divider, Chip, Modal, Box } from '@mui/material';
+import { Divider, Chip, Modal, Box, IconButton, Tooltip } from '@mui/material';
+import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import { Question } from '../../types';
 import Util from '../../utils';
 
@@ -50,28 +51,51 @@ const QuestionCard = (props: QuestionCardProps) => {
     navigate(`/questions/${props.question._id}`);
   };
 
-  const qdClassName = props.qdClickable ? 'qDetailsClickable' : '';
+  const qdClassName = props.qdClickable ? 'detailsClickable' : '';
   const qdOnClick = props.qdClickable ? handleQuestionClick : undefined;
 
   return (
     <div className="cl-QuestionCard">
-      <div className="qContent">
-        <div className={qdClassName} onClick={qdOnClick}>
-          <Typography variant="body1">{parse(props.question.details)}</Typography>
+      <Stack direction="row" spacing={2} divider={<Divider orientation="vertical" flexItem className="divider" />}>
+        <div className="left-pane">
+          <div className="UD-container">
+            <Tooltip title="Up vote">
+              <IconButton>
+                <ChangeHistoryIcon />
+              </IconButton>
+            </Tooltip>
+            <div className="net-cnt">
+              <Typography>0</Typography>
+            </div>
+            <Tooltip title="Down vote">
+              <IconButton>
+                <ChangeHistoryIcon className="down-icon" />
+              </IconButton>
+            </Tooltip>
+          </div>
         </div>
-        {fileData && <Divider />}
-        <div className="qImageContainer" onClick={handleInageModalOpen}>
-          {fileData && <img src={fileData} className="qImage" />}
+        <div className="right-pane">
+          <div className={qdClassName} onClick={qdOnClick}>
+            <Typography variant="body1">{parse(props.question.details)}</Typography>
+          </div>
+          {fileData && <Divider />}
+          <div className="imageContainer" onClick={handleInageModalOpen}>
+            {fileData && <img src={fileData} className="image" />}
+          </div>
+          {props.question.tags.length > 0 && <Divider />}
+          <div className="tags">
+            <Stack
+              direction="row"
+              spacing={2}
+              divider={<Divider orientation="vertical" flexItem className="divider" />}
+            >
+              {props.question.tags.map((tag) => (
+                <Chip key={tag._id} variant="outlined" size="small" label={tag.name} className="tag" />
+              ))}
+            </Stack>
+          </div>
         </div>
-        {props.question.tags.length > 0 && <Divider />}
-        <div className="qTags">
-          <Stack direction="row" spacing={2} divider={<Divider orientation="vertical" flexItem className="divider" />}>
-            {props.question.tags.map((tag) => (
-              <Chip key={tag._id} variant="outlined" size="small" label={tag.name} className="tag" />
-            ))}
-          </Stack>
-        </div>
-      </div>
+      </Stack>
       {fileData && showImageModal && (
         <Modal open={showImageModal} onClose={handleInageModalClose}>
           <Box
