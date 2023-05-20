@@ -52,7 +52,7 @@ const reducer = (state: QInputState, action: any): QInputState => {
   if (action.type === 'tag') {
     ns.selectedTags = action.payload;
   }
-  
+
   ns = getDisbleStatus(ns);
 
   return ns;
