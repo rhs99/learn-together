@@ -10,6 +10,7 @@ import SubjectDetail from './pages/SubjectDetail/SubjectDetail';
 import ChapterDetail from './pages/ChapterDetail/ChapterDetail';
 import AskQuestion from './pages/AskQuestion';
 import QuestionDetail from './pages/QuestionDetail/QuestionDetail';
+import AnswerPage from './pages/AnswerPage';
 import { AuthContextProvider } from './store/auth';
 
 const router = createBrowserRouter([
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
           {
             path: '/questions/:questionId',
             element: <QuestionDetail />,
+          },
+          {
+            path: '/answers/:answerId',
+            element: <AnswerPage />,
           },
         ],
       },

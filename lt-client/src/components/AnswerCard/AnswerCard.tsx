@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import parse from 'html-react-parser';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { Divider, Modal, Box, IconButton, Tooltip } from '@mui/material';
+import { Divider, Modal, Box, IconButton, Tooltip, Snackbar, Alert } from '@mui/material';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import EditIcon from '@mui/icons-material/Edit';
 import ShareIcon from '@mui/icons-material/Share';
@@ -19,6 +19,7 @@ type AnswerCardProps = {
 const AnswerCard = (props: AnswerCardProps) => {
   const [fileData, setFileData] = useState(null);
   const [showImageModal, setShowImageModal] = useState<boolean>(false);
+  const [showShareAlert, setShowShareAlert] = useState(false);
 
   const handleInageModalOpen = () => {
     setShowImageModal(true);
@@ -45,9 +46,20 @@ const AnswerCard = (props: AnswerCardProps) => {
     });
   }, [props.answer.imageLocations]);
 
+  const handleShareClick = () => {
+    const url = `${Util.CONSTANTS.CLIENT_URL}/answers/${props.answer._id}`;
+    navigator.clipboard.writeText(url);
+    setShowShareAlert(true);
+  };
+
   return (
     <div className="cl-AnswerCard">
-      <Stack direction="row" spacing={2} divider={<Divider orientation="vertical" flexItem className="side-divider" />}>
+      <Snackbar open={showShareAlert} autoHideDuration={1000} onClose={() => setShowShareAlert(false)}>
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Copied to clipboard!
+        </Alert>
+      </Snackbar>
+      <Stack direction="row" spacing={2} divider={<Divider orientation="vertical" flexItem />}>
         <div className="left-pane">
           <div className="UD-container">
             <Tooltip title="Up vote">
@@ -80,7 +92,7 @@ const AnswerCard = (props: AnswerCardProps) => {
           Answered by <span className="user-name">{props.answer.user.userName}</span>
         </Typography>
         <Tooltip title="share">
-          <IconButton className="share">
+          <IconButton className="share" onClick={handleShareClick}>
             <ShareIcon fontSize="small"></ShareIcon>
           </IconButton>
         </Tooltip>

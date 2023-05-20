@@ -8,6 +8,14 @@ const addNewAnswer = async (body) => {
         console.log(e.message);
     }
 };
+const getAnswer = async (answerId) => {
+    try {
+        const answer = await Answer.findOne({ _id: answerId, isDeleted: false }).populate('user').exec();
+        return answer;
+    } catch (e) {
+        console.log(e.message);
+    }
+};
 
 const getAllAnswers = async (questionId) => {
     try {
@@ -33,4 +41,4 @@ const softDeleteAnswer = async (_id) => {
     }
 };
 
-module.exports = { addNewAnswer, getAllAnswers, softDeleteAnswer };
+module.exports = { addNewAnswer, getAllAnswers, softDeleteAnswer, getAnswer };

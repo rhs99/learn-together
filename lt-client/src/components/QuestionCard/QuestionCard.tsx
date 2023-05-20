@@ -70,7 +70,7 @@ const QuestionCard = (props: QuestionCardProps) => {
           Copied to clipboard!
         </Alert>
       </Snackbar>
-      <Stack direction="row" spacing={2} divider={<Divider orientation="vertical" flexItem className="side-divider" />}>
+      <Stack direction="row" spacing={2} divider={<Divider orientation="vertical" flexItem />}>
         <div className="left-pane">
           <div className="UD-container">
             <Tooltip title="Up vote">

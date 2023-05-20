@@ -1,5 +1,14 @@
 const AnswerService = require('../services/answer');
 
+const getAnswer = async (req, res) => {
+    try {
+        const answer = await AnswerService.getAnswer(req.query.answerId);
+        res.status(200).json(answer);
+    } catch (e) {
+        res.status(400).json({ message: e.message });
+    }
+};
+
 const getAllAnswers = async (req, res) => {
     try {
         const answers = await AnswerService.getAllAnswers(req.query.questionId);
@@ -28,4 +37,4 @@ const softDeleteAnswer = async (req, res) => {
     }
 };
 
-module.exports = { getAllAnswers, addNewAnswer, softDeleteAnswer };
+module.exports = { getAllAnswers, addNewAnswer, softDeleteAnswer, getAnswer };
