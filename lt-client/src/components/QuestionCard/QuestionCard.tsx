@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 
 import parse from 'html-react-parser';
 import Typography from '@mui/material/Typography';
@@ -11,6 +11,8 @@ import ShareIcon from '@mui/icons-material/Share';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Question } from '../../types';
 import Util from '../../utils';
+import axios from 'axios';
+import AuthContext from '../../store/auth';
 
 import './_index.scss';
 
@@ -23,7 +25,9 @@ const QuestionCard = (props: QuestionCardProps) => {
   const [fileData, setFileData] = useState(null);
   const [showImageModal, setShowImageModal] = useState<boolean>(false);
   const [showShareAlert, setShowShareAlert] = useState(false);
+  const [netCnt, setNetCnt] = useState(props.question.upVote - props.question.downVote);
 
+  const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleInageModalOpen = () => {
@@ -61,6 +65,40 @@ const QuestionCard = (props: QuestionCardProps) => {
     setShowShareAlert(true);
   };
 
+  const handleUpVote = async () => {
+    const url = `${Util.CONSTANTS.SERVER_URL}/votes/update`;
+    const payload = {
+      qaId: props.question._id,
+      up: true,
+      q: true,
+    };
+
+    const { data } = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${authCtx.getToken()}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    setNetCnt(data.newCnt);
+  };
+
+  const handleDownVote = async () => {
+    const url = `${Util.CONSTANTS.SERVER_URL}/votes/update`;
+    const payload = {
+      qaId: props.question._id,
+      up: false,
+      q: true,
+    };
+
+    const { data } = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${authCtx.getToken()}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    setNetCnt(data.newCnt);
+  };
+
   const qdClassName = props.qdClickable ? 'detailsClickable' : '';
   const qdOnClick = props.qdClickable ? handleQuestionClick : undefined;
 
@@ -75,15 +113,15 @@ const QuestionCard = (props: QuestionCardProps) => {
         <div className="left-pane">
           <div className="UD-container">
             <Tooltip title="Up vote">
-              <IconButton>
+              <IconButton onClick={handleUpVote}>
                 <ChangeHistoryIcon />
               </IconButton>
             </Tooltip>
             <div className="net-cnt">
-              <Typography>{props.question.upVote - props.question.downVote}</Typography>
+              <Typography>{netCnt}</Typography>
             </div>
             <Tooltip title="Down vote">
-              <IconButton>
+              <IconButton onClick={handleDownVote}>
                 <ChangeHistoryIcon className="down-icon" />
               </IconButton>
             </Tooltip>

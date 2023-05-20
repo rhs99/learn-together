@@ -11,6 +11,7 @@ const userRouter = require('./routes/user');
 const questionRouter = require('./routes/question');
 const answerRouter = require('./routes/answer');
 const tagRouter = require('./routes/tag');
+const qaRouter = require('./routes/qavote');
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use('/users', userRouter);
 app.use('/questions', questionRouter);
 app.use('/answers', answerRouter);
 app.use('/tags', tagRouter);
+app.use('/votes', qaRouter);
 
 const PORT = 5000;
 
