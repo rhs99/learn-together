@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useRef, useContext, useEffect } from 'react';
+import { useState, useRef, useContext, useEffect, useReducer } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Util from '../../utils';
@@ -19,12 +19,48 @@ type QuestionInputProps = {
   chapterId: string;
 };
 
+type QInputState = {
+  description: string;
+  imageLocations: string[];
+  disabled: boolean;
+  selectedTags: Tag[];
+};
+
+const init: QInputState = {
+  description: '',
+  imageLocations: [],
+  disabled: true,
+  selectedTags: [],
+};
+
+const reducer = (state: QInputState, action: any): QInputState => {
+  const getDisbleStatus = (state: QInputState): QInputState => {
+    if (state.selectedTags.length > 0 && (state.description.trim().length !== 0 || state.imageLocations.length !== 0)) {
+      return { ...state, disabled: false };
+    }
+    return { ...state, disabled: true };
+  };
+
+  let ns = { ...state };
+
+  if (action.type === 'description') {
+    ns.description = action.payload;
+  }
+  if (action.type === 'file') {
+    ns.imageLocations = [action.payload];
+  }
+  if (action.type === 'tag') {
+    ns.selectedTags = action.payload;
+  }
+  
+  ns = getDisbleStatus(ns);
+
+  return ns;
+};
+
 const QuestionInput = (props: QuestionInputProps) => {
-  const [description, setDescription] = useState('');
-  const [imageLocations, setImageLocations] = useState<string[]>([]);
-  const [disabled, setDisabled] = useState(true);
+  const [qInputState, dispatch] = useReducer(reducer, init);
   const [existingTags, setExistingTags] = useState<Tag[]>([]);
-  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 
   const editorRef = useRef<ReactQuill>(null);
   const authCtx = useContext(AuthContext);
@@ -36,13 +72,7 @@ const QuestionInput = (props: QuestionInputProps) => {
   }, [props.chapterId]);
 
   const handleDescriptionChange = (value: string) => {
-    setDescription(value);
-
-    if (editorRef.current?.getEditor().getText().trim().length !== 0 || imageLocations.length !== 0) {
-      setDisabled(false);
-    } else {
-      setDisabled(true);
-    }
+    dispatch({ type: 'description', payload: value });
   };
 
   const handleFileUpload = async (event: any) => {
@@ -69,8 +99,7 @@ const QuestionInput = (props: QuestionInputProps) => {
           if (err) {
             return console.log(err);
           }
-          setImageLocations((prevState) => [uniqueFileName, ...prevState]);
-          setDisabled(false);
+          dispatch({ type: 'file', payload: uniqueFileName });
         }
       );
     };
@@ -80,15 +109,15 @@ const QuestionInput = (props: QuestionInputProps) => {
   const handleSave = async () => {
     const tagURL = `${Util.CONSTANTS.SERVER_URL}/tags/create`;
     const question = {
-      details: description,
+      details: qInputState.description,
       chapter: props.chapterId,
       tags: [],
-      imageLocations: imageLocations,
+      imageLocations: qInputState.imageLocations,
     };
 
     const newTags: Tag[] = [];
 
-    selectedTags.forEach((tag) => {
+    qInputState.selectedTags.forEach((tag) => {
       if (tag._id.length === 0) {
         newTags.push(tag);
       } else {
@@ -135,7 +164,7 @@ const QuestionInput = (props: QuestionInputProps) => {
         ref={editorRef}
         className="editor"
         theme="snow"
-        value={description}
+        value={qInputState.description}
         onChange={handleDescriptionChange}
       />
       <div className="tag-heading">
@@ -146,7 +175,7 @@ const QuestionInput = (props: QuestionInputProps) => {
           multiple
           id="tags-standard"
           onChange={(event: any, selection: Tag[]) => {
-            setSelectedTags(selection);
+            dispatch({ type: 'tag', payload: selection });
           }}
           options={existingTags}
           filterOptions={(options, params) => {
@@ -177,7 +206,13 @@ const QuestionInput = (props: QuestionInputProps) => {
         <Button variant="outlined" onClick={handleClose} color="error" className="close-btn">
           Close
         </Button>
-        <Button variant="contained" onClick={handleSave} disabled={disabled} color="success" className="save-btn">
+        <Button
+          variant="contained"
+          onClick={handleSave}
+          disabled={qInputState.disabled}
+          color="success"
+          className="save-btn"
+        >
           Save
         </Button>
       </div>

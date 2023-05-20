@@ -41,9 +41,13 @@ const QuestionDetail = () => {
   const handleDescriptionChange = (value: string) => {
     setDescription(value);
     if (editorRef.current?.getEditor().getText().trim().length !== 0 || imageLocations.length !== 0) {
-      setDisabled(false);
+      if (disabled) {
+        setDisabled(false);
+      }
     } else {
-      setDisabled(true);
+      if (!disabled) {
+        setDisabled(true);
+      }
     }
   };
 
@@ -80,13 +84,6 @@ const QuestionDetail = () => {
   };
 
   const handlePostAnswer = async () => {
-    if (editorRef.current?.getEditor().getText().trim().length !== 0 || imageLocations.length !== 0) {
-      setDisabled(false);
-    } else {
-      setDisabled(true);
-      return;
-    }
-
     const answer: Partial<Answer> = {
       details: description,
       question: questionId,
