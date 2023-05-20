@@ -24,6 +24,7 @@ type QInputState = {
   imageLocations: string[];
   disabled: boolean;
   selectedTags: Tag[];
+  text: string;
 };
 
 const init: QInputState = {
@@ -31,11 +32,12 @@ const init: QInputState = {
   imageLocations: [],
   disabled: true,
   selectedTags: [],
+  text: '',
 };
 
 const reducer = (state: QInputState, action: any): QInputState => {
   const getDisbleStatus = (state: QInputState): QInputState => {
-    if (state.selectedTags.length > 0 && (state.description.trim().length !== 0 || state.imageLocations.length !== 0)) {
+    if (state.selectedTags.length > 0 && state.text.trim().length !== 0) {
       return { ...state, disabled: false };
     }
     return { ...state, disabled: true };
@@ -44,7 +46,8 @@ const reducer = (state: QInputState, action: any): QInputState => {
   let ns = { ...state };
 
   if (action.type === 'description') {
-    ns.description = action.payload;
+    ns.description = action.payload.value;
+    ns.text = action.payload.text;
   }
   if (action.type === 'file') {
     ns.imageLocations = [action.payload];
@@ -52,9 +55,7 @@ const reducer = (state: QInputState, action: any): QInputState => {
   if (action.type === 'tag') {
     ns.selectedTags = action.payload;
   }
-
   ns = getDisbleStatus(ns);
-
   return ns;
 };
 
@@ -72,7 +73,8 @@ const QuestionInput = (props: QuestionInputProps) => {
   }, [props.chapterId]);
 
   const handleDescriptionChange = (value: string) => {
-    dispatch({ type: 'description', payload: value });
+    const text = editorRef.current?.getEditor().getText();
+    dispatch({ type: 'description', payload: { value, text } });
   };
 
   const handleFileUpload = async (event: any) => {
