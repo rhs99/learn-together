@@ -1,11 +1,13 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
-import { Stack } from '@mui/material';
+import { useContext, useState } from 'react';
+import { IconButton, Menu, MenuItem, Stack, Typography } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import LogoutIcon from '@mui/icons-material/Logout';
 import Button from '@mui/material/Button';
 import AuthContext from '../../store/auth';
 
@@ -14,6 +16,15 @@ import './_index.scss';
 const MainNavigation = () => {
   const authCtx = useContext(AuthContext);
   const { isLoggedIn } = authCtx;
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
 
   const navigate = useNavigate();
 
@@ -61,11 +72,41 @@ const MainNavigation = () => {
               </NavLink>
             )}
             {isLoggedIn && (
-              <Button color="inherit" onClick={logoutHandler}>
-                Logout
-              </Button>
+              <>
+                <IconButton onClick={handleOpenUserMenu}>
+                  <AccountCircleRoundedIcon fontSize="medium" />
+                </IconButton>
+                <Menu
+                  sx={{ mt: '35px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Stack direction="row" alignItems="center" gap={1}>
+                      <PersonOutlineIcon />
+                      <Typography variant="body1">Profile</Typography>
+                    </Stack>
+                  </MenuItem>
+                  <MenuItem onClick={logoutHandler}>
+                    <Stack direction="row" alignItems="center" gap={1}>
+                      <LogoutIcon />
+                      <Typography variant="body1">Logout</Typography>
+                    </Stack>
+                  </MenuItem>
+                </Menu>
+              </>
             )}
-            <AccountCircleRoundedIcon fontSize="medium" />
           </Stack>
         </Toolbar>
       </AppBar>
