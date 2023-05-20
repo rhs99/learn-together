@@ -1,12 +1,21 @@
 .cl-QuestionCard {
     margin-bottom: 20px;
+    background-color: rgb(231, 235, 240);
+    border-radius: 10px;
+    padding: 10px;
+
+    .divider {
+        background-color: rgb(233, 184, 184);
+    }
 
     .left-pane {
+        margin-left: 15px;
+
         .UD-container {
             display: flex;
             flex-direction: column;
 
-            .net-cnt{
+            .net-cnt {
                 margin-left: 15px;
             }
 
@@ -23,9 +32,9 @@
         }
 
         .imageContainer {
-            margin-top: 10px;
+            margin: 20px 0;
 
-            .qImage {
+            .image {
                 width: auto;
                 max-height: 100px;
             }
@@ -36,17 +45,38 @@
         }
 
         .tags {
-            margin-top: 10px;
+            margin-top: 20px;
 
             .divider {
                 background-color: rgb(174, 129, 129);
             }
 
             .tag {
-                background-color: rgb(126, 219, 188);
+                background-color: rgb(186, 240, 222);
+            }
+        }
+    }
+
+    .bottom-pane {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+
+        .author {
+            margin-top: 10px;
+            .user-name{
+                color: rgb(25, 165, 178);
             }
         }
 
+        .share {
+            margin-left: 20px;
+        }
+
+        .edit {
+            margin-left: 20px;
+        }
     }
 
 }

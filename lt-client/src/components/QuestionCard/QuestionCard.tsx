@@ -6,6 +6,8 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { Divider, Chip, Modal, Box, IconButton, Tooltip } from '@mui/material';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
+import EditIcon from '@mui/icons-material/Edit';
+import ShareIcon from '@mui/icons-material/Share';
 import { Question } from '../../types';
 import Util from '../../utils';
 
@@ -56,7 +58,7 @@ const QuestionCard = (props: QuestionCardProps) => {
 
   return (
     <div className="cl-QuestionCard">
-      <Stack direction="row" spacing={2} divider={<Divider orientation="vertical" flexItem className="divider" />}>
+      <Stack direction="row" spacing={2} divider={<Divider orientation="vertical" flexItem className="side-divider" />}>
         <div className="left-pane">
           <div className="UD-container">
             <Tooltip title="Up vote">
@@ -65,7 +67,7 @@ const QuestionCard = (props: QuestionCardProps) => {
               </IconButton>
             </Tooltip>
             <div className="net-cnt">
-              <Typography>0</Typography>
+              <Typography>{props.question.upVote - props.question.downVote}</Typography>
             </div>
             <Tooltip title="Down vote">
               <IconButton>
@@ -96,6 +98,21 @@ const QuestionCard = (props: QuestionCardProps) => {
           </div>
         </div>
       </Stack>
+      <div className="bottom-pane">
+        <Typography variant="body2" className="author">
+          Asked by <span className="user-name">{props.question.user.userName}</span>
+        </Typography>
+        <Tooltip title="share">
+          <IconButton className="share">
+            <ShareIcon fontSize="small"></ShareIcon>
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="edit">
+          <IconButton className="edit">
+            <EditIcon fontSize="small"></EditIcon>
+          </IconButton>
+        </Tooltip>
+      </div>
       {fileData && showImageModal && (
         <Modal open={showImageModal} onClose={handleInageModalClose}>
           <Box

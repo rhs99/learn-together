@@ -5,7 +5,7 @@ import { Question, Answer } from '../../types';
 import QuestionCard from '../../components/QuestionCard/QuestionCard';
 import ReactQuill from 'react-quill';
 import AnswerCard from '../../components/AnswerCard/AnswerCard';
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { PassThrough } from 'stream';
 import AuthContext from '../../store/auth';
 import Util from '../../utils';
@@ -140,6 +140,9 @@ const QuestionDetail = () => {
           </div>
         </div>
       )}
+      <Typography variant="h5" className="ans-title">
+        All Answers
+      </Typography>
       {answers.map((answer) => (
         <AnswerCard key={answer._id} answer={answer} />
       ))}

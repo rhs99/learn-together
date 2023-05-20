@@ -1,3 +1,5 @@
+import { type } from 'os';
+
 export type Class = {
   name: string;
   _id: string;
@@ -13,6 +15,11 @@ export type Chapter = {
   _id: string;
 };
 
+export type User = {
+  _id: string;
+  userName: string;
+};
+
 export type Tag = {
   name: string;
   _id: string;
@@ -24,7 +31,9 @@ export type Answer = {
   details: string;
   imageLocations: string[];
   question: string;
-  user: string;
+  user: User;
+  upVote: number;
+  downVote: number;
 };
 
 export type Question = {
@@ -33,5 +42,7 @@ export type Question = {
   tags: Tag[];
   chapter: string;
   imageLocations: string[];
-  user: string;
+  user: User;
+  upVote: number;
+  downVote: number;
 };

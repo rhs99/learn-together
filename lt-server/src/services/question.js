@@ -11,7 +11,7 @@ const addNewQuestion = async (body) => {
 
 const getAllQuestions = async (chapterId) => {
     try {
-        const questions = Question.find({ chapter: chapterId, isDeleted: false }).populate('tags').exec();
+        const questions = await Question.find({ chapter: chapterId, isDeleted: false }).populate('tags').populate('user').exec();
         return questions;
     } catch (e) {
         console.log(e.message);
@@ -20,7 +20,7 @@ const getAllQuestions = async (chapterId) => {
 
 const getQuestion = async (questionId) => {
     try {
-        const question = Question.findOne({ _id: questionId, isDeleted: false }).populate('tags').exec();
+        const question = await Question.findOne({ _id: questionId, isDeleted: false }).populate('tags').populate('user').exec();
         return question;
     } catch (e) {
         console.log(e.message);

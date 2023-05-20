@@ -1,29 +1,77 @@
 .cl-AnswerCard {
-    width: 100%;
     margin-bottom: 20px;
-    border: 2px solid;
-    border-radius: 5px;
-    background-color: rgb(133, 151, 150);
+    background-color: rgb(231, 235, 240);
+    border-radius: 10px;
+    padding: 10px;
 
-    .aContent {
-        padding: 10px;
+    .divider {
+        background-color: rgb(233, 184, 184);
+    }
 
-        .aDetails {
-            margin: 0;
-            padding: 5px;
-            max-height: 150px;
+    .left-pane {
+        margin-left: 15px;
+
+        .UD-container {
+            display: flex;
+            flex-direction: column;
+
+            .net-cnt {
+                margin-left: 15px;
+            }
+
+            .down-icon {
+                transform: rotateX(180deg);
+            }
         }
+    }
 
-        .aImageContainer {
-            margin-top: 10px;
+    .right-pane {
+        .imageContainer {
+            margin: 20px 0;
 
-            .aImage {
+            .image {
                 width: auto;
                 max-height: 100px;
             }
         }
-        .aImageContainer:hover{
+
+        .imageContainer:hover {
             cursor: pointer;
         }
+
+        .tags {
+            margin-top: 20px;
+
+            .divider {
+                background-color: rgb(174, 129, 129);
+            }
+
+            .tag {
+                background-color: rgb(186, 240, 222);
+            }
+        }
     }
+
+    .bottom-pane {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+
+        .author {
+            margin-top: 10px;
+            .user-name{
+                color: rgb(25, 165, 178);
+            }
+        }
+
+        .share {
+            margin-left: 20px;
+        }
+
+        .edit {
+            margin-left: 20px;
+        }
+    }
+
 }

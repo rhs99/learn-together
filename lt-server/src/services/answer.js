@@ -11,7 +11,7 @@ const addNewAnswer = async (body) => {
 
 const getAllAnswers = async (questionId) => {
     try {
-        const answers = Answer.find({ question: questionId, isDeleted: false }).exec();
+        const answers = await Answer.find({ question: questionId, isDeleted: false }).populate('user').exec();
         return answers;
     } catch (e) {
         console.log(e.message);
