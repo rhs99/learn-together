@@ -2,8 +2,17 @@ const Question = require('../models/question');
 
 const addNewQuestion = async (body) => {
     try {
-        const newQuestion = new Question(body);
-        await newQuestion.save();
+        let question;
+        if (body._id !== ''){
+            question = await Question.findOne({_id: body._id}).exec();
+            question.details = body.details;
+            question.imageLocations = body.imageLocations;
+            question.tags = body.tags;
+        }else{
+            delete body._id;
+            question = newQuestion(body);
+        }
+        await question.save();
     } catch (e) {
         console.log(e.message);
     }

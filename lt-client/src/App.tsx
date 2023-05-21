@@ -11,6 +11,7 @@ import ChapterDetail from './pages/ChapterDetail/ChapterDetail';
 import AskQuestion from './pages/AskQuestion';
 import QuestionDetail from './pages/QuestionDetail/QuestionDetail';
 import AnswerPage from './pages/AnswerPage/AnswerPage';
+import QuestionEdit from './pages/QuestionEdit';
 import { AuthContextProvider } from './store/auth';
 
 const router = createBrowserRouter([
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
           {
             path: '/questions/:questionId',
             element: <QuestionDetail />,
+          },
+          {
+            path: '/questions/:questionId/edit',
+            element: <QuestionEdit />,
           },
           {
             path: '/answers/:answerId',

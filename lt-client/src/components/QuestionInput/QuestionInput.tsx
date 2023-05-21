@@ -17,6 +17,7 @@ const filter = createFilterOptions<Tag>();
 
 type QuestionInputProps = {
   chapterId: string;
+  question?: Question;
 };
 
 type QInputState = {
@@ -25,14 +26,6 @@ type QInputState = {
   disabled: boolean;
   selectedTags: Tag[];
   text: string;
-};
-
-const init: QInputState = {
-  description: '',
-  imageLocations: [],
-  disabled: true,
-  selectedTags: [],
-  text: '',
 };
 
 const reducer = (state: QInputState, action: any): QInputState => {
@@ -60,6 +53,13 @@ const reducer = (state: QInputState, action: any): QInputState => {
 };
 
 const QuestionInput = (props: QuestionInputProps) => {
+  const init: QInputState = {
+    description: props.question?.details || '',
+    imageLocations: props.question?.imageLocations || [],
+    disabled: props.question ? false : true,
+    selectedTags: props.question?.tags || [],
+    text: props.question?.details || '',
+  };
   const [qInputState, dispatch] = useReducer(reducer, init);
   const [existingTags, setExistingTags] = useState<Tag[]>([]);
 
@@ -111,6 +111,7 @@ const QuestionInput = (props: QuestionInputProps) => {
   const handleSave = async () => {
     const tagURL = `${Util.CONSTANTS.SERVER_URL}/tags/create`;
     const question = {
+      _id: props.question?._id || '',
       details: qInputState.description,
       chapter: props.chapterId,
       tags: [],
@@ -197,7 +198,7 @@ const QuestionInput = (props: QuestionInputProps) => {
             return filtered;
           }}
           getOptionLabel={(option) => option.name}
-          defaultValue={[]}
+          defaultValue={qInputState.selectedTags}
           renderInput={(params) => <TextField {...params} variant="standard" label="All Tags" placeholder="Add Tags" />}
         />
       </div>

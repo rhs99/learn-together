@@ -99,6 +99,10 @@ const QuestionCard = (props: QuestionCardProps) => {
     setNetCnt(data.newCnt);
   };
 
+  const handleEdit = () => {
+    navigate(`/questions/${props.question._id}/edit`);
+  };
+
   const qdClassName = props.qdClickable ? 'detailsClickable' : '';
   const qdOnClick = props.qdClickable ? handleQuestionClick : undefined;
 
@@ -159,7 +163,7 @@ const QuestionCard = (props: QuestionCardProps) => {
           </IconButton>
         </Tooltip>
         <Tooltip title="edit">
-          <IconButton className="edit">
+          <IconButton className="edit" onClick={handleEdit}>
             <EditIcon fontSize="small"></EditIcon>
           </IconButton>
         </Tooltip>
