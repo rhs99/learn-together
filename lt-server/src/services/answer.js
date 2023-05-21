@@ -2,10 +2,24 @@ const Answer = require('../models/answer');
 
 const addNewAnswer = async (body) => {
     try {
-        const newAnswer = new Answer(body);
-        await newAnswer.save();
+        let answer;
+        if (body._id !== '') {
+            answer = await Answer.findOne({ _id: body._id }).exec();
+            if (JSON.stringify(answer.user) !== JSON.stringify(body.user)) {
+                throw new Error('unauthorized');
+            }
+            answer.details = body.details;
+            answer.imageLocations = body.imageLocations;
+        } else {
+            delete body._id;
+            answer = new Answer(body);
+        }
+        await answer.save();
     } catch (e) {
         console.log(e.message);
+        if (e.message === 'unauthorized') {
+            throw new Error();
+        }
     }
 };
 const getAnswer = async (answerId) => {

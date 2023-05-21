@@ -12,6 +12,7 @@ import AskQuestion from './pages/AskQuestion';
 import QuestionDetail from './pages/QuestionDetail/QuestionDetail';
 import AnswerPage from './pages/AnswerPage/AnswerPage';
 import QuestionEdit from './pages/QuestionEdit';
+import AnswerEdit from './pages/AnswerEdit';
 import { AuthContextProvider } from './store/auth';
 
 const router = createBrowserRouter([
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
           {
             path: '/answers/:answerId',
             element: <AnswerPage />,
+          },
+          {
+            path: '/answers/:answerId/edit',
+            element: <AnswerEdit />,
           },
         ],
       },

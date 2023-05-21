@@ -5,7 +5,7 @@ const addNewQuestion = async (body) => {
         let question;
         if (body._id !== '') {
             question = await Question.findOne({ _id: body._id }).exec();
-            if (question.user !== body.user) {
+            if (JSON.stringify(question.user) !== JSON.stringify(body.user)) {
                 throw new Error('unauthorized');
             }
             question.details = body.details;
@@ -13,7 +13,7 @@ const addNewQuestion = async (body) => {
             question.tags = body.tags;
         } else {
             delete body._id;
-            question = newQuestion(body);
+            question = new Question(body);
         }
         await question.save();
     } catch (e) {

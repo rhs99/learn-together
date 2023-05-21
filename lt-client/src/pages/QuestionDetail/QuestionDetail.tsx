@@ -85,6 +85,7 @@ const QuestionDetail = () => {
 
   const handlePostAnswer = async () => {
     const answer: Partial<Answer> = {
+      _id: '',
       details: description,
       question: questionId,
       imageLocations: imageLocations,

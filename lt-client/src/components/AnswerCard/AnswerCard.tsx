@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
 
 import parse from 'html-react-parser';
@@ -26,6 +27,7 @@ const AnswerCard = (props: AnswerCardProps) => {
   const [netCnt, setNetCnt] = useState(props.answer.upVote - props.answer.downVote);
 
   const authCtx = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleInageModalOpen = () => {
     setShowImageModal(true);
@@ -92,6 +94,10 @@ const AnswerCard = (props: AnswerCardProps) => {
     setNetCnt(data.newCnt);
   };
 
+  const handleEdit = () => {
+    navigate(`/answers/${props.answer._id}/edit`);
+  };
+
   const isOwner = authCtx.getStoredValue().userName === props.answer.user.userName;
 
   return (
@@ -139,7 +145,7 @@ const AnswerCard = (props: AnswerCardProps) => {
           </IconButton>
         </Tooltip>
         <Tooltip title="edit">
-          <IconButton className="edit" disabled={!isOwner}>
+          <IconButton className="edit" disabled={!isOwner} onClick={handleEdit}>
             <EditIcon fontSize="small"></EditIcon>
           </IconButton>
         </Tooltip>
