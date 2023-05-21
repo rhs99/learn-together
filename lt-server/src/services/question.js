@@ -3,18 +3,24 @@ const Question = require('../models/question');
 const addNewQuestion = async (body) => {
     try {
         let question;
-        if (body._id !== ''){
-            question = await Question.findOne({_id: body._id}).exec();
+        if (body._id !== '') {
+            question = await Question.findOne({ _id: body._id }).exec();
+            if (question.user !== body.user) {
+                throw new Error('unauthorized');
+            }
             question.details = body.details;
             question.imageLocations = body.imageLocations;
             question.tags = body.tags;
-        }else{
+        } else {
             delete body._id;
             question = newQuestion(body);
         }
         await question.save();
     } catch (e) {
         console.log(e.message);
+        if (e.message === 'unauthorized') {
+            throw new Error();
+        }
     }
 };
 

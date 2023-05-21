@@ -75,7 +75,7 @@ const QuestionCard = (props: QuestionCardProps) => {
 
     const { data } = await axios.post(url, payload, {
       headers: {
-        Authorization: `Bearer ${authCtx.getToken()}`,
+        Authorization: `Bearer ${authCtx.getStoredValue().token}`,
         'Content-Type': 'application/json',
       },
     });
@@ -92,7 +92,7 @@ const QuestionCard = (props: QuestionCardProps) => {
 
     const { data } = await axios.post(url, payload, {
       headers: {
-        Authorization: `Bearer ${authCtx.getToken()}`,
+        Authorization: `Bearer ${authCtx.getStoredValue().token}`,
         'Content-Type': 'application/json',
       },
     });
@@ -102,6 +102,8 @@ const QuestionCard = (props: QuestionCardProps) => {
   const handleEdit = () => {
     navigate(`/questions/${props.question._id}/edit`);
   };
+
+  const isOwner = authCtx.getStoredValue().userName === props.question.user.userName;
 
   const qdClassName = props.qdClickable ? 'detailsClickable' : '';
   const qdOnClick = props.qdClickable ? handleQuestionClick : undefined;
@@ -163,12 +165,12 @@ const QuestionCard = (props: QuestionCardProps) => {
           </IconButton>
         </Tooltip>
         <Tooltip title="edit">
-          <IconButton className="edit" onClick={handleEdit}>
+          <IconButton className="edit" disabled={!isOwner} onClick={handleEdit}>
             <EditIcon fontSize="small"></EditIcon>
           </IconButton>
         </Tooltip>
         <Tooltip title="delete">
-          <IconButton className="delete">
+          <IconButton className="delete" disabled={!isOwner}>
             <DeleteIcon fontSize="small"></DeleteIcon>
           </IconButton>
         </Tooltip>

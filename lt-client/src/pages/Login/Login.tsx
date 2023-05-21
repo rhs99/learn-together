@@ -31,7 +31,7 @@ function LoginPage() {
     axios
       .post(URL, userInfo)
       .then(({ data }) => {
-        authCtx.login(data.token);
+        authCtx.login(data.token, username);
         navigate('/');
       })
       .catch(() => {

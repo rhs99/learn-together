@@ -68,7 +68,7 @@ const AnswerCard = (props: AnswerCardProps) => {
 
     const { data } = await axios.post(url, payload, {
       headers: {
-        Authorization: `Bearer ${authCtx.getToken()}`,
+        Authorization: `Bearer ${authCtx.getStoredValue().token}`,
         'Content-Type': 'application/json',
       },
     });
@@ -85,12 +85,14 @@ const AnswerCard = (props: AnswerCardProps) => {
 
     const { data } = await axios.post(url, payload, {
       headers: {
-        Authorization: `Bearer ${authCtx.getToken()}`,
+        Authorization: `Bearer ${authCtx.getStoredValue().token}`,
         'Content-Type': 'application/json',
       },
     });
     setNetCnt(data.newCnt);
   };
+
+  const isOwner = authCtx.getStoredValue().userName === props.answer.user.userName;
 
   return (
     <div className="cl-AnswerCard">
@@ -137,12 +139,12 @@ const AnswerCard = (props: AnswerCardProps) => {
           </IconButton>
         </Tooltip>
         <Tooltip title="edit">
-          <IconButton className="edit">
+          <IconButton className="edit" disabled={!isOwner}>
             <EditIcon fontSize="small"></EditIcon>
           </IconButton>
         </Tooltip>
         <Tooltip title="delete">
-          <IconButton className="delete">
+          <IconButton className="delete" disabled={!isOwner}>
             <DeleteIcon fontSize="small"></DeleteIcon>
           </IconButton>
         </Tooltip>

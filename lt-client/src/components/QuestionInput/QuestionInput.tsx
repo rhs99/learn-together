@@ -142,7 +142,7 @@ const QuestionInput = (props: QuestionInputProps) => {
 
     await axios.post(questionURL, question, {
       headers: {
-        Authorization: `Bearer ${authCtx.getToken()}`,
+        Authorization: `Bearer ${authCtx.getStoredValue().token}`,
         'Content-Type': 'application/json',
       },
     });

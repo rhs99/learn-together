@@ -21,7 +21,7 @@ const QuestionDetail = () => {
   const editorRef = useRef<ReactQuill>(null);
   const { questionId } = useParams();
 
-  const { isLoggedIn, getToken } = useContext(AuthContext);
+  const { isLoggedIn, getStoredValue } = useContext(AuthContext);
 
   const [inputRef, setInputRef] = useState<{ value: '' }>();
 
@@ -93,7 +93,7 @@ const QuestionDetail = () => {
 
     await axios.post(URL, answer, {
       headers: {
-        Authorization: `Bearer ${getToken()}`,
+        Authorization: `Bearer ${getStoredValue().token}`,
         'Content-Type': 'application/json',
       },
     });
