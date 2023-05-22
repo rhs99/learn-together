@@ -12,7 +12,7 @@ import AskQuestion from './pages/AskQuestion';
 import QuestionDetail from './pages/QuestionDetail/QuestionDetail';
 import AnswerPage from './pages/AnswerPage/AnswerPage';
 import QuestionEdit from './pages/QuestionEdit';
-import AnswerEdit from './pages/AnswerEdit';
+import AnswerEdit from './pages/AnswerEdit/AnswerEdit';
 import { AuthContextProvider } from './store/auth';
 
 const router = createBrowserRouter([

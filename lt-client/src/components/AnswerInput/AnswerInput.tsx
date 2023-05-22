@@ -11,14 +11,16 @@ import AuthContext from '../../store/auth';
 import './_index.scss';
 
 type AnswerInputProps = {
-  answer: Answer;
+  answer: Partial<Answer>;
+  fetchAnswer?: () => Promise<void>;
 };
 
 const AnswerInput = (props: AnswerInputProps) => {
   const [description, setDescription] = useState(props.answer.details || '');
   const [imageLocations, setImageLocations] = useState<string[]>(props.answer.imageLocations || []);
-  const [disabled, setDisabled] = useState(false);
+  const [disabled, setDisabled] = useState(true);
   const editorRef = useRef<ReactQuill>(null);
+  const [inputRef, setInputRef] = useState<{ value: '' }>();
 
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
@@ -38,7 +40,6 @@ const AnswerInput = (props: AnswerInputProps) => {
 
   const handleFileUpload = async (event: any) => {
     const file = event.target.files[0];
-    console.log(file);
     const metadata = {
       'Content-type': 'image',
     };
@@ -84,13 +85,24 @@ const AnswerInput = (props: AnswerInputProps) => {
       },
     });
 
-    navigate(-1);
+    if (props.answer._id !== '') {
+      navigate(-1);
+    } else if (props.fetchAnswer) {
+      props.fetchAnswer().then(() => {
+        setImageLocations([]);
+        setDescription('');
+        if (inputRef) {
+          inputRef.value = '';
+        }
+        setDisabled(true);
+      });
+    }
   };
 
   return (
     <div className="cl-AnswerInput">
       <div className="aHeader">
-        <h3>Edit Your Answer</h3>
+        <h3>Your Answer</h3>
       </div>
       <ReactQuill
         ref={editorRef}
@@ -100,7 +112,7 @@ const AnswerInput = (props: AnswerInputProps) => {
         onChange={handleDescriptionChange}
       />
       <div className="file-upload">
-        <input type="file" onChange={handleFileUpload} />
+        <input type="file" ref={(ref: any) => setInputRef(ref)} onChange={handleFileUpload} />
       </div>
       <div className="btn-container">
         <Button variant="outlined" disabled={disabled} onClick={handlePostAnswer}>
