@@ -24,12 +24,13 @@ const addNewQuestion = async (body) => {
     }
 };
 
-const getAllQuestions = async (chapterId) => {
+const getAllQuestions = async (body) => {
     try {
-        const questions = await Question.find({ chapter: chapterId, isDeleted: false })
-            .populate('tags')
-            .populate('user')
-            .exec();
+        let query = { chapter: body.chapterId, isDeleted: false };
+        if (body.tagIds && body.tagIds.length > 0) {
+            query.tags = { $in: body.tagIds };
+        }
+        const questions = await Question.find(query).populate('tags').populate('user').exec();
         return questions;
     } catch (e) {
         console.log(e.message);
