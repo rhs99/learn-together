@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Question = require('../models/question');
 
 const addNewQuestion = async (body) => {
@@ -24,13 +25,76 @@ const addNewQuestion = async (body) => {
     }
 };
 
-const getAllQuestions = async (body) => {
+const getAllQuestions = async (body, query) => {
     try {
-        let query = { chapter: body.chapterId, isDeleted: false };
+        let q = { chapter: new mongoose.Types.ObjectId(body.chapterId) };
         if (body.tagIds && body.tagIds.length > 0) {
-            query.tags = { $in: body.tagIds };
+            q.tags = { $in: body.tagIds.map((_id) => new mongoose.Types.ObjectId(_id)) };
         }
-        const questions = await Question.find(query).populate('tags').populate('user').exec();
+
+        let key = 'createdAt',
+            val = -1;
+
+        if (query.sortBy && query.sortOrder) {
+            switch (query.sortBy) {
+                case 'upVote':
+                    key = 'upVote';
+                    break;
+                case 'downVote':
+                    key = 'downVote';
+                    break;
+                case 'time':
+                    key = 'createdAt';
+                    break;
+                case 'vote':
+                    key = 'vote';
+                    break;
+            }
+            switch (query.sortOrder) {
+                case 'desc':
+                    val = -1;
+                    break;
+                case 'asc':
+                    val = 1;
+                    break;
+            }
+        }
+
+        const sort = { [key]: val };
+
+        const questions = await Question.aggregate([
+            {
+                $match: q,
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'user',
+                    foreignField: '_id',
+                    as: 'user',
+                },
+            },
+            {
+                $lookup: {
+                    from: 'tags',
+                    localField: 'tags',
+                    foreignField: '_id',
+                    as: 'tags',
+                },
+            },
+            {
+                $addFields: {
+                    vote: { $subtract: ['$upVote', '$downVote'] },
+                },
+            },
+            {
+                $unwind: '$user',
+            },
+            {
+                $sort: sort,
+            },
+        ]).exec();
+
         return questions;
     } catch (e) {
         console.log(e.message);
