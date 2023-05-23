@@ -56,13 +56,11 @@ const ChapterDetail = () => {
             <TextField {...params} variant="standard" label="Filter By Tags" placeholder="Select Tags" />
           )}
         />
-        {isLoggedIn && (
-          <div className="ask-btn">
-            <Button variant="outlined" onClick={handleAskQuestion}>
-              Ask Question
-            </Button>
-          </div>
-        )}
+        <div className="ask-btn">
+          <Button variant="outlined" disabled={!isLoggedIn} onClick={handleAskQuestion}>
+            Ask Question
+          </Button>
+        </div>
       </div>
       {questions.map((question) => (
         <QuestionCard key={question._id} question={question} qdClickable={true} />

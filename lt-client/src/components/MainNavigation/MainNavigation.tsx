@@ -8,7 +8,6 @@ import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LogoutIcon from '@mui/icons-material/Logout';
-import Button from '@mui/material/Button';
 import AuthContext from '../../store/auth';
 
 import './_index.scss';
@@ -74,7 +73,7 @@ const MainNavigation = () => {
             {isLoggedIn && (
               <>
                 <IconButton onClick={handleOpenUserMenu}>
-                  <AccountCircleRoundedIcon fontSize="medium" />
+                  <AccountCircleRoundedIcon sx={{ color: 'white' }} fontSize="medium" />
                 </IconButton>
                 <Menu
                   sx={{ mt: '35px' }}
