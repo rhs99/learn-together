@@ -24,7 +24,7 @@ const addNewAnswer = async (body) => {
 };
 const getAnswer = async (answerId) => {
     try {
-        const answer = await Answer.findOne({ _id: answerId, isDeleted: false }).populate('user').exec();
+        const answer = await Answer.findOne({ _id: answerId }).populate('user').exec();
         return answer;
     } catch (e) {
         console.log(e.message);
@@ -33,26 +33,11 @@ const getAnswer = async (answerId) => {
 
 const getAllAnswers = async (questionId) => {
     try {
-        const answers = await Answer.find({ question: questionId, isDeleted: false }).populate('user').exec();
+        const answers = await Answer.find({ question: questionId }).populate('user').exec();
         return answers;
     } catch (e) {
         console.log(e.message);
     }
 };
 
-const softDeleteAnswer = async (_id) => {
-    try {
-        const answer = await Answer.findOneAndUpdate(
-            { _id },
-            { isDeleted: true },
-            {
-                new: true,
-            },
-        );
-        return answer;
-    } catch (e) {
-        if (e instanceof Error) console.log(e.message);
-    }
-};
-
-module.exports = { addNewAnswer, getAllAnswers, softDeleteAnswer, getAnswer };
+module.exports = { addNewAnswer, getAllAnswers, getAnswer };

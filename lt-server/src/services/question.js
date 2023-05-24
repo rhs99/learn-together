@@ -103,29 +103,11 @@ const getAllQuestions = async (body, query) => {
 
 const getQuestion = async (questionId) => {
     try {
-        const question = await Question.findOne({ _id: questionId, isDeleted: false })
-            .populate('tags')
-            .populate('user')
-            .exec();
+        const question = await Question.findOne({ _id: questionId }).populate('tags').populate('user').exec();
         return question;
     } catch (e) {
         console.log(e.message);
     }
 };
 
-const softDeleteQuestion = async (_id) => {
-    try {
-        const question = await Question.findOneAndUpdate(
-            { _id },
-            { isDeleted: true },
-            {
-                new: true,
-            },
-        );
-        return question;
-    } catch (e) {
-        if (e instanceof Error) console.log(e.message);
-    }
-};
-
-module.exports = { addNewQuestion, getAllQuestions, softDeleteQuestion, getQuestion };
+module.exports = { addNewQuestion, getAllQuestions, getQuestion };

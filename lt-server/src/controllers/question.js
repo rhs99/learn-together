@@ -11,8 +11,8 @@ const getAllQuestions = async (req, res) => {
 
 const getQuestion = async (req, res) => {
     try {
-        const questions = await QuestionService.getQuestion(req.query.questionId);
-        res.status(200).json(questions);
+        const question = await QuestionService.getQuestion(req.query.questionId);
+        res.status(200).json(question);
     } catch (e) {
         res.status(400).json({ message: e.message });
     }
@@ -28,13 +28,4 @@ const addNewQuestion = async (req, res) => {
     }
 };
 
-const softDeleteQuestion = async (req, res) => {
-    try {
-        const question = await QuestionService.softDeleteQuestion(req.params._id);
-        res.status(200).json(question);
-    } catch (e) {
-        if (e instanceof Error) res.status(400).json({ message: e.message });
-    }
-};
-
-module.exports = { getAllQuestions, addNewQuestion, softDeleteQuestion, getQuestion };
+module.exports = { getAllQuestions, addNewQuestion, getQuestion };

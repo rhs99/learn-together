@@ -7,6 +7,5 @@ const AnswerController = require('../controllers/answer');
 router.get('/', AnswerController.getAnswer);
 router.get('/list', AnswerController.getAllAnswers);
 router.post('/create', extractAndVerifyToken, AnswerController.addNewAnswer);
-router.delete('/:_id', AnswerController.softDeleteAnswer);
 
 module.exports = router;

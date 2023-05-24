@@ -25,40 +25,54 @@ type QInputState = {
   imageLocations: string[];
   disabled: boolean;
   selectedTags: Tag[];
-  text: string;
 };
 
-const reducer = (state: QInputState, action: any): QInputState => {
-  const getDisbleStatus = (state: QInputState): QInputState => {
-    if (state.selectedTags.length > 0 && state.text.trim().length !== 0) {
-      return { ...state, disabled: false };
-    }
-    return { ...state, disabled: true };
+type QInputAction =
+  | { type: 'description'; payload: string }
+  | { type: 'file'; payload: string }
+  | { type: 'tag'; payload: Tag[] };
+
+const reducer = (state: QInputState, action: QInputAction): QInputState => {
+  const getDisableStatus = (selectedTags: Tag[], description: string): boolean => {
+    return selectedTags.length > 0 && description.replace(/(<([^>]+)>)/gi, '').trim().length !== 0;
   };
 
-  let ns = { ...state };
-
-  if (action.type === 'description') {
-    ns.description = action.payload.value;
-    ns.text = action.payload.text;
+  switch (action.type) {
+    case 'description': {
+      const { payload } = action;
+      return {
+        ...state,
+        description: payload,
+        disabled: !getDisableStatus(state.selectedTags, payload),
+      };
+    }
+    case 'file': {
+      const { payload } = action;
+      return {
+        ...state,
+        imageLocations: [payload],
+        disabled: !getDisableStatus(state.selectedTags, state.description),
+      };
+    }
+    case 'tag': {
+      const { payload } = action;
+      return {
+        ...state,
+        selectedTags: payload,
+        disabled: !getDisableStatus(payload, state.description),
+      };
+    }
+    default:
+      return state;
   }
-  if (action.type === 'file') {
-    ns.imageLocations = [action.payload];
-  }
-  if (action.type === 'tag') {
-    ns.selectedTags = action.payload;
-  }
-  ns = getDisbleStatus(ns);
-  return ns;
 };
 
 const QuestionInput = (props: QuestionInputProps) => {
   const init: QInputState = {
     description: props.question?.details || '',
     imageLocations: props.question?.imageLocations || [],
-    disabled: props.question ? false : true,
+    disabled: true,
     selectedTags: props.question?.tags || [],
-    text: props.question?.details || '',
   };
   const [qInputState, dispatch] = useReducer(reducer, init);
   const [existingTags, setExistingTags] = useState<Tag[]>([]);
@@ -73,8 +87,7 @@ const QuestionInput = (props: QuestionInputProps) => {
   }, [props.chapterId]);
 
   const handleDescriptionChange = (value: string) => {
-    const text = editorRef.current?.getEditor().getText();
-    dispatch({ type: 'description', payload: { value, text } });
+    dispatch({ type: 'description', payload: value });
   };
 
   const handleFileUpload = async (event: any) => {
