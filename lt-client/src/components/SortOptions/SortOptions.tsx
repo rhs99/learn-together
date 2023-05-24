@@ -67,7 +67,7 @@ const SortOptions = (props: SortOptionsProps) => {
         <MenuItem onClick={() => handleSortByClick('downVote')}>Down Vote</MenuItem>
         <MenuItem onClick={() => handleSortByClick('time')}>Time</MenuItem>
       </Menu>
-      <Chip variant="outlined" label={getName(sortBy)} />
+      <Chip variant="outlined" label={getName(sortBy)} size="small" className="chip" />
       <Tooltip title={sortOrder}>
         <IconButton onClick={handleSortOrderClick} color="primary">
           {sortOrder === 'desc' ? <ArrowDownwardIcon fontSize="medium" /> : <ArrowUpwardIcon fontSize="medium" />}
