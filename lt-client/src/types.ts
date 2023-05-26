@@ -28,7 +28,7 @@ export type Tag = {
 
 export type Answer = {
   _id: string;
-  details: string;
+  details: any;
   imageLocations: string[];
   question: string;
   user: User;
@@ -37,7 +37,7 @@ export type Answer = {
 };
 
 export type Question = {
-  details: string;
+  details: any;
   _id: string;
   tags: Tag[];
   chapter: string;

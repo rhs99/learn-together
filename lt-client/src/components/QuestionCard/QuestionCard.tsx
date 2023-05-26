@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
 
-import parse from 'html-react-parser';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { Divider, Chip, Modal, Box, IconButton, Tooltip, Snackbar, Alert } from '@mui/material';
@@ -13,6 +12,7 @@ import { Question } from '../../types';
 import Util from '../../utils';
 import axios from 'axios';
 import AuthContext from '../../store/auth';
+import ReactQuill from 'react-quill';
 
 import './_index.scss';
 
@@ -135,7 +135,7 @@ const QuestionCard = (props: QuestionCardProps) => {
         </div>
         <div className="right-pane">
           <div className={qdClassName} onClick={qdOnClick}>
-            <Typography variant="body1">{parse(props.question.details)}</Typography>
+            <ReactQuill value={props.question.details} readOnly={true} theme={'bubble'} />
           </div>
           {fileData && <Divider />}
           <div className="imageContainer" onClick={handleInageModalOpen}>

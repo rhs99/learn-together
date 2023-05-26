@@ -1,20 +1,14 @@
 .cl-QuestionInput {
     width: 80%;
     margin: auto;
-    .description-heading {
 
+    .description-heading {
         margin: 10px 0;
     }
 
-    .editor {
-        height: 150px;
-    }
-
-    .tag-heading {
-        margin-top: 80px;
-    }
     .tag-input-container {
         margin-top: -10px;
+
         .tag-input {
             width: 100%;
         }
@@ -24,7 +18,7 @@
         margin-top: 30px;
     }
 
-    .btn-container{
+    .btn-container {
         display: flex;
         flex-direction: row;
         margin-top: 20px;

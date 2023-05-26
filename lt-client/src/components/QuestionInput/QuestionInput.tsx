@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useRef, useContext, useEffect, useReducer } from 'react';
-import ReactQuill from 'react-quill';
+import { useState, useContext, useEffect, useCallback } from 'react';
+import Quill from 'quill';
 import 'react-quill/dist/quill.snow.css';
 import Util from '../../utils';
 import axios from 'axios';
@@ -10,6 +10,10 @@ import AuthContext from '../../store/auth';
 import { Button } from '@mui/material';
 import { Tag } from '../../types';
 import { Autocomplete, TextField, createFilterOptions } from '@mui/material';
+import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
+import AlertTitle from '@mui/material/AlertTitle';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 
 import './_index.scss';
 
@@ -20,64 +24,13 @@ type QuestionInputProps = {
   question?: Question;
 };
 
-type QInputState = {
-  description: string;
-  imageLocations: string[];
-  disabled: boolean;
-  selectedTags: Tag[];
-};
-
-type QInputAction =
-  | { type: 'description'; payload: string }
-  | { type: 'file'; payload: string }
-  | { type: 'tag'; payload: Tag[] };
-
-const reducer = (state: QInputState, action: QInputAction): QInputState => {
-  const getDisableStatus = (selectedTags: Tag[], description: string): boolean => {
-    return selectedTags.length > 0 && description.replace(/(<([^>]+)>)/gi, '').trim().length !== 0;
-  };
-
-  switch (action.type) {
-    case 'description': {
-      const { payload } = action;
-      return {
-        ...state,
-        description: payload,
-        disabled: !getDisableStatus(state.selectedTags, payload),
-      };
-    }
-    case 'file': {
-      const { payload } = action;
-      return {
-        ...state,
-        imageLocations: [payload],
-        disabled: !getDisableStatus(state.selectedTags, state.description),
-      };
-    }
-    case 'tag': {
-      const { payload } = action;
-      return {
-        ...state,
-        selectedTags: payload,
-        disabled: !getDisableStatus(payload, state.description),
-      };
-    }
-    default:
-      return state;
-  }
-};
-
 const QuestionInput = (props: QuestionInputProps) => {
-  const init: QInputState = {
-    description: props.question?.details || '',
-    imageLocations: props.question?.imageLocations || [],
-    disabled: true,
-    selectedTags: props.question?.tags || [],
-  };
-  const [qInputState, dispatch] = useReducer(reducer, init);
+  const [imageLocations, setImageLocations] = useState<string[]>(props.question?.imageLocations || []);
+  const [selectedTags, setSelectedTags] = useState<Tag[]>(props.question?.tags || []);
   const [existingTags, setExistingTags] = useState<Tag[]>([]);
+  const [editor, setEditor] = useState<Quill>();
+  const [showAlert, setShowAlert] = useState(false);
 
-  const editorRef = useRef<ReactQuill>(null);
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -86,13 +39,8 @@ const QuestionInput = (props: QuestionInputProps) => {
     axios.get(URL).then((data) => setExistingTags(data.data));
   }, [props.chapterId]);
 
-  const handleDescriptionChange = (value: string) => {
-    dispatch({ type: 'description', payload: value });
-  };
-
   const handleFileUpload = async (event: any) => {
     const file = event.target.files[0];
-    console.log(file);
     const metadata = {
       'Content-type': 'image',
     };
@@ -114,7 +62,7 @@ const QuestionInput = (props: QuestionInputProps) => {
           if (err) {
             return console.log(err);
           }
-          dispatch({ type: 'file', payload: uniqueFileName });
+          setImageLocations([uniqueFileName]);
         }
       );
     };
@@ -122,18 +70,26 @@ const QuestionInput = (props: QuestionInputProps) => {
   };
 
   const handleSave = async () => {
+    const description = editor?.getContents().ops || [];
+    const text = editor?.getText() || '';
+
+    if (text.trim().length === 0 || selectedTags.length === 0) {
+      setShowAlert(true);
+      return;
+    }
+
     const tagURL = `${Util.CONSTANTS.SERVER_URL}/tags/create`;
     const question = {
       _id: props.question?._id || '',
-      details: qInputState.description,
+      details: description,
       chapter: props.chapterId,
       tags: [],
-      imageLocations: qInputState.imageLocations,
+      imageLocations: imageLocations,
     };
 
     const newTags: Tag[] = [];
 
-    qInputState.selectedTags.forEach((tag) => {
+    selectedTags.forEach((tag) => {
       if (tag._id.length === 0) {
         newTags.push(tag);
       } else {
@@ -167,23 +123,35 @@ const QuestionInput = (props: QuestionInputProps) => {
     navigate(`/chapters/${props.chapterId}`);
   };
 
+  const onEditorReady = useCallback((editor: Quill) => {
+    setEditor(editor);
+    editor.setContents(props.question?.details || []);
+  }, []);
+
   if (!authCtx.isLoggedIn) {
     return null;
   }
 
   return (
     <div className="cl-QuestionInput">
+      {showAlert && (
+        <Stack sx={{ width: '50%', margin: '10px auto' }}>
+          <Alert
+            severity="error"
+            onClose={() => {
+              setShowAlert(false);
+            }}
+          >
+            <AlertTitle>Error</AlertTitle>
+            Question <strong>description and tags</strong> cannot be empty!
+          </Alert>
+        </Stack>
+      )}
       <div className="description-heading">
         <h3>Write Question Description</h3>
       </div>
-      <ReactQuill
-        ref={editorRef}
-        className="editor"
-        theme="snow"
-        value={qInputState.description}
-        onChange={handleDescriptionChange}
-      />
-      <div className="tag-heading">
+      <QuillTextEditor onEditorReady={onEditorReady} />
+      <div>
         <h4>Add Relevant Tags</h4>
       </div>
       <div className="tag-input-container">
@@ -191,7 +159,7 @@ const QuestionInput = (props: QuestionInputProps) => {
           multiple
           id="tags-standard"
           onChange={(event: any, selection: Tag[]) => {
-            dispatch({ type: 'tag', payload: selection });
+            setSelectedTags(selection);
           }}
           options={existingTags}
           filterOptions={(options, params) => {
@@ -211,7 +179,7 @@ const QuestionInput = (props: QuestionInputProps) => {
             return filtered;
           }}
           getOptionLabel={(option) => option.name}
-          defaultValue={qInputState.selectedTags}
+          defaultValue={selectedTags}
           renderInput={(params) => <TextField {...params} variant="standard" label="All Tags" placeholder="Add Tags" />}
         />
       </div>
@@ -222,13 +190,7 @@ const QuestionInput = (props: QuestionInputProps) => {
         <Button variant="outlined" onClick={handleClose} color="error" className="close-btn">
           Close
         </Button>
-        <Button
-          variant="contained"
-          onClick={handleSave}
-          disabled={qInputState.disabled}
-          color="success"
-          className="save-btn"
-        >
+        <Button variant="contained" onClick={handleSave} color="success" className="save-btn">
           Save
         </Button>
       </div>
