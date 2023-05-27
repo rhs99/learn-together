@@ -50,6 +50,14 @@ const ChapterDetail = () => {
     navigate(`/chapters/${chapterId}/ask`);
   };
 
+  const handleQuestionDelete = (_id: string)=>{
+    setQuestions((prev)=>{
+      const fq = prev.filter((q)=>q._id !== _id);
+      return fq;
+    })
+
+  }
+
   return (
     <div className="cl-ChapterDetail">
       <div className="heading">
@@ -78,7 +86,7 @@ const ChapterDetail = () => {
         <SortOptions fetchSortedData={fetchQuestion} />
       </div>
       {questions.map((question) => (
-        <QuestionCard key={question._id} question={question} qdClickable={true} />
+        <QuestionCard key={question._id} question={question} qdClickable={true} handleQuestionDelete={handleQuestionDelete}/>
       ))}
     </div>
   );

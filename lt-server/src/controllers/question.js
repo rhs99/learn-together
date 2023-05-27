@@ -28,4 +28,13 @@ const addNewQuestion = async (req, res) => {
     }
 };
 
-module.exports = { getAllQuestions, addNewQuestion, getQuestion };
+const deleteQuestion = async (req, res) => {
+    try {
+        await QuestionService.deleteQuestion(req.params._id, req.user);
+        res.status(200).json();
+    } catch (e) {
+        res.status(400).json({ message: e.message });
+    }
+};
+
+module.exports = { getAllQuestions, addNewQuestion, getQuestion, deleteQuestion };

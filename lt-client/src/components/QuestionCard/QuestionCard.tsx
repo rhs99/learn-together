@@ -19,6 +19,7 @@ import './_index.scss';
 type QuestionCardProps = {
   question: Question;
   qdClickable: boolean;
+  handleQuestionDelete: (_id: string)=>void;
 };
 
 const QuestionCard = (props: QuestionCardProps) => {
@@ -103,6 +104,15 @@ const QuestionCard = (props: QuestionCardProps) => {
     navigate(`/questions/${props.question._id}/edit`);
   };
 
+  const handleDelete = ()=>{
+    const url = `${Util.CONSTANTS.SERVER_URL}/questions/${props.question._id}`;
+    axios.delete(url, {headers: {
+    Authorization: `Bearer ${authCtx.getStoredValue().token}`,
+  },}).then(()=>{
+      props.handleQuestionDelete(props.question._id);
+    })
+  }
+
   const isOwner = authCtx.getStoredValue().userName === props.question.user.userName;
 
   const qdClassName = props.qdClickable ? 'detailsClickable' : '';
@@ -170,7 +180,7 @@ const QuestionCard = (props: QuestionCardProps) => {
           </IconButton>
         </Tooltip>
         <Tooltip title="delete">
-          <IconButton className="delete" disabled={!isOwner}>
+          <IconButton className="delete" disabled={!isOwner} onClick={handleDelete} >
             <DeleteIcon fontSize="small"></DeleteIcon>
           </IconButton>
         </Tooltip>

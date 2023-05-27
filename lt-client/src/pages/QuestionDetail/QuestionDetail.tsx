@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Question, Answer } from '../../types';
 import QuestionCard from '../../components/QuestionCard/QuestionCard';
@@ -14,6 +14,8 @@ import './_index.scss';
 const QuestionDetail = () => {
   const [question, setQuestion] = useState<Question>();
   const [answers, setAnswers] = useState<Answer[]>([]);
+
+  const navigate = useNavigate();
   const { questionId } = useParams();
 
   const { isLoggedIn } = useContext(AuthContext);
@@ -35,13 +37,17 @@ const QuestionDetail = () => {
     fetchAnswers().then((data) => setAnswers(data));
   };
 
+  const handleQuestionDelete = ()=>{
+    navigate(`/chapters/${question?.chapter}`)
+  }
+
   if (!question) {
     return null;
   }
 
   return (
     <div className="cl-QuestionDetail">
-      <QuestionCard question={question} qdClickable={false} />
+      <QuestionCard question={question} qdClickable={false} handleQuestionDelete={handleQuestionDelete} />
       {isLoggedIn && (
         <AnswerInput
           fetchAnswer={handleAnsPost}

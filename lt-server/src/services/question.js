@@ -7,7 +7,7 @@ const addNewQuestion = async (body) => {
         if (body._id !== '') {
             question = await Question.findOne({ _id: body._id }).exec();
             if (JSON.stringify(question.user) !== JSON.stringify(body.user)) {
-                throw new Error('unauthorized');
+                throw new Error('unauth');
             }
             question.details = body.details;
             question.imageLocations = body.imageLocations;
@@ -19,7 +19,7 @@ const addNewQuestion = async (body) => {
         await question.save();
     } catch (e) {
         console.log(e.message);
-        if (e.message === 'unauthorized') {
+        if (e.message === 'unauth') {
             throw new Error();
         }
     }
@@ -110,4 +110,19 @@ const getQuestion = async (questionId) => {
     }
 };
 
-module.exports = { addNewQuestion, getAllQuestions, getQuestion };
+const deleteQuestion = async (questionId, user) => {
+    try {
+        const question = await Question.findById(questionId).exec();
+        if (JSON.stringify(question.user) !== JSON.stringify(user)) {
+            throw new Error('unauth');
+        }
+        await Question.deleteOne({ _id: questionId }).exec();
+    } catch (e) {
+        console.log(e.message);
+        if (e.message === 'unauth') {
+            throw new Error();
+        }
+    }
+};
+
+module.exports = { addNewQuestion, getAllQuestions, getQuestion, deleteQuestion };
