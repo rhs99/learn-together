@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Question = require('../models/question');
+const Answer = require('../models/answer')
 
 const addNewQuestion = async (body) => {
     try {
@@ -116,7 +117,11 @@ const deleteQuestion = async (questionId, user) => {
         if (JSON.stringify(question.user) !== JSON.stringify(user)) {
             throw new Error('unauth');
         }
+        const promises = question.answers.map((_id)=>{
+            return Answer.deleteOne({_id: _id}).exec();
+        })
         await Question.deleteOne({ _id: questionId }).exec();
+        await Promise.all(promises);
     } catch (e) {
         console.log(e.message);
         if (e.message === 'unauth') {

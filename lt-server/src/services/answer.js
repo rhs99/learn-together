@@ -1,4 +1,5 @@
 const Answer = require('../models/answer');
+const Question = require('../models/question')
 
 const addNewAnswer = async (body) => {
     try {
@@ -14,7 +15,11 @@ const addNewAnswer = async (body) => {
             delete body._id;
             answer = new Answer(body);
         }
-        await answer.save();
+        answer = await answer.save();
+        const question = await Question.findById(body.question).exec();
+        question.answers.push(answer._id);
+        await question.save();
+
     } catch (e) {
         console.log(e.message);
         if (e.message === 'unauthorized') {
@@ -46,7 +51,10 @@ const deleteAnswer = async (answerId, user) => {
         if (JSON.stringify(answer.user) !== JSON.stringify(user)) {
             throw new Error('unauth');
         }
+        const question = await Question.findById(answer._id).exec();
+        question.answers = question.answers.filter((q) => JSON.stringify(q) !== JSON.stringify(answer._id));
         await Answer.deleteOne({ _id: answerId }).exec();
+        await question.save();
     } catch (e) {
         console.log(e.message);
         if (e.message === 'unauth') {
