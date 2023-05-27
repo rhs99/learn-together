@@ -3,7 +3,7 @@ import { useEffect, useState, useContext } from 'react';
 
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { Divider, Chip, Modal, Box, IconButton, Tooltip, Snackbar, Alert } from '@mui/material';
+import { Divider, Chip, Modal, Box, IconButton, Tooltip, Snackbar, Alert, Button } from '@mui/material';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import EditIcon from '@mui/icons-material/Edit';
 import ShareIcon from '@mui/icons-material/Share';
@@ -27,15 +27,16 @@ const QuestionCard = (props: QuestionCardProps) => {
   const [showImageModal, setShowImageModal] = useState<boolean>(false);
   const [showShareAlert, setShowShareAlert] = useState(false);
   const [netCnt, setNetCnt] = useState(props.question.upVote - props.question.downVote);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleInageModalOpen = () => {
+  const handleImageModalOpen = () => {
     setShowImageModal(true);
   };
 
-  const handleInageModalClose = () => {
+  const handleImageModalClose = () => {
     setShowImageModal(false);
   };
 
@@ -105,6 +106,10 @@ const QuestionCard = (props: QuestionCardProps) => {
   };
 
   const handleDelete = () => {
+    setOpenDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
     const url = `${Util.CONSTANTS.SERVER_URL}/questions/${props.question._id}`;
     axios
       .delete(url, {
@@ -115,6 +120,10 @@ const QuestionCard = (props: QuestionCardProps) => {
       .then(() => {
         props.handleQuestionDelete(props.question._id);
       });
+  };
+
+  const handleDeleteModalClose = () => {
+    setOpenDeleteModal(false);
   };
 
   const isOwner = authCtx.getStoredValue().userName === props.question.user.userName;
@@ -152,7 +161,7 @@ const QuestionCard = (props: QuestionCardProps) => {
             <ReactQuill value={props.question.details} readOnly={true} theme={'bubble'} />
           </div>
           {fileData && <Divider />}
-          <div className="imageContainer" onClick={handleInageModalOpen}>
+          <div className="imageContainer" onClick={handleImageModalOpen}>
             {fileData && <img src={fileData} className="image" />}
           </div>
           {props.question.tags.length > 0 && <Divider />}
@@ -190,7 +199,7 @@ const QuestionCard = (props: QuestionCardProps) => {
         </Tooltip>
       </div>
       {fileData && showImageModal && (
-        <Modal open={showImageModal} onClose={handleInageModalClose}>
+        <Modal open={showImageModal} onClose={handleImageModalClose}>
           <Box
             sx={{
               position: 'absolute',
@@ -203,6 +212,34 @@ const QuestionCard = (props: QuestionCardProps) => {
             }}
           >
             <img src={fileData} style={{ width: '100%', height: 'auto' }} />
+          </Box>
+        </Modal>
+      )}
+      {openDeleteModal && (
+        <Modal open={openDeleteModal} onClose={handleDeleteModalClose}>
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              maxWidth: '400px',
+              bgcolor: 'background.paper',
+              borderRadius: '5px',
+              padding: '15px',
+            }}
+          >
+            <Typography sx={{ color: 'red' }} variant="h6">
+              Do you want to delete this question?
+            </Typography>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
+              <Button onClick={handleDeleteModalClose} color="secondary">
+                Cancel
+              </Button>
+              <Button variant="contained" color="error" onClick={handleConfirmDelete}>
+                Confirm
+              </Button>
+            </div>
           </Box>
         </Modal>
       )}

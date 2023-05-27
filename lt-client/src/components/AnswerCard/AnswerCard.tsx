@@ -3,7 +3,7 @@ import { useEffect, useState, useContext } from 'react';
 
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { Divider, Modal, Box, IconButton, Tooltip, Snackbar, Alert } from '@mui/material';
+import { Divider, Modal, Box, IconButton, Tooltip, Snackbar, Alert, Button } from '@mui/material';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import EditIcon from '@mui/icons-material/Edit';
 import ShareIcon from '@mui/icons-material/Share';
@@ -26,6 +26,7 @@ const AnswerCard = (props: AnswerCardProps) => {
   const [showImageModal, setShowImageModal] = useState<boolean>(false);
   const [showShareAlert, setShowShareAlert] = useState(false);
   const [netCnt, setNetCnt] = useState(props.answer.upVote - props.answer.downVote);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
@@ -100,6 +101,10 @@ const AnswerCard = (props: AnswerCardProps) => {
   };
 
   const handleDelete = () => {
+    setOpenDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
     const url = `${Util.CONSTANTS.SERVER_URL}/answers/${props.answer._id}`;
     axios
       .delete(url, {
@@ -110,6 +115,10 @@ const AnswerCard = (props: AnswerCardProps) => {
       .then(() => {
         props.handleAnswerDelete(props.answer._id);
       });
+  };
+
+  const handleDeleteModalClose = () => {
+    setOpenDeleteModal(false);
   };
 
   const isOwner = authCtx.getStoredValue().userName === props.answer.user.userName;
@@ -181,6 +190,34 @@ const AnswerCard = (props: AnswerCardProps) => {
             }}
           >
             <img src={fileData} style={{ width: '100%', height: 'auto' }} />
+          </Box>
+        </Modal>
+      )}
+      {openDeleteModal && (
+        <Modal open={openDeleteModal} onClose={handleDeleteModalClose}>
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              maxWidth: '400px',
+              bgcolor: 'background.paper',
+              borderRadius: '5px',
+              padding: '15px',
+            }}
+          >
+            <Typography sx={{ color: 'red' }} variant="h6">
+              Do you want to delete this answer?
+            </Typography>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
+              <Button onClick={handleDeleteModalClose} color="secondary">
+                Cancel
+              </Button>
+              <Button variant="contained" color="error" onClick={handleConfirmDelete}>
+                Confirm
+              </Button>
+            </div>
           </Box>
         </Modal>
       )}
