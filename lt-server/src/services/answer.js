@@ -40,4 +40,19 @@ const getAllAnswers = async (questionId) => {
     }
 };
 
-module.exports = { addNewAnswer, getAllAnswers, getAnswer };
+const deleteAnswer = async (answerId, user) => {
+    try {
+        const answer = await Answer.findById(answerId).exec();
+        if (JSON.stringify(answer.user) !== JSON.stringify(user)) {
+            throw new Error('unauth');
+        }
+        await Answer.deleteOne({ _id: answerId }).exec();
+    } catch (e) {
+        console.log(e.message);
+        if (e.message === 'unauth') {
+            throw new Error();
+        }
+    }
+};
+
+module.exports = { addNewAnswer, getAllAnswers, getAnswer, deleteAnswer };

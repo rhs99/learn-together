@@ -28,4 +28,13 @@ const addNewAnswer = async (req, res) => {
     }
 };
 
-module.exports = { getAllAnswers, addNewAnswer, getAnswer };
+const deleteAnswer = async (req, res) => {
+    try {
+        await AnswerService.deleteAnswer(req.params._id, req.user);
+        res.status(200).json();
+    } catch (e) {
+        res.status(400).json({ message: e.message });
+    }
+};
+
+module.exports = { getAllAnswers, addNewAnswer, getAnswer, deleteAnswer };

@@ -18,6 +18,7 @@ import './_index.scss';
 
 type AnswerCardProps = {
   answer: Answer;
+  handleAnswerDelete: (_id: string) => void;
 };
 
 const AnswerCard = (props: AnswerCardProps) => {
@@ -98,6 +99,19 @@ const AnswerCard = (props: AnswerCardProps) => {
     navigate(`/answers/${props.answer._id}/edit`);
   };
 
+  const handleDelete = () => {
+    const url = `${Util.CONSTANTS.SERVER_URL}/answers/${props.answer._id}`;
+    axios
+      .delete(url, {
+        headers: {
+          Authorization: `Bearer ${authCtx.getStoredValue().token}`,
+        },
+      })
+      .then(() => {
+        props.handleAnswerDelete(props.answer._id);
+      });
+  };
+
   const isOwner = authCtx.getStoredValue().userName === props.answer.user.userName;
 
   return (
@@ -148,7 +162,7 @@ const AnswerCard = (props: AnswerCardProps) => {
           </IconButton>
         </Tooltip>
         <Tooltip title="delete">
-          <IconButton className="delete" disabled={!isOwner}>
+          <IconButton className="delete" disabled={!isOwner} onClick={handleDelete}>
             <DeleteIcon fontSize="small"></DeleteIcon>
           </IconButton>
         </Tooltip>

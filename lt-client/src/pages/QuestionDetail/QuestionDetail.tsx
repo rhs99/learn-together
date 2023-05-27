@@ -37,9 +37,15 @@ const QuestionDetail = () => {
     fetchAnswers().then((data) => setAnswers(data));
   };
 
-  const handleQuestionDelete = ()=>{
-    navigate(`/chapters/${question?.chapter}`)
-  }
+  const handleQuestionDelete = () => {
+    navigate(`/chapters/${question?.chapter}`);
+  };
+
+  const handleAnswerDelete = (_id: string) => {
+    setAnswers((prev) => {
+      return prev.filter((a) => a._id !== _id);
+    });
+  };
 
   if (!question) {
     return null;
@@ -58,7 +64,7 @@ const QuestionDetail = () => {
         All Answers
       </Typography>
       {answers.map((answer) => (
-        <AnswerCard key={answer._id} answer={answer} />
+        <AnswerCard key={answer._id} answer={answer} handleAnswerDelete={handleAnswerDelete} />
       ))}
     </div>
   );
