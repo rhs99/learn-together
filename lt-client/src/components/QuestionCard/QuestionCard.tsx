@@ -13,6 +13,13 @@ import Util from '../../utils';
 import axios from 'axios';
 import AuthContext from '../../store/auth';
 import ReactQuill from 'react-quill';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 import './_index.scss';
 
@@ -154,6 +161,30 @@ const QuestionCard = (props: QuestionCardProps) => {
                 <ChangeHistoryIcon className="down-icon" />
               </IconButton>
             </Tooltip>
+          </div>
+          <div className="info">
+            <Table size='small'>
+              <TableBody>
+                <TableRow>
+                  <TableCell scope="row">
+                    Up vote
+                  </TableCell>
+                  <TableCell>{props.question.upVote}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell scope="row">
+                    Down vote
+                  </TableCell>
+                  <TableCell>{props.question.downVote}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell scope="row">
+                    Answers
+                  </TableCell>
+                  <TableCell>{props.question.answers.length}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
         </div>
         <div className="right-pane">

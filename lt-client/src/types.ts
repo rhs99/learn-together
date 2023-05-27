@@ -45,4 +45,5 @@ export type Question = {
   user: User;
   upVote: number;
   downVote: number;
+  answers: string[];
 };
