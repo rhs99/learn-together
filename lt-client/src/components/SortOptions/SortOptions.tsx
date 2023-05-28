@@ -14,7 +14,7 @@ type SortOptionsProps = {
   fetchSortedData: (options: any) => void;
 };
 
-const SortOptions = (props: SortOptionsProps) => {
+const SortOptions = ({ fetchSortedData }: SortOptionsProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [sortBy, setSortBy] = useState<string>('time');
   const [sortOrder, setSortOrder] = useState<string>('desc');
@@ -22,8 +22,8 @@ const SortOptions = (props: SortOptionsProps) => {
   const open = Boolean(anchorEl);
 
   useEffect(() => {
-    props.fetchSortedData({ sortBy, sortOrder });
-  }, [props.fetchSortedData, sortBy, sortOrder]);
+    fetchSortedData({ sortBy, sortOrder });
+  }, [fetchSortedData, sortBy, sortOrder]);
 
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);

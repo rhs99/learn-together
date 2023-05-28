@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useRef, useContext, useCallback } from 'react';
+import { useState, useContext, useCallback } from 'react';
 import { Button } from '@mui/material';
 import { PassThrough } from 'stream';
 import { Answer } from '../../types';
@@ -95,10 +95,13 @@ const AnswerInput = (props: AnswerInputProps) => {
     }
   };
 
-  const onEditorReady = useCallback((editor: Quill) => {
-    setEditor(editor);
-    editor.setContents(props.answer?.details || []);
-  }, []);
+  const onEditorReady = useCallback(
+    (editor: Quill) => {
+      setEditor(editor);
+      editor.setContents(props.answer?.details || []);
+    },
+    [props.answer?.details]
+  );
 
   return (
     <div className="cl-AnswerInput">

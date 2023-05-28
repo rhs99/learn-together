@@ -123,10 +123,13 @@ const QuestionInput = (props: QuestionInputProps) => {
     navigate(`/chapters/${props.chapterId}`);
   };
 
-  const onEditorReady = useCallback((editor: Quill) => {
-    setEditor(editor);
-    editor.setContents(props.question?.details || []);
-  }, []);
+  const onEditorReady = useCallback(
+    (editor: Quill) => {
+      setEditor(editor);
+      editor.setContents(props.question?.details || []);
+    },
+    [props.question?.details]
+  );
 
   if (!authCtx.isLoggedIn) {
     return null;
