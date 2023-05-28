@@ -1,10 +1,11 @@
-.cl-AnswerCard {
+.cl-QACard {
     margin-bottom: 20px;
     background-color: rgb(231, 235, 240);
     border-radius: 10px;
     padding: 10px;
 
     .left-pane {
+        width: 12%;
         margin-left: 15px;
 
         .UD-container {
@@ -12,16 +13,26 @@
             flex-direction: column;
 
             .net-cnt {
-                margin-left: 15px;
+                margin-left: 47%;
             }
 
             .down-icon {
                 transform: rotateX(180deg);
             }
         }
+
+        .info{
+            margin-top: 20px;
+        }
     }
 
     .right-pane {
+
+        .detailsClickable:hover {
+            color: rgb(33, 139, 210);
+            cursor: pointer;
+        }
+
         .imageContainer {
             margin: 20px 0;
 
@@ -56,7 +67,8 @@
 
         .author {
             margin-top: 10px;
-            .user-name{
+
+            .user-name {
                 color: rgb(25, 165, 178);
             }
         }
@@ -73,5 +85,4 @@
             margin-left: 20px;
         }
     }
-
 }

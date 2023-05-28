@@ -2,12 +2,11 @@ import { useEffect, useState, useCallback, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Question, Answer } from '../../types';
-import QuestionCard from '../../components/QuestionCard/QuestionCard';
-import AnswerCard from '../../components/AnswerCard/AnswerCard';
 import { Typography } from '@mui/material';
 import AuthContext from '../../store/auth';
 import Util from '../../utils';
 import AnswerInput from '../../components/AnswerInput/AnswerInput';
+import QACard from '../../components/QACard/QACard';
 
 import './_index.scss';
 
@@ -53,7 +52,7 @@ const QuestionDetail = () => {
 
   return (
     <div className="cl-QuestionDetail">
-      <QuestionCard question={question} qdClickable={false} handleQuestionDelete={handleQuestionDelete} />
+      <QACard item={question} clickableDetails={false} isQuestion={true} handleItemDelete={handleQuestionDelete} />
       {isLoggedIn && (
         <AnswerInput
           fetchAnswer={handleAnsPost}
@@ -64,7 +63,13 @@ const QuestionDetail = () => {
         All Answers
       </Typography>
       {answers.map((answer) => (
-        <AnswerCard key={answer._id} answer={answer} handleAnswerDelete={handleAnswerDelete} />
+        <QACard
+          key={answer._id}
+          item={answer}
+          clickableDetails={false}
+          isQuestion={false}
+          handleItemDelete={handleAnswerDelete}
+        />
       ))}
     </div>
   );

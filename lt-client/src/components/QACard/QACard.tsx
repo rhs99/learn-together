@@ -3,46 +3,52 @@ import { useEffect, useState, useContext } from 'react';
 
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { Divider, Modal, Box, IconButton, Tooltip, Snackbar, Alert, Button } from '@mui/material';
+import { Divider, Chip, Modal, Box, IconButton, Tooltip, Snackbar, Alert, Button } from '@mui/material';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import EditIcon from '@mui/icons-material/Edit';
 import ShareIcon from '@mui/icons-material/Share';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Answer } from '../../types';
-import axios from 'axios';
+import { Question, Answer } from '../../types';
 import Util from '../../utils';
+import axios from 'axios';
 import AuthContext from '../../store/auth';
 import ReactQuill from 'react-quill';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
 
 import './_index.scss';
 
-type AnswerCardProps = {
-  answer: Answer;
-  handleAnswerDelete: (_id: string) => void;
+type QACardProps = {
+  item: Question | Answer;
+  isQuestion: boolean;
+  clickableDetails: boolean;
+  handleItemDelete: (_id: string) => void;
 };
 
-const AnswerCard = (props: AnswerCardProps) => {
+const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACardProps) => {
   const [fileData, setFileData] = useState(null);
   const [showImageModal, setShowImageModal] = useState<boolean>(false);
   const [showShareAlert, setShowShareAlert] = useState(false);
-  const [netCnt, setNetCnt] = useState(props.answer.upVote - props.answer.downVote);
+  const [udCnt, setUdCnt] = useState({ upVote: item.upVote, downVote: item.downVote });
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleInageModalOpen = () => {
+  const handleImageModalOpen = () => {
     setShowImageModal(true);
   };
 
-  const handleInageModalClose = () => {
+  const handleImageModalClose = () => {
     setShowImageModal(false);
   };
 
   useEffect(() => {
     let fileName = '';
-    if (props.answer.imageLocations.length > 0) {
-      fileName = props.answer.imageLocations[0];
+    if (item.imageLocations.length > 0) {
+      fileName = item.imageLocations[0];
     } else {
       return;
     }
@@ -54,10 +60,14 @@ const AnswerCard = (props: AnswerCardProps) => {
       }
       setFileData(dataStream.url);
     });
-  }, [props.answer.imageLocations]);
+  }, [item.imageLocations]);
+
+  const handleItemDetailsClick = () => {
+    if (isQuestion) navigate(`/questions/${item._id}`);
+  };
 
   const handleShareClick = () => {
-    const url = `${Util.CONSTANTS.CLIENT_URL}/answers/${props.answer._id}`;
+    const url = `${Util.CONSTANTS.CLIENT_URL}/${isQuestion ? 'questions' : 'answers'}/${item._id}`;
     navigator.clipboard.writeText(url);
     setShowShareAlert(true);
   };
@@ -65,9 +75,9 @@ const AnswerCard = (props: AnswerCardProps) => {
   const handleUpVote = async () => {
     const url = `${Util.CONSTANTS.SERVER_URL}/votes/update`;
     const payload = {
-      qaId: props.answer._id,
+      qaId: item._id,
       up: true,
-      q: false,
+      q: isQuestion,
     };
 
     const { data } = await axios.post(url, payload, {
@@ -76,15 +86,15 @@ const AnswerCard = (props: AnswerCardProps) => {
         'Content-Type': 'application/json',
       },
     });
-    setNetCnt(data.newCnt);
+    setUdCnt(data);
   };
 
   const handleDownVote = async () => {
     const url = `${Util.CONSTANTS.SERVER_URL}/votes/update`;
     const payload = {
-      qaId: props.answer._id,
+      qaId: item._id,
       up: false,
-      q: false,
+      q: isQuestion,
     };
 
     const { data } = await axios.post(url, payload, {
@@ -93,11 +103,11 @@ const AnswerCard = (props: AnswerCardProps) => {
         'Content-Type': 'application/json',
       },
     });
-    setNetCnt(data.newCnt);
+    setUdCnt(data);
   };
 
   const handleEdit = () => {
-    navigate(`/answers/${props.answer._id}/edit`);
+    navigate(`/${isQuestion ? 'questions' : 'answers'}/${item._id}/edit`);
   };
 
   const handleDelete = () => {
@@ -105,7 +115,7 @@ const AnswerCard = (props: AnswerCardProps) => {
   };
 
   const handleConfirmDelete = () => {
-    const url = `${Util.CONSTANTS.SERVER_URL}/answers/${props.answer._id}`;
+    const url = `${Util.CONSTANTS.SERVER_URL}/${isQuestion ? 'questions' : 'answers'}/${item._id}`;
     axios
       .delete(url, {
         headers: {
@@ -113,7 +123,7 @@ const AnswerCard = (props: AnswerCardProps) => {
         },
       })
       .then(() => {
-        props.handleAnswerDelete(props.answer._id);
+        handleItemDelete(item._id);
       });
   };
 
@@ -121,10 +131,13 @@ const AnswerCard = (props: AnswerCardProps) => {
     setOpenDeleteModal(false);
   };
 
-  const isOwner = authCtx.getStoredValue().userName === props.answer.user.userName;
+  const isOwner = authCtx.getStoredValue().userName === item.user.userName;
+
+  const detailsClassName = clickableDetails ? 'detailsClickable' : '';
+  const detailsOnClick = clickableDetails ? handleItemDetailsClick : undefined;
 
   return (
-    <div className="cl-AnswerCard">
+    <div className="cl-QACard">
       <Snackbar open={showShareAlert} autoHideDuration={1000} onClose={() => setShowShareAlert(false)}>
         <Alert severity="success" sx={{ width: '100%' }}>
           Copied to clipboard!
@@ -139,7 +152,7 @@ const AnswerCard = (props: AnswerCardProps) => {
               </IconButton>
             </Tooltip>
             <div className="net-cnt">
-              <Typography>{netCnt}</Typography>
+              <Typography>{udCnt.upVote - udCnt.downVote}</Typography>
             </div>
             <Tooltip title="Down vote">
               <IconButton onClick={handleDownVote}>
@@ -147,18 +160,54 @@ const AnswerCard = (props: AnswerCardProps) => {
               </IconButton>
             </Tooltip>
           </div>
+          <div className="info">
+            <Table size="small">
+              <TableBody>
+                <TableRow>
+                  <TableCell>Up vote</TableCell>
+                  <TableCell>{udCnt.upVote}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Down vote</TableCell>
+                  <TableCell>{udCnt.downVote}</TableCell>
+                </TableRow>
+                {isQuestion && (
+                  <TableRow>
+                    <TableCell>Answers</TableCell>
+                    <TableCell>{(item as Question).answers.length}</TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </div>
         <div className="right-pane">
-          <ReactQuill value={props.answer.details} readOnly={true} theme={'bubble'} />
+          <div className={detailsClassName} onClick={detailsOnClick}>
+            <ReactQuill value={item.details} readOnly={true} theme={'bubble'} />
+          </div>
           {fileData && <Divider />}
-          <div className="imageContainer" onClick={handleInageModalOpen}>
+          <div className="imageContainer" onClick={handleImageModalOpen}>
             {fileData && <img src={fileData} className="image" />}
           </div>
+          {isQuestion && <Divider />}
+          {isQuestion && (
+            <div className="tags">
+              <Stack
+                direction="row"
+                spacing={2}
+                divider={<Divider orientation="vertical" flexItem className="divider" />}
+              >
+                {(item as Question).tags.map((tag) => (
+                  <Chip key={tag._id} variant="outlined" size="small" label={tag.name} className="tag" />
+                ))}
+              </Stack>
+            </div>
+          )}
         </div>
       </Stack>
       <div className="bottom-pane">
         <Typography variant="body2" className="author">
-          answered by <span className="user-name">{props.answer.user.userName}</span>
+          {`${isQuestion ? 'asked' : 'answered'} by`} <span className="user-name">{item.user.userName}</span>
         </Typography>
         <Tooltip title="share">
           <IconButton className="share" onClick={handleShareClick}>
@@ -177,7 +226,7 @@ const AnswerCard = (props: AnswerCardProps) => {
         </Tooltip>
       </div>
       {fileData && showImageModal && (
-        <Modal open={showImageModal} onClose={handleInageModalClose}>
+        <Modal open={showImageModal} onClose={handleImageModalClose}>
           <Box
             sx={{
               position: 'absolute',
@@ -208,7 +257,7 @@ const AnswerCard = (props: AnswerCardProps) => {
             }}
           >
             <Typography sx={{ color: 'red' }} variant="h6">
-              Do you want to delete this answer?
+              Do you want to delete this question?
             </Typography>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
               <Button onClick={handleDeleteModalClose} color="secondary">
@@ -225,4 +274,4 @@ const AnswerCard = (props: AnswerCardProps) => {
   );
 };
 
-export default AnswerCard;
+export default QACard;

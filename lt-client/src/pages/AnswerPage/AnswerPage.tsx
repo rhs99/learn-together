@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Answer } from '../../types';
 import Util from '../../utils';
-import AnswerCard from '../../components/AnswerCard/AnswerCard';
+import QACard from '../../components/QACard/QACard';
 import axios from 'axios';
 
 import './_index.scss';
@@ -29,7 +29,7 @@ const AnswerPage = () => {
 
   return (
     <div className="cl-AnswerPage">
-      <AnswerCard answer={answer} handleAnswerDelete={handleAnswerDelete} />;
+      <QACard item={answer} handleItemDelete={handleAnswerDelete} isQuestion={false} clickableDetails={false} />;
     </div>
   );
 };

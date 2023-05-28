@@ -3,12 +3,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Util from '../../utils';
 import { Question } from '../../types';
-import QuestionCard from '../../components/QuestionCard/QuestionCard';
 import AuthContext from '../../store/auth';
 import { Typography, Button } from '@mui/material';
 import { Autocomplete, TextField } from '@mui/material';
 import SortOptions from '../../components/SortOptions/SortOptions';
 import { Tag } from '../../types';
+import QACard from '../../components/QACard/QACard';
 
 import './_index.scss';
 
@@ -85,11 +85,12 @@ const ChapterDetail = () => {
         <SortOptions fetchSortedData={fetchQuestion} />
       </div>
       {questions.map((question) => (
-        <QuestionCard
+        <QACard
           key={question._id}
-          question={question}
-          qdClickable={true}
-          handleQuestionDelete={handleQuestionDelete}
+          item={question}
+          clickableDetails={true}
+          isQuestion={true}
+          handleItemDelete={handleQuestionDelete}
         />
       ))}
     </div>
