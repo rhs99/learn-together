@@ -51,7 +51,7 @@ const deleteAnswer = async (answerId, user) => {
         if (JSON.stringify(answer.user) !== JSON.stringify(user)) {
             throw new Error('unauth');
         }
-        const question = await Question.findById(answer._id).exec();
+        const question = await Question.findById(answer.question).exec();
         question.answers = question.answers.filter((q) => JSON.stringify(q) !== JSON.stringify(answer._id));
         await Answer.deleteOne({ _id: answerId }).exec();
         await question.save();

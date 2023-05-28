@@ -33,7 +33,7 @@ const QuestionCard = (props: QuestionCardProps) => {
   const [fileData, setFileData] = useState(null);
   const [showImageModal, setShowImageModal] = useState<boolean>(false);
   const [showShareAlert, setShowShareAlert] = useState(false);
-  const [netCnt, setNetCnt] = useState(props.question.upVote - props.question.downVote);
+  const [udCnt, setUdCnt] = useState({upVote: props.question.upVote, downVote: props.question.downVote});
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const authCtx = useContext(AuthContext);
@@ -88,7 +88,7 @@ const QuestionCard = (props: QuestionCardProps) => {
         'Content-Type': 'application/json',
       },
     });
-    setNetCnt(data.newCnt);
+    setUdCnt(data);
   };
 
   const handleDownVote = async () => {
@@ -105,7 +105,7 @@ const QuestionCard = (props: QuestionCardProps) => {
         'Content-Type': 'application/json',
       },
     });
-    setNetCnt(data.newCnt);
+    setUdCnt(data);
   };
 
   const handleEdit = () => {
@@ -154,7 +154,7 @@ const QuestionCard = (props: QuestionCardProps) => {
               </IconButton>
             </Tooltip>
             <div className="net-cnt">
-              <Typography>{netCnt}</Typography>
+              <Typography>{udCnt.upVote-udCnt.downVote}</Typography>
             </div>
             <Tooltip title="Down vote">
               <IconButton onClick={handleDownVote}>
@@ -166,19 +166,19 @@ const QuestionCard = (props: QuestionCardProps) => {
             <Table size='small'>
               <TableBody>
                 <TableRow>
-                  <TableCell scope="row">
+                  <TableCell>
                     Up vote
                   </TableCell>
-                  <TableCell>{props.question.upVote}</TableCell>
+                  <TableCell>{udCnt.upVote}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell scope="row">
+                  <TableCell>
                     Down vote
                   </TableCell>
-                  <TableCell>{props.question.downVote}</TableCell>
+                  <TableCell>{udCnt.downVote}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell scope="row">
+                  <TableCell>
                     Answers
                   </TableCell>
                   <TableCell>{props.question.answers.length}</TableCell>
