@@ -56,11 +56,9 @@ const SortOptions = ({ fetchSortedData }: SortOptionsProps) => {
 
   return (
     <div className="cl-SortOptions">
-      <Tooltip title={getName(sortBy)}>
-        <Button onClick={handleClick} endIcon={<KeyboardArrowDown />}>
-          Sort By
-        </Button>
-      </Tooltip>
+      <Button onClick={handleClick} endIcon={<KeyboardArrowDown />}>
+        Sort By
+      </Button>
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
         <MenuItem onClick={() => handleSortByClick('vote')}>Vote</MenuItem>
         <MenuItem onClick={() => handleSortByClick('upVote')}>Up Vote</MenuItem>

@@ -76,7 +76,7 @@ const ChapterDetail = () => {
           )}
         />
         <div className="ask-btn">
-          <Button variant="outlined" disabled={!isLoggedIn} onClick={handleAskQuestion}>
+          <Button variant="contained" disabled={!isLoggedIn} onClick={handleAskQuestion}>
             Ask Question
           </Button>
         </div>

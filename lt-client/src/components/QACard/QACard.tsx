@@ -185,8 +185,11 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
           <div className={detailsClassName} onClick={detailsOnClick}>
             <ReactQuill value={item.details} readOnly={true} theme={'bubble'} />
           </div>
-          {fileData && <Divider />}
-          <div className="imageContainer" onClick={handleImageModalOpen}>
+          <Divider />
+          <div
+            className={`imageContainer ${fileData ? 'with-image' : ''}`}
+            onClick={fileData ? handleImageModalOpen : () => undefined}
+          >
             {fileData && <img src={fileData} className="image" />}
           </div>
           {isQuestion && <Divider />}
@@ -235,7 +238,7 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
               transform: 'translate(-50%, -50%)',
               width: '500px',
               bgcolor: 'background.paper',
-              border: '2px solid #000',
+              border: '2px solid grey',
             }}
           >
             <img src={fileData} style={{ width: '100%', height: 'auto' }} />
@@ -256,9 +259,7 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
               padding: '15px',
             }}
           >
-            <Typography sx={{ color: 'red' }} variant="h6">
-              Do you want to delete this question?
-            </Typography>
+            <Typography variant="h6">Do you want to delete this question?</Typography>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
               <Button onClick={handleDeleteModalClose} color="secondary">
                 Cancel

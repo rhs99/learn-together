@@ -21,7 +21,7 @@
             }
         }
 
-        .info{
+        .info {
             margin-top: 20px;
         }
     }
@@ -35,15 +35,16 @@
 
         .imageContainer {
             margin: 20px 0;
+            height: 100px;
 
             .image {
                 width: auto;
                 max-height: 100px;
             }
-        }
 
-        .imageContainer:hover {
-            cursor: pointer;
+            &.with-image:hover {
+                cursor: pointer;
+            }
         }
 
         .tags {
