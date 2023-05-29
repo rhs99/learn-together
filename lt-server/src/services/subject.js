@@ -1,3 +1,4 @@
+const Class = require('../models/class');
 const Subject = require('../models/subject');
 
 const getSubjects = async (classId) => {
@@ -11,10 +12,23 @@ const getSubjects = async (classId) => {
 
 const addNewSubject = async (body) => {
     try {
-        const newSubject = new Subject(body);
-        await newSubject.save();
+        let subject;
+        if (body._id !== '') {
+            subject = await Subject.findOne({ _id: body._id }).exec();
+        } else {
+            delete body._id;
+            subject = new Subject(body);
+        }
+        subject = await subject.save();
+        const _class = await Class.findById(body.class).exec();
+        _class.subjects.push(subject._id);
+        await _class.save();
+
     } catch (e) {
         console.log(e.message);
+        if (e.message === 'unauthorized') {
+            throw new Error();
+        }
     }
 };
 
