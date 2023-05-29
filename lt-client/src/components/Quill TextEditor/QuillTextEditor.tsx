@@ -3,6 +3,14 @@ import Quill from 'quill';
 
 import './_index.scss';
 
+const toolbarOptions = [
+  [{ size: ['small', false, 'large', 'huge'] }],
+  ['bold', 'italic', 'underline'],
+  [{ list: 'ordered' }, { list: 'bullet' }],
+  [{ script: 'sub' }, { script: 'super' }],
+  [{ align: [] }],
+];
+
 type QuillTextEditorProps = {
   onEditorReady: (editor: any) => void;
 };
@@ -13,6 +21,9 @@ const QuillTextEditor = ({ onEditorReady }: QuillTextEditorProps) => {
   useEffect(() => {
     if (editorRef.current) {
       const quill = new Quill(editorRef.current, {
+        modules: {
+          toolbar: toolbarOptions,
+        },
         theme: 'snow',
       });
 
