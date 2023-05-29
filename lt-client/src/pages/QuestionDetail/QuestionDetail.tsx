@@ -17,7 +17,7 @@ const QuestionDetail = () => {
   const navigate = useNavigate();
   const { questionId } = useParams();
 
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, getStoredValue } = useContext(AuthContext);
 
   const fetchAnswers = useCallback(async () => {
     const URL = `${Util.CONSTANTS.SERVER_URL}/answers/list?questionId=${questionId}`;
@@ -46,6 +46,8 @@ const QuestionDetail = () => {
     });
   };
 
+  const isOwner = getStoredValue().userName === question?.user.userName;
+
   if (!question) {
     return null;
   }
@@ -53,7 +55,7 @@ const QuestionDetail = () => {
   return (
     <div className="cl-QuestionDetail">
       <QACard item={question} clickableDetails={false} isQuestion={true} handleItemDelete={handleQuestionDelete} />
-      {isLoggedIn && (
+      {isLoggedIn && !isOwner && (
         <AnswerInput
           fetchAnswer={handleAnsPost}
           answer={{ _id: '', question: questionId || '', imageLocations: [], details: '' }}
