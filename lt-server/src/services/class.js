@@ -1,8 +1,9 @@
 const Class = require('../models/class');
+const Subject = require('../models/subject');
 
 const getClasses = async () => {
     try {
-        const classes = await Class.find({ isDeleted: false });
+        const classes = await Class.find();
         return classes;
     } catch (e) {
         console.log(e.message);
@@ -18,19 +19,17 @@ const addNewClass = async (body) => {
     }
 };
 
-const softDeleteClass = async (_id) => {
+const deleteClass = async (classId) => {
     try {
-        const _class = await Class.findOneAndUpdate(
-            { _id },
-            { isDeleted: true },
-            {
-                new: true,
-            },
-        );
-        return _class;
+        const _class = await Class.findOne({ _id: classId }).exec();
+        const promises = _class.subjets.map((_id) => {
+            return Subject.deleteOne({ _id: _id }).exec();
+        });
+        await Class.deleteOne({ _id: classId }).exec();
+        await Promise.all(promises);
     } catch (e) {
         if (e instanceof Error) console.log(e.message);
     }
 };
 
-module.exports = { getClasses, addNewClass, softDeleteClass };
+module.exports = { getClasses, addNewClass, deleteClass };

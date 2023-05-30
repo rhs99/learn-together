@@ -1,3 +1,4 @@
+const Class = require('../models/class');
 const Subject = require('../models/subject');
 
 const getSubjects = async (classId) => {
@@ -11,25 +12,24 @@ const getSubjects = async (classId) => {
 
 const addNewSubject = async (body) => {
     try {
-        const newSubject = new Subject(body);
-        await newSubject.save();
+        let subject = new Subject(body);
+        subject = await subject.save();
+        const _class = await Class.findById(body.class).exec();
+        _class.subjects.push(subject._id);
+        await _class.save();
     } catch (e) {
         console.log(e.message);
+        if (e.message === 'unauthorized') {
+            throw new Error();
+        }
     }
 };
 
-const softDeleteSubject = async (_id) => {
+const deleteSubject = async (_id) => {
     try {
-        const subject = await Subject.findOneAndUpdate(
-            { _id },
-            { isDeleted: true },
-            {
-                new: true,
-            },
-        );
-        return subject;
+        await Subject.deleteOne({ _id: _id }).exec();
     } catch (e) {
         if (e instanceof Error) console.log(e.message);
     }
 };
-module.exports = { getSubjects, addNewSubject, softDeleteSubject };
+module.exports = { getSubjects, addNewSubject, deleteSubject };

@@ -18,13 +18,13 @@ const addNewSubject = async (req, res) => {
     }
 };
 
-const softDeleteSubject = async (req, res) => {
+const deleteSubject = async (req, res) => {
     try {
-        const subject = await SubjectService.softDeleteSubject(req.params._id);
+        const subject = await SubjectService.deleteSubject(req.params._id);
         res.status(200).json(subject);
     } catch (e) {
         if (e instanceof Error) res.status(400).json({ message: e.message });
     }
 };
 
-module.exports = { getSubjects, addNewSubject, softDeleteSubject };
+module.exports = { getSubjects, addNewSubject, deleteSubject };
