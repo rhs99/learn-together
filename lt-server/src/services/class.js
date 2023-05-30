@@ -21,17 +21,14 @@ const addNewClass = async (body) => {
 
 const deleteClass = async (classId) => {
     try {
-        const _class = await Class.findOne({_id : classId }).exec();
-        const promises = _class.subjets.map((_id)=>{
-            return Subject.deleteOne({_id: _id}).exec();
+        const _class = await Class.findOne({ _id: classId }).exec();
+        const promises = _class.subjets.map((_id) => {
+            return Subject.deleteOne({ _id: _id }).exec();
         });
         await Class.deleteOne({ _id: classId }).exec();
         await Promise.all(promises);
     } catch (e) {
         if (e instanceof Error) console.log(e.message);
-        if (e.message === 'unauth') {
-            throw new Error();
-        }
     }
 };
 

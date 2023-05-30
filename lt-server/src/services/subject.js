@@ -12,18 +12,11 @@ const getSubjects = async (classId) => {
 
 const addNewSubject = async (body) => {
     try {
-        let subject;
-        if (body._id !== '') {
-            subject = await Subject.findOne({ _id: body._id }).exec();
-        } else {
-            delete body._id;
-            subject = new Subject(body);
-        }
+        let subject = new Subject(body);
         subject = await subject.save();
         const _class = await Class.findById(body.class).exec();
         _class.subjects.push(subject._id);
         await _class.save();
-
     } catch (e) {
         console.log(e.message);
         if (e.message === 'unauthorized') {
@@ -32,18 +25,11 @@ const addNewSubject = async (body) => {
     }
 };
 
-const softDeleteSubject = async (_id) => {
+const deleteSubject = async (_id) => {
     try {
-        const subject = await Subject.findOneAndUpdate(
-            { _id },
-            { isDeleted: true },
-            {
-                new: true,
-            },
-        );
-        return subject;
+        await Subject.deleteOne({ _id: _id }).exec();
     } catch (e) {
         if (e instanceof Error) console.log(e.message);
     }
 };
-module.exports = { getSubjects, addNewSubject, softDeleteSubject };
+module.exports = { getSubjects, addNewSubject, deleteSubject };
