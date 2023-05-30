@@ -11,18 +11,19 @@ import { Tooltip, Chip } from '@mui/material';
 import './_index.scss';
 
 type SortOptionsProps = {
-  fetchSortedData: (options: any) => void;
+  sortBy: string;
+  sortOrder: string;
+  handleSortOptionsChange: (option: string, val: string) => void;
+  fetchSortedData: () => void;
 };
 
-const SortOptions = ({ fetchSortedData }: SortOptionsProps) => {
+const SortOptions = ({ sortBy, sortOrder, handleSortOptionsChange, fetchSortedData }: SortOptionsProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [sortBy, setSortBy] = useState<string>('time');
-  const [sortOrder, setSortOrder] = useState<string>('desc');
 
   const open = Boolean(anchorEl);
 
   useEffect(() => {
-    fetchSortedData({ sortBy, sortOrder });
+    fetchSortedData();
   }, [fetchSortedData, sortBy, sortOrder]);
 
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
@@ -34,11 +35,12 @@ const SortOptions = ({ fetchSortedData }: SortOptionsProps) => {
   };
 
   const handleSortByClick = (option: string) => {
-    setSortBy(option);
+    handleSortOptionsChange('sortBy', option);
     handleClose();
   };
   const handleSortOrderClick = () => {
-    setSortOrder((prev) => (prev === 'desc' ? 'asc' : 'desc'));
+    const val = sortOrder === 'desc' ? 'asc' : 'desc';
+    handleSortOptionsChange('sortOrder', val);
   };
 
   const getName = (val: string) => {

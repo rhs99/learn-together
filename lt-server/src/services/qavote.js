@@ -31,7 +31,7 @@ const updateVote = async (body) => {
         qa = await qa.save();
         vote = await vote.save();
 
-        return {upVote: qa.upVote, downVote: qa.downVote};
+        return { upVote: qa.upVote, downVote: qa.downVote };
     } catch (e) {
         console.log(e.message);
     }

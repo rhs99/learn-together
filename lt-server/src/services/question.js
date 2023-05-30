@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Question = require('../models/question');
-const Answer = require('../models/answer')
+const Answer = require('../models/answer');
 
 const addNewQuestion = async (body) => {
     try {
@@ -27,43 +27,46 @@ const addNewQuestion = async (body) => {
 };
 
 const getAllQuestions = async (body, query) => {
+    const pageNumber = query.pageNumber || 1;
+    const pageSize = query.pageSize || 5;
+
+    let q = { chapter: new mongoose.Types.ObjectId(body.chapterId) };
+    if (body.tagIds && body.tagIds.length > 0) {
+        q.tags = { $in: body.tagIds.map((_id) => new mongoose.Types.ObjectId(_id)) };
+    }
+
+    let key = 'createdAt',
+        val = -1;
+
+    if (query.sortBy && query.sortOrder) {
+        switch (query.sortBy) {
+            case 'upVote':
+                key = 'upVote';
+                break;
+            case 'downVote':
+                key = 'downVote';
+                break;
+            case 'time':
+                key = 'createdAt';
+                break;
+            case 'vote':
+                key = 'vote';
+                break;
+        }
+        switch (query.sortOrder) {
+            case 'desc':
+                val = -1;
+                break;
+            case 'asc':
+                val = 1;
+                break;
+        }
+    }
+
+    const sort = { [key]: val };
+
     try {
-        let q = { chapter: new mongoose.Types.ObjectId(body.chapterId) };
-        if (body.tagIds && body.tagIds.length > 0) {
-            q.tags = { $in: body.tagIds.map((_id) => new mongoose.Types.ObjectId(_id)) };
-        }
-
-        let key = 'createdAt',
-            val = -1;
-
-        if (query.sortBy && query.sortOrder) {
-            switch (query.sortBy) {
-                case 'upVote':
-                    key = 'upVote';
-                    break;
-                case 'downVote':
-                    key = 'downVote';
-                    break;
-                case 'time':
-                    key = 'createdAt';
-                    break;
-                case 'vote':
-                    key = 'vote';
-                    break;
-            }
-            switch (query.sortOrder) {
-                case 'desc':
-                    val = -1;
-                    break;
-                case 'asc':
-                    val = 1;
-                    break;
-            }
-        }
-
-        const sort = { [key]: val };
-
-        const questions = await Question.aggregate([
+        const results = await Question.aggregate([
             {
                 $match: q,
             },
@@ -94,9 +97,17 @@ const getAllQuestions = async (body, query) => {
             {
                 $sort: sort,
             },
+            {
+                $facet: {
+                    totalCount: [{ $count: 'total' }],
+                    paginatedResults: [{ $skip: (pageNumber - 1) * pageSize }, { $limit: pageSize }],
+                },
+            },
         ]).exec();
+        const totalCount = results[0].totalCount[0].total;
+        const paginatedResults = results[0].paginatedResults;
 
-        return questions;
+        return { totalCount, paginatedResults };
     } catch (e) {
         console.log(e.message);
     }
@@ -117,9 +128,9 @@ const deleteQuestion = async (questionId, user) => {
         if (JSON.stringify(question.user) !== JSON.stringify(user)) {
             throw new Error('unauth');
         }
-        const promises = question.answers.map((_id)=>{
-            return Answer.deleteOne({_id: _id}).exec();
-        })
+        const promises = question.answers.map((_id) => {
+            return Answer.deleteOne({ _id: _id }).exec();
+        });
         await Question.deleteOne({ _id: questionId }).exec();
         await Promise.all(promises);
     } catch (e) {

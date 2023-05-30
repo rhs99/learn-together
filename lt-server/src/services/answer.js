@@ -1,5 +1,5 @@
 const Answer = require('../models/answer');
-const Question = require('../models/question')
+const Question = require('../models/question');
 
 const addNewAnswer = async (body) => {
     try {
@@ -19,7 +19,6 @@ const addNewAnswer = async (body) => {
         const question = await Question.findById(body.question).exec();
         question.answers.push(answer._id);
         await question.save();
-
     } catch (e) {
         console.log(e.message);
         if (e.message === 'unauthorized') {

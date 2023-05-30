@@ -9,6 +9,7 @@ import { Autocomplete, TextField } from '@mui/material';
 import SortOptions from '../../components/SortOptions/SortOptions';
 import { Tag } from '../../types';
 import QACard from '../../components/QACard/QACard';
+import Pagination from '@mui/material/Pagination';
 
 import './_index.scss';
 
@@ -16,29 +17,36 @@ const ChapterDetail = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [existingTags, setExistingTags] = useState<Tag[]>([]);
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+  const [sortBy, setSortBy] = useState<string>('time');
+  const [sortOrder, setSortOrder] = useState<string>('desc');
+  const [paginationInfo, setPaginationInfo] = useState({ currPage: 1, totalPage: 10 });
 
   const navigate = useNavigate();
   const { chapterId } = useParams();
 
   const { isLoggedIn } = useContext(AuthContext);
 
-  const fetchQuestion = useCallback(
-    (options: any) => {
-      let queryString = '';
-      queryString += `sortBy=${options.sortBy}`;
-      queryString += `&sortOrder=${options.sortOrder}`;
+  const fetchQuestion = useCallback(() => {
+    let queryString = '';
+    queryString += `sortBy=${sortBy}`;
+    queryString += `&sortOrder=${sortOrder}`;
+    queryString += `&pageNumber=${paginationInfo.currPage}`;
 
-      const URL = `${Util.CONSTANTS.SERVER_URL}/questions/list?${queryString}`;
-      const selectedTagIds = selectedTags.map((tag) => tag._id);
-      axios.post(URL, { chapterId, tagIds: selectedTagIds }).then(({ data }) => {
-        setQuestions(data);
+    const URL = `${Util.CONSTANTS.SERVER_URL}/questions/list?${queryString}`;
+    const selectedTagIds = selectedTags.map((tag) => tag._id);
+    axios.post(URL, { chapterId, tagIds: selectedTagIds }).then(({ data }) => {
+      setQuestions(data.paginatedResults);
+      setPaginationInfo((prev) => {
+        return {
+          ...prev,
+          totalPage: Math.ceil(data.totalCount / 5),
+        };
       });
-    },
-    [selectedTags, chapterId]
-  );
+    });
+  }, [selectedTags, chapterId, paginationInfo.currPage, sortBy, sortOrder]);
 
   useEffect(() => {
-    fetchQuestion({ sortBy: 'time', sortOrder: 'desc' });
+    fetchQuestion();
   }, [fetchQuestion]);
 
   useEffect(() => {
@@ -55,6 +63,14 @@ const ChapterDetail = () => {
       const fq = prev.filter((q) => q._id !== _id);
       return fq;
     });
+  };
+
+  const handleSortOptionsChange = (option: string, val: string) => {
+    if (option === 'sortBy') {
+      setSortBy(val);
+    } else if (option === 'sortOrder') {
+      setSortOrder(val);
+    }
   };
 
   return (
@@ -82,7 +98,12 @@ const ChapterDetail = () => {
         </div>
       </div>
       <div>
-        <SortOptions fetchSortedData={fetchQuestion} />
+        <SortOptions
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          handleSortOptionsChange={handleSortOptionsChange}
+          fetchSortedData={fetchQuestion}
+        />
       </div>
       {questions.map((question) => (
         <QACard
@@ -93,6 +114,21 @@ const ChapterDetail = () => {
           handleItemDelete={handleQuestionDelete}
         />
       ))}
+      <Pagination
+        count={paginationInfo.totalPage}
+        page={paginationInfo.currPage}
+        variant="outlined"
+        shape="rounded"
+        color="primary"
+        onChange={(e, page) => {
+          setPaginationInfo((prev) => {
+            return {
+              ...prev,
+              currPage: page,
+            };
+          });
+        }}
+      />
     </div>
   );
 };

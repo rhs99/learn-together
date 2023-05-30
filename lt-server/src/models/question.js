@@ -35,9 +35,11 @@ const questionSchema = new mongoose.Schema(
                 type: String,
             },
         ],
-        answers: [{
-            type: mongoose.Types.ObjectId
-        }]
+        answers: [
+            {
+                type: mongoose.Types.ObjectId,
+            },
+        ],
     },
     { timestamps: true },
 );
