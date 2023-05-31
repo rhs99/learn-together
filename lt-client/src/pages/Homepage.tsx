@@ -6,7 +6,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import { Typography } from '@mui/material';
 
 const HoomePage = () => {
   const classes = useLoaderData();
@@ -18,15 +18,21 @@ const HoomePage = () => {
 
   return (
     <div>
-      <p>Let&apos;s Learn Together</p>
-      <p>List of Classes</p>
-      <TableContainer sx={{ width: 650, border: 1, borderColor: 'lightgray' }}>
-        <Table sx={{ width: '100%' }}>
+      <TableContainer
+        sx={{ width: '40%', border: 2, borderColor: 'rgb(231, 235, 240)', borderRadius: '3px', margin: '50px auto' }}
+      >
+        <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Class</TableCell>
-              <TableCell align="right" sx={{ borderLeft: 1, borderColor: 'lightgray' }}>
-                Total subjects
+              <TableCell sx={{ width: '50%' }}>
+                <Typography fontSize={18} variant="caption">
+                  Class
+                </Typography>
+              </TableCell>
+              <TableCell align="center" sx={{ width: '50%' }}>
+                <Typography fontSize={18} variant="caption">
+                  Subjects
+                </Typography>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -34,13 +40,11 @@ const HoomePage = () => {
             {(classes as Class[]).map((_class) => (
               <TableRow
                 key={_class._id}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 onClick={() => handleClassChange(_class._id)}
+                sx={{ ':hover': { cursor: 'pointer', backgroundColor: 'rgb(231, 235, 240)' } }}
               >
                 <TableCell>{_class.name}</TableCell>
-                <TableCell align="right" sx={{ borderLeft: 1, borderColor: 'lightgray' }}>
-                  {_class.subjects ? _class.subjects.length : 0}
-                </TableCell>
+                <TableCell align="center">{_class.subjects.length}</TableCell>
               </TableRow>
             ))}
           </TableBody>
