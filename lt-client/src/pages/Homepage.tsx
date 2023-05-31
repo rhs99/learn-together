@@ -17,40 +17,38 @@ const HoomePage = () => {
   };
 
   return (
-    <div>
-      <TableContainer
-        sx={{ width: '40%', border: 2, borderColor: 'rgb(231, 235, 240)', borderRadius: '3px', margin: '50px auto' }}
-      >
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ width: '50%' }}>
-                <Typography fontSize={18} variant="caption">
-                  Class
-                </Typography>
-              </TableCell>
-              <TableCell align="center" sx={{ width: '50%' }}>
-                <Typography fontSize={18} variant="caption">
-                  Subjects
-                </Typography>
-              </TableCell>
+    <TableContainer
+      sx={{ width: '40%', border: 2, borderColor: 'rgb(231, 235, 240)', borderRadius: '3px', margin: '50px auto' }}
+    >
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell sx={{ width: '50%' }}>
+              <Typography fontSize={18} variant="caption">
+                Class
+              </Typography>
+            </TableCell>
+            <TableCell align="center" sx={{ width: '50%' }}>
+              <Typography fontSize={18} variant="caption">
+                Subjects
+              </Typography>
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {(classes as Class[]).map((_class) => (
+            <TableRow
+              key={_class._id}
+              onClick={() => handleClassChange(_class._id)}
+              sx={{ ':hover': { cursor: 'pointer', backgroundColor: 'rgb(231, 235, 240)' } }}
+            >
+              <TableCell>{_class.name}</TableCell>
+              <TableCell align="center">{_class.subjects.length}</TableCell>
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {(classes as Class[]).map((_class) => (
-              <TableRow
-                key={_class._id}
-                onClick={() => handleClassChange(_class._id)}
-                sx={{ ':hover': { cursor: 'pointer', backgroundColor: 'rgb(231, 235, 240)' } }}
-              >
-                <TableCell>{_class.name}</TableCell>
-                <TableCell align="center">{_class.subjects.length}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </div>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 

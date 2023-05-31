@@ -3,7 +3,7 @@ const Subject = require('../models/subject');
 
 const getSubjects = async (classId) => {
     try {
-        const subjects = await Subject.find({ class: classId, isDeleted: false });
+        const subjects = await Subject.find({ class: classId });
         return subjects;
     } catch (e) {
         console.log(e.message);
@@ -25,11 +25,4 @@ const addNewSubject = async (body) => {
     }
 };
 
-const deleteSubject = async (_id) => {
-    try {
-        await Subject.deleteOne({ _id: _id }).exec();
-    } catch (e) {
-        if (e instanceof Error) console.log(e.message);
-    }
-};
-module.exports = { getSubjects, addNewSubject, deleteSubject };
+module.exports = { getSubjects, addNewSubject };

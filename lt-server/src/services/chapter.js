@@ -1,4 +1,5 @@
 const Chapter = require('../models/chapter');
+const Subject = require('../models/subject');
 
 const getChapters = async (subjectId) => {
     try {
@@ -11,26 +12,14 @@ const getChapters = async (subjectId) => {
 
 const addNewChapter = async (body) => {
     try {
-        const newChapter = new Chapter(body);
-        await newChapter.save();
+        let chapter = new Chapter(body);
+        chapter = await chapter.save();
+        const sub = await Subject.findById(body.subject).exec();
+        sub.chapters.push(chapter._id);
+        await sub.save();
     } catch (e) {
         console.log(e.message);
     }
 };
 
-const softDeleteChapter = async (_id) => {
-    try {
-        const chapter = await Chapter.findOneAndUpdate(
-            { _id },
-            { isDeleted: true },
-            {
-                new: true,
-            },
-        );
-        return chapter;
-    } catch (e) {
-        if (e instanceof Error) console.log(e.message);
-    }
-};
-
-module.exports = { getChapters, addNewChapter, softDeleteChapter };
+module.exports = { getChapters, addNewChapter };

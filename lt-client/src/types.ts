@@ -7,6 +7,7 @@ export type Class = {
 export type Subject = {
   name: string;
   _id: string;
+  chapters: string[];
 };
 
 export type Chapter = {
