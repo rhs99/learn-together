@@ -19,7 +19,7 @@ const ChapterDetail = () => {
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [sortBy, setSortBy] = useState<string>('time');
   const [sortOrder, setSortOrder] = useState<string>('desc');
-  const [paginationInfo, setPaginationInfo] = useState({ currPage: 1, totalPage: 10 });
+  const [paginationInfo, setPaginationInfo] = useState({ currPage: 1, totalPage: 1 });
 
   const navigate = useNavigate();
   const { chapterId } = useParams();
@@ -73,38 +73,44 @@ const ChapterDetail = () => {
     }
   };
 
+  const isEmpty = questions.length === 0;
+
   return (
     <div className="cl-ChapterDetail">
       <div className="heading">
         <Typography variant="h6">All Questions</Typography>
-        <Autocomplete
-          className="filter"
-          multiple
-          id="tags-standard"
-          onChange={(event: any, selection: Tag[]) => {
-            setSelectedTags(selection);
-          }}
-          options={existingTags}
-          getOptionLabel={(option) => option.name}
-          defaultValue={[]}
-          renderInput={(params) => (
-            <TextField {...params} variant="standard" label="Filter By Tags" placeholder="Select Tags" />
-          )}
-        />
+        {!isEmpty && (
+          <Autocomplete
+            className="filter"
+            multiple
+            id="tags-standard"
+            onChange={(event: any, selection: Tag[]) => {
+              setSelectedTags(selection);
+            }}
+            options={existingTags}
+            getOptionLabel={(option) => option.name}
+            defaultValue={[]}
+            renderInput={(params) => (
+              <TextField {...params} variant="standard" label="Filter By Tags" placeholder="Select Tags" />
+            )}
+          />
+        )}
         <div className="ask-btn">
           <Button variant="contained" disabled={!isLoggedIn} onClick={handleAskQuestion}>
             Ask Question
           </Button>
         </div>
       </div>
-      <div>
+
+      {!isEmpty && (
         <SortOptions
           sortBy={sortBy}
           sortOrder={sortOrder}
           handleSortOptionsChange={handleSortOptionsChange}
           fetchSortedData={fetchQuestion}
         />
-      </div>
+      )}
+
       {questions.map((question) => (
         <QACard
           key={question._id}
@@ -114,21 +120,24 @@ const ChapterDetail = () => {
           handleItemDelete={handleQuestionDelete}
         />
       ))}
-      <Pagination
-        count={paginationInfo.totalPage}
-        page={paginationInfo.currPage}
-        variant="outlined"
-        shape="rounded"
-        color="primary"
-        onChange={(e, page) => {
-          setPaginationInfo((prev) => {
-            return {
-              ...prev,
-              currPage: page,
-            };
-          });
-        }}
-      />
+      
+      {paginationInfo.totalPage > 1 && (
+        <Pagination
+          count={paginationInfo.totalPage}
+          page={paginationInfo.currPage}
+          variant="outlined"
+          shape="rounded"
+          color="primary"
+          onChange={(e, page) => {
+            setPaginationInfo((prev) => {
+              return {
+                ...prev,
+                currPage: page,
+              };
+            });
+          }}
+        />
+      )}
     </div>
   );
 };

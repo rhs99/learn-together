@@ -3,7 +3,7 @@ const Subject = require('../models/subject');
 
 const getChapters = async (subjectId) => {
     try {
-        const chapters = await Chapter.find({ subject: subjectId, isDeleted: false });
+        const chapters = await Chapter.find({ subject: subjectId });
         return chapters;
     } catch (e) {
         console.log(e.message);

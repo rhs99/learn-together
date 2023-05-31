@@ -104,7 +104,7 @@ const getAllQuestions = async (body, query) => {
                 },
             },
         ]).exec();
-        const totalCount = results[0].totalCount[0].total;
+        const totalCount = results[0].totalCount.length > 0 ? results[0].totalCount[0].total : 0;
         const paginatedResults = results[0].paginatedResults;
 
         return { totalCount, paginatedResults };
