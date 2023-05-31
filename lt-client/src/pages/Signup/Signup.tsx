@@ -1,4 +1,4 @@
-import { redirect, useLoaderData } from 'react-router-dom';
+import { useLoaderData, useNavigate } from 'react-router-dom';
 import { FormEvent, useState } from 'react';
 import { Class } from '../../types';
 import axios from 'axios';
@@ -18,14 +18,15 @@ const SignupPage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [_class, setClass] = useState('');
-  const [err, setErr] = useState(false);
+  const [err, setErr] = useState('');
 
   const classes = useLoaderData();
+  const navigate = useNavigate();
 
   const handleSignup = async (event: FormEvent) => {
     event.preventDefault();
     if (password !== confirmPassword) {
-      setErr(true);
+      setErr('Confirm Password should match Password');
       return;
     }
 
@@ -36,9 +37,14 @@ const SignupPage = () => {
       class: _class,
     };
 
-    await axios.post(URL, userInfo);
-
-    return redirect('/users/login');
+    axios
+      .post(URL, userInfo)
+      .then(() => {
+        navigate('/users/login');
+      })
+      .catch((err) => {
+        setErr(err.response.data.message);
+      });
   };
 
   return (
@@ -70,7 +76,7 @@ const SignupPage = () => {
             onChange={(event) => setConfirmPassword(event.target.value)}
             required
           />
-          {err && <span className="err">Confirm Password should match Password</span>}
+          {err && <span className="err">{err}</span>}
           <label htmlFor="class">Class</label>
           <select value={_class} onChange={(event) => setClass(event.target.value)} name="class">
             <option value="">Select class</option>

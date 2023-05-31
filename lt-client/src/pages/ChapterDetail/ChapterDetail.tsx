@@ -120,7 +120,7 @@ const ChapterDetail = () => {
           handleItemDelete={handleQuestionDelete}
         />
       ))}
-      
+
       {paginationInfo.totalPage > 1 && (
         <Pagination
           count={paginationInfo.totalPage}
