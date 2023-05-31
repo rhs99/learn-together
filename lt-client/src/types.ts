@@ -1,6 +1,7 @@
 export type Class = {
   name: string;
   _id: string;
+  subjects: string[];
 };
 
 export type Subject = {
