@@ -187,7 +187,7 @@ const QuestionInput = (props: QuestionInputProps) => {
         />
       </div>
       <div className="file-upload">
-        <input type="file" onChange={handleFileUpload} />
+        <input type="file" accept="image/*" multiple={false} onChange={handleFileUpload} />
       </div>
       <div className="btn-container">
         <Button variant="outlined" onClick={handleClose} color="error" className="close-btn">

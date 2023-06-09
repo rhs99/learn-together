@@ -122,7 +122,14 @@ const AnswerInput = (props: AnswerInputProps) => {
         <h3>Your Answer</h3>
       </div>
       <QuillTextEditor onEditorReady={onEditorReady} />
-      <input className="file-input" type="file" ref={(ref: any) => setInputRef(ref)} onChange={handleFileUpload} />
+      <input
+        className="file-input"
+        type="file"
+        accept="image/*"
+        multiple={false}
+        ref={(ref: any) => setInputRef(ref)}
+        onChange={handleFileUpload}
+      />
       <div className="btn-container">
         <Button variant="outlined" onClick={handlePostAnswer}>
           Save
