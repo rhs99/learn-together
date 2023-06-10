@@ -30,32 +30,7 @@ const AnswerInput = (props: AnswerInputProps) => {
 
   const handleFileUpload = async (event: any) => {
     const file = event.target.files[0];
-    const metadata = {
-      'Content-type': 'image',
-    };
-    const reader = new FileReader();
-    reader.onload = function (e: any) {
-      const buffer = e.target.result;
-      const stream = new PassThrough();
-      stream.end(Buffer.from(buffer));
-
-      const uniqueFileName = props.answer._id + '-' + file.name;
-
-      Util.minioClient.putObject(
-        Util.CONSTANTS.MINIO_BUCKET,
-        uniqueFileName,
-        stream,
-        file.size,
-        metadata,
-        function (err: any) {
-          if (err) {
-            return console.log(err);
-          }
-          setImageLocations((prevState) => [uniqueFileName, ...prevState]);
-        }
-      );
-    };
-    reader.readAsArrayBuffer(file);
+    await Util.uploadFile(file, setImageLocations);
   };
 
   const handlePostAnswer = async () => {

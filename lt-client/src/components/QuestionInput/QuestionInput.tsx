@@ -14,6 +14,7 @@ import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
 import AlertTitle from '@mui/material/AlertTitle';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
+import imageCompression from 'browser-image-compression';
 
 import './_index.scss';
 
@@ -41,32 +42,7 @@ const QuestionInput = (props: QuestionInputProps) => {
 
   const handleFileUpload = async (event: any) => {
     const file = event.target.files[0];
-    const metadata = {
-      'Content-type': 'image',
-    };
-    const reader = new FileReader();
-    reader.onload = function (e: any) {
-      const buffer = e.target.result;
-      const stream = new PassThrough();
-      stream.end(Buffer.from(buffer));
-
-      const uniqueFileName = props.chapterId + '-' + file.name;
-
-      Util.minioClient.putObject(
-        Util.CONSTANTS.MINIO_BUCKET,
-        uniqueFileName,
-        stream,
-        file.size,
-        metadata,
-        function (err: any) {
-          if (err) {
-            return console.log(err);
-          }
-          setImageLocations([uniqueFileName]);
-        }
-      );
-    };
-    reader.readAsArrayBuffer(file);
+    await Util.uploadFile(file, setImageLocations);
   };
 
   const handleSave = async () => {
