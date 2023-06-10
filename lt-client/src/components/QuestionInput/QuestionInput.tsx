@@ -5,7 +5,6 @@ import 'react-quill/dist/quill.snow.css';
 import Util from '../../utils';
 import axios from 'axios';
 import { Question } from '../../types';
-import { PassThrough } from 'stream';
 import AuthContext from '../../store/auth';
 import { Button } from '@mui/material';
 import { Tag } from '../../types';
@@ -14,7 +13,6 @@ import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
 import AlertTitle from '@mui/material/AlertTitle';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
-import imageCompression from 'browser-image-compression';
 
 import './_index.scss';
 

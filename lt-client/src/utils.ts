@@ -1,6 +1,7 @@
 import * as minio from 'minio';
 import imageCompression from 'browser-image-compression';
 import { PassThrough } from 'stream';
+import { v4 as uuidv4 } from 'uuid';
 
 const minioClient = new minio.Client({
   endPoint: 'localhost',
@@ -29,7 +30,7 @@ const uploadFile = async (file: any, cb: any) => {
       const stream = new PassThrough();
       stream.end(Buffer.from(buffer));
 
-      const uniqueFileName = '-' + file.name;
+      const uniqueFileName = uuid() + '-' + file.name;
 
       minioClient.putObject(
         Util.CONSTANTS.MINIO_BUCKET,
@@ -51,6 +52,10 @@ const uploadFile = async (file: any, cb: any) => {
   }
 };
 
+const uuid = () => {
+  return uuidv4();
+};
+
 const Util = {
   CONSTANTS: {
     SERVER_URL: 'http://localhost:5000',
@@ -59,6 +64,7 @@ const Util = {
   },
   minioClient,
   uploadFile,
+  uuid,
 };
 
 export default Util;
