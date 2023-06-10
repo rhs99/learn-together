@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Question = require('../models/question');
 const Answer = require('../models/answer');
+const Chapter = require('../models/chapter');
 
 const addNewQuestion = async (body) => {
     try {
@@ -16,6 +17,9 @@ const addNewQuestion = async (body) => {
         } else {
             delete body._id;
             question = new Question(body);
+            const chapter = await Chapter.findById(body.chapter).exec();
+            chapter.questionsCount += 1;
+            await chapter.save();
         }
         await question.save();
     } catch (e) {
@@ -131,6 +135,9 @@ const deleteQuestion = async (questionId, user) => {
         const promises = question.answers.map((_id) => {
             return Answer.deleteOne({ _id: _id }).exec();
         });
+        const chapter = await Chapter.findById(question.chapter).exec();
+        chapter.questionsCount -= 1;
+        await chapter.save();
         await Question.deleteOne({ _id: questionId }).exec();
         await Promise.all(promises);
     } catch (e) {

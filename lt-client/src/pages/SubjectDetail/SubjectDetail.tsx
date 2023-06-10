@@ -48,7 +48,7 @@ const SubjectDetail = () => {
               sx={{ ':hover': { cursor: 'pointer', backgroundColor: 'rgb(231, 235, 240)' } }}
             >
               <TableCell>{chapter.name}</TableCell>
-              <TableCell align="center">0</TableCell>
+              <TableCell align="center">{chapter.questionsCount}</TableCell>
             </TableRow>
           ))}
         </TableBody>

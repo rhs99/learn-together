@@ -13,6 +13,7 @@ export type Subject = {
 export type Chapter = {
   name: string;
   _id: string;
+  questionsCount: number;
 };
 
 export type User = {
