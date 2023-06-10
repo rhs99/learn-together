@@ -14,7 +14,7 @@ const minioClient = new minio.Client({
 const uploadFile = async (file: any, cb: any) => {
   const options = {
     maxSizeMB: 0.1,
-    maxWidthOrHeight: 600,
+    maxWidthOrHeight: 2048,
     useWebWorker: typeof Worker !== 'undefined',
   };
 
@@ -42,7 +42,7 @@ const uploadFile = async (file: any, cb: any) => {
           if (err) {
             return console.log(err);
           }
-          cb(uniqueFileName);
+          cb([uniqueFileName]);
         }
       );
     };
@@ -50,6 +50,14 @@ const uploadFile = async (file: any, cb: any) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+const deleteFile = (name: string) => {
+  minioClient.removeObject(Util.CONSTANTS.MINIO_BUCKET, name, (err) => {
+    if (err) {
+      console.log(err);
+    }
+  });
 };
 
 const uuid = () => {
@@ -64,6 +72,7 @@ const Util = {
   },
   minioClient,
   uploadFile,
+  deleteFile,
   uuid,
 };
 

@@ -114,7 +114,22 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
     setOpenDeleteModal(true);
   };
 
-  const handleConfirmDelete = () => {
+  const deleteImageLocations = async () => {
+    const images = item.imageLocations;
+    if (isQuestion) {
+      const URL = `${Util.CONSTANTS.SERVER_URL}/answers/list?questionId=${item._id}`;
+      const { data } = await axios.get(URL);
+      (data as Answer[]).forEach((answer) => {
+        images.push(...answer.imageLocations);
+      });
+    }
+    images.forEach((image) => {
+      Util.deleteFile(image);
+    });
+  };
+
+  const handleConfirmDelete = async () => {
+    await deleteImageLocations();
     const url = `${Util.CONSTANTS.SERVER_URL}/${isQuestion ? 'questions' : 'answers'}/${item._id}`;
     axios
       .delete(url, {

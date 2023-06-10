@@ -28,6 +28,9 @@ const AnswerInput = (props: AnswerInputProps) => {
   const navigate = useNavigate();
 
   const handleFileUpload = async (event: any) => {
+    if (imageLocations.length > 0) {
+      Util.deleteFile(imageLocations[0]);
+    }
     const file = event.target.files[0];
     await Util.uploadFile(file, setImageLocations);
   };
