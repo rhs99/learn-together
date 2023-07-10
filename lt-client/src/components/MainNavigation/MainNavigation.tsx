@@ -4,7 +4,6 @@ import { IconButton, Menu, MenuItem, Stack, Typography } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -34,10 +33,9 @@ const MainNavigation = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
+      <AppBar position="static" sx={{ boxShadow: '0 0 0 0' }}>
+        <Toolbar sx={{ backgroundColor: 'rgb(231, 235, 240)' }}>
           <Stack direction="row" spacing={2}>
-            <SchoolRoundedIcon fontSize="medium" />
             <NavLink
               to="/"
               className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
@@ -73,7 +71,7 @@ const MainNavigation = () => {
             {isLoggedIn && (
               <>
                 <IconButton onClick={handleOpenUserMenu}>
-                  <AccountCircleRoundedIcon sx={{ color: 'white' }} fontSize="medium" />
+                  <AccountCircleRoundedIcon sx={{ color: 'primary' }} fontSize="medium" />
                 </IconButton>
                 <Menu
                   sx={{ mt: '35px' }}
