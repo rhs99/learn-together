@@ -17,6 +17,18 @@ const userSchema = new mongoose.Schema({
             ref: 'Privilege',
         },
     ],
+    questions: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: 'Question',
+        },
+    ],
+    answers: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: 'Answer',
+        },
+    ],
     class: {
         type: mongoose.Types.ObjectId,
         ref: 'Class',

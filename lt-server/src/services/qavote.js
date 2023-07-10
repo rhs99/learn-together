@@ -37,4 +37,22 @@ const updateVote = async (body) => {
     }
 };
 
-module.exports = { updateVote };
+const countUpvotesForUser = async (userID) => {
+    try {
+        const upvotes = await QAVote.find({ uId: userID, cnt: 1 });
+        return upvotes;
+    } catch (e) {
+        console.log(e.message);
+    }
+};
+
+const countDownvotesForUser = async (userID) => {
+    try {
+        const downvotes = await QAVote.find({ uId: userID, cnt: -1 });
+        return downvotes;
+    } catch (e) {
+        console.log(e.message);
+    }
+};
+
+module.exports = { updateVote, countUpvotesForUser, countDownvotesForUser };

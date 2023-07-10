@@ -15,6 +15,7 @@ import QuestionEdit from './pages/QuestionEdit';
 import AnswerEdit from './pages/AnswerEdit/AnswerEdit';
 import AboutPage from './pages/AboutPage/AboutPage';
 import { AuthContextProvider } from './store/auth';
+import Profile from './pages/Profile/Profile';
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <HoomePage />, loader: ClassLoader },
           { path: '/about', element: <AboutPage /> },
+          { path: '/profile/:userName', element: <Profile /> },
           {
             path: '/users/signup',
             element: <SignupPage />,

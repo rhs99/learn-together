@@ -6,5 +6,7 @@ const router = express.Router();
 const QAVoteController = require('../controllers/qavote');
 
 router.post('/update', extractAndVerifyToken, QAVoteController.updateVote);
+router.get('/countUpvotes', QAVoteController.countUpvotesForUser);
+router.get('/countDownvotes', QAVoteController.countDownvotesForUser);
 
 module.exports = router;
