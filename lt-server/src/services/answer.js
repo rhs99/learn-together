@@ -3,6 +3,7 @@ const Question = require('../models/question');
 
 const addNewAnswer = async (body) => {
     try {
+        const question = await Question.findById(body.question).exec();
         let answer;
         if (body._id !== '') {
             answer = await Answer.findOne({ _id: body._id }).exec();
@@ -11,14 +12,14 @@ const addNewAnswer = async (body) => {
             }
             answer.details = body.details;
             answer.imageLocations = body.imageLocations;
+            await answer.save();
         } else {
             delete body._id;
             answer = new Answer(body);
+            answer = await answer.save();
+            question.answers.push(answer._id);
+            await question.save();
         }
-        answer = await answer.save();
-        const question = await Question.findById(body.question).exec();
-        question.answers.push(answer._id);
-        await question.save();
     } catch (e) {
         console.log(e.message);
         if (e.message === 'unauthorized') {
