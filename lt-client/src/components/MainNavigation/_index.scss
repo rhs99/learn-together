@@ -1,16 +1,42 @@
-  a {
-    text-decoration: none;
-  }
+.lt-Navigation {
+    height: 5vh;
+    width: 100%;
+    background-color: var(--primary);
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
 
-  .idle{
-    color: black;
-  }
+    .left {
+        width: 7%;
+        display: flex;
+        justify-content: space-between;
+    }
 
-  .pending {
-    opacity: 0.5;
-  }
+    .right {
+        width: 7%;
+        display: flex;
+        justify-content: space-between;
+    }
 
-  .active {
-    color: rgb(31, 54, 229);
-  }
-  
+    .right-loggedIn {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .idle {
+        color: black;
+    }
+
+    .pending {
+        opacity: 0.5;
+    }
+
+    .active {
+        color: #1976d2;
+    }
+
+}
