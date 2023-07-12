@@ -1,5 +1,6 @@
 const Answer = require('../models/answer');
 const Question = require('../models/question');
+const User = require('../models/user');
 
 const addNewAnswer = async (body) => {
     try {
@@ -17,6 +18,9 @@ const addNewAnswer = async (body) => {
             delete body._id;
             answer = new Answer(body);
             answer = await answer.save();
+            const user = await User.findById(body.user).exec();
+            user.answers.push(answer._id);
+            await user.save();
             question.answers.push(answer._id);
             await question.save();
         }
@@ -53,8 +57,11 @@ const deleteAnswer = async (answerId, user) => {
         }
         const question = await Question.findById(answer.question).exec();
         question.answers = question.answers.filter((q) => JSON.stringify(q) !== JSON.stringify(answer._id));
-        await Answer.deleteOne({ _id: answerId }).exec();
         await question.save();
+        const _user = await User.findById(user).exec();
+        _user.answers = _user.answers.filter((item) => JSON.stringify(item) !== JSON.stringify(answerId));
+        await _user.save();
+        await Answer.deleteOne({ _id: answerId }).exec();
     } catch (e) {
         console.log(e.message);
         if (e.message === 'unauth') {

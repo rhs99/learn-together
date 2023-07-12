@@ -31,6 +31,10 @@ const MainNavigation = () => {
     navigate('/');
   };
 
+  const goToProfile = () => {
+    navigate('/profile/' + authCtx.getStoredValue().userName);
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ boxShadow: '0 0 0 0' }}>
@@ -89,7 +93,7 @@ const MainNavigation = () => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  <MenuItem onClick={handleCloseUserMenu}>
+                  <MenuItem onClick={goToProfile}>
                     <Stack direction="row" alignItems="center" gap={1}>
                       <PersonOutlineIcon />
                       <Typography variant="body1">Profile</Typography>
