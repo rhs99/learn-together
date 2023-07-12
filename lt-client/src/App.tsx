@@ -28,7 +28,7 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <HoomePage />, loader: ClassLoader },
           { path: '/about', element: <AboutPage /> },
-          { path: '/profile/:userName', element: <Profile /> },
+          { path: '/users/:userName', element: <Profile /> },
           {
             path: '/users/signup',
             element: <SignupPage />,

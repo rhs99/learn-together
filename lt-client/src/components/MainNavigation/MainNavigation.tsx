@@ -32,7 +32,7 @@ const MainNavigation = () => {
   };
 
   const goToProfile = () => {
-    navigate('/profile/' + authCtx.getStoredValue().userName);
+    navigate('/users/' + authCtx.getStoredValue().userName);
   };
 
   return (

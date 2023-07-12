@@ -20,7 +20,7 @@ const Profile = () => {
   const [downvoteCnt, setDownvoteCnt] = useState(0);
   const { userName } = useParams();
   useEffect(() => {
-    const URL = `${Util.CONSTANTS.SERVER_URL}/users/?userName=${userName}`;
+    const URL = `${Util.CONSTANTS.SERVER_URL}/users?userName=${userName}`;
     axios.get(URL).then(({ data }) => {
       setUserId(data[0]._id);
       setClass(data[0].class);
@@ -36,13 +36,11 @@ const Profile = () => {
       .get(URL)
       .then(({ data }) => {
         setUpvoteCnt(data.length);
-        console.log(data);
       })
       .catch((e) => console.log(e));
   }, [userId]);
   useEffect(() => {
     if (userId === null || userId === undefined) return;
-    console.log(userId);
     const URL = `${Util.CONSTANTS.SERVER_URL}/votes/countDownvotes?userId=${userId}`;
     axios
       .get(URL)
