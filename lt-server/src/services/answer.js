@@ -17,10 +17,10 @@ const addNewAnswer = async (body) => {
         } else {
             delete body._id;
             answer = new Answer(body);
+            answer = await answer.save();
             const user = await User.findById(body.user).exec();
             user.answers.push(answer._id);
             await user.save();
-            answer = await answer.save();
             question.answers.push(answer._id);
             await question.save();
         }
