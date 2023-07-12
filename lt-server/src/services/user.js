@@ -1,4 +1,6 @@
 const User = require('../models/user');
+const Question = require('../models/question');
+const Answer = require('../models/answer');
 
 const addNewUser = async (body) => {
     try {
@@ -15,8 +17,42 @@ const addNewUser = async (body) => {
 
 const getUser = async (userName) => {
     try {
-        const user = await User.find({ userName }).select('-password').exec();
-        return user;
+        const user = await User.findOne({ userName }).populate('class').select('-password').exec();
+        if (!user) {
+            throw new Error('No user found');
+        }
+
+        let upVote = 0;
+        let downVote = 0;
+
+        const qPromises = user.questions.map((question) => {
+            return Question.findById(question).exec();
+        });
+        const questions = await Promise.all(qPromises);
+
+        const aPromises = user.answers.map((answer) => {
+            return Answer.findById(answer).exec();
+        });
+        const answers = await Promise.all(aPromises);
+
+        questions.forEach((q) => {
+            upVote += q.upVote;
+            downVote += q.downVote;
+        });
+
+        answers.forEach((a) => {
+            upVote += a.upVote;
+            downVote += a.downVote;
+        });
+
+        return {
+            questions: user.questions.length,
+            answers: user.answers.length,
+            userName: user.userName,
+            class: user.class.name,
+            upVote,
+            downVote,
+        };
     } catch (error) {
         console.log(error.message);
     }

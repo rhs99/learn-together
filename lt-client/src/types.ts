@@ -19,6 +19,11 @@ export type Chapter = {
 export type User = {
   _id: string;
   userName: string;
+  questions?: number;
+  answers?: number;
+  class?: string;
+  upVote?: number;
+  downVote?: number;
 };
 
 export type Tag = {
