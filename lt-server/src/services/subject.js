@@ -1,6 +1,25 @@
 const Class = require('../models/class');
 const Subject = require('../models/subject');
 
+const getSubjectBreadcrumb = async (id) => {
+    try {
+        const subject = await Subject.findById(id).exec();
+        const _class = await Class.findById(subject.class).exec();
+        return [
+            {
+                name: _class.name,
+                url: `/classes/${_class._id}`,
+            },
+            {
+                name: subject.name,
+                url: '#',
+            },
+        ];
+    } catch (e) {
+        console.log(e.message);
+    }
+};
+
 const getSubjects = async (classId) => {
     try {
         const subjects = await Subject.find({ class: classId });
@@ -25,4 +44,4 @@ const addNewSubject = async (body) => {
     }
 };
 
-module.exports = { getSubjects, addNewSubject };
+module.exports = { getSubjects, addNewSubject, getSubjectBreadcrumb };

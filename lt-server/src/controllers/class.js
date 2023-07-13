@@ -1,5 +1,14 @@
 const ClassService = require('../services/class');
 
+const getClass = async (req, res) => {
+    try {
+        const _class = await ClassService.getClass(req.params.id);
+        res.status(200).json(_class);
+    } catch (e) {
+        res.status(400).json({ message: e.message });
+    }
+};
+
 const getClasses = async (req, res) => {
     try {
         const classes = await ClassService.getClasses();
@@ -18,4 +27,4 @@ const addNewClass = async (req, res) => {
     }
 };
 
-module.exports = { getClasses, addNewClass };
+module.exports = { getClasses, addNewClass, getClass };

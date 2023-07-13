@@ -62,7 +62,7 @@ const QuestionDetail = () => {
         />
       )}
       <Typography variant="h5" className="ans-title">
-        All Answers
+        {`${answers.length} Answers`}
       </Typography>
       {answers.map((answer) => (
         <QACard

@@ -53,3 +53,8 @@ export type Question = {
   downVote: number;
   answers: string[];
 };
+
+export type Breadcrumb = {
+  name: string;
+  url: string;
+};

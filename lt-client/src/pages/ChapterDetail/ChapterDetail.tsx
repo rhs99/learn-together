@@ -2,7 +2,7 @@ import { useEffect, useState, useContext, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Util from '../../utils';
-import { Question } from '../../types';
+import { Question, Breadcrumb } from '../../types';
 import AuthContext from '../../store/auth';
 import { Typography, Button } from '@mui/material';
 import { Autocomplete, TextField } from '@mui/material';
@@ -10,6 +10,8 @@ import SortOptions from '../../components/SortOptions/SortOptions';
 import { Tag } from '../../types';
 import QACard from '../../components/QACard/QACard';
 import Pagination from '@mui/material/Pagination';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Link from '@mui/material/Link';
 
 import './_index.scss';
 
@@ -20,6 +22,7 @@ const ChapterDetail = () => {
   const [sortBy, setSortBy] = useState<string>('time');
   const [sortOrder, setSortOrder] = useState<string>('desc');
   const [paginationInfo, setPaginationInfo] = useState({ currPage: 1, totalPage: 1 });
+  const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([]);
 
   const navigate = useNavigate();
   const { chapterId } = useParams();
@@ -54,6 +57,13 @@ const ChapterDetail = () => {
     axios.get(URL).then((data) => setExistingTags(data.data));
   }, [chapterId]);
 
+  useEffect(() => {
+    const URL = `${Util.CONSTANTS.SERVER_URL}/chapters/${chapterId}/breadcrumb`;
+    axios.get(URL).then(({ data }) => {
+      setBreadcrumbs(data);
+    });
+  }, [chapterId]);
+
   const handleAskQuestion = () => {
     navigate(`/chapters/${chapterId}/ask`);
   };
@@ -78,7 +88,18 @@ const ChapterDetail = () => {
   return (
     <div className="cl-ChapterDetail">
       <div className="heading">
-        <Typography variant="h6">All Questions</Typography>
+        {breadcrumbs.length > 0 && (
+          <Breadcrumbs separator="›" aria-label="breadcrumb">
+            {breadcrumbs.slice(0, -1).map((breadcrumb) => {
+              return (
+                <Link key={breadcrumb.name} href={breadcrumb.url} underline="hover">
+                  {breadcrumb.name}
+                </Link>
+              );
+            })}
+            {<Typography>{breadcrumbs[breadcrumbs.length - 1].name}</Typography>}
+          </Breadcrumbs>
+        )}
         {!isEmpty && (
           <Autocomplete
             className="filter"

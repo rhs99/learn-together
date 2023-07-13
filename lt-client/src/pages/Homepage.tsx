@@ -18,17 +18,17 @@ const HoomePage = () => {
 
   return (
     <TableContainer
-      sx={{ width: '40%', border: 2, borderColor: 'rgb(231, 235, 240)', borderRadius: '3px', margin: '50px auto' }}
+      sx={{ width: '30%', border: 2, borderColor: 'rgb(231, 235, 240)', borderRadius: '3px', margin: '10vh auto' }}
     >
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell sx={{ width: '50%' }}>
+            <TableCell>
               <Typography fontSize={18} variant="caption">
                 Class
               </Typography>
             </TableCell>
-            <TableCell align="center" sx={{ width: '50%' }}>
+            <TableCell sx={{ width: '20%' }}>
               <Typography fontSize={18} variant="caption">
                 Subjects
               </Typography>
@@ -43,7 +43,7 @@ const HoomePage = () => {
               sx={{ ':hover': { cursor: 'pointer', backgroundColor: 'rgb(231, 235, 240)' } }}
             >
               <TableCell>{_class.name}</TableCell>
-              <TableCell align="center">{_class.subjects.length}</TableCell>
+              <TableCell>{_class.subjects.length}</TableCell>
             </TableRow>
           ))}
         </TableBody>

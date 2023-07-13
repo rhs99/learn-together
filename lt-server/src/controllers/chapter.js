@@ -1,5 +1,14 @@
 const ChapterService = require('../services/chapter');
 
+const getChapterBreadcrumb = async (req, res) => {
+    try {
+        const chapter = await ChapterService.getChapterBreadcrumb(req.params.id);
+        res.status(200).json(chapter);
+    } catch (e) {
+        res.status(400).json({ message: e.message });
+    }
+};
+
 const getChapters = async (req, res) => {
     try {
         const chapters = await ChapterService.getChapters(req.query.subjectId);
@@ -18,4 +27,4 @@ const addNewChapter = async (req, res) => {
     }
 };
 
-module.exports = { getChapters, addNewChapter };
+module.exports = { getChapters, addNewChapter, getChapterBreadcrumb };

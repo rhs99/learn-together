@@ -1,5 +1,14 @@
 const SubjectService = require('../services/subject');
 
+const getSubjectBreadcrumb = async (req, res) => {
+    try {
+        const subject = await SubjectService.getSubjectBreadcrumb(req.params.id);
+        res.status(200).json(subject);
+    } catch (e) {
+        res.status(400).json({ message: e.message });
+    }
+};
+
 const getSubjects = async (req, res) => {
     try {
         const subjects = await SubjectService.getSubjects(req.query.classId);
@@ -18,4 +27,4 @@ const addNewSubject = async (req, res) => {
     }
 };
 
-module.exports = { getSubjects, addNewSubject };
+module.exports = { getSubjects, addNewSubject, getSubjectBreadcrumb };
