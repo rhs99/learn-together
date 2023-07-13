@@ -15,6 +15,7 @@ export async function loader() {
 
 const SignupPage = () => {
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [_class, setClass] = useState('');
@@ -33,6 +34,7 @@ const SignupPage = () => {
     const URL = Util.CONSTANTS.SERVER_URL + '/users/create';
     const userInfo = {
       userName: username,
+      email: email,
       password: password,
       class: _class,
     };
@@ -60,6 +62,8 @@ const SignupPage = () => {
             onChange={(event) => setUsername(event.target.value)}
             required
           />
+          <label htmlFor="email">E-mail</label>
+          <input type="email" name="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
           <label htmlFor="password">Password</label>
           <input
             type="password"
