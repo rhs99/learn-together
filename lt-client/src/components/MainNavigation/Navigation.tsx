@@ -74,8 +74,7 @@ const Navigation = () => {
               <AccountCircleRoundedIcon sx={{ color: 'primary' }} fontSize="medium" />
             </IconButton>
             <Menu
-              sx={{ mt: '35px' }}
-              id="menu-appbar"
+              sx={{ mt: '20px' }}
               anchorEl={anchorElUser}
               anchorOrigin={{
                 vertical: 'top',

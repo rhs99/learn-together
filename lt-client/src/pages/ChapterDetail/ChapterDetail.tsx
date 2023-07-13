@@ -123,6 +123,13 @@ const ChapterDetail = () => {
         </div>
       </div>
 
+      {isEmpty && (
+        <div className="empty">
+          <Typography variant="h3" color="gray">
+            No Questions
+          </Typography>
+        </div>
+      )}
       {!isEmpty && (
         <SortOptions
           sortBy={sortBy}
