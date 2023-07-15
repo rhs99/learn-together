@@ -75,4 +75,37 @@ const logInUser = async (body) => {
     }
 };
 
-module.exports = { addNewUser, getUser, logInUser };
+const updateClassInUser = async (body) => {
+    try {
+        const user = await User.findOne({ userName: body.userName }).exec();
+        if (!user) {
+            return null;
+        }
+        user.class = body._class;
+        await user.save();
+        return user;
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+const updatePasswordInUser = async (body) => {
+    try {
+        const user = await User.findOne({ userName: body.userName }).exec();
+        if (!user) {
+            return null;
+        }
+        const match = await user.comparePassword(body.prevPassword);
+        if (match) {
+            user.password = body.password;
+            await user.save();
+            return user;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+module.exports = { addNewUser, getUser, logInUser, updateClassInUser, updatePasswordInUser };
