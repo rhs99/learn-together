@@ -24,7 +24,7 @@ type QuestionInputProps = {
 };
 
 const QuestionInput = (props: QuestionInputProps) => {
-  const [imageLocations, setImageLocations] = useState<string[]>(props.question?.imageLocations || []);
+  const [imageLocations, _setImageLocations] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<Tag[]>(props.question?.tags || []);
   const [existingTags, setExistingTags] = useState<Tag[]>([]);
   const [editor, setEditor] = useState<Quill>();
@@ -38,10 +38,16 @@ const QuestionInput = (props: QuestionInputProps) => {
     axios.get(URL).then((data) => setExistingTags(data.data));
   }, [props.chapterId]);
 
+  const setImageLocations = (image: string) => {
+    _setImageLocations((prev) => {
+      return [...prev, image];
+    });
+  };
+
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
-    if (imageLocations.length > 0) {
-      Util.deleteFile(imageLocations[0]);
-    }
+    props.question?.imageLocations.forEach((image) => {
+      Util.deleteFile(image);
+    });
     if (event.target.files) {
       const file = event.target.files[0];
       await Util.uploadFile(file, setImageLocations);

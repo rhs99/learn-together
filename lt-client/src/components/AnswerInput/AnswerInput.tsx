@@ -19,7 +19,7 @@ type AnswerInputProps = {
 };
 
 const AnswerInput = (props: AnswerInputProps) => {
-  const [imageLocations, setImageLocations] = useState<string[]>(props.answer.imageLocations || []);
+  const [imageLocations, _setImageLocations] = useState<string[]>([]);
   const [editor, setEditor] = useState<Quill>();
   const [inputRef, setInputRef] = useState<HTMLInputElement | null>();
   const [showAlert, setShowAlert] = useState(false);
@@ -27,13 +27,21 @@ const AnswerInput = (props: AnswerInputProps) => {
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const setImageLocations = (image: string) => {
+    _setImageLocations((prev) => {
+      return [...prev, image];
+    });
+  };
+
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
-    if (imageLocations.length > 0) {
-      Util.deleteFile(imageLocations[0]);
-    }
+    props.answer.imageLocations?.forEach((image) => {
+      Util.deleteFile(image);
+    });
     if (event.target.files) {
-      const file = event.target.files[0];
-      await Util.uploadFile(file, setImageLocations);
+      await Util.uploadFile(event.target.files[0], setImageLocations);
+      if (event.target.files.length > 1) {
+        await Util.uploadFile(event.target.files[1], setImageLocations);
+      }
     }
   };
 
@@ -52,6 +60,7 @@ const AnswerInput = (props: AnswerInputProps) => {
       question: props.answer.question,
       imageLocations: imageLocations,
     };
+    console.log(answer);
     const URL = `${Util.CONSTANTS.SERVER_URL}/answers/create`;
 
     await axios.post(URL, answer, {
@@ -66,7 +75,7 @@ const AnswerInput = (props: AnswerInputProps) => {
     } else if (props.fetchAnswer) {
       props.fetchAnswer().then(() => {
         if (editor) editor.setContents({} as DeltaStatic);
-        setImageLocations([]);
+        _setImageLocations([]);
         if (inputRef) {
           inputRef.value = '';
         }
@@ -107,7 +116,7 @@ const AnswerInput = (props: AnswerInputProps) => {
         className="file-input"
         type="file"
         accept="image/*"
-        multiple={false}
+        multiple
         ref={(ref) => setInputRef(ref)}
         onChange={handleFileUpload}
       />

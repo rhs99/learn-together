@@ -11,7 +11,7 @@ const minioClient = new minio.Client({
   secretKey: '',
 });
 
-const uploadFile = async (file: File, cb: (arg: string[]) => void) => {
+const uploadFile = async (file: File, cb: (arg: string) => void) => {
   const options = {
     maxSizeMB: 0.1,
     maxWidthOrHeight: 2048,
@@ -42,7 +42,7 @@ const uploadFile = async (file: File, cb: (arg: string[]) => void) => {
           if (err) {
             return console.log(err);
           }
-          cb([uniqueFileName]);
+          cb(uniqueFileName);
         }
       );
     };

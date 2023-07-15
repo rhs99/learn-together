@@ -28,8 +28,8 @@ type QACardProps = {
 };
 
 const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACardProps) => {
-  const [fileData, setFileData] = useState(null);
-  const [showImageModal, setShowImageModal] = useState<boolean>(false);
+  const [fileData, setFileData] = useState<string[]>([]);
+  const [imageToShow, setImageToShow] = useState<string>('');
   const [showShareAlert, setShowShareAlert] = useState(false);
   const [udCnt, setUdCnt] = useState({ upVote: item.upVote, downVote: item.downVote });
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -37,28 +37,38 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleImageModalOpen = () => {
-    setShowImageModal(true);
+  const handleImageModalOpen = (url: string) => {
+    setImageToShow(url);
   };
 
   const handleImageModalClose = () => {
-    setShowImageModal(false);
+    setImageToShow('');
   };
 
   useEffect(() => {
-    let fileName = '';
-    if (item.imageLocations.length > 0) {
-      fileName = item.imageLocations[0];
-    } else {
+    if (item.imageLocations.length === 0) {
       return;
     }
-
-    Util.minioClient.getObject(Util.CONSTANTS.MINIO_BUCKET, fileName, (err: any, dataStream: any) => {
+    Util.minioClient.getObject(Util.CONSTANTS.MINIO_BUCKET, item.imageLocations[0], (err: any, dataStream1: any) => {
       if (err) {
         console.log(err);
         return;
       }
-      setFileData(dataStream.url);
+      if (item.imageLocations.length > 1) {
+        Util.minioClient.getObject(
+          Util.CONSTANTS.MINIO_BUCKET,
+          item.imageLocations[1],
+          (err: any, dataStream2: any) => {
+            if (err) {
+              console.log(err);
+              return;
+            }
+            setFileData([dataStream1.url, dataStream2.url]);
+          }
+        );
+      } else {
+        setFileData([dataStream1.url]);
+      }
     });
   }, [item.imageLocations]);
 
@@ -201,11 +211,10 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
             <ReactQuill value={item.details} readOnly={true} theme={'bubble'} />
           </div>
           <Divider />
-          <div
-            className={`imageContainer ${fileData ? 'with-image' : ''}`}
-            onClick={fileData ? handleImageModalOpen : () => undefined}
-          >
-            {fileData && <img src={fileData} className="image" />}
+          <div className="imageContainer">
+            {fileData.map((file, index) => (
+              <img key={index} src={file} className="image" onClick={() => handleImageModalOpen(file)} />
+            ))}
           </div>
           {isQuestion && <Divider />}
           {isQuestion && (
@@ -243,8 +252,8 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
           </IconButton>
         </Tooltip>
       </div>
-      {fileData && showImageModal && (
-        <Modal open={showImageModal} onClose={handleImageModalClose}>
+      {imageToShow.length > 0 && (
+        <Modal open={imageToShow.length > 0} onClose={handleImageModalClose}>
           <Box
             sx={{
               position: 'absolute',
@@ -256,7 +265,7 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
               border: '2px solid grey',
             }}
           >
-            <img src={fileData} style={{ width: '100%', height: 'auto' }} />
+            <img src={imageToShow} style={{ width: '100%', height: 'auto' }} />
           </Box>
         </Modal>
       )}

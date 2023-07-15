@@ -40,9 +40,10 @@
             .image {
                 width: auto;
                 max-height: 100px;
+                margin-left: 10px;
             }
 
-            &.with-image:hover {
+            .image:hover {
                 cursor: pointer;
             }
         }
