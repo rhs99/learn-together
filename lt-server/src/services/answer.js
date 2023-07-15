@@ -52,10 +52,15 @@ const getAllAnswers = async (questionId) => {
 const deleteAnswer = async (answerId, user) => {
     try {
         const answer = await Answer.findById(answerId).exec();
-        if (JSON.stringify(answer.user) !== JSON.stringify(user)) {
+        const question = await Question.findById(answer.question).exec();
+
+        if (
+            JSON.stringify(answer.user) !== JSON.stringify(user) &&
+            JSON.stringify(question.user) !== JSON.stringify(user)
+        ) {
             throw new Error('unauth');
         }
-        const question = await Question.findById(answer.question).exec();
+
         question.answers = question.answers.filter((q) => JSON.stringify(q) !== JSON.stringify(answer._id));
         await question.save();
         const _user = await User.findById(user).exec();

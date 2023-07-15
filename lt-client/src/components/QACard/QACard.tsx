@@ -33,9 +33,12 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
   const [showShareAlert, setShowShareAlert] = useState(false);
   const [udCnt, setUdCnt] = useState({ upVote: item.upVote, downVote: item.downVote });
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [qOwner, setQOwner] = useState('');
 
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const qId = isQuestion ? '' : (item as Answer).question;
 
   const handleImageModalOpen = (url: string) => {
     setImageToShow(url);
@@ -71,6 +74,15 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
       }
     });
   }, [item.imageLocations]);
+
+  useEffect(() => {
+    if (!isQuestion) {
+      const url = `${Util.CONSTANTS.SERVER_URL}/questions?questionId=${qId}`;
+      axios.get(url).then(({ data }) => {
+        setQOwner(data.user.userName);
+      });
+    }
+  }, [isQuestion, qId]);
 
   const handleItemDetailsClick = () => {
     if (isQuestion) navigate(`/questions/${item._id}`);
@@ -157,6 +169,7 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
   };
 
   const isOwner = authCtx.getStoredValue().userName === item.user.userName;
+  const isQOwner = authCtx.getStoredValue().userName === qOwner;
 
   const detailsClassName = clickableDetails ? 'detailsClickable' : '';
   const detailsOnClick = clickableDetails ? handleItemDetailsClick : undefined;
@@ -247,7 +260,7 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
           </IconButton>
         </Tooltip>
         <Tooltip title="delete">
-          <IconButton className="delete" disabled={!isOwner} onClick={handleDelete}>
+          <IconButton className="delete" disabled={!isOwner && !isQOwner} onClick={handleDelete}>
             <DeleteIcon fontSize="small"></DeleteIcon>
           </IconButton>
         </Tooltip>
