@@ -24,7 +24,7 @@ const logInUser = async (req, res) => {
         const user = await UserService.logInUser(req.body);
         if (user) {
             const token = Util.createToken({ _id: user._id });
-            res.status(200).json({ token });
+            res.status(200).json({ token, class: user.class });
         } else {
             res.status(401).json({ msg: 'login failed' });
         }
