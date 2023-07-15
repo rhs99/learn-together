@@ -5,7 +5,7 @@ import { Answer } from '../../types';
 import Util from '../../utils';
 import axios from 'axios';
 import AuthContext from '../../store/auth';
-import Quill from 'quill';
+import Quill, { DeltaStatic } from 'quill';
 import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
 import AlertTitle from '@mui/material/AlertTitle';
 import Alert from '@mui/material/Alert';
@@ -21,7 +21,7 @@ type AnswerInputProps = {
 const AnswerInput = (props: AnswerInputProps) => {
   const [imageLocations, setImageLocations] = useState<string[]>(props.answer.imageLocations || []);
   const [editor, setEditor] = useState<Quill>();
-  const [inputRef, setInputRef] = useState<{ value: '' }>();
+  const [inputRef, setInputRef] = useState<HTMLInputElement | null>();
   const [showAlert, setShowAlert] = useState(false);
 
   const authCtx = useContext(AuthContext);
@@ -38,7 +38,7 @@ const AnswerInput = (props: AnswerInputProps) => {
   };
 
   const handlePostAnswer = async () => {
-    const description = editor?.getContents().ops || [];
+    const description = editor?.getContents();
     const text = editor?.getText() || '';
 
     if (text.trim().length === 0 && imageLocations.length === 0) {
@@ -65,7 +65,7 @@ const AnswerInput = (props: AnswerInputProps) => {
       navigate(-1);
     } else if (props.fetchAnswer) {
       props.fetchAnswer().then(() => {
-        if (editor) editor.setContents([] as any);
+        if (editor) editor.setContents({} as DeltaStatic);
         setImageLocations([]);
         if (inputRef) {
           inputRef.value = '';
@@ -77,7 +77,9 @@ const AnswerInput = (props: AnswerInputProps) => {
   const onEditorReady = useCallback(
     (editor: Quill) => {
       setEditor(editor);
-      editor.setContents(props.answer?.details || []);
+      if (props.answer.details) {
+        editor.setContents(props.answer.details);
+      }
     },
     [props.answer?.details]
   );
@@ -106,7 +108,7 @@ const AnswerInput = (props: AnswerInputProps) => {
         type="file"
         accept="image/*"
         multiple={false}
-        ref={(ref: any) => setInputRef(ref)}
+        ref={(ref) => setInputRef(ref)}
         onChange={handleFileUpload}
       />
       <div className="btn-container">

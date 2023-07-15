@@ -1,3 +1,5 @@
+import { DeltaStatic } from 'quill';
+
 export type Class = {
   name: string;
   _id: string;
@@ -34,7 +36,7 @@ export type Tag = {
 
 export type Answer = {
   _id: string;
-  details: any;
+  details: DeltaStatic;
   imageLocations: string[];
   question: string;
   user: User;
@@ -43,7 +45,7 @@ export type Answer = {
 };
 
 export type Question = {
-  details: any;
+  details: DeltaStatic;
   _id: string;
   tags: Tag[];
   chapter: string;

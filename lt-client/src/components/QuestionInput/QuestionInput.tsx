@@ -49,7 +49,7 @@ const QuestionInput = (props: QuestionInputProps) => {
   };
 
   const handleSave = async () => {
-    const description = editor?.getContents().ops || [];
+    const description = editor?.getContents();
     const text = editor?.getText() || '';
 
     if (text.trim().length === 0 || selectedTags.length === 0) {
@@ -105,7 +105,9 @@ const QuestionInput = (props: QuestionInputProps) => {
   const onEditorReady = useCallback(
     (editor: Quill) => {
       setEditor(editor);
-      editor.setContents(props.question?.details || []);
+      if (props.question?.details) {
+        editor.setContents(props.question?.details);
+      }
     },
     [props.question?.details]
   );

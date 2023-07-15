@@ -56,10 +56,7 @@ const QuestionDetail = () => {
     <div className="cl-QuestionDetail">
       <QACard item={question} clickableDetails={false} isQuestion={true} handleItemDelete={handleQuestionDelete} />
       {isLoggedIn && !isOwner && (
-        <AnswerInput
-          fetchAnswer={handleAnsPost}
-          answer={{ _id: '', question: questionId || '', imageLocations: [], details: '' }}
-        />
+        <AnswerInput fetchAnswer={handleAnsPost} answer={{ _id: '', question: questionId || '', imageLocations: [] }} />
       )}
       <Typography variant="h5" className="ans-title">
         {`${answers.length} Answers`}
