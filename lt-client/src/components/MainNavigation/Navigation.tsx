@@ -35,6 +35,11 @@ const Navigation = () => {
     navigate('/users/' + authCtx.getStoredValue().userName);
   };
 
+  const goToSettings = () => {
+    setAnchorElUser(null);
+    navigate('/users/' + authCtx.getStoredValue().userName + '/settings');
+  };
+
   return (
     <div className="lt-Navigation">
       <div className="left">
@@ -95,7 +100,7 @@ const Navigation = () => {
                   <Typography variant="body1">Profile</Typography>
                 </Stack>
               </MenuItem>
-              <MenuItem onClick={goToProfile}>
+              <MenuItem onClick={goToSettings}>
                 <Stack direction="row" alignItems="center" gap={1}>
                   <SettingsIcon />
                   <Typography variant="body1">Settings</Typography>
