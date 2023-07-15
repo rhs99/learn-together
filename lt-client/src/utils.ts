@@ -11,7 +11,7 @@ const minioClient = new minio.Client({
   secretKey: '',
 });
 
-const uploadFile = async (file: any, cb: any) => {
+const uploadFile = async (file: File, cb: (arg: string[]) => void) => {
   const options = {
     maxSizeMB: 0.1,
     maxWidthOrHeight: 2048,
@@ -25,10 +25,10 @@ const uploadFile = async (file: any, cb: any) => {
     };
 
     const reader = new FileReader();
-    reader.onload = function (e: any) {
-      const buffer = e.target.result;
+    reader.onload = function (e: ProgressEvent<FileReader>) {
+      const buffer = e.target?.result as ArrayBuffer;
       const stream = new PassThrough();
-      stream.end(Buffer.from(buffer));
+      stream.end(Buffer.from(buffer as Buffer));
 
       const uniqueFileName = uuid() + '-' + file.name;
 

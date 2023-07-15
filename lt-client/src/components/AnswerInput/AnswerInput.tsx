@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useContext, useCallback } from 'react';
+import { useState, useContext, useCallback, ChangeEvent } from 'react';
 import { Button } from '@mui/material';
 import { Answer } from '../../types';
 import Util from '../../utils';
@@ -27,12 +27,14 @@ const AnswerInput = (props: AnswerInputProps) => {
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleFileUpload = async (event: any) => {
+  const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     if (imageLocations.length > 0) {
       Util.deleteFile(imageLocations[0]);
     }
-    const file = event.target.files[0];
-    await Util.uploadFile(file, setImageLocations);
+    if (event.target.files) {
+      const file = event.target.files[0];
+      await Util.uploadFile(file, setImageLocations);
+    }
   };
 
   const handlePostAnswer = async () => {

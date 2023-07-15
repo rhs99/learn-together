@@ -12,7 +12,7 @@ const toolbarOptions = [
 ];
 
 type QuillTextEditorProps = {
-  onEditorReady: (editor: any) => void;
+  onEditorReady: (editor: Quill) => void;
 };
 
 const QuillTextEditor = ({ onEditorReady }: QuillTextEditorProps) => {

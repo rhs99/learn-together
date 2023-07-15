@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useContext, useEffect, useCallback } from 'react';
+import { useState, useContext, useEffect, useCallback, ChangeEvent, SyntheticEvent } from 'react';
 import Quill from 'quill';
 import 'react-quill/dist/quill.snow.css';
 import Util from '../../utils';
@@ -38,12 +38,14 @@ const QuestionInput = (props: QuestionInputProps) => {
     axios.get(URL).then((data) => setExistingTags(data.data));
   }, [props.chapterId]);
 
-  const handleFileUpload = async (event: any) => {
+  const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     if (imageLocations.length > 0) {
       Util.deleteFile(imageLocations[0]);
     }
-    const file = event.target.files[0];
-    await Util.uploadFile(file, setImageLocations);
+    if (event.target.files) {
+      const file = event.target.files[0];
+      await Util.uploadFile(file, setImageLocations);
+    }
   };
 
   const handleSave = async () => {
@@ -138,7 +140,7 @@ const QuestionInput = (props: QuestionInputProps) => {
         <Autocomplete
           multiple
           id="tags-standard"
-          onChange={(event: any, selection: Tag[]) => {
+          onChange={(event: SyntheticEvent<Element, Event>, selection: Tag[]) => {
             setSelectedTags(selection);
           }}
           options={existingTags}

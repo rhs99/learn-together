@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, useCallback } from 'react';
+import { useEffect, useState, useContext, useCallback, SyntheticEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Util from '../../utils';
@@ -105,7 +105,7 @@ const ChapterDetail = () => {
             className="filter"
             multiple
             id="tags-standard"
-            onChange={(event: any, selection: Tag[]) => {
+            onChange={(event: SyntheticEvent<Element, Event>, selection: Tag[]) => {
               setSelectedTags(selection);
             }}
             options={existingTags}
