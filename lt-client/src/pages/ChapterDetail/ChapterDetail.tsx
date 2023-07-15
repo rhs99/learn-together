@@ -102,9 +102,9 @@ const ChapterDetail = () => {
         )}
         {!isEmpty && (
           <Autocomplete
+            size="small"
             className="filter"
             multiple
-            id="tags-standard"
             onChange={(event: SyntheticEvent<Element, Event>, selection: Tag[]) => {
               setSelectedTags(selection);
             }}
@@ -130,6 +130,7 @@ const ChapterDetail = () => {
           </Typography>
         </div>
       )}
+
       {!isEmpty && (
         <SortOptions
           sortBy={sortBy}
