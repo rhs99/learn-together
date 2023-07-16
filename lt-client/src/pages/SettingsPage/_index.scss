@@ -1,12 +1,6 @@
 .lt-settings {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 5vh;
-
-  .change-class {
-    width: 50%;
-  }
+  width: 50%;
+  margin: 0 auto;
 
   input[type='text'],
   input[type='password'],

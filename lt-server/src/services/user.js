@@ -75,36 +75,48 @@ const logInUser = async (body) => {
     }
 };
 
-const updateClassInUser = async (body) => {
+const updateClassInUser = async (body, req_user) => {
     try {
         const user = await User.findOne({ userName: body.userName }).exec();
         if (!user) {
-            return null;
+            throw new Error('No user found!');
         }
+        if (JSON.stringify(user._id) !== JSON.stringify(req_user)) {
+            throw new Error('unauth');
+        }
+
         user.class = body._class;
         await user.save();
         return user;
     } catch (error) {
         console.log(error.message);
+        throw new Error(error);
     }
 };
 
-const updatePasswordInUser = async (body) => {
+const updatePasswordInUser = async (body, req_user) => {
     try {
         const user = await User.findOne({ userName: body.userName }).exec();
         if (!user) {
-            return null;
+            throw new Error('No user found!');
         }
+
+        if (JSON.stringify(user._id) !== JSON.stringify(req_user)) {
+            throw new Error('unauth');
+        }
+
         const match = await user.comparePassword(body.prevPassword);
+
         if (match) {
             user.password = body.password;
             await user.save();
             return user;
         } else {
-            return null;
+            throw new Error('Previous password is not correct!');
         }
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
+        throw new Error(error);
     }
 };
 

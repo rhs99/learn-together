@@ -35,12 +35,8 @@ const logInUser = async (req, res) => {
 
 const updateClassInUser = async (req, res) => {
     try {
-        const user = await UserService.updateClassInUser(req.body);
-        if (user) {
-            res.status(200).json();
-        } else {
-            res.status(401).json({ msg: 'no user found!' });
-        }
+        await UserService.updateClassInUser(req.body, req.user);
+        res.status(200).json();
     } catch (e) {
         res.status(400).json({ message: e.message });
     }
@@ -48,12 +44,8 @@ const updateClassInUser = async (req, res) => {
 
 const updatePasswordInUser = async (req, res) => {
     try {
-        const user = await UserService.updatePasswordInUser(req.body);
-        if (user) {
-            res.status(200).json();
-        } else {
-            res.status(401).json({ msg: 'no user found!' });
-        }
+        await UserService.updatePasswordInUser(req.body, req.user);
+        res.status(200).json();
     } catch (e) {
         res.status(400).json({ message: e.message });
     }
