@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { IconButton, Menu, MenuItem, Stack, Typography } from '@mui/material';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import SettingsIcon from '@mui/icons-material/Settings';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AuthContext from '../../store/auth';
@@ -32,6 +33,11 @@ const Navigation = () => {
   const goToProfile = () => {
     setAnchorElUser(null);
     navigate('/users/' + authCtx.getStoredValue().userName);
+  };
+
+  const goToSettings = () => {
+    setAnchorElUser(null);
+    navigate('/users/' + authCtx.getStoredValue().userName + '/settings');
   };
 
   return (
@@ -92,6 +98,12 @@ const Navigation = () => {
                 <Stack direction="row" alignItems="center" gap={1}>
                   <PersonOutlineIcon />
                   <Typography variant="body1">Profile</Typography>
+                </Stack>
+              </MenuItem>
+              <MenuItem onClick={goToSettings}>
+                <Stack direction="row" alignItems="center" gap={1}>
+                  <SettingsIcon />
+                  <Typography variant="body1">Settings</Typography>
                 </Stack>
               </MenuItem>
               <MenuItem onClick={logoutHandler}>

@@ -33,4 +33,22 @@ const logInUser = async (req, res) => {
     }
 };
 
-module.exports = { getUser, addNewUser, logInUser };
+const updateClassInUser = async (req, res) => {
+    try {
+        await UserService.updateClassInUser(req.body, req.user);
+        res.status(200).json();
+    } catch (e) {
+        res.status(400).json({ message: e.message });
+    }
+};
+
+const updatePasswordInUser = async (req, res) => {
+    try {
+        await UserService.updatePasswordInUser(req.body, req.user);
+        res.status(200).json();
+    } catch (e) {
+        res.status(400).json({ message: e.message });
+    }
+};
+
+module.exports = { getUser, addNewUser, logInUser, updateClassInUser, updatePasswordInUser };
