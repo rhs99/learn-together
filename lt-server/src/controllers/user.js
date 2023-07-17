@@ -51,4 +51,13 @@ const updatePasswordInUser = async (req, res) => {
     }
 };
 
-module.exports = { getUser, addNewUser, logInUser, updateClassInUser, updatePasswordInUser };
+const updatePrivilege = async (req, res) => {
+    try {
+        await UserService.updatePrivilege(req.body);
+        res.status(200).json();
+    } catch (e) {
+        res.status(400).json({ message: e.message });
+    }
+};
+
+module.exports = { getUser, addNewUser, logInUser, updateClassInUser, updatePasswordInUser, updatePrivilege };

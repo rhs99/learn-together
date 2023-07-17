@@ -10,5 +10,6 @@ router.post('/create', UserController.addNewUser);
 router.post('/login', UserController.logInUser);
 router.post('/updateClass', extractAndVerifyToken, UserController.updateClassInUser);
 router.post('/updatePassword', extractAndVerifyToken, UserController.updatePasswordInUser);
+router.post('/updatePrivilege', extractAndVerifyToken, UserController.updatePrivilege);
 
 module.exports = router;

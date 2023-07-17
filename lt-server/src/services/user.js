@@ -127,4 +127,23 @@ const updatePasswordInUser = async (body, req_user) => {
     }
 };
 
-module.exports = { addNewUser, getUser, logInUser, updateClassInUser, updatePasswordInUser };
+const updatePrivilege = async (body) => {
+    try {
+        const user = await User.findOne({ userName: body.userName }).exec();
+        if (!user) {
+            throw new Error('No user found!');
+        }
+        const newPrivileges = body.privileges;
+        newPrivileges.forEach((privilege)=>{
+            if(!user.privileges.includes(newPrivileges)){
+                user.privileges.push(privilege);
+            }
+        })
+        await user.save();
+    } catch (error) {
+        console.log(error);
+        throw new Error(error);
+    }
+};
+
+module.exports = { addNewUser, getUser, logInUser, updateClassInUser, updatePasswordInUser, updatePrivilege };

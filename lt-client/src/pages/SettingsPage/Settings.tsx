@@ -25,6 +25,9 @@ const Settings = () => {
   const [newChapter, setNewChapter] = useState('');
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [hasAdminPrivilege, setHasAdminPrivilege] = useState(false);
+  const [newPrivilege, setNewPrivilege] = useState('');
+  const [privileges, setPrivileges] = useState<Privilege[]>([]);
+  const [userName, setUserName] = useState('');
 
   const [alert, setAlert] = useState<{ showAlert: boolean; type: string; msg: string }>({
     showAlert: false,
@@ -36,7 +39,7 @@ const Settings = () => {
   const authCtx = useContext(AuthContext);
 
   useEffect(() => {
-    const URL = `${Util.CONSTANTS.SERVER_URL}/users?userName=${authCtx.getStoredValue().userName}`;
+    let URL = `${Util.CONSTANTS.SERVER_URL}/users?userName=${authCtx.getStoredValue().userName}`;
     axios.get(URL).then(({ data }) => {
       data.privileges.forEach((privilege: Privilege) => {
         if (privilege.name === 'admin') {
@@ -45,6 +48,11 @@ const Settings = () => {
         }
       });
     });
+
+    URL = `${Util.CONSTANTS.SERVER_URL}/privileges/list`;
+    axios.get(URL).then(({ data }) => {
+      setPrivileges(data);
+    });
   }, []);
 
   const fetchSubjects = async (classId: string) => {
@@ -52,6 +60,37 @@ const Settings = () => {
     axios.get(URL).then(({ data }) => {
       setSubjects(data);
     });
+  };
+
+  const handleAddPrivilege = async (event: FormEvent) => {
+    event.preventDefault();
+    const url = `${Util.CONSTANTS.SERVER_URL}/privileges/create`;
+
+    const payload = {
+      name: newPrivilege,
+    };
+
+    await axios
+      .post(url, payload, {
+        headers: {
+          Authorization: `Bearer ${authCtx.getStoredValue().token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(() => {
+        setAlert({
+          showAlert: true,
+          type: 'success',
+          msg: 'Privilege created!',
+        });
+      })
+      .catch(() => {
+        setAlert({
+          showAlert: true,
+          type: 'error',
+          msg: 'Privilege creation failed!',
+        });
+      });
   };
 
   const handleChangeClass = async (event: FormEvent) => {
@@ -76,8 +115,7 @@ const Settings = () => {
           msg: 'Class updated successfully!',
         });
       })
-      .catch((e) => {
-        console.log(e);
+      .catch(() => {
         setAlert({
           showAlert: true,
           type: 'error',
@@ -119,7 +157,7 @@ const Settings = () => {
           msg: 'Password changed successfully!',
         });
       })
-      .catch((e) => {
+      .catch(() => {
         setAlert({
           showAlert: true,
           type: 'error',
@@ -151,8 +189,7 @@ const Settings = () => {
           msg: 'Class created successfully!',
         });
       })
-      .catch((e) => {
-        console.log(e);
+      .catch(() => {
         setAlert({
           showAlert: true,
           type: 'error',
@@ -183,8 +220,7 @@ const Settings = () => {
           msg: 'Subject created successfully!',
         });
       })
-      .catch((e) => {
-        console.log(e);
+      .catch(() => {
         setAlert({
           showAlert: true,
           type: 'error',
@@ -216,8 +252,7 @@ const Settings = () => {
           msg: 'Chapter created successfully!',
         });
       })
-      .catch((e) => {
-        console.log(e);
+      .catch(() => {
         setAlert({
           showAlert: true,
           type: 'error',
@@ -225,6 +260,41 @@ const Settings = () => {
         });
       });
     setNewChapter('');
+  };
+
+  const handleChangePrivilege = async (event: FormEvent) => {
+    event.preventDefault();
+
+    const url = `${Util.CONSTANTS.SERVER_URL}/users/updatePrivilege`;
+
+    const payload = {
+      userName,
+      privileges: [newPrivilege],
+    };
+
+    await axios
+      .post(url, payload, {
+        headers: {
+          Authorization: `Bearer ${authCtx.getStoredValue().token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(() => {
+        setAlert({
+          showAlert: true,
+          type: 'success',
+          msg: 'Privilege updated!',
+        });
+      })
+      .catch(() => {
+        setAlert({
+          showAlert: true,
+          type: 'error',
+          msg: 'Privilege update failed!',
+        });
+      });
+    setUserName('');
+    setNewPrivilege('');
   };
 
   return (
@@ -299,6 +369,57 @@ const Settings = () => {
       </Accordion>
       {hasAdminPrivilege && (
         <>
+          <Accordion sx={{ marginTop: '10px' }}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
+              <Typography>Create Privilege</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <form onSubmit={handleAddPrivilege}>
+                <input
+                  type="text"
+                  name="addPrivilege"
+                  value={newPrivilege}
+                  onChange={(event) => setNewPrivilege(event.target.value)}
+                  required
+                />
+                <button type="submit">Add</button>
+              </form>
+            </AccordionDetails>
+          </Accordion>
+
+          <Accordion sx={{ marginTop: '10px' }}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
+              <Typography>Give Privilege</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <form onSubmit={handleChangePrivilege}>
+                <label htmlFor="add-username">Username</label>
+                <input
+                  type="text"
+                  name="addUsername"
+                  value={userName}
+                  onChange={(event) => setUserName(event.target.value)}
+                  required
+                />
+                <label htmlFor="change-privilege">Select privilege</label>
+                <select
+                  value={newPrivilege}
+                  onChange={(event) => setNewPrivilege(event.target.value)}
+                  name="privilege"
+                  required
+                >
+                  <option value="">Select privilege</option>
+                  {privileges.map((privilege) => (
+                    <option value={privilege._id} key={privilege._id}>
+                      {privilege.name}
+                    </option>
+                  ))}
+                </select>
+                <button type="submit">Add</button>
+              </form>
+            </AccordionDetails>
+          </Accordion>
+
           <Accordion sx={{ marginTop: '10px' }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
               <Typography>Add New Class</Typography>
