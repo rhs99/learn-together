@@ -32,7 +32,11 @@ function LoginPage() {
       .post(URL, userInfo)
       .then(({ data }) => {
         authCtx.login(data.token, username);
-        navigate(`/classes/${data.class}`);
+        if (data.class) {
+          navigate(`/classes/${data.class}`);
+        } else {
+          navigate('/');
+        }
       })
       .catch(() => {
         setErr(true);

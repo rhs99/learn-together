@@ -32,12 +32,16 @@ const SignupPage = () => {
     }
 
     const URL = Util.CONSTANTS.SERVER_URL + '/users/create';
-    const userInfo = {
+
+    const userInfo: { [key: string]: string } = {
       userName: username,
       email: email,
       password: password,
-      class: _class,
     };
+
+    if (_class.trim().length > 0) {
+      userInfo.class = _class;
+    }
 
     axios
       .post(URL, userInfo)

@@ -1,28 +1,33 @@
 const User = require('../models/user');
 const Question = require('../models/question');
 const Answer = require('../models/answer');
-const Privilege = require('../models/privilege');
+const Class = require('../models/class');
 
 const addNewUser = async (body) => {
     try {
-        const user = new User(body);
+        const newUserInfo = {
+            userName: body.userName,
+            email: body.email,
+            password: body.password,
+        };
+        if (body.class && body.class.trim().length > 0) {
+            newUserInfo.class = body.class;
+        }
+        const user = new User(newUserInfo);
         await user.save();
     } catch (error) {
         if (error.code === 11000) {
             throw new Error('Username Exists');
         } else {
             console.log(error.message);
+            throw new Error(error.message);
         }
     }
 };
 
 const getUser = async (userName) => {
     try {
-        const user = await User.findOne({ userName })
-            .populate('class')
-            .populate('privileges')
-            .select('-password')
-            .exec();
+        const user = await User.findOne({ userName }).populate('privileges').select('-password').exec();
 
         if (!user) {
             throw new Error('No user found');
@@ -51,15 +56,26 @@ const getUser = async (userName) => {
             downVote += a.downVote;
         });
 
-        return {
+        let _class = null;
+
+        if (user.class) {
+            _class = await Class.findById(user.class).exec();
+        }
+
+        const userInfo = {
             questions: user.questions.length,
             answers: user.answers.length,
             privileges: user.privileges,
             userName: user.userName,
-            class: user.class.name,
             upVote,
             downVote,
         };
+
+        if (_class) {
+            userInfo.class = _class.name;
+        }
+
+        return userInfo;
     } catch (error) {
         console.log(error.message);
     }
