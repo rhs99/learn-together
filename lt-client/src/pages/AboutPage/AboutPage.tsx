@@ -9,21 +9,20 @@ const AboutPage = () => {
         <br />
         This platform is developed keeping in mind of helping you to learn and grow together.
       </Typography>
-      <Typography>
-        Contributors:
-        <ol>
-          <li>
-            <Link href="https://rhs99.github.io/portfolio/" underline="none">
-              Md. Rakibul Hasan Sarker
-            </Link>
-          </li>
-          <li>
-            <Link href="#" underline="none">
-              Tahmid Anjum
-            </Link>
-          </li>
-        </ol>
-      </Typography>
+      <br />
+      <Typography>Contributors:</Typography>
+      <ol>
+        <li>
+          <Link href="https://rhs99.github.io/portfolio/" underline="none" target="_blank">
+            Md. Rakibul Hasan Sarker
+          </Link>
+        </li>
+        <li>
+          <Link href="#" underline="none" target="_blank">
+            Tahmid Anjum
+          </Link>
+        </li>
+      </ol>
     </div>
   );
 };

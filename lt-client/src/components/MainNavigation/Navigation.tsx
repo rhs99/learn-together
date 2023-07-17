@@ -164,7 +164,7 @@ const Navigation = () => {
             );
           })}
           {notifications.length === 0 && (
-            <Card sx={{margin: '5px 10px'}}>
+            <Card sx={{ margin: '5px 10px' }}>
               <CardContent>
                 <Typography>No notifications</Typography>
               </CardContent>
