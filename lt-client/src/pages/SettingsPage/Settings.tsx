@@ -1,6 +1,6 @@
 import { useLoaderData } from 'react-router-dom';
 import axios from 'axios';
-import { Class, Privilege } from '../../types';
+import { Class, Privilege, Subject } from '../../types';
 import { FormEvent, useContext, useEffect, useState } from 'react';
 import Util from '../../utils';
 import AuthContext from '../../store/auth';
@@ -20,13 +20,20 @@ const Settings = () => {
   const [_class, setClass] = useState('');
   const [newClass, setNewClass] = useState('');
   const [classForSubject, setClassForSubject] = useState('');
+  const [subjectForChapter, setSubjectForChapter] = useState('');
   const [newSubject, setNewSubject] = useState('');
+  const [newChapter, setNewChapter] = useState('');
+  const [subjects, setSubjects] = useState<Subject[]>([]);
   const [hasAdminPrivilege, setHasAdminPrivilege] = useState(false);
+
   const [alert, setAlert] = useState<{ showAlert: boolean; type: string; msg: string }>({
     showAlert: false,
     type: '',
     msg: '',
   });
+
+  const classes = useLoaderData();
+  const authCtx = useContext(AuthContext);
 
   useEffect(() => {
     const URL = `${Util.CONSTANTS.SERVER_URL}/users?userName=${authCtx.getStoredValue().userName}`;
@@ -39,8 +46,13 @@ const Settings = () => {
       });
     });
   }, []);
-  const classes = useLoaderData();
-  const authCtx = useContext(AuthContext);
+
+  const fetchSubjects = async (classId: string) => {
+    const URL = `${Util.CONSTANTS.SERVER_URL}/subjects/list?classId=${classId}`;
+    axios.get(URL).then(({ data }) => {
+      setSubjects(data);
+    });
+  };
 
   const handleChangeClass = async (event: FormEvent) => {
     event.preventDefault();
@@ -176,10 +188,43 @@ const Settings = () => {
         setAlert({
           showAlert: true,
           type: 'error',
-          msg: 'Subject create failed!',
+          msg: 'Subject creation failed!',
         });
       });
-    setClassForSubject('');
+    setNewSubject('');
+  };
+
+  const handleAddChapter = async (event: FormEvent) => {
+    event.preventDefault();
+
+    const url = `${Util.CONSTANTS.SERVER_URL}/chapters/create`;
+    const payload = {
+      name: newChapter,
+      subject: subjectForChapter,
+    };
+    await axios
+      .post(url, payload, {
+        headers: {
+          Authorization: `Bearer ${authCtx.getStoredValue().token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(() => {
+        setAlert({
+          showAlert: true,
+          type: 'success',
+          msg: 'Chapter created successfully!',
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+        setAlert({
+          showAlert: true,
+          type: 'error',
+          msg: 'Chapter creation failed!',
+        });
+      });
+    setNewChapter('');
   };
 
   return (
@@ -262,7 +307,7 @@ const Settings = () => {
               <form onSubmit={handleAddClass}>
                 <label htmlFor="add-class">Class Name</label>
                 <input
-                  type="number"
+                  type="text"
                   name="addClass"
                   value={newClass}
                   onChange={(event) => setNewClass(event.target.value)}
@@ -299,6 +344,56 @@ const Settings = () => {
                   name="addSubject"
                   value={newSubject}
                   onChange={(event) => setNewSubject(event.target.value)}
+                  required
+                />
+                <button type="submit">Add</button>
+              </form>
+            </AccordionDetails>
+          </Accordion>
+
+          <Accordion sx={{ marginTop: '10px' }}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
+              <Typography>Add New Chapter</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <form onSubmit={handleAddChapter}>
+                <label htmlFor="check-class">Class Name</label>
+                <select
+                  value={classForSubject}
+                  onChange={async (event) => {
+                    setClassForSubject(event.target.value);
+                    await fetchSubjects(event.target.value);
+                  }}
+                  name="class"
+                  required
+                >
+                  <option value="">Select class</option>
+                  {(classes as Class[]).map((_class) => (
+                    <option value={_class._id} key={_class._id}>
+                      {_class.name}
+                    </option>
+                  ))}
+                </select>
+                <label htmlFor="check-subject">Select subject</label>
+                <select
+                  value={subjectForChapter}
+                  onChange={(event) => setSubjectForChapter(event.target.value)}
+                  name="subject"
+                  required
+                >
+                  <option value="">Select subject</option>
+                  {subjects.map((subject) => (
+                    <option value={subject._id} key={subject._id}>
+                      {subject.name}
+                    </option>
+                  ))}
+                </select>
+                <label htmlFor="add-chapter">Chapter Name</label>
+                <input
+                  type="text"
+                  name="addChapter"
+                  value={newChapter}
+                  onChange={(event) => setNewChapter(event.target.value)}
                   required
                 />
                 <button type="submit">Add</button>
