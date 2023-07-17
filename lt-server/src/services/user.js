@@ -18,7 +18,12 @@ const addNewUser = async (body) => {
 
 const getUser = async (userName) => {
     try {
-        const user = await User.findOne({ userName }).populate('class').select('-password').exec();
+        const user = await User.findOne({ userName })
+            .populate('class')
+            .populate('privileges')
+            .select('-password')
+            .exec();
+
         if (!user) {
             throw new Error('No user found');
         }
@@ -36,11 +41,6 @@ const getUser = async (userName) => {
         });
         const answers = await Promise.all(aPromises);
 
-        const pPromises = user.privileges.map((privilege) => {
-            return Privilege.findById(privilege).exec();
-        });
-        const privileges = await Promise.all(pPromises);
-
         questions.forEach((q) => {
             upVote += q.upVote;
             downVote += q.downVote;
@@ -54,7 +54,7 @@ const getUser = async (userName) => {
         return {
             questions: user.questions.length,
             answers: user.answers.length,
-            privileges,
+            privileges: user.privileges,
             userName: user.userName,
             class: user.class.name,
             upVote,
