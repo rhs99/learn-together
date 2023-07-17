@@ -18,13 +18,4 @@ const addNewPrivilege = async (req, res) => {
     }
 };
 
-const softDeletePrivilege = async (req, res) => {
-    try {
-        const privilege = await PrivilegeService.softDeletePrivilege(req.params._id);
-        res.status(200).json(privilege);
-    } catch (e) {
-        if (e instanceof Error) res.status(400).json({ message: e.message });
-    }
-};
-
-module.exports = { getPrivileges, addNewPrivilege, softDeletePrivilege };
+module.exports = { getPrivileges, addNewPrivilege };

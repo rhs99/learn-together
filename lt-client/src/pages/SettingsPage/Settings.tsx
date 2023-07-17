@@ -5,9 +5,13 @@ import { FormEvent, useContext, useEffect, useState } from 'react';
 import Util from '../../utils';
 import AuthContext from '../../store/auth';
 import { Alert } from '@mui/material';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import './_index.scss';
-import { eventNames } from 'process';
 
 const Settings = () => {
   const [prevPassword, setPrevPassword] = useState('');
@@ -195,9 +199,11 @@ const Settings = () => {
           {alert.msg}
         </Alert>
       )}
-      {!hasAdminPrivilege && (
-        <>
-          <h2>Change Class</h2>
+      <Accordion sx={{marginTop: '10px'}}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
+          <Typography>Change Class</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
           <form onSubmit={handleChangeClass}>
             <select value={_class} onChange={(event) => setClass(event.target.value)} name="class" required>
               <option value="">Select class</option>
@@ -209,8 +215,14 @@ const Settings = () => {
             </select>
             <button type="submit">Change</button>
           </form>
+        </AccordionDetails>
+      </Accordion>
 
-          <h2>Change Password</h2>
+      <Accordion sx={{marginTop: '10px'}}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
+          <Typography>Change Password</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
           <form onSubmit={handleChangePassword}>
             <label htmlFor="password">Previous Password</label>
             <input
@@ -238,49 +250,61 @@ const Settings = () => {
             />
             <button type="submit">Change</button>
           </form>
-        </>
-      )}
+        </AccordionDetails>
+      </Accordion>
       {hasAdminPrivilege && (
         <>
-          <h2>Add New Class</h2>
-          <form onSubmit={handleAddClass}>
-            <label htmlFor="add-class">Class No.</label>
-            <input
-              type="number"
-              name="addClass"
-              value={newClass}
-              onChange={(event) => setNewClass(event.target.value)}
-              required
-            />
-            <button type="submit">Add</button>
-          </form>
+          <Accordion sx={{marginTop: '10px'}} >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
+              <Typography>Add New Class</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <form onSubmit={handleAddClass}>
+                <label htmlFor="add-class">Class Name</label>
+                <input
+                  type="number"
+                  name="addClass"
+                  value={newClass}
+                  onChange={(event) => setNewClass(event.target.value)}
+                  required
+                />
+                <button type="submit">Add</button>
+              </form>
+            </AccordionDetails>
+          </Accordion>
 
-          <h2>Add New Subject</h2>
-          <form onSubmit={handleAddSubject}>
-            <label htmlFor="check-class">Class No.</label>
-            <select
-              value={classForSubject}
-              onChange={(event) => setClassForSubject(event.target.value)}
-              name="class"
-              required
-            >
-              <option value="">Select class</option>
-              {(classes as Class[]).map((_class) => (
-                <option value={_class._id} key={_class._id}>
-                  {_class.name}
-                </option>
-              ))}
-            </select>
-            <label htmlFor="add-subject">Subject Name</label>
-            <input
-              type="text"
-              name="addSubject"
-              value={newSubject}
-              onChange={(event) => setNewSubject(event.target.value)}
-              required
-            />
-            <button type="submit">Add</button>
-          </form>
+          <Accordion sx={{marginTop: '10px'}} >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
+              <Typography>Add New Subject</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <form onSubmit={handleAddSubject}>
+                <label htmlFor="check-class">Class Name</label>
+                <select
+                  value={classForSubject}
+                  onChange={(event) => setClassForSubject(event.target.value)}
+                  name="class"
+                  required
+                >
+                  <option value="">Select class</option>
+                  {(classes as Class[]).map((_class) => (
+                    <option value={_class._id} key={_class._id}>
+                      {_class.name}
+                    </option>
+                  ))}
+                </select>
+                <label htmlFor="add-subject">Subject Name</label>
+                <input
+                  type="text"
+                  name="addSubject"
+                  value={newSubject}
+                  onChange={(event) => setNewSubject(event.target.value)}
+                  required
+                />
+                <button type="submit">Add</button>
+              </form>
+            </AccordionDetails>
+          </Accordion>
         </>
       )}
     </div>

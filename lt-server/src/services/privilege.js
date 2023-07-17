@@ -15,22 +15,8 @@ const addNewPrivilege = async (body) => {
         await newPrivilege.save();
     } catch (e) {
         console.log(e.message);
+        throw new Error(e.message);
     }
 };
 
-const softDeletePrivilege = async (_id) => {
-    try {
-        const privilege = await Privilege.findOneAndUpdate(
-            { _id },
-            { isDeleted: true },
-            {
-                new: true,
-            },
-        );
-        return privilege;
-    } catch (e) {
-        if (e instanceof Error) console.log(e.message);
-    }
-};
-
-module.exports = { getPrivileges, addNewPrivilege, softDeletePrivilege };
+module.exports = { getPrivileges, addNewPrivilege };
