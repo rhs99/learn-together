@@ -24,6 +24,12 @@ const addNewAnswer = async (body) => {
             question.answers.push(answer._id);
             await question.save();
         }
+        const qOwner = await User.findById(question.user).exec();
+        qOwner.notifications.push(question._id);
+        if (qOwner.notifications.length > 20) {
+            qOwner.notifications = qOwner.notifications.slice(1);
+        }
+        await qOwner.save();
     } catch (e) {
         console.log(e.message);
         if (e.message === 'unauthorized') {

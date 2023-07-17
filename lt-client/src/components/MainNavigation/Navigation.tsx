@@ -1,18 +1,37 @@
+import axios from 'axios';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useContext, useState } from 'react';
-import { IconButton, Menu, MenuItem, Stack, Typography } from '@mui/material';
+import {
+  IconButton,
+  Menu,
+  MenuItem,
+  Stack,
+  Typography,
+  Box,
+  Card,
+  CardContent,
+  CardActions,
+  Button,
+} from '@mui/material';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AuthContext from '../../store/auth';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import Util from '../../utils';
+import Drawer from '@mui/material/Drawer';
 
 import './_index.scss';
 
 const Navigation = () => {
-  const authCtx = useContext(AuthContext);
-  const { isLoggedIn } = authCtx;
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState<string[]>([]);
+
+  const authCtx = useContext(AuthContext);
+  const { isLoggedIn, getStoredValue } = authCtx;
+  const navigate = useNavigate();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -21,8 +40,6 @@ const Navigation = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-  const navigate = useNavigate();
 
   const logoutHandler = () => {
     authCtx.logout();
@@ -38,6 +55,19 @@ const Navigation = () => {
   const goToSettings = () => {
     setAnchorElUser(null);
     navigate('/users/' + authCtx.getStoredValue().userName + '/settings');
+  };
+
+  const fetchNotifications = async () => {
+    const URL = `${Util.CONSTANTS.SERVER_URL}/users/notifications?userName=${getStoredValue().userName}`;
+    axios.get(URL).then(({ data }) => {
+      setNotifications(data);
+      setShowNotifications(true);
+    });
+  };
+
+  const goToQuestion = (qId: string) => {
+    setShowNotifications(false);
+    navigate(`/questions/${qId}`);
   };
 
   return (
@@ -76,6 +106,9 @@ const Navigation = () => {
         )}
         {isLoggedIn && (
           <>
+            <IconButton onClick={fetchNotifications}>
+              <NotificationsNoneIcon />
+            </IconButton>
             <IconButton onClick={handleOpenUserMenu}>
               <AccountCircleRoundedIcon sx={{ color: 'primary' }} fontSize="medium" />
             </IconButton>
@@ -116,6 +149,29 @@ const Navigation = () => {
           </>
         )}
       </div>
+      <Drawer anchor="right" open={showNotifications} onClose={() => setShowNotifications(false)}>
+        <Box>
+          {notifications.map((notification) => {
+            return (
+              <Card key={notification} sx={{ margin: '5px 10px' }}>
+                <CardContent sx={{ padding: '5px' }}>
+                  <Typography>Your question got a new answer!</Typography>
+                </CardContent>
+                <CardActions sx={{ padding: '0' }}>
+                  <Button onClick={() => goToQuestion(notification)}>Check here</Button>
+                </CardActions>
+              </Card>
+            );
+          })}
+          {notifications.length === 0 && (
+            <Card sx={{margin: '5px 10px'}}>
+              <CardContent>
+                <Typography>No notifications</Typography>
+              </CardContent>
+            </Card>
+          )}
+        </Box>
+      </Drawer>
     </div>
   );
 };

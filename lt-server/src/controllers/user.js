@@ -10,6 +10,15 @@ const getUser = async (req, res) => {
     }
 };
 
+const getNotifictions = async (req, res) => {
+    try {
+        const notifications = await UserService.getNotifications(req.query.userName);
+        res.status(200).json(notifications);
+    } catch (e) {
+        res.status(400).json({ message: e.message });
+    }
+};
+
 const addNewUser = async (req, res) => {
     try {
         await UserService.addNewUser(req.body);
@@ -60,4 +69,12 @@ const updatePrivilege = async (req, res) => {
     }
 };
 
-module.exports = { getUser, addNewUser, logInUser, updateClassInUser, updatePasswordInUser, updatePrivilege };
+module.exports = {
+    getUser,
+    addNewUser,
+    logInUser,
+    updateClassInUser,
+    updatePasswordInUser,
+    updatePrivilege,
+    getNotifictions,
+};

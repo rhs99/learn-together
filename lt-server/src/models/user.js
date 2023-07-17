@@ -38,6 +38,11 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'Class',
     },
+    notifications: [
+        {
+            type: mongoose.Types.ObjectId,
+        },
+    ],
 });
 
 userSchema.pre('save', async function (next) {

@@ -6,6 +6,7 @@ const { extractAndVerifyToken, hasAdminPrivilege } = require('../common/middlewa
 const UserController = require('../controllers/user');
 
 router.get('/', UserController.getUser);
+router.get('/notifications', UserController.getNotifictions);
 router.post('/create', UserController.addNewUser);
 router.post('/login', UserController.logInUser);
 router.post('/updateClass', extractAndVerifyToken, hasAdminPrivilege, UserController.updateClassInUser);

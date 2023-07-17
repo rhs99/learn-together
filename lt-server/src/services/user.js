@@ -162,4 +162,24 @@ const updatePrivilege = async (body) => {
     }
 };
 
-module.exports = { addNewUser, getUser, logInUser, updateClassInUser, updatePasswordInUser, updatePrivilege };
+const getNotifications = async (userName) => {
+    try {
+        const user = await User.findOne({ userName }).exec();
+        if (!user) {
+            return [];
+        }
+        return user.notifications;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+module.exports = {
+    addNewUser,
+    getUser,
+    logInUser,
+    updateClassInUser,
+    updatePasswordInUser,
+    updatePrivilege,
+    getNotifications,
+};
