@@ -134,11 +134,11 @@ const updatePrivilege = async (body) => {
             throw new Error('No user found!');
         }
         const newPrivileges = body.privileges;
-        newPrivileges.forEach((privilege)=>{
-            if(!user.privileges.includes(newPrivileges)){
+        newPrivileges.forEach((privilege) => {
+            if (!user.privileges.includes(newPrivileges)) {
                 user.privileges.push(privilege);
             }
-        })
+        });
         await user.save();
     } catch (error) {
         console.log(error);
