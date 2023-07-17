@@ -25,8 +25,10 @@ const addNewAnswer = async (body) => {
             await question.save();
         }
         const qOwner = await User.findById(question.user).exec();
-        qOwner.notifications.push(question._id);
-        if (qOwner.notifications.length > 20) {
+        if (!qOwner.notifications.includes(question._id)) {
+            qOwner.notifications.push(question._id);
+        }
+        if (qOwner.notifications.length > 10) {
             qOwner.notifications = qOwner.notifications.slice(1);
         }
         await qOwner.save();

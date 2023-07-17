@@ -174,6 +174,21 @@ const getNotifications = async (userName) => {
     }
 };
 
+const removeNotification = async (userName, qId) => {
+    try {
+        const user = await User.findOne({ userName }).exec();
+        if (!user) {
+            return [];
+        }
+        user.notifications = user.notifications.filter(
+            (notification) => JSON.stringify(notification) !== JSON.stringify(qId),
+        );
+        await user.save();
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 module.exports = {
     addNewUser,
     getUser,
@@ -182,4 +197,5 @@ module.exports = {
     updatePasswordInUser,
     updatePrivilege,
     getNotifications,
+    removeNotification,
 };

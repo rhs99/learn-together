@@ -19,6 +19,15 @@ const getNotifictions = async (req, res) => {
     }
 };
 
+const removeNotification = async (req, res) => {
+    try {
+        await UserService.removeNotification(req.params.userName, req.params.qId);
+        res.status(200).json();
+    } catch (e) {
+        res.status(400).json({ message: e.message });
+    }
+};
+
 const addNewUser = async (req, res) => {
     try {
         await UserService.addNewUser(req.body);
@@ -77,4 +86,5 @@ module.exports = {
     updatePasswordInUser,
     updatePrivilege,
     getNotifictions,
+    removeNotification,
 };

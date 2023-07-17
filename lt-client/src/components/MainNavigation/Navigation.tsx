@@ -66,8 +66,11 @@ const Navigation = () => {
   };
 
   const goToQuestion = (qId: string) => {
-    setShowNotifications(false);
-    navigate(`/questions/${qId}`);
+    const URL = `${Util.CONSTANTS.SERVER_URL}/users/${getStoredValue().userName}/notifications/${qId}`;
+    axios.delete(URL).then(() => {
+      setShowNotifications(false);
+      navigate(`/questions/${qId}`);
+    });
   };
 
   return (
