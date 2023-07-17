@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const Question = require('../models/question');
 const Answer = require('../models/answer');
+const Privilege = require('../models/privilege');
 
 const addNewUser = async (body) => {
     try {
@@ -35,6 +36,11 @@ const getUser = async (userName) => {
         });
         const answers = await Promise.all(aPromises);
 
+        const pPromises = user.privileges.map((privilege) => {
+            return Privilege.findById(privilege).exec();
+        });
+        const privileges = await Promise.all(pPromises);
+
         questions.forEach((q) => {
             upVote += q.upVote;
             downVote += q.downVote;
@@ -48,6 +54,7 @@ const getUser = async (userName) => {
         return {
             questions: user.questions.length,
             answers: user.answers.length,
+            privileges,
             userName: user.userName,
             class: user.class.name,
             upVote,
