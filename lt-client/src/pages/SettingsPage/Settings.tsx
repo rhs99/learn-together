@@ -199,7 +199,7 @@ const Settings = () => {
           {alert.msg}
         </Alert>
       )}
-      <Accordion sx={{marginTop: '10px'}}>
+      <Accordion sx={{ marginTop: '10px' }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
           <Typography>Change Class</Typography>
         </AccordionSummary>
@@ -218,7 +218,7 @@ const Settings = () => {
         </AccordionDetails>
       </Accordion>
 
-      <Accordion sx={{marginTop: '10px'}}>
+      <Accordion sx={{ marginTop: '10px' }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
           <Typography>Change Password</Typography>
         </AccordionSummary>
@@ -254,7 +254,7 @@ const Settings = () => {
       </Accordion>
       {hasAdminPrivilege && (
         <>
-          <Accordion sx={{marginTop: '10px'}} >
+          <Accordion sx={{ marginTop: '10px' }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
               <Typography>Add New Class</Typography>
             </AccordionSummary>
@@ -273,7 +273,7 @@ const Settings = () => {
             </AccordionDetails>
           </Accordion>
 
-          <Accordion sx={{marginTop: '10px'}} >
+          <Accordion sx={{ marginTop: '10px' }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
               <Typography>Add New Subject</Typography>
             </AccordionSummary>
