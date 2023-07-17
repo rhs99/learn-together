@@ -228,6 +228,7 @@ const Settings = () => {
         });
       });
     setNewSubject('');
+    setClassForSubject('');
   };
 
   const handleAddChapter = async (event: FormEvent) => {
@@ -260,6 +261,7 @@ const Settings = () => {
         });
       });
     setNewChapter('');
+    setSubjectForChapter('');
   };
 
   const handleChangePrivilege = async (event: FormEvent) => {
