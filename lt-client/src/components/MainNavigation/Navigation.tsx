@@ -20,18 +20,22 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import AuthContext from '../../store/auth';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import Util from '../../utils';
-import Drawer from '@mui/material/Drawer';
+import Popover from '@mui/material/Popover';
 
 import './_index.scss';
 
 const Navigation = () => {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-  const [showNotifications, setShowNotifications] = useState(false);
+  const [anchorElNotification, setAnchorElNotification] = useState<HTMLButtonElement | null>(null);
+
   const [notifications, setNotifications] = useState<string[]>([]);
 
   const authCtx = useContext(AuthContext);
   const { isLoggedIn, getStoredValue } = authCtx;
   const navigate = useNavigate();
+
+  const open = Boolean(anchorElNotification);
+  const id = open ? 'simple-popover' : undefined;
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -61,14 +65,22 @@ const Navigation = () => {
     const URL = `${Util.CONSTANTS.SERVER_URL}/users/notifications?userName=${getStoredValue().userName}`;
     axios.get(URL).then(({ data }) => {
       setNotifications(data);
-      setShowNotifications(true);
     });
   };
 
+  const handleNotificationFetch = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorElNotification(event.currentTarget);
+    await fetchNotifications();
+  };
+
+  const handleNotificationClose = () => {
+    setAnchorElNotification(null);
+  };
+
   const goToQuestion = (qId: string) => {
+    setAnchorElNotification(null);
     const URL = `${Util.CONSTANTS.SERVER_URL}/users/${getStoredValue().userName}/notifications/${qId}`;
     axios.delete(URL).then(() => {
-      setShowNotifications(false);
       navigate(`/questions/${qId}`);
     });
   };
@@ -109,9 +121,35 @@ const Navigation = () => {
         )}
         {isLoggedIn && (
           <>
-            <IconButton onClick={fetchNotifications}>
+            <IconButton aria-describedby={id} onClick={handleNotificationFetch}>
               <NotificationsNoneIcon />
             </IconButton>
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorElNotification}
+              onClose={handleNotificationClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+            >
+              <Box>
+                {notifications.map((notification) => {
+                  return (
+                    <Card key={notification} sx={{ margin: '5px 10px', width: '250px' }}>
+                      <CardContent sx={{ padding: '5px' }}>
+                        <Typography>Your question got a new answer!</Typography>
+                      </CardContent>
+                      <CardActions sx={{ padding: '0' }}>
+                        <Button onClick={() => goToQuestion(notification)}>Check here</Button>
+                      </CardActions>
+                    </Card>
+                  );
+                })}
+                {notifications.length === 0 && <Typography sx={{ padding: '10px' }}>No notifications</Typography>}
+              </Box>
+            </Popover>
             <IconButton onClick={handleOpenUserMenu}>
               <AccountCircleRoundedIcon sx={{ color: 'primary' }} fontSize="medium" />
             </IconButton>
@@ -152,29 +190,6 @@ const Navigation = () => {
           </>
         )}
       </div>
-      <Drawer anchor="right" open={showNotifications} onClose={() => setShowNotifications(false)}>
-        <Box>
-          {notifications.map((notification) => {
-            return (
-              <Card key={notification} sx={{ margin: '5px 10px' }}>
-                <CardContent sx={{ padding: '5px' }}>
-                  <Typography>Your question got a new answer!</Typography>
-                </CardContent>
-                <CardActions sx={{ padding: '0' }}>
-                  <Button onClick={() => goToQuestion(notification)}>Check here</Button>
-                </CardActions>
-              </Card>
-            );
-          })}
-          {notifications.length === 0 && (
-            <Card sx={{ margin: '5px 10px' }}>
-              <CardContent>
-                <Typography>No notifications</Typography>
-              </CardContent>
-            </Card>
-          )}
-        </Box>
-      </Drawer>
     </div>
   );
 };
