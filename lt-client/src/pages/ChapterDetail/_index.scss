@@ -1,19 +1,43 @@
-.cl-ChapterDetail{
+.cl-ChapterDetail {
     padding: 20px;
     margin: auto;
-    .heading{
+
+    .heading {
         margin: 20px 0;
         display: flex;
         justify-content: space-between;
     }
 
-    .filter{
+    .filter {
         margin-top: -15px;
         width: 50%;
     }
 
-    .empty{
+    .empty {
         width: 30%;
         margin: 30vh auto;
+    }
+
+    .ask-btn-mbl{
+        visibility: hidden;
+        width: 20%;
+    }
+
+    .mid-section{
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    @media only screen and (max-width: 780px) {
+        .empty {
+            width: 100%;
+        }
+        .ask-btn{
+            display: none;
+        }
+        .ask-btn-mbl{
+            visibility: visible;
+        }
     }
 }

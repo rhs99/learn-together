@@ -189,7 +189,7 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
                 <ChangeHistoryIcon />
               </IconButton>
             </Tooltip>
-            <div className="net-cnt">
+            <div>
               <Typography>{udCnt.upVote - udCnt.downVote}</Typography>
             </div>
             <Tooltip title="Down vote">
@@ -197,6 +197,12 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
                 <ChangeHistoryIcon className="down-icon" />
               </IconButton>
             </Tooltip>
+            {isQuestion && (
+              <>
+                <Typography className="short-info">Ans</Typography>
+                <Typography className="short-info">{(item as Question).answers.length}</Typography>
+              </>
+            )}
           </div>
           <div className="info">
             <Table size="small">
@@ -254,16 +260,12 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
             <ShareIcon fontSize="small"></ShareIcon>
           </IconButton>
         </Tooltip>
-        <Tooltip title="edit">
-          <IconButton className="edit" disabled={!isOwner} onClick={handleEdit}>
-            <EditIcon fontSize="small"></EditIcon>
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="delete">
-          <IconButton className="delete" disabled={!isOwner && !isQOwner} onClick={handleDelete}>
-            <DeleteIcon fontSize="small"></DeleteIcon>
-          </IconButton>
-        </Tooltip>
+        <IconButton className="edit" disabled={!isOwner} onClick={handleEdit}>
+          <EditIcon fontSize="small"></EditIcon>
+        </IconButton>
+        <IconButton className="delete" disabled={!isOwner && !isQOwner} onClick={handleDelete}>
+          <DeleteIcon fontSize="small"></DeleteIcon>
+        </IconButton>
       </div>
       {imageToShow.length > 0 && (
         <Modal open={imageToShow.length > 0} onClose={handleImageModalClose}>
@@ -273,9 +275,12 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
-              width: '500px',
+              maxWidth: '80%',
               bgcolor: 'background.paper',
               border: '2px solid grey',
+              '@media only screen and (max-width: 780px)': {
+                width: '95%',
+              },
             }}
           >
             <img src={imageToShow} style={{ width: '100%', height: 'auto' }} />
@@ -290,10 +295,12 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
-              maxWidth: '400px',
               bgcolor: 'background.paper',
               borderRadius: '5px',
               padding: '15px',
+              '@media only screen and (max-width: 780px)': {
+                width: '70%',
+              },
             }}
           >
             <Typography variant="h6">Do you want to delete this question?</Typography>

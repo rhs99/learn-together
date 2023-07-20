@@ -11,18 +11,30 @@
         .UD-container {
             display: flex;
             flex-direction: column;
-
-            .net-cnt {
-                margin-left: 47%;
-            }
+            align-items: center;
 
             .down-icon {
                 transform: rotateX(180deg);
+                margin-bottom: 20px;
+            }
+
+            .short-info {
+                visibility: hidden;
+            }
+
+            @media only screen and (max-width: 780px) {
+
+                .short-info {
+                    visibility: visible;
+                }
             }
         }
 
-        .info {
-            margin-top: 20px;
+        @media only screen and (max-width: 780px) {
+            .info {
+                display: none;
+            }
+
         }
     }
 
@@ -43,6 +55,12 @@
                 margin-left: 10px;
             }
 
+            @media only screen and (max-width: 780px) {
+                .image {
+                    max-height: 90px;
+                }
+            }
+
             .image:hover {
                 cursor: pointer;
             }
@@ -60,6 +78,8 @@
             }
         }
     }
+
+
 
     .bottom-pane {
         margin-top: 20px;

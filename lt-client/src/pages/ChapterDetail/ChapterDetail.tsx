@@ -131,14 +131,22 @@ const ChapterDetail = () => {
         </div>
       )}
 
-      {!isEmpty && (
-        <SortOptions
-          sortBy={sortBy}
-          sortOrder={sortOrder}
-          handleSortOptionsChange={handleSortOptionsChange}
-          fetchSortedData={fetchQuestion}
-        />
-      )}
+      <div className="mid-section">
+        <div className="ask-btn-mbl">
+          <Button variant="contained" disabled={!isLoggedIn} onClick={handleAskQuestion}>
+            Ask
+          </Button>
+        </div>
+
+        {!isEmpty && (
+          <SortOptions
+            sortBy={sortBy}
+            sortOrder={sortOrder}
+            handleSortOptionsChange={handleSortOptionsChange}
+            fetchSortedData={fetchQuestion}
+          />
+        )}
+      </div>
 
       {questions.map((question) => (
         <QACard
