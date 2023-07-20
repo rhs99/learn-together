@@ -95,12 +95,14 @@ const Navigation = () => {
         >
           Home
         </NavLink>
-        <NavLink
-          to="/about"
-          className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
-        >
-          About
-        </NavLink>
+        <div className="gap">
+          <NavLink
+            to="/about"
+            className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
+          >
+            About
+          </NavLink>
+        </div>
       </div>
       <div className={isLoggedIn ? 'right-loggedIn' : 'right'}>
         {!isLoggedIn && (
@@ -112,12 +114,14 @@ const Navigation = () => {
           </NavLink>
         )}
         {!isLoggedIn && (
-          <NavLink
-            className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
-            to="/users/signup"
-          >
-            Signup
-          </NavLink>
+          <div className="gap">
+            <NavLink
+              className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
+              to="/users/signup"
+            >
+              Signup
+            </NavLink>
+          </div>
         )}
         {isLoggedIn && (
           <>
