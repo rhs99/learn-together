@@ -16,10 +16,19 @@ const HoomePage = () => {
     navigate(`/classes/${_id}`);
   };
 
+  const tableStyles = {
+    width: '30%',
+    border: 2,
+    borderColor: 'rgb(231, 235, 240)',
+    borderRadius: '3px',
+    margin: '10vh auto',
+    '@media (max-width: 780px)': {
+      width: '80%',
+    },
+  };
+
   return (
-    <TableContainer
-      sx={{ width: '30%', border: 2, borderColor: 'rgb(231, 235, 240)', borderRadius: '3px', margin: '10vh auto' }}
-    >
+    <TableContainer sx={tableStyles}>
       <Table>
         <TableHead>
           <TableRow>

@@ -1,4 +1,8 @@
 .lt-SubjectDetail {
     width: 30%;
     margin: 10vh auto;
+    
+    @media (max-width: 780px){
+        width: 80%;
+    }
 }
