@@ -22,7 +22,7 @@ const HoomePage = () => {
     borderColor: 'rgb(231, 235, 240)',
     borderRadius: '3px',
     margin: '10vh auto',
-    '@media (max-width: 780px)': {
+    '@media only screen and (max-width: 780px)': {
       width: '80%',
     },
   };
