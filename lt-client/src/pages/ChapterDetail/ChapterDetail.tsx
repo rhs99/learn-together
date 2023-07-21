@@ -100,44 +100,26 @@ const ChapterDetail = () => {
             {<Typography>{breadcrumbs[breadcrumbs.length - 1].name}</Typography>}
           </Breadcrumbs>
         )}
-        {!isEmpty && (
-          <Autocomplete
-            size="small"
-            className="filter"
-            multiple
-            onChange={(event: SyntheticEvent<Element, Event>, selection: Tag[]) => {
-              setSelectedTags(selection);
-            }}
-            options={existingTags}
-            getOptionLabel={(option) => option.name}
-            defaultValue={[]}
-            renderInput={(params) => (
-              <TextField {...params} variant="standard" label="Filter By Tags" placeholder="Select Tags" />
-            )}
-          />
-        )}
+        <Autocomplete
+          size="small"
+          className="filter"
+          multiple
+          onChange={(event: SyntheticEvent<Element, Event>, selection: Tag[]) => {
+            setSelectedTags(selection);
+          }}
+          options={existingTags}
+          getOptionLabel={(option) => option.name}
+          defaultValue={[]}
+          renderInput={(params) => <TextField {...params} variant="standard" placeholder="Filter by tags" />}
+        />
         <div className="ask-btn">
-          <Button variant="contained" disabled={!isLoggedIn} onClick={handleAskQuestion}>
+          <Button variant="contained" size="small" disabled={!isLoggedIn} onClick={handleAskQuestion}>
             Ask Question
           </Button>
         </div>
       </div>
 
-      {isEmpty && (
-        <div className="empty">
-          <Typography variant="h3" color="gray">
-            No Questions
-          </Typography>
-        </div>
-      )}
-
-      <div className="mid-section">
-        <div className="ask-btn-mbl">
-          <Button variant="contained" disabled={!isLoggedIn} onClick={handleAskQuestion}>
-            Ask
-          </Button>
-        </div>
-
+      <div className="sort-options">
         {!isEmpty && (
           <SortOptions
             sortBy={sortBy}
@@ -147,6 +129,27 @@ const ChapterDetail = () => {
           />
         )}
       </div>
+
+      <Autocomplete
+        size="small"
+        className="filter-mbl"
+        multiple
+        onChange={(event: SyntheticEvent<Element, Event>, selection: Tag[]) => {
+          setSelectedTags(selection);
+        }}
+        options={existingTags}
+        getOptionLabel={(option) => option.name}
+        defaultValue={[]}
+        renderInput={(params) => <TextField {...params} variant="standard" placeholder="Filter by tags" />}
+      />
+
+      {isEmpty && (
+        <div className="empty">
+          <Typography variant="h3" color="gray">
+            No Questions
+          </Typography>
+        </div>
+      )}
 
       {questions.map((question) => (
         <QACard

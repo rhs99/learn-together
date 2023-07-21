@@ -9,7 +9,6 @@
     }
 
     .filter {
-        margin-top: -15px;
         width: 50%;
     }
 
@@ -18,26 +17,26 @@
         margin: 30vh auto;
     }
 
-    .ask-btn-mbl{
+    .filter-mbl{
         visibility: hidden;
-        width: 20%;
+        margin-bottom: -20px;
     }
 
-    .mid-section{
+    .sort-options{
         display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
+        justify-content: flex-end;
     }
 
     @media only screen and (max-width: 780px) {
         .empty {
             width: 100%;
         }
-        .ask-btn{
+        .filter{
             display: none;
         }
-        .ask-btn-mbl{
+        .filter-mbl{
             visibility: visible;
+            margin-bottom: 20px;
         }
     }
 }
