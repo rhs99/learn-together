@@ -1,3 +1,4 @@
+const { sendEmail } = require('../common/middlewares');
 const Util = require('../common/utils');
 const UserService = require('../services/user');
 
@@ -78,6 +79,31 @@ const updatePrivilege = async (req, res) => {
     }
 };
 
+const forgotPassword = async (req, res) => {
+    try {
+        const user = await UserService.forgotPassword(req.body);
+        if (user) {
+            const token = Util.createTokenForPassword({ _id: user._id, email: user.email });
+            const resetLink = `http://localhost:3000/users/resetPassword/${user._id}/${token}`;
+            sendEmail(user.email, 'Reset password', resetLink);
+            res.status(200).json({ token, userId: user._id });
+        } else {
+            res.status(401).json({ msg: 'Username not found!' });
+        }
+    } catch (e) {
+        res.status(400).json({ message: e.message });
+    }
+};
+
+const resetPassword = async (req, res) => {
+    try {
+        await UserService.resetPassword(req.body);
+        res.status(200).json();
+    } catch (e) {
+        res.status(400).json({ message: e.message });
+    }
+};
+
 module.exports = {
     getUser,
     addNewUser,
@@ -87,4 +113,6 @@ module.exports = {
     updatePrivilege,
     getNotifictions,
     removeNotification,
+    forgotPassword,
+    resetPassword,
 };

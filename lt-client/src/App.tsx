@@ -17,6 +17,8 @@ import AboutPage from './pages/AboutPage/AboutPage';
 import { AuthContextProvider } from './store/auth';
 import Profile from './pages/Profile/Profile';
 import Settings from './pages/SettingsPage/Settings';
+import ForgotPasswordPage from './pages/ForgotPassword/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPassword/ResetPasswordPage';
 
 const router = createBrowserRouter([
   {
@@ -39,6 +41,14 @@ const router = createBrowserRouter([
           {
             path: '/users/login',
             element: <LoginPage />,
+          },
+          {
+            path: '/users/forgotPassword',
+            element: <ForgotPasswordPage />,
+          },
+          {
+            path: '/users/resetPassword/:userId/:token',
+            element: <ResetPasswordPage />,
           },
           {
             path: '/classes/:classId',

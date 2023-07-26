@@ -10,6 +10,8 @@ router.get('/notifications', UserController.getNotifictions);
 router.delete('/:userName/notifications/:qId', UserController.removeNotification);
 router.post('/create', UserController.addNewUser);
 router.post('/login', UserController.logInUser);
+router.post('/forgotPassword', UserController.forgotPassword);
+router.post('/resetPassword', UserController.resetPassword);
 router.post('/updateClass', extractAndVerifyToken, hasAdminPrivilege, UserController.updateClassInUser);
 router.post('/updatePassword', extractAndVerifyToken, hasAdminPrivilege, UserController.updatePasswordInUser);
 router.post('/updatePrivilege', extractAndVerifyToken, hasAdminPrivilege, UserController.updatePrivilege);

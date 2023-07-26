@@ -4,6 +4,7 @@ import axios from 'axios';
 import Util from '../../utils';
 import AuthContext from '../../store/auth';
 import './_index.scss';
+import { Link } from '@mui/material';
 
 function LoginPage() {
   const [username, setUsername] = useState<string>('');
@@ -18,6 +19,11 @@ function LoginPage() {
 
   const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
+  };
+
+  const handleForgotPassword = (event: FormEvent) => {
+    event.preventDefault();
+    navigate('/users/forgotPassword');
   };
 
   const handleSubmit = async (event: FormEvent) => {
@@ -56,6 +62,10 @@ function LoginPage() {
             Password:
             <input type="password" name="password" value={password} onChange={handlePasswordChange} required />
           </label>
+          <Link href="" underline="none" target="_blank" onClick={handleForgotPassword}>
+            Forgot Password?
+          </Link>
+
           {err && <span className="err">Invalid Credentials</span>}
           <button type="submit">Login</button>
         </form>
