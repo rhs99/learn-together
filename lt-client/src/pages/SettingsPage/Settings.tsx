@@ -49,7 +49,7 @@ const Settings = () => {
       });
     });
 
-    URL = `${Util.CONSTANTS.SERVER_URL}/privileges/list`;
+    URL = `${Util.CONSTANTS.SERVER_URL}/privileges`;
     axios.get(URL).then(({ data }) => {
       setPrivileges(data);
     });
@@ -64,7 +64,7 @@ const Settings = () => {
 
   const handleAddPrivilege = async (event: FormEvent) => {
     event.preventDefault();
-    const url = `${Util.CONSTANTS.SERVER_URL}/privileges/create`;
+    const url = `${Util.CONSTANTS.SERVER_URL}/privileges`;
 
     const payload = {
       name: newPrivilege,

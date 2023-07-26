@@ -5,7 +5,7 @@ const { extractAndVerifyToken, hasAdminPrivilege } = require('../common/middlewa
 
 const PrivilegeController = require('../controllers/privilege');
 
-router.get('/list', PrivilegeController.getPrivileges);
-router.post('/create', extractAndVerifyToken, hasAdminPrivilege, PrivilegeController.addNewPrivilege);
+router.get('/', PrivilegeController.getPrivileges);
+router.post('/', extractAndVerifyToken, hasAdminPrivilege, PrivilegeController.addNewPrivilege);
 
 module.exports = router;
