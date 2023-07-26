@@ -56,13 +56,14 @@ function ForgotPasswordPage() {
           </button>
         </form>
         <Snackbar
+          sx={{ marginTop: '20px' }}
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           open={showAlert}
           autoHideDuration={6000}
           onClose={handleAlertClose}
         >
           <Alert variant="filled" onClose={handleAlertClose} severity="info">
-            A Link Has been sent to your email.
+            A password reset link has been sent to your email.
           </Alert>
         </Snackbar>
       </div>
