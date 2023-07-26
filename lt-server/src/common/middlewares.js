@@ -1,5 +1,6 @@
 const Util = require('./utils');
 const User = require('../models/user');
+const nodemailer = require('nodemailer');
 
 const extractAndVerifyToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -46,4 +47,30 @@ const hasAdminPrivilege = async (req, res, next) => {
     }
 };
 
-module.exports = { extractAndVerifyToken, hasAdminPrivilege };
+const sendEmail = async (email, subject, text) => {
+    try {
+        const transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465,
+            service: 'gmail',
+            secure: true,
+            auth: {
+                user: '1605027@ugrad.cse.buet.ac.bd',
+                pass: 'djvdhwssohquzkin',
+            },
+        });
+
+        await transporter.sendMail({
+            from: '1605027@ugrad.cse.buet.ac.bd',
+            to: email,
+            subject: subject,
+            text: text,
+        });
+
+        console.log('email sent sucessfully');
+    } catch (error) {
+        console.log(error, 'email not sent');
+    }
+};
+
+module.exports = { extractAndVerifyToken, hasAdminPrivilege, sendEmail };

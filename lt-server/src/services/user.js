@@ -189,6 +189,34 @@ const removeNotification = async (userName, qId) => {
     }
 };
 
+const forgotPassword = async (body) => {
+    try {
+        const user = await User.findOne({ userName: body.userName }).exec();
+        if (!user) {
+            return null;
+        }
+        return user;
+    } catch (error) {
+        console.log(error);
+        throw new Error(error);
+    }
+};
+
+const resetPassword = async (body) => {
+    try {
+        const user = await User.findById(body.userId).exec();
+        if (!user) {
+            throw new Error('No user found!');
+        }
+        user.password = body.password;
+        await user.save();
+        return user;
+    } catch (error) {
+        console.log(error);
+        throw new Error(error);
+    }
+};
+
 module.exports = {
     addNewUser,
     getUser,
@@ -198,4 +226,6 @@ module.exports = {
     updatePrivilege,
     getNotifications,
     removeNotification,
+    forgotPassword,
+    resetPassword,
 };

@@ -7,9 +7,14 @@ const createToken = (data) => {
     return token;
 };
 
+const createTokenForPassword = (data) => {
+    const token = jwt.sign(data, privateKey, { expiresIn: '60m' });
+    return token;
+};
+
 const verityToken = (token) => {
     const data = jwt.verify(token, privateKey);
     return data;
 };
 
-module.exports = { createToken, verityToken };
+module.exports = { createToken, createTokenForPassword, verityToken };
