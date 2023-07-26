@@ -2,10 +2,11 @@ const Privilege = require('../models/privilege');
 
 const getPrivileges = async () => {
     try {
-        const privileges = await Privilege.find({ isDeleted: false });
+        const privileges = await Privilege.find().exec();
         return privileges;
     } catch (e) {
         console.log(e.message);
+        throw new Error('Unable to list privileges');
     }
 };
 
@@ -15,7 +16,7 @@ const addNewPrivilege = async (body) => {
         await newPrivilege.save();
     } catch (e) {
         console.log(e.message);
-        throw new Error(e.message);
+        throw new Error('Failed to create privilege');
     }
 };
 
