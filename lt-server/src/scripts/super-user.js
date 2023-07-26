@@ -26,7 +26,7 @@ const createAdminUser = async () => {
 
         const superUser = new User({
             userName: 'admin',
-            email: 'lt@gmail.com',
+            email: 'learntogether3009@gmail.com',
             password: 'admin',
             privileges: [adminPrivilege._id],
         });

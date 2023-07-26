@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 
 const privateKey = '69h441HbITlmUTQJ5atXpJ7Givt1utqjeSf3VrNNUfY=';
 
@@ -17,4 +18,30 @@ const verityToken = (token) => {
     return data;
 };
 
-module.exports = { createToken, createTokenForPassword, verityToken };
+const sendEmail = async (email, subject, text) => {
+    try {
+        const transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465,
+            service: 'gmail',
+            secure: true,
+            auth: {
+                user: 'learntogether3009@gmail.com',
+                pass: 'owavaxkroqemknvc',
+            },
+        });
+
+        await transporter.sendMail({
+            from: 'learntogether3009@gmail.com',
+            to: email,
+            subject: subject,
+            text: text,
+        });
+
+        console.log('email sent sucessfully');
+    } catch (error) {
+        console.log(error, 'email not sent');
+    }
+};
+
+module.exports = { createToken, createTokenForPassword, verityToken, sendEmail };

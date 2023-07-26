@@ -1,4 +1,4 @@
-const { sendEmail } = require('../common/middlewares');
+const { sendEmail } = require('../common/utils');
 const Util = require('../common/utils');
 const UserService = require('../services/user');
 
