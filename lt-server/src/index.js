@@ -1,3 +1,5 @@
+const http = require('http');
+const WebSocket = require('ws');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -29,10 +31,27 @@ app.use('/answers', answerRouter);
 app.use('/tags', tagRouter);
 app.use('/votes', qaRouter);
 
-const PORT = 5000;
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
 
+export const connectedUsers = new Map();
+
+wss.on('connection', (socket, req) => {
+    const queryParams = new URLSearchParams(req.url.split('?')[1]);
+    const userName = queryParams.get('userName');
+
+    if (userName) {
+        connectedUsers.set(userName, socket);
+        socket.on('close', () => {
+            connectedUsers.delete(userId);
+        });
+    }
+});
+
+
+const PORT = 5000;
 try {
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
         console.log(`Connected successfully on port ${PORT}`);
     });
 } catch (error) {

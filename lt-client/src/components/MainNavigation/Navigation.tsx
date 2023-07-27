@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import {
   IconButton,
   Menu,
@@ -36,6 +36,32 @@ const Navigation = () => {
 
   const open = Boolean(anchorElNotification);
   const id = open ? 'simple-popover' : undefined;
+
+  useEffect(()=>{
+    if(!isLoggedIn){
+      return;
+    }
+
+    const socket = new WebSocket(`ws://localhost:5000?userName=${authCtx.getStoredValue().userName}`); 
+
+    socket.onopen = () => {
+      console.log('Connected to WebSocket server');
+    };
+
+    socket.onmessage = (event) => {
+      const data = event.data;
+      console.log('Received message:', data);
+    };
+
+    socket.onclose = () => {
+      console.log('Disconnected from WebSocket server');
+    };
+
+    return () => {
+      socket.close(); // Clean up on unmount
+    };
+
+  },[isLoggedIn])
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
