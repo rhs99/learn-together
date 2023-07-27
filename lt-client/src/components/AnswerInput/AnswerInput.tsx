@@ -60,8 +60,7 @@ const AnswerInput = (props: AnswerInputProps) => {
       question: props.answer.question,
       imageLocations: imageLocations,
     };
-    console.log(answer);
-    const URL = `${Util.CONSTANTS.SERVER_URL}/answers/create`;
+    const URL = `${Util.CONSTANTS.SERVER_URL}/answers`;
 
     await axios.post(URL, answer, {
       headers: {

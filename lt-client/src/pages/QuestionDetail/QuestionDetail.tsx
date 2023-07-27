@@ -20,7 +20,7 @@ const QuestionDetail = () => {
   const { isLoggedIn, getStoredValue } = useContext(AuthContext);
 
   const fetchAnswers = useCallback(async () => {
-    const URL = `${Util.CONSTANTS.SERVER_URL}/answers/list?questionId=${questionId}`;
+    const URL = `${Util.CONSTANTS.SERVER_URL}/answers?questionId=${questionId}`;
     return axios.get(URL).then(({ data }) => data);
   }, [questionId]);
 

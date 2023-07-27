@@ -12,7 +12,7 @@ const AnswerEdit = () => {
   const { answerId } = useParams();
 
   useEffect(() => {
-    const url = `${Util.CONSTANTS.SERVER_URL}/answers?answerId=${answerId}`;
+    const url = `${Util.CONSTANTS.SERVER_URL}/answers/${answerId}`;
     axios.get(url).then(({ data }) => {
       setAnswer(data);
     });

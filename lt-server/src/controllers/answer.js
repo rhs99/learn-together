@@ -2,7 +2,7 @@ const AnswerService = require('../services/answer');
 
 const getAnswer = async (req, res) => {
     try {
-        const answer = await AnswerService.getAnswer(req.query.answerId);
+        const answer = await AnswerService.getAnswer(req.params._id);
         res.status(200).json(answer);
     } catch (e) {
         res.status(400).json({ message: e.message });
