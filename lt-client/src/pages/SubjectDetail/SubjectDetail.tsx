@@ -16,7 +16,7 @@ const SubjectDetail = () => {
   const { subjectId } = useParams();
 
   useEffect(() => {
-    const URL = `${Util.CONSTANTS.SERVER_URL}/chapters/list?subjectId=${subjectId}`;
+    const URL = `${Util.CONSTANTS.SERVER_URL}/chapters?subjectId=${subjectId}`;
     axios.get(URL).then(({ data }) => {
       setChapters(data);
     });

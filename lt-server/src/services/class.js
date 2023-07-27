@@ -3,7 +3,7 @@ const Class = require('../models/class');
 const getClass = async (id) => {
     try {
         const _class = await Class.findById(id).exec();
-        return _class.name;
+        return _class;
     } catch (e) {
         console.log(e.message);
     }
@@ -11,7 +11,7 @@ const getClass = async (id) => {
 
 const getClasses = async () => {
     try {
-        const classes = await Class.find();
+        const classes = await Class.find().exec();
         return classes;
     } catch (e) {
         console.log(e.message);

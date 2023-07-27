@@ -53,7 +53,7 @@ const ChapterDetail = () => {
   }, [fetchQuestion]);
 
   useEffect(() => {
-    const URL = `${Util.CONSTANTS.SERVER_URL}/tags/list?chapterId=${chapterId}`;
+    const URL = `${Util.CONSTANTS.SERVER_URL}/tags?chapterId=${chapterId}`;
     axios.get(URL).then((data) => setExistingTags(data.data));
   }, [chapterId]);
 

@@ -5,8 +5,8 @@ const { extractAndVerifyToken, hasAdminPrivilege } = require('../common/middlewa
 
 const ClassController = require('../controllers/class');
 
-router.get('/:id/name', ClassController.getClass);
-router.get('/list', ClassController.getClasses);
-router.post('/create', extractAndVerifyToken, hasAdminPrivilege, ClassController.addNewClass);
+router.get('/', ClassController.getClasses);
+router.get('/:_id', ClassController.getClass);
+router.post('/', extractAndVerifyToken, hasAdminPrivilege, ClassController.addNewClass);
 
 module.exports = router;

@@ -16,26 +16,11 @@ const addNewTag = async (body) => {
 
 const getAllTags = async (chapterId) => {
     try {
-        const tags = Tag.find({ chapter: chapterId, isDeleted: false }).exec();
+        const tags = Tag.find({ chapter: chapterId }).exec();
         return tags;
     } catch (e) {
         console.log(e.message);
     }
 };
 
-const softDeleteTag = async (_id) => {
-    try {
-        const tag = await Tag.findOneAndUpdate(
-            { _id },
-            { isDeleted: true },
-            {
-                new: true,
-            },
-        );
-        return tag;
-    } catch (e) {
-        if (e instanceof Error) console.log(e.message);
-    }
-};
-
-module.exports = { addNewTag, getAllTags, softDeleteTag };
+module.exports = { addNewTag, getAllTags };

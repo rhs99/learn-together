@@ -2,7 +2,7 @@ const ClassService = require('../services/class');
 
 const getClass = async (req, res) => {
     try {
-        const _class = await ClassService.getClass(req.params.id);
+        const _class = await ClassService.getClass(req.params._id);
         res.status(200).json(_class);
     } catch (e) {
         res.status(400).json({ message: e.message });

@@ -5,8 +5,8 @@ const { extractAndVerifyToken, hasAdminPrivilege } = require('../common/middlewa
 
 const ChapterController = require('../controllers/chapter');
 
-router.get('/:id/breadcrumb', ChapterController.getChapterBreadcrumb);
-router.get('/list', ChapterController.getChapters);
-router.post('/create', extractAndVerifyToken, hasAdminPrivilege, ChapterController.addNewChapter);
+router.get('/', ChapterController.getChapters);
+router.get('/:_id/breadcrumb', ChapterController.getChapterBreadcrumb);
+router.post('/', extractAndVerifyToken, hasAdminPrivilege, ChapterController.addNewChapter);
 
 module.exports = router;

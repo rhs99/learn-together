@@ -34,7 +34,7 @@ const QuestionInput = (props: QuestionInputProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const URL = `${Util.CONSTANTS.SERVER_URL}/tags/list?chapterId=${props.chapterId}`;
+    const URL = `${Util.CONSTANTS.SERVER_URL}/tags?chapterId=${props.chapterId}`;
     axios.get(URL).then((data) => setExistingTags(data.data));
   }, [props.chapterId]);
 
@@ -63,7 +63,7 @@ const QuestionInput = (props: QuestionInputProps) => {
       return;
     }
 
-    const tagURL = `${Util.CONSTANTS.SERVER_URL}/tags/create`;
+    const tagURL = `${Util.CONSTANTS.SERVER_URL}/tags`;
     const question = {
       _id: props.question?._id || '',
       details: description,

@@ -18,13 +18,4 @@ const addNewTag = async (req, res) => {
     }
 };
 
-const softDeleteTag = async (req, res) => {
-    try {
-        const tag = await TagService.softDeleteTag(req.params._id);
-        res.status(200).json(tag);
-    } catch (e) {
-        if (e instanceof Error) res.status(400).json({ message: e.message });
-    }
-};
-
-module.exports = { getAllTags, addNewTag, softDeleteTag };
+module.exports = { getAllTags, addNewTag };

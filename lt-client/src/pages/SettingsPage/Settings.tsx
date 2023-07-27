@@ -56,7 +56,7 @@ const Settings = () => {
   }, []);
 
   const fetchSubjects = async (classId: string) => {
-    const URL = `${Util.CONSTANTS.SERVER_URL}/subjects/list?classId=${classId}`;
+    const URL = `${Util.CONSTANTS.SERVER_URL}/subjects?classId=${classId}`;
     axios.get(URL).then(({ data }) => {
       setSubjects(data);
     });
@@ -171,7 +171,7 @@ const Settings = () => {
 
   const handleAddClass = async (event: FormEvent) => {
     event.preventDefault();
-    const url = `${Util.CONSTANTS.SERVER_URL}/classes/create`;
+    const url = `${Util.CONSTANTS.SERVER_URL}/classes`;
     const payload = {
       name: newClass,
     };
@@ -201,7 +201,7 @@ const Settings = () => {
 
   const handleAddSubject = async (event: FormEvent) => {
     event.preventDefault();
-    const url = `${Util.CONSTANTS.SERVER_URL}/subjects/create`;
+    const url = `${Util.CONSTANTS.SERVER_URL}/subjects`;
     const payload = {
       name: newSubject,
       class: classForSubject,
@@ -234,7 +234,7 @@ const Settings = () => {
   const handleAddChapter = async (event: FormEvent) => {
     event.preventDefault();
 
-    const url = `${Util.CONSTANTS.SERVER_URL}/chapters/create`;
+    const url = `${Util.CONSTANTS.SERVER_URL}/chapters`;
     const payload = {
       name: newChapter,
       subject: subjectForChapter,

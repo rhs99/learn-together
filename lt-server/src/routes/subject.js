@@ -4,8 +4,8 @@ const { extractAndVerifyToken, hasAdminPrivilege } = require('../common/middlewa
 
 const SubjectController = require('../controllers/subject');
 
-router.get('/:id/breadcrumb', SubjectController.getSubjectBreadcrumb);
-router.get('/list', SubjectController.getSubjects);
-router.post('/create', extractAndVerifyToken, hasAdminPrivilege, SubjectController.addNewSubject);
+router.get('/', SubjectController.getSubjects);
+router.get('/:_id/breadcrumb', SubjectController.getSubjectBreadcrumb);
+router.post('/', extractAndVerifyToken, hasAdminPrivilege, SubjectController.addNewSubject);
 
 module.exports = router;

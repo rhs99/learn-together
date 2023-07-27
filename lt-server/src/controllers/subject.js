@@ -2,7 +2,7 @@ const SubjectService = require('../services/subject');
 
 const getSubjectBreadcrumb = async (req, res) => {
     try {
-        const subject = await SubjectService.getSubjectBreadcrumb(req.params.id);
+        const subject = await SubjectService.getSubjectBreadcrumb(req.params._id);
         res.status(200).json(subject);
     } catch (e) {
         res.status(400).json({ message: e.message });

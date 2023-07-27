@@ -2,7 +2,7 @@ const ChapterService = require('../services/chapter');
 
 const getChapterBreadcrumb = async (req, res) => {
     try {
-        const chapter = await ChapterService.getChapterBreadcrumb(req.params.id);
+        const chapter = await ChapterService.getChapterBreadcrumb(req.params._id);
         res.status(200).json(chapter);
     } catch (e) {
         res.status(400).json({ message: e.message });

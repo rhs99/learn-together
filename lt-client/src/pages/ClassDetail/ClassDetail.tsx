@@ -14,16 +14,16 @@ const ClassDetail = () => {
   const { classId } = useParams();
 
   useEffect(() => {
-    const URL = `${Util.CONSTANTS.SERVER_URL}/subjects/list?classId=${classId}`;
+    const URL = `${Util.CONSTANTS.SERVER_URL}/subjects?classId=${classId}`;
     axios.get(URL).then(({ data }) => {
       setSubjects(data);
     });
   }, [classId]);
 
   useEffect(() => {
-    const URL = `${Util.CONSTANTS.SERVER_URL}/classes/${classId}/name`;
+    const URL = `${Util.CONSTANTS.SERVER_URL}/classes/${classId}`;
     axios.get(URL).then(({ data }) => {
-      setClassName(data);
+      setClassName(data.name);
     });
   }, [classId]);
 

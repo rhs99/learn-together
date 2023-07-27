@@ -8,7 +8,7 @@ import Util from '../../utils';
 import './_index.scss';
 
 export async function loader() {
-  const URL = Util.CONSTANTS.SERVER_URL + '/classes/list';
+  const URL = Util.CONSTANTS.SERVER_URL + '/classes';
   const { data } = await axios.get(URL);
   return data;
 }
