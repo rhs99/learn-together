@@ -21,7 +21,7 @@ const ResetPasswordPage = () => {
       return;
     }
 
-    const URL = Util.CONSTANTS.SERVER_URL + '/users/resetPassword';
+    const URL = Util.CONSTANTS.SERVER_URL + '/users/reset-password';
 
     const userInfo = {
       userId: userId,

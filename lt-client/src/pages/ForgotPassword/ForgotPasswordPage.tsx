@@ -25,7 +25,7 @@ function ForgotPasswordPage() {
     event.preventDefault();
     setEmailSent(true);
     setShowAlert(true);
-    const URL = Util.CONSTANTS.SERVER_URL + '/users/forgotPassword';
+    const URL = Util.CONSTANTS.SERVER_URL + '/users/forgot-password';
 
     const userInfo = {
       userName: username,

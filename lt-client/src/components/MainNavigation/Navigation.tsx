@@ -62,7 +62,7 @@ const Navigation = () => {
   };
 
   const fetchNotifications = async () => {
-    const URL = `${Util.CONSTANTS.SERVER_URL}/users/notifications?userName=${getStoredValue().userName}`;
+    const URL = `${Util.CONSTANTS.SERVER_URL}/users/${getStoredValue().userName}/notifications`;
     axios.get(URL).then(({ data }) => {
       setNotifications(data);
     });

@@ -4,7 +4,7 @@ const UserService = require('../services/user');
 
 const getUser = async (req, res) => {
     try {
-        const user = await UserService.getUser(req.query.userName);
+        const user = await UserService.getUser(req.params.userName);
         res.status(200).json(user);
     } catch (e) {
         res.status(400).json({ message: e.message });
@@ -13,7 +13,7 @@ const getUser = async (req, res) => {
 
 const getNotifictions = async (req, res) => {
     try {
-        const notifications = await UserService.getNotifications(req.query.userName);
+        const notifications = await UserService.getNotifications(req.params.userName);
         res.status(200).json(notifications);
     } catch (e) {
         res.status(400).json({ message: e.message });
@@ -84,7 +84,7 @@ const forgotPassword = async (req, res) => {
         const user = await UserService.forgotPassword(req.body);
         if (user) {
             const token = Util.createTokenForPassword({ _id: user._id, email: user.email });
-            const resetLink = `http://localhost:3000/users/resetPassword/${user._id}/${token}`;
+            const resetLink = `http://localhost:3000/users/reset-password/${user._id}/${token}`;
             sendEmail(user.email, 'Reset password', resetLink);
             res.status(200).json({ token, userId: user._id });
         } else {

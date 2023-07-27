@@ -23,7 +23,7 @@ function LoginPage() {
 
   const handleForgotPassword = (event: FormEvent) => {
     event.preventDefault();
-    navigate('/users/forgotPassword');
+    navigate('/users/forgot-password');
   };
 
   const handleSubmit = async (event: FormEvent) => {

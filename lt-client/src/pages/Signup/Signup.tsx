@@ -31,7 +31,7 @@ const SignupPage = () => {
       return;
     }
 
-    const URL = Util.CONSTANTS.SERVER_URL + '/users/create';
+    const URL = Util.CONSTANTS.SERVER_URL + '/users';
 
     const userInfo: { [key: string]: string } = {
       userName: username,

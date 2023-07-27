@@ -12,7 +12,7 @@ const Profile = () => {
   const { userName } = useParams();
 
   useEffect(() => {
-    const URL = `${Util.CONSTANTS.SERVER_URL}/users?userName=${userName}`;
+    const URL = `${Util.CONSTANTS.SERVER_URL}/users/${userName}`;
     axios.get(URL).then(({ data }) => {
       setUser(data);
     });

@@ -39,7 +39,7 @@ const Settings = () => {
   const authCtx = useContext(AuthContext);
 
   useEffect(() => {
-    let URL = `${Util.CONSTANTS.SERVER_URL}/users?userName=${authCtx.getStoredValue().userName}`;
+    let URL = `${Util.CONSTANTS.SERVER_URL}/users/${authCtx.getStoredValue().userName}`;
     axios.get(URL).then(({ data }) => {
       data.privileges.forEach((privilege: Privilege) => {
         if (privilege.name === 'admin') {
@@ -95,7 +95,7 @@ const Settings = () => {
 
   const handleChangeClass = async (event: FormEvent) => {
     event.preventDefault();
-    const url = `${Util.CONSTANTS.SERVER_URL}/users/updateClass`;
+    const url = `${Util.CONSTANTS.SERVER_URL}/users/update-class`;
     const payload = {
       userName: authCtx.getStoredValue().userName,
       _class: _class,
@@ -136,7 +136,7 @@ const Settings = () => {
       return;
     }
 
-    const url = `${Util.CONSTANTS.SERVER_URL}/users/updatePassword`;
+    const url = `${Util.CONSTANTS.SERVER_URL}/users/update-password`;
     const payload = {
       userName: authCtx.getStoredValue().userName,
       prevPassword: prevPassword,

@@ -43,11 +43,11 @@ const router = createBrowserRouter([
             element: <LoginPage />,
           },
           {
-            path: '/users/forgotPassword',
+            path: '/users/forgot-password',
             element: <ForgotPasswordPage />,
           },
           {
-            path: '/users/resetPassword/:userId/:token',
+            path: '/users/reset-password/:userId/:token',
             element: <ResetPasswordPage />,
           },
           {
