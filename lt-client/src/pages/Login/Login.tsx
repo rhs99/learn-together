@@ -62,11 +62,14 @@ function LoginPage() {
             Password:
             <input type="password" name="password" value={password} onChange={handlePasswordChange} required />
           </label>
-          <Link href="" underline="none" target="_blank" onClick={handleForgotPassword}>
-            Forgot Password?
-          </Link>
-
-          {err && <span className="err">Invalid Credentials</span>}
+          {err && (
+            <>
+              <p className="err">Invalid Credentials</p>
+              <Link href="" underline="none" target="_blank" onClick={handleForgotPassword}>
+                Forgot password?
+              </Link>
+            </>
+          )}
           <button type="submit">Login</button>
         </form>
       </div>
