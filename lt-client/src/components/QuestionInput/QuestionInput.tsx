@@ -92,14 +92,18 @@ const QuestionInput = (props: QuestionInputProps) => {
       (question.tags as string[]).push(data._id);
     });
 
-    const questionURL = `${Util.CONSTANTS.SERVER_URL}/questions/create`;
+    const questionURL = `${Util.CONSTANTS.SERVER_URL}/questions`;
 
-    await axios.post(questionURL, question, {
+    console.log(questionURL);
+
+    const lol = await axios.post(questionURL, question, {
       headers: {
         Authorization: `Bearer ${authCtx.getStoredValue().token}`,
         'Content-Type': 'application/json',
       },
     });
+
+    console.log(lol);
 
     navigate(`/chapters/${props.chapterId}`);
   };

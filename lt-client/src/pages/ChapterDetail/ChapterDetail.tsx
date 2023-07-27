@@ -35,7 +35,7 @@ const ChapterDetail = () => {
     queryString += `&sortOrder=${sortOrder}`;
     queryString += `&pageNumber=${paginationInfo.currPage}`;
 
-    const URL = `${Util.CONSTANTS.SERVER_URL}/questions/list?${queryString}`;
+    const URL = `${Util.CONSTANTS.SERVER_URL}/questions/search?${queryString}`;
     const selectedTagIds = selectedTags.map((tag) => tag._id);
     axios.post(URL, { chapterId, tagIds: selectedTagIds }).then(({ data }) => {
       setQuestions(data.paginatedResults);

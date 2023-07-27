@@ -11,7 +11,7 @@ const getAllQuestions = async (req, res) => {
 
 const getQuestion = async (req, res) => {
     try {
-        const question = await QuestionService.getQuestion(req.query.questionId);
+        const question = await QuestionService.getQuestion(req.params._id);
         res.status(200).json(question);
     } catch (e) {
         res.status(400).json({ message: e.message });

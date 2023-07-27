@@ -10,7 +10,7 @@ const QuestionEdit = () => {
   const { questionId } = useParams();
 
   useEffect(() => {
-    const url = `${Util.CONSTANTS.SERVER_URL}/questions?questionId=${questionId}`;
+    const url = `${Util.CONSTANTS.SERVER_URL}/questions/${questionId}`;
     axios.get(url).then(({ data }) => {
       setQuestion(data);
     });

@@ -25,7 +25,7 @@ const QuestionDetail = () => {
   }, [questionId]);
 
   useEffect(() => {
-    const URL = `${Util.CONSTANTS.SERVER_URL}/questions?questionId=${questionId}`;
+    const URL = `${Util.CONSTANTS.SERVER_URL}/questions/${questionId}`;
     axios.get(URL).then(({ data }) => {
       setQuestion(data);
     });
