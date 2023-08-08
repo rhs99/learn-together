@@ -29,6 +29,7 @@ const Navigation = () => {
   const [anchorElNotification, setAnchorElNotification] = useState<HTMLButtonElement | null>(null);
 
   const [notifications, setNotifications] = useState<string[]>([]);
+  const [hasNewNotification, setHasNewNotification] = useState(false);
 
   const authCtx = useContext(AuthContext);
   const { isLoggedIn, getStoredValue } = authCtx;
@@ -36,21 +37,22 @@ const Navigation = () => {
 
   const open = Boolean(anchorElNotification);
   const id = open ? 'simple-popover' : undefined;
+  const currUserName = authCtx.getStoredValue().userName;
 
-  useEffect(()=>{
-    if(!isLoggedIn){
+  useEffect(() => {
+    if (!isLoggedIn) {
       return;
     }
 
-    const socket = new WebSocket(`ws://localhost:5000?userName=${authCtx.getStoredValue().userName}`); 
+    const socket = new WebSocket(`ws://localhost:5000?userName=${currUserName}`);
 
     socket.onopen = () => {
       console.log('Connected to WebSocket server');
     };
 
     socket.onmessage = (event) => {
-      const data = event.data;
-      console.log('Received message:', data);
+      console.log(event.data);
+      setHasNewNotification(true);
     };
 
     socket.onclose = () => {
@@ -60,8 +62,7 @@ const Navigation = () => {
     return () => {
       socket.close(); // Clean up on unmount
     };
-
-  },[isLoggedIn])
+  }, [isLoggedIn, currUserName]);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -97,6 +98,7 @@ const Navigation = () => {
   const handleNotificationFetch = async (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorElNotification(event.currentTarget);
     await fetchNotifications();
+    setHasNewNotification(false);
   };
 
   const handleNotificationClose = () => {
@@ -152,7 +154,7 @@ const Navigation = () => {
         {isLoggedIn && (
           <>
             <IconButton aria-describedby={id} onClick={handleNotificationFetch}>
-              <NotificationsNoneIcon />
+              <NotificationsNoneIcon color={hasNewNotification ? 'primary' : 'inherit'} />
             </IconButton>
             <Popover
               id={id}
