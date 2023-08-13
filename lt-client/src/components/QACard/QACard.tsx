@@ -77,7 +77,7 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
 
   useEffect(() => {
     if (!isQuestion) {
-      const url = `${Util.CONSTANTS.SERVER_URL}/questions?questionId=${qId}`;
+      const url = `${Util.CONSTANTS.SERVER_URL}/questions/${qId}`;
       axios.get(url).then(({ data }) => {
         setQOwner(data.user.userName);
       });
@@ -137,13 +137,15 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
   };
 
   const deleteImageLocations = async () => {
-    const images = item.imageLocations;
+    const images = item.imageLocations ? item.imageLocations : [];
     if (isQuestion) {
-      const URL = `${Util.CONSTANTS.SERVER_URL}/answers/list?questionId=${item._id}`;
+      const URL = `${Util.CONSTANTS.SERVER_URL}/answers?questionId=${item._id}`;
       const { data } = await axios.get(URL);
-      (data as Answer[]).forEach((answer) => {
-        images.push(...answer.imageLocations);
-      });
+      if (data.length > 0) {
+        (data as Answer[]).forEach((answer) => {
+          if (answer.imageLocations?.length > 0) images.push(...answer.imageLocations);
+        });
+      }
     }
     images.forEach((image) => {
       Util.deleteFile(image);

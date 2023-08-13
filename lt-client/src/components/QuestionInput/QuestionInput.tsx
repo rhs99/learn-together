@@ -45,7 +45,7 @@ const QuestionInput = (props: QuestionInputProps) => {
   };
 
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
-    props.question?.imageLocations.forEach((image) => {
+    props.question?.imageLocations?.forEach((image) => {
       Util.deleteFile(image);
     });
     if (event.target.files) {
