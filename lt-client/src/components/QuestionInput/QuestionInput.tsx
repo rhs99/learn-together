@@ -13,6 +13,8 @@ import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
 import AlertTitle from '@mui/material/AlertTitle';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 import './_index.scss';
 
@@ -29,6 +31,7 @@ const QuestionInput = (props: QuestionInputProps) => {
   const [existingTags, setExistingTags] = useState<Tag[]>([]);
   const [editor, setEditor] = useState<Quill>();
   const [showAlert, setShowAlert] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
@@ -45,6 +48,7 @@ const QuestionInput = (props: QuestionInputProps) => {
   };
 
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    setIsUploading(true);
     props.question?.imageLocations?.forEach((image) => {
       Util.deleteFile(image);
     });
@@ -52,6 +56,7 @@ const QuestionInput = (props: QuestionInputProps) => {
       const file = event.target.files[0];
       await Util.uploadFile(file, setImageLocations);
     }
+    setIsUploading(false);
   };
 
   const handleSave = async () => {
@@ -94,16 +99,12 @@ const QuestionInput = (props: QuestionInputProps) => {
 
     const questionURL = `${Util.CONSTANTS.SERVER_URL}/questions`;
 
-    console.log(questionURL);
-
     const lol = await axios.post(questionURL, question, {
       headers: {
         Authorization: `Bearer ${authCtx.getStoredValue().token}`,
         'Content-Type': 'application/json',
       },
     });
-
-    console.log(lol);
 
     navigate(`/chapters/${props.chapterId}`);
   };
@@ -188,6 +189,11 @@ const QuestionInput = (props: QuestionInputProps) => {
           Save
         </Button>
       </div>
+      {isUploading && (
+        <Box sx={{ position: 'fixed', top: '50%', left: '50%' }}>
+          <CircularProgress color="inherit" />
+        </Box>
+      )}
     </div>
   );
 };

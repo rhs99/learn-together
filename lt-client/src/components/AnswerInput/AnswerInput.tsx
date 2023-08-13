@@ -10,6 +10,8 @@ import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
 import AlertTitle from '@mui/material/AlertTitle';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 import './_index.scss';
 
@@ -23,6 +25,7 @@ const AnswerInput = (props: AnswerInputProps) => {
   const [editor, setEditor] = useState<Quill>();
   const [inputRef, setInputRef] = useState<HTMLInputElement | null>();
   const [showAlert, setShowAlert] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
@@ -34,6 +37,7 @@ const AnswerInput = (props: AnswerInputProps) => {
   };
 
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    setIsUploading(true);
     props.answer.imageLocations?.forEach((image) => {
       Util.deleteFile(image);
     });
@@ -43,6 +47,7 @@ const AnswerInput = (props: AnswerInputProps) => {
         await Util.uploadFile(event.target.files[1], setImageLocations);
       }
     }
+    setIsUploading(false);
   };
 
   const handlePostAnswer = async () => {
@@ -106,6 +111,11 @@ const AnswerInput = (props: AnswerInputProps) => {
             Answer <strong>description and image</strong> both cannot be empty!
           </Alert>
         </Stack>
+      )}
+      {isUploading && (
+        <Box sx={{ position: 'fixed', top: '50%', left: '50%' }}>
+          <CircularProgress color="inherit" />
+        </Box>
       )}
       <div className="aHeader">
         <h3>Your Answer</h3>
