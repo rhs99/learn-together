@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import {
   IconButton,
   Menu,
@@ -29,6 +29,7 @@ const Navigation = () => {
   const [anchorElNotification, setAnchorElNotification] = useState<HTMLButtonElement | null>(null);
 
   const [notifications, setNotifications] = useState<string[]>([]);
+  const [hasNewNotification, setHasNewNotification] = useState(false);
 
   const authCtx = useContext(AuthContext);
   const { isLoggedIn, getStoredValue } = authCtx;
@@ -36,6 +37,32 @@ const Navigation = () => {
 
   const open = Boolean(anchorElNotification);
   const id = open ? 'simple-popover' : undefined;
+  const currUserName = authCtx.getStoredValue().userName;
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      return;
+    }
+
+    const socket = new WebSocket(`ws://localhost:5000?userName=${currUserName}`);
+
+    socket.onopen = () => {
+      console.log('Connected to WebSocket server');
+    };
+
+    socket.onmessage = (event) => {
+      console.log(event.data);
+      setHasNewNotification(true);
+    };
+
+    socket.onclose = () => {
+      console.log('Disconnected from WebSocket server');
+    };
+
+    return () => {
+      socket.close();
+    };
+  }, [isLoggedIn, currUserName]);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -71,6 +98,7 @@ const Navigation = () => {
   const handleNotificationFetch = async (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorElNotification(event.currentTarget);
     await fetchNotifications();
+    setHasNewNotification(false);
   };
 
   const handleNotificationClose = () => {
@@ -126,7 +154,7 @@ const Navigation = () => {
         {isLoggedIn && (
           <>
             <IconButton aria-describedby={id} onClick={handleNotificationFetch}>
-              <NotificationsNoneIcon />
+              <NotificationsNoneIcon color={hasNewNotification ? 'primary' : 'inherit'} />
             </IconButton>
             <Popover
               id={id}

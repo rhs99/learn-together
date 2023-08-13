@@ -2,6 +2,8 @@ const Answer = require('../models/answer');
 const Question = require('../models/question');
 const User = require('../models/user');
 
+const connectedUsers = require('../common/connected-users');
+
 const addNewAnswer = async (body) => {
     try {
         const question = await Question.findById(body.question).exec();
@@ -32,6 +34,10 @@ const addNewAnswer = async (body) => {
             qOwner.notifications = qOwner.notifications.slice(1);
         }
         await qOwner.save();
+        const socket = connectedUsers.get(qOwner.userName);
+        if (socket) {
+            socket.send('new answer');
+        }
     } catch (e) {
         console.log(e.message);
         if (e.message === 'unauthorized') {

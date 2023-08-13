@@ -37,9 +37,10 @@ const Settings = () => {
 
   const classes = useLoaderData();
   const authCtx = useContext(AuthContext);
+  const uName = authCtx.getStoredValue().userName;
 
   useEffect(() => {
-    let URL = `${Util.CONSTANTS.SERVER_URL}/users/${authCtx.getStoredValue().userName}`;
+    let URL = `${Util.CONSTANTS.SERVER_URL}/users/${uName}`;
     axios.get(URL).then(({ data }) => {
       data.privileges.forEach((privilege: Privilege) => {
         if (privilege.name === 'admin') {
@@ -53,7 +54,7 @@ const Settings = () => {
     axios.get(URL).then(({ data }) => {
       setPrivileges(data);
     });
-  }, []);
+  }, [uName]);
 
   const fetchSubjects = async (classId: string) => {
     const URL = `${Util.CONSTANTS.SERVER_URL}/subjects?classId=${classId}`;
