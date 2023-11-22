@@ -5,9 +5,6 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { Divider, Chip, Modal, Box, IconButton, Tooltip, Snackbar, Alert } from '@mui/material';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
-import EditIcon from '@mui/icons-material/Edit';
-import ShareIcon from '@mui/icons-material/Share';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { Question, Answer } from '../../types';
 import Util from '../../utils';
 import axios from 'axios';
@@ -258,17 +255,9 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
         <Typography variant="body2" className="author">
           {`${isQuestion ? 'asked' : 'answered'} by`} <span className="user-name">{item.user.userName}</span>
         </Typography>
-        <Tooltip title="share">
-          <IconButton className="share" onClick={handleShareClick}>
-            <ShareIcon fontSize="small"></ShareIcon>
-          </IconButton>
-        </Tooltip>
-        <IconButton className="edit" disabled={!isOwner} onClick={handleEdit}>
-          <EditIcon fontSize="small"></EditIcon>
-        </IconButton>
-        <IconButton className="delete" disabled={!isOwner && !isQOwner} onClick={handleDelete}>
-          <DeleteIcon fontSize="small"></DeleteIcon>
-        </IconButton>
+        <Button className="share" onClick={handleShareClick} icon="share" />
+        <Button className="edit" disabled={!isOwner} onClick={handleEdit} icon="edit" />
+        <Button className="delete" disabled={!isOwner && !isQOwner} onClick={handleDelete} icon="delete" />
       </div>
       {imageToShow.length > 0 && (
         <Modal open={imageToShow.length > 0} onClose={handleImageModalClose}>
@@ -308,12 +297,8 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
           >
             <Typography variant="h6">Do you want to delete this question?</Typography>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
-              <Button onClick={handleDeleteModalClose}>
-                Cancel
-              </Button>
-              <Button onClick={handleConfirmDelete}>
-                Confirm
-              </Button>
+              <Button onClick={handleDeleteModalClose}>Cancel</Button>
+              <Button onClick={handleConfirmDelete}>Confirm</Button>
             </div>
           </Box>
         </Modal>

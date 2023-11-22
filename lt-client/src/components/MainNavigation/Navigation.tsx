@@ -14,13 +14,11 @@ import {
   Button,
 } from '@mui/material';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
-import SettingsIcon from '@mui/icons-material/Settings';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import LogoutIcon from '@mui/icons-material/Logout';
 import AuthContext from '../../store/auth';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import Util from '../../utils';
 import Popover from '@mui/material/Popover';
+import Icon from '../../design-library/Icon';
 
 import './_index.scss';
 
@@ -202,19 +200,19 @@ const Navigation = () => {
             >
               <MenuItem onClick={goToProfile}>
                 <Stack direction="row" alignItems="center" gap={1}>
-                  <PersonOutlineIcon />
+                  <Icon name="profile" size={16} />
                   <Typography variant="body1">Profile</Typography>
                 </Stack>
               </MenuItem>
               <MenuItem onClick={goToSettings}>
                 <Stack direction="row" alignItems="center" gap={1}>
-                  <SettingsIcon />
+                  <Icon name="settings" size={16} />
                   <Typography variant="body1">Settings</Typography>
                 </Stack>
               </MenuItem>
               <MenuItem onClick={logoutHandler}>
                 <Stack direction="row" alignItems="center" gap={1}>
-                  <LogoutIcon />
+                  <Icon name="logout" size={16} />
                   <Typography variant="body1">Logout</Typography>
                 </Stack>
               </MenuItem>

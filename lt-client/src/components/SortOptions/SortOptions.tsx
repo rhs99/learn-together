@@ -57,9 +57,7 @@ const SortOptions = ({ sortBy, sortOrder, handleSortOptionsChange, fetchSortedDa
 
   return (
     <div className="cl-SortOptions">
-      <Button onClick={handleClick}>
-        Sort By
-      </Button>
+      <Button onClick={handleClick}>Sort By</Button>
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
         <MenuItem onClick={() => handleSortByClick('vote')}>Vote</MenuItem>
         <MenuItem onClick={() => handleSortByClick('upVote')}>Up Vote</MenuItem>
