@@ -6,7 +6,6 @@ import Util from '../../utils';
 import axios from 'axios';
 import { Question } from '../../types';
 import AuthContext from '../../store/auth';
-import { Button } from '@mui/material';
 import { Tag } from '../../types';
 import { Autocomplete, TextField, createFilterOptions } from '@mui/material';
 import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
@@ -15,6 +14,7 @@ import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import Button from '../../design-library/Button';
 
 import './_index.scss';
 
@@ -182,10 +182,10 @@ const QuestionInput = (props: QuestionInputProps) => {
         <input type="file" accept="image/*" multiple={false} onChange={handleFileUpload} />
       </div>
       <div className="btn-container">
-        <Button variant="outlined" onClick={handleClose} color="error" className="close-btn">
+        <Button onClick={handleClose} className="close-btn">
           Close
         </Button>
-        <Button variant="contained" onClick={handleSave} color="success" className="save-btn">
+        <Button onClick={handleSave} className="save-btn">
           Save
         </Button>
       </div>

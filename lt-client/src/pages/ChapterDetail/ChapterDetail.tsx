@@ -4,7 +4,7 @@ import axios from 'axios';
 import Util from '../../utils';
 import { Question, Breadcrumb } from '../../types';
 import AuthContext from '../../store/auth';
-import { Typography, Button } from '@mui/material';
+import { Typography } from '@mui/material';
 import { Autocomplete, TextField } from '@mui/material';
 import SortOptions from '../../components/SortOptions/SortOptions';
 import { Tag } from '../../types';
@@ -12,6 +12,8 @@ import QACard from '../../components/QACard/QACard';
 import Pagination from '@mui/material/Pagination';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
+
+import Button from '../../design-library/Button';
 
 import './_index.scss';
 
@@ -113,7 +115,7 @@ const ChapterDetail = () => {
           renderInput={(params) => <TextField {...params} variant="standard" placeholder="Filter by tags" />}
         />
         <div className="ask-btn">
-          <Button variant="contained" size="small" disabled={!isLoggedIn} onClick={handleAskQuestion}>
+          <Button disabled={!isLoggedIn} onClick={handleAskQuestion}>
             Ask Question
           </Button>
         </div>
