@@ -3,8 +3,7 @@ import { useEffect, useState, useContext } from 'react';
 
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { Divider, Chip, Modal, Box, IconButton, Tooltip, Snackbar, Alert } from '@mui/material';
-import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
+import { Divider, Chip, Modal, Box, Snackbar, Alert } from '@mui/material';
 import { Question, Answer } from '../../types';
 import Util from '../../utils';
 import axios from 'axios';
@@ -184,19 +183,11 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
       <Stack direction="row" spacing={2} divider={<Divider orientation="vertical" flexItem />}>
         <div className="left-pane">
           <div className="UD-container">
-            <Tooltip title="Up vote">
-              <IconButton onClick={handleUpVote}>
-                <ChangeHistoryIcon />
-              </IconButton>
-            </Tooltip>
+            <Button onClick={handleUpVote} icon="arrow-up" />
             <div>
               <Typography>{udCnt.upVote - udCnt.downVote}</Typography>
             </div>
-            <Tooltip title="Down vote">
-              <IconButton onClick={handleDownVote}>
-                <ChangeHistoryIcon className="down-icon" />
-              </IconButton>
-            </Tooltip>
+            <Button onClick={handleDownVote} icon="arrow-down" />
             {isQuestion && (
               <>
                 <Typography className="short-info">Ans</Typography>
