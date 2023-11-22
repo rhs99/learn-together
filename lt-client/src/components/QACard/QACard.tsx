@@ -3,7 +3,7 @@ import { useEffect, useState, useContext } from 'react';
 
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { Divider, Chip, Modal, Box, IconButton, Tooltip, Snackbar, Alert, Button } from '@mui/material';
+import { Divider, Chip, Modal, Box, IconButton, Tooltip, Snackbar, Alert } from '@mui/material';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import EditIcon from '@mui/icons-material/Edit';
 import ShareIcon from '@mui/icons-material/Share';
@@ -17,6 +17,7 @@ import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
+import Button from '../../design-library/Button';
 
 import './_index.scss';
 
@@ -307,10 +308,10 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
           >
             <Typography variant="h6">Do you want to delete this question?</Typography>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
-              <Button onClick={handleDeleteModalClose} color="secondary">
+              <Button onClick={handleDeleteModalClose}>
                 Cancel
               </Button>
-              <Button variant="contained" color="error" onClick={handleConfirmDelete}>
+              <Button onClick={handleConfirmDelete}>
                 Confirm
               </Button>
             </div>

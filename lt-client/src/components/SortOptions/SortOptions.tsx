@@ -1,12 +1,11 @@
 import { useState, MouseEvent, useEffect } from 'react';
-import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { KeyboardArrowDown } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { Tooltip, Chip } from '@mui/material';
+import Button from '../../design-library/Button';
 
 import './_index.scss';
 
@@ -58,7 +57,7 @@ const SortOptions = ({ sortBy, sortOrder, handleSortOptionsChange, fetchSortedDa
 
   return (
     <div className="cl-SortOptions">
-      <Button onClick={handleClick} endIcon={<KeyboardArrowDown />}>
+      <Button onClick={handleClick}>
         Sort By
       </Button>
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
