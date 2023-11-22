@@ -99,7 +99,7 @@ const QuestionInput = (props: QuestionInputProps) => {
 
     const questionURL = `${Util.CONSTANTS.SERVER_URL}/questions`;
 
-    const lol = await axios.post(questionURL, question, {
+    await axios.post(questionURL, question, {
       headers: {
         Authorization: `Bearer ${authCtx.getStoredValue().token}`,
         'Content-Type': 'application/json',
