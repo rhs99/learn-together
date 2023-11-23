@@ -1,10 +1,6 @@
 import { useState, MouseEvent, useEffect } from 'react';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { IconButton } from '@mui/material';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import { Tooltip, Chip } from '@mui/material';
 import Button from '../../design-library/Button';
 
 import './_index.scss';
@@ -64,12 +60,8 @@ const SortOptions = ({ sortBy, sortOrder, handleSortOptionsChange, fetchSortedDa
         <MenuItem onClick={() => handleSortByClick('downVote')}>Down Vote</MenuItem>
         <MenuItem onClick={() => handleSortByClick('time')}>Time</MenuItem>
       </Menu>
-      <Chip variant="outlined" label={getName(sortBy)} size="small" className="chip" />
-      <Tooltip title={sortOrder}>
-        <IconButton onClick={handleSortOrderClick} color="primary">
-          {sortOrder === 'desc' ? <ArrowDownwardIcon fontSize="medium" /> : <ArrowUpwardIcon fontSize="medium" />}
-        </IconButton>
-      </Tooltip>
+      <span className="sortBy">{getName(sortBy)}</span>
+      <Button onClick={handleSortOrderClick} icon={sortOrder === 'desc' ? 'arrow-down-line' : 'arrow-up-line'} />
     </div>
   );
 };

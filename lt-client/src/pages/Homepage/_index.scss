@@ -1,0 +1,10 @@
+.lt-Homepage{
+    width: 30%;
+    margin: auto;
+    margin-top: 5%;
+
+    @media only screen and (max-width: 780px){
+      width: 80%;
+    }
+
+}

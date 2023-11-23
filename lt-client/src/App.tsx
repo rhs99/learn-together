@@ -1,7 +1,7 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import RootLayout from './pages/RootLayout';
-import HoomePage from './pages/Homepage';
+import HoomePage from './pages/Homepage/Homepage';
 import ErrorPage from './pages/Errorpage';
 import SignupPage, { loader as ClassLoader } from './pages/Signup/Signup';
 import LoginPage from './pages/Login/Login';

@@ -3,25 +3,33 @@
     background-color: var(--primary);
     border-radius: 10px;
     padding: 10px;
+    width: 80%;
+    margin: auto;
+
+    .qa-Body {
+        display: flex;
+        flex-direction: row;
+    }
 
     .left-pane {
         width: 12%;
         margin-left: 15px;
 
+        box-shadow: 2px 0px lightblue;
+
         .UD-container {
             display: flex;
             flex-direction: column;
             align-items: center;
+            margin-bottom: 12px;
+        }
 
-            .short-info {
-                visibility: hidden;
-            }
-
-            @media only screen and (max-width: 780px) {
-
-                .short-info {
-                    visibility: visible;
-                }
+        .tags {
+            margin-top: 12px;
+            .tag {
+                background-color: rgb(186, 240, 222);
+                margin-right: 5px;
+                margin-bottom: 10px;
             }
         }
 
@@ -33,7 +41,17 @@
         }
     }
 
+    .left-pane p{
+        font-size: .9em;
+        margin: 0;
+        padding: 0;
+    }
+
     .right-pane {
+        display: flex;
+        flex-direction: column;
+        margin-left: 12px;
+
 
         .detailsClickable:hover {
             color: rgb(33, 139, 210);
@@ -61,17 +79,6 @@
             }
         }
 
-        .tags {
-            margin-top: 20px;
-
-            .divider {
-                background-color: rgb(174, 129, 129);
-            }
-
-            .tag {
-                background-color: rgb(186, 240, 222);
-            }
-        }
     }
 
 
@@ -102,4 +109,24 @@
             margin-left: 20px;
         }
     }
+
+}
+
+.full-img {
+    position: absolute;
+    left: 25%;
+    max-width: 50%;
+    max-height: 50%;
+    border: 2px solid grey;
+}
+
+.dlt-modal {
+    position: absolute;
+    top: 40%;
+    left: 30%;
+    width: 30%;
+    height: 20%;
+    border-radius: 5px;
+    padding: 15px;
+    background-color: rgb(198, 78, 38);
 }

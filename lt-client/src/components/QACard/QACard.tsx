@@ -1,18 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
 
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
-import { Divider, Chip, Modal, Box, Snackbar, Alert } from '@mui/material';
+import { Modal } from '@mui/material';
 import { Question, Answer } from '../../types';
 import Util from '../../utils';
 import axios from 'axios';
 import AuthContext from '../../store/auth';
 import ReactQuill from 'react-quill';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableRow from '@mui/material/TableRow';
 import Button from '../../design-library/Button';
 
 import './_index.scss';
@@ -27,7 +21,6 @@ type QACardProps = {
 const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACardProps) => {
   const [fileData, setFileData] = useState<string[]>([]);
   const [imageToShow, setImageToShow] = useState<string>('');
-  const [showShareAlert, setShowShareAlert] = useState(false);
   const [udCnt, setUdCnt] = useState({ upVote: item.upVote, downVote: item.downVote });
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [qOwner, setQOwner] = useState('');
@@ -88,7 +81,6 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
   const handleShareClick = () => {
     const url = `${Util.CONSTANTS.CLIENT_URL}/${isQuestion ? 'questions' : 'answers'}/${item._id}`;
     navigator.clipboard.writeText(url);
-    setShowShareAlert(true);
   };
 
   const handleUpVote = async () => {
@@ -175,123 +167,63 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
 
   return (
     <div className="cl-QACard">
-      <Snackbar open={showShareAlert} autoHideDuration={1000} onClose={() => setShowShareAlert(false)}>
-        <Alert severity="success" sx={{ width: '100%' }}>
-          Copied to clipboard!
-        </Alert>
-      </Snackbar>
-      <Stack direction="row" spacing={2} divider={<Divider orientation="vertical" flexItem />}>
+      <div className="qa-Body">
         <div className="left-pane">
           <div className="UD-container">
             <Button onClick={handleUpVote} icon="arrow-up" />
-            <div>
-              <Typography>{udCnt.upVote - udCnt.downVote}</Typography>
-            </div>
+            <p>{udCnt.upVote - udCnt.downVote}</p>
             <Button onClick={handleDownVote} icon="arrow-down" />
-            {isQuestion && (
-              <>
-                <Typography className="short-info">Ans</Typography>
-                <Typography className="short-info">{(item as Question).answers.length}</Typography>
-              </>
-            )}
           </div>
           <div className="info">
-            <Table size="small">
-              <TableBody>
-                <TableRow>
-                  <TableCell>Up vote</TableCell>
-                  <TableCell>{udCnt.upVote}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Down vote</TableCell>
-                  <TableCell>{udCnt.downVote}</TableCell>
-                </TableRow>
-                {isQuestion && (
-                  <TableRow>
-                    <TableCell>Answers</TableCell>
-                    <TableCell>{(item as Question).answers.length}</TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+            <p>Up vote: {udCnt.upVote}</p>
+            <p>Down vote: {udCnt.downVote}</p>
+            {isQuestion && <p>Answers: {(item as Question).answers.length}</p>}
           </div>
+          {isQuestion && (
+            <div className="tags">
+              {(item as Question).tags.map((tag) => (
+                <span key={tag._id} className="tag">
+                  {tag.name}{' '}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
         <div className="right-pane">
           <div className={detailsClassName} onClick={detailsOnClick}>
             <ReactQuill value={item.details} readOnly={true} theme={'bubble'} />
           </div>
-          <Divider />
           <div className="imageContainer">
             {fileData.map((file, index) => (
               <img key={index} src={file} className="image" onClick={() => handleImageModalOpen(file)} />
             ))}
           </div>
-          {isQuestion && <Divider />}
-          {isQuestion && (
-            <div className="tags">
-              <Stack
-                direction="row"
-                spacing={2}
-                divider={<Divider orientation="vertical" flexItem className="divider" />}
-              >
-                {(item as Question).tags.map((tag) => (
-                  <Chip key={tag._id} variant="outlined" size="small" label={tag.name} className="tag" />
-                ))}
-              </Stack>
-            </div>
-          )}
         </div>
-      </Stack>
+      </div>
       <div className="bottom-pane">
-        <Typography variant="body2" className="author">
+        <span className="author">
           {`${isQuestion ? 'asked' : 'answered'} by`} <span className="user-name">{item.user.userName}</span>
-        </Typography>
+        </span>
         <Button className="share" onClick={handleShareClick} icon="share" />
         <Button className="edit" disabled={!isOwner} onClick={handleEdit} icon="edit" />
         <Button className="delete" disabled={!isOwner && !isQOwner} onClick={handleDelete} icon="delete" />
       </div>
       {imageToShow.length > 0 && (
         <Modal open={imageToShow.length > 0} onClose={handleImageModalClose}>
-          <Box
-            sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              maxWidth: '80%',
-              bgcolor: 'background.paper',
-              border: '2px solid grey',
-              '@media only screen and (max-width: 780px)': {
-                width: '95%',
-              },
-            }}
-          >
+          <div className="full-img">
             <img src={imageToShow} style={{ width: '100%', height: 'auto' }} />
-          </Box>
+          </div>
         </Modal>
       )}
       {openDeleteModal && (
         <Modal open={openDeleteModal} onClose={handleDeleteModalClose}>
-          <Box
-            sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              bgcolor: 'background.paper',
-              borderRadius: '5px',
-              padding: '15px',
-              '@media only screen and (max-width: 780px)': {
-                width: '70%',
-              },
-            }}
-          >
-            <Typography variant="h6">Do you want to delete this question?</Typography>
+          <div className="dlt-modal">
+            <h6>Do you want to delete this question?</h6>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
               <Button onClick={handleDeleteModalClose}>Cancel</Button>
               <Button onClick={handleConfirmDelete}>Confirm</Button>
             </div>
-          </Box>
+          </div>
         </Modal>
       )}
     </div>
