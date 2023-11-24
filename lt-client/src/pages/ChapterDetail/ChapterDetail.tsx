@@ -91,7 +91,7 @@ const ChapterDetail = () => {
 
   const handleTagAddition = (tag: CustomTag) => {
     if (tag.id === tag.text) {
-      tag.id = '';
+      return;
     }
     setSelectedTags([...selectedTags, tag]);
   };
@@ -122,11 +122,9 @@ const ChapterDetail = () => {
             placeholder="Filter by tags"
           />
         </div>
-        <div className="ask-btn">
-          <Button disabled={!isLoggedIn} onClick={handleAskQuestion}>
-            Ask Question
-          </Button>
-        </div>
+        <Button disabled={!isLoggedIn} onClick={handleAskQuestion} className="ask-btn">
+          Ask Question
+        </Button>
       </div>
 
       <div className="sort-options">
