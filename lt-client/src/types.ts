@@ -39,6 +39,11 @@ export type Tag = {
   chapter: string;
 };
 
+export type CustomTag = {
+  id: string;
+  text: string;
+};
+
 export type Answer = {
   _id: string;
   details: DeltaStatic;

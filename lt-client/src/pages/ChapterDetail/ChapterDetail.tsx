@@ -1,17 +1,17 @@
-import { useEffect, useState, useContext, useCallback, SyntheticEvent } from 'react';
+import { useEffect, useState, useContext, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Util from '../../utils';
 import { Question, Breadcrumb } from '../../types';
 import AuthContext from '../../store/auth';
 import { Typography } from '@mui/material';
-import { Autocomplete, TextField } from '@mui/material';
 import SortOptions from '../../components/SortOptions/SortOptions';
-import { Tag } from '../../types';
+import { Tag, CustomTag } from '../../types';
 import QACard from '../../components/QACard/QACard';
 import Pagination from '@mui/material/Pagination';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
+import TagInput from '../../components/TagInput/TagInput';
 
 import Button from '../../design-library/Button';
 
@@ -20,7 +20,7 @@ import './_index.scss';
 const ChapterDetail = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [existingTags, setExistingTags] = useState<Tag[]>([]);
-  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+  const [selectedTags, setSelectedTags] = useState<CustomTag[]>([]);
   const [sortBy, setSortBy] = useState<string>('time');
   const [sortOrder, setSortOrder] = useState<string>('desc');
   const [paginationInfo, setPaginationInfo] = useState({ currPage: 1, totalPage: 1 });
@@ -38,7 +38,7 @@ const ChapterDetail = () => {
     queryString += `&pageNumber=${paginationInfo.currPage}`;
 
     const URL = `${Util.CONSTANTS.SERVER_URL}/questions/search?${queryString}`;
-    const selectedTagIds = selectedTags.map((tag) => tag._id);
+    const selectedTagIds = selectedTags.filter((tag) => tag.id.length > 0).map((tag) => tag.id);
     axios.post(URL, { chapterId, tagIds: selectedTagIds }).then(({ data }) => {
       setQuestions(data.paginatedResults);
       setPaginationInfo((prev) => {
@@ -85,6 +85,17 @@ const ChapterDetail = () => {
     }
   };
 
+  const handleTagDelete = (i: number) => {
+    setSelectedTags(selectedTags.filter((tag, index) => index !== i));
+  };
+
+  const handleTagAddition = (tag: CustomTag) => {
+    if (tag.id === tag.text) {
+      tag.id = '';
+    }
+    setSelectedTags([...selectedTags, tag]);
+  };
+
   const isEmpty = questions.length === 0;
 
   return (
@@ -102,18 +113,15 @@ const ChapterDetail = () => {
             {<Typography>{breadcrumbs[breadcrumbs.length - 1].name}</Typography>}
           </Breadcrumbs>
         )}
-        <Autocomplete
-          size="small"
-          className="filter"
-          multiple
-          onChange={(event: SyntheticEvent<Element, Event>, selection: Tag[]) => {
-            setSelectedTags(selection);
-          }}
-          options={existingTags}
-          getOptionLabel={(option) => option.name}
-          defaultValue={[]}
-          renderInput={(params) => <TextField {...params} variant="standard" placeholder="Filter by tags" />}
-        />
+        <div className="filter">
+          <TagInput
+            tags={selectedTags}
+            suggestions={existingTags.map((tag) => ({ id: tag._id, text: tag.name }))}
+            handleDelete={handleTagDelete}
+            handleAddition={handleTagAddition}
+            placeholder="Filter by tags"
+          />
+        </div>
         <div className="ask-btn">
           <Button disabled={!isLoggedIn} onClick={handleAskQuestion}>
             Ask Question
@@ -131,19 +139,6 @@ const ChapterDetail = () => {
           />
         )}
       </div>
-
-      <Autocomplete
-        size="small"
-        className="filter-mbl"
-        multiple
-        onChange={(event: SyntheticEvent<Element, Event>, selection: Tag[]) => {
-          setSelectedTags(selection);
-        }}
-        options={existingTags}
-        getOptionLabel={(option) => option.name}
-        defaultValue={[]}
-        renderInput={(params) => <TextField {...params} variant="standard" placeholder="Filter by tags" />}
-      />
 
       {isEmpty && (
         <div className="empty">

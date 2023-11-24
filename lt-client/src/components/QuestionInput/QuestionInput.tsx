@@ -1,13 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useContext, useEffect, useCallback, ChangeEvent, SyntheticEvent } from 'react';
+import { useState, useContext, useEffect, useCallback, ChangeEvent } from 'react';
 import Quill from 'quill';
 import 'react-quill/dist/quill.snow.css';
 import Util from '../../utils';
 import axios from 'axios';
 import { Question } from '../../types';
 import AuthContext from '../../store/auth';
-import { Tag } from '../../types';
-import { Autocomplete, TextField, createFilterOptions } from '@mui/material';
+import { Tag, CustomTag } from '../../types';
 import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
 import AlertTitle from '@mui/material/AlertTitle';
 import Alert from '@mui/material/Alert';
@@ -15,10 +14,9 @@ import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Button from '../../design-library/Button';
+import TagInput from '../TagInput/TagInput';
 
 import './_index.scss';
-
-const filter = createFilterOptions<Tag>();
 
 type QuestionInputProps = {
   chapterId: string;
@@ -26,8 +24,8 @@ type QuestionInputProps = {
 };
 
 const QuestionInput = (props: QuestionInputProps) => {
+  const [tags, setTags] = useState<CustomTag[]>([]);
   const [imageLocations, _setImageLocations] = useState<string[]>([]);
-  const [selectedTags, setSelectedTags] = useState<Tag[]>(props.question?.tags || []);
   const [existingTags, setExistingTags] = useState<Tag[]>([]);
   const [editor, setEditor] = useState<Quill>();
   const [showAlert, setShowAlert] = useState(false);
@@ -63,7 +61,7 @@ const QuestionInput = (props: QuestionInputProps) => {
     const description = editor?.getContents();
     const text = editor?.getText() || '';
 
-    if (text.trim().length === 0 || selectedTags.length === 0) {
+    if (text.trim().length === 0 || tags.length === 0) {
       setShowAlert(true);
       return;
     }
@@ -79,11 +77,11 @@ const QuestionInput = (props: QuestionInputProps) => {
 
     const newTags: Tag[] = [];
 
-    selectedTags.forEach((tag) => {
-      if (tag._id.length === 0) {
-        newTags.push(tag);
+    tags.forEach((tag) => {
+      if (tag.id.length === 0) {
+        newTags.push({ _id: '', name: tag.text, chapter: props.chapterId });
       } else {
-        (question.tags as string[]).push(tag._id);
+        (question.tags as string[]).push(tag.id);
       }
     });
 
@@ -123,6 +121,17 @@ const QuestionInput = (props: QuestionInputProps) => {
     [props.question?.details]
   );
 
+  const handleTagDelete = (i: number) => {
+    setTags(tags.filter((tag, index) => index !== i));
+  };
+
+  const handleTagAddition = (tag: CustomTag) => {
+    if (tag.id === tag.text) {
+      tag.id = '';
+    }
+    setTags([...tags, tag]);
+  };
+
   if (!authCtx.isLoggedIn) {
     return null;
   }
@@ -150,32 +159,11 @@ const QuestionInput = (props: QuestionInputProps) => {
         <h4>Add Relevant Tags</h4>
       </div>
       <div className="tag-input-container">
-        <Autocomplete
-          multiple
-          id="tags-standard"
-          onChange={(event: SyntheticEvent<Element, Event>, selection: Tag[]) => {
-            setSelectedTags(selection);
-          }}
-          options={existingTags}
-          filterOptions={(options, params) => {
-            const filtered = filter(options, params);
-            const { inputValue } = params;
-            const isExisting = options.some(
-              (option) => inputValue.toLocaleLowerCase() === option.name.toLocaleLowerCase()
-            );
-            if (inputValue !== '' && !isExisting) {
-              const newTag = {
-                _id: '',
-                chapter: props.chapterId,
-                name: inputValue,
-              };
-              filtered.push(newTag);
-            }
-            return filtered;
-          }}
-          getOptionLabel={(option) => option.name}
-          defaultValue={selectedTags}
-          renderInput={(params) => <TextField {...params} variant="standard" label="All Tags" placeholder="Add Tags" />}
+        <TagInput
+          tags={tags}
+          suggestions={existingTags.map((tag) => ({ id: tag._id, text: tag.name }))}
+          handleDelete={handleTagDelete}
+          handleAddition={handleTagAddition}
         />
       </div>
       <div className="file-upload">
