@@ -1,0 +1,18 @@
+.lt-TableRow {
+    .container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 10px;
+    }
+
+    .header-cell {
+        font-weight: bold;
+    }
+
+    .clickable:hover {
+        cursor: pointer;
+        background-color: var(--primary);
+    }
+
+}

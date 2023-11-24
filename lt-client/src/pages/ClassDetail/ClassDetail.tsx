@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Util from '../../utils';
 import { Subject } from '../../types';
-import { Table, TableContainer, TableHead, TableRow, TableCell, Typography, TableBody } from '@mui/material';
+import { TableContainer, TableHead, TableRow, TableCell, Typography, TableBody } from '@mui/material';
+import Table from '../../design-library/Table/Table';
 
 import './_index.scss';
 
@@ -31,39 +32,19 @@ const ClassDetail = () => {
     navigate(`/subjects/${id}`);
   };
 
+  const rowData = useMemo(() => {
+    const rows: any = [{ value: ['Subject', 'Chapters'] }];
+    subjects.forEach((sub) => {
+      const data = { value: [sub.name, sub.chapters.length], options: { _id: sub._id } };
+      rows.push(data);
+    });
+    return rows;
+  }, [subjects]);
+
   return (
     <div className="lt-ClassDetail">
-      <Typography>{className}</Typography>
-      <TableContainer sx={{ border: 2, borderColor: 'rgb(231, 235, 240)', borderRadius: '3px', marginTop: '20px' }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <Typography fontSize={18} variant="caption">
-                  Subjects
-                </Typography>
-              </TableCell>
-              <TableCell sx={{ width: '20%' }}>
-                <Typography fontSize={18} variant="caption">
-                  Chapters
-                </Typography>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {subjects.map((subject) => (
-              <TableRow
-                key={subject._id}
-                onClick={() => handleSubjectClick(subject._id)}
-                sx={{ ':hover': { cursor: 'pointer', backgroundColor: 'rgb(231, 235, 240)' } }}
-              >
-                <TableCell>{subject.name}</TableCell>
-                <TableCell>{subject.chapters.length}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <p>{className}</p>
+      <Table rowData={rowData} onRowSelection={handleSubjectClick} />
     </div>
   );
 };

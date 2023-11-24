@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Util from '../../utils';
 import { Chapter, Breadcrumb } from '../../types';
-import { Table, TableContainer, TableHead, TableRow, TableCell, Typography, TableBody } from '@mui/material';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
+import Table from '../../design-library/Table/Table';
 
 import './_index.scss';
 
@@ -33,6 +33,15 @@ const SubjectDetail = () => {
     navigate(`/chapters/${id}`);
   };
 
+  const rowData = useMemo(() => {
+    const rows: any = [{ value: ['Chapter', 'Questions'] }];
+    chapters.forEach((chap) => {
+      const data = { value: [chap.name, chap.questionsCount], options: { _id: chap._id } };
+      rows.push(data);
+    });
+    return rows;
+  }, [chapters]);
+
   return (
     <div className="lt-SubjectDetail">
       {breadcrumbs.length > 0 && (
@@ -44,39 +53,10 @@ const SubjectDetail = () => {
               </Link>
             );
           })}
-          {<Typography>{breadcrumbs[breadcrumbs.length - 1].name}</Typography>}
+          {<span>{breadcrumbs[breadcrumbs.length - 1].name}</span>}
         </Breadcrumbs>
       )}
-      <TableContainer sx={{ border: 2, borderColor: 'rgb(231, 235, 240)', borderRadius: '3px', marginTop: '20PX' }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <Typography fontSize={18} variant="caption">
-                  Chapters
-                </Typography>
-              </TableCell>
-              <TableCell sx={{ width: '10%' }}>
-                <Typography fontSize={18} variant="caption">
-                  Questions
-                </Typography>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {chapters.map((chapter) => (
-              <TableRow
-                key={chapter._id}
-                onClick={() => handleChapterOpen(chapter._id)}
-                sx={{ ':hover': { cursor: 'pointer', backgroundColor: 'rgb(231, 235, 240)' } }}
-              >
-                <TableCell>{chapter.name}</TableCell>
-                <TableCell>{chapter.questionsCount}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Table rowData={rowData} onRowSelection={handleChapterOpen} />
     </div>
   );
 };

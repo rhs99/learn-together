@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useLoaderData, useNavigate } from 'react-router-dom';
-import Table from '../../design-library/Table';
+import Table from '../../design-library/Table/Table';
 import { Class } from '../../types';
 
 import './_index.scss';
@@ -9,21 +9,24 @@ const HoomePage = () => {
   const classes = useLoaderData();
   const navigate = useNavigate();
 
-  const handleClassChange = (_class: Class) => {
-    navigate(`/classes/${_class._id}`);
+  const handleClassChange = (_id: string) => {
+    navigate(`/classes/${_id}`);
   };
 
-  const columnDefs = [{ field: 'class' }, { field: 'subjects' }];
-
   const rowData = useMemo(() => {
-    return (classes as Class[]).map((_class) => ({
-      class: _class.name,
-      subjects: _class.subjects.length,
-      _id: _class._id,
-    }));
+    const rows: any = [{ value: ['Class', 'Subjects'] }];
+    (classes as Class[]).forEach((_class) => {
+      const data = { value: [_class.name, _class.subjects.length], options: { _id: _class._id } };
+      rows.push(data);
+    });
+    return rows;
   }, [classes]);
 
-  return <Table columnDefs={columnDefs} rowData={rowData} className="lt-Homepage" onRowSelection={handleClassChange} />;
+  return (
+    <div className="lt-Homepage">
+      <Table rowData={rowData} onRowSelection={handleClassChange} />
+    </div>
+  );
 };
 
 export default HoomePage;

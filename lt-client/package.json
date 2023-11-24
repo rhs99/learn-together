@@ -15,8 +15,6 @@
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
     "@types/react-router-dom": "^5.3.3",
-    "ag-grid-community": "^30.2.1",
-    "ag-grid-react": "^30.2.1",
     "axios": "^1.4.0",
     "browser-image-compression": "^2.0.2",
     "minio": "^7.1.0",
