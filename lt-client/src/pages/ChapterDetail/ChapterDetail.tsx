@@ -146,16 +146,16 @@ const ChapterDetail = () => {
         </div>
       )}
 
-      <div className='qContainer'>
-      {questions.map((question) => (
-        <QACard
-          key={question._id}
-          item={question}
-          clickableDetails={true}
-          isQuestion={true}
-          handleItemDelete={handleQuestionDelete}
-        />
-      ))}
+      <div className="qContainer">
+        {questions.map((question) => (
+          <QACard
+            key={question._id}
+            item={question}
+            clickableDetails={true}
+            isQuestion={true}
+            handleItemDelete={handleQuestionDelete}
+          />
+        ))}
       </div>
 
       {paginationInfo.totalPage > 1 && (

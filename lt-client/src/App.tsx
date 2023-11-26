@@ -8,7 +8,7 @@ import LoginPage from './pages/Login/Login';
 import ClassDetail from './pages/ClassDetail/ClassDetail';
 import SubjectDetail from './pages/SubjectDetail/SubjectDetail';
 import ChapterDetail from './pages/ChapterDetail/ChapterDetail';
-import AskQuestion from './pages/AskQuestion';
+import AskQuestion from './pages/AskQuestion/AskQuestion';
 import QuestionDetail from './pages/QuestionDetail/QuestionDetail';
 import AnswerPage from './pages/AnswerPage/AnswerPage';
 import QuestionEdit from './pages/QuestionEdit';
