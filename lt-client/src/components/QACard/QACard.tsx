@@ -8,6 +8,7 @@ import axios from 'axios';
 import AuthContext from '../../store/auth';
 import ReactQuill from 'react-quill';
 import Button from '../../design-library/Button';
+import Icon from '../../design-library/Icon';
 
 import './_index.scss';
 
@@ -170,9 +171,9 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
       <div className="qa-Body">
         <div className="left-pane">
           <div className="UD-container">
-            <Button onClick={handleUpVote} icon="arrow-up" />
+            <Icon onClick={handleUpVote} name="arrow-up" size={32} />
             <p>{udCnt.upVote - udCnt.downVote}</p>
-            <Button onClick={handleDownVote} icon="arrow-down" />
+            <Icon onClick={handleDownVote} name="arrow-down" size={32} />
           </div>
           <div className="info">
             <p>Up vote: {udCnt.upVote}</p>
@@ -202,11 +203,11 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
       </div>
       <div className="bottom-pane">
         <span className="author">
-          {`${isQuestion ? 'asked' : 'answered'} by`} <span className="user-name">{item.user.userName}</span>
+          {`${isQuestion ? 'Asked' : 'Answered'} by`} <span className="user-name">{item.user.userName}</span>
         </span>
-        <Button className="share" onClick={handleShareClick} icon="share" />
-        <Button className="edit" disabled={!isOwner} onClick={handleEdit} icon="edit" />
-        <Button className="delete" disabled={!isOwner && !isQOwner} onClick={handleDelete} icon="delete" />
+        <Icon className="share" onClick={handleShareClick} name="share" />
+        <Icon className="edit" disabled={!isOwner} onClick={handleEdit} name="edit" />
+        <Icon className="delete" disabled={!isOwner && !isQOwner} onClick={handleDelete} name="delete" />
       </div>
       {imageToShow.length > 0 && (
         <Modal open={imageToShow.length > 0} onClose={handleImageModalClose}>

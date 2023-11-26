@@ -1,24 +1,14 @@
 import axios from 'axios';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useContext, useState, useEffect } from 'react';
-import {
-  IconButton,
-  Menu,
-  MenuItem,
-  Stack,
-  Typography,
-  Box,
-  Card,
-  CardContent,
-  CardActions,
-  Button,
-} from '@mui/material';
+import { IconButton, Menu, MenuItem, Stack, Typography, Box, Card, CardContent, CardActions } from '@mui/material';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import AuthContext from '../../store/auth';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import Util from '../../utils';
 import Popover from '@mui/material/Popover';
 import Icon from '../../design-library/Icon';
+import Button from '../../design-library/Button';
 
 import './_index.scss';
 
@@ -151,9 +141,7 @@ const Navigation = () => {
         )}
         {isLoggedIn && (
           <>
-            <IconButton aria-describedby={id} onClick={handleNotificationFetch}>
-              <NotificationsNoneIcon color={hasNewNotification ? 'primary' : 'inherit'} />
-            </IconButton>
+            <Icon onClick={handleNotificationFetch} name="notification" size={18} />
             <Popover
               id={id}
               open={open}

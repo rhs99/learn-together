@@ -86,10 +86,9 @@
         display: flex;
         flex-direction: row;
         justify-content: flex-end;
+        align-items: center;
 
         .author {
-            margin-top: 10px;
-
             .user-name {
                 color: rgb(25, 165, 178);
             }

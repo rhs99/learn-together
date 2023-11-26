@@ -1,9 +1,11 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import Util from '../utils';
+import Util from '../../utils';
 import axios from 'axios';
-import { Question } from '../types';
-import QuestionInput from '../components/QuestionInput/QuestionInput';
+import { Question } from '../../types';
+import QuestionInput from '../../components/QuestionInput/QuestionInput';
+
+import './_index.scss';
 
 const QuestionEdit = () => {
   const [question, setQuestion] = useState<Question>();
@@ -20,6 +22,10 @@ const QuestionEdit = () => {
     return null;
   }
 
-  return <QuestionInput chapterId={question.chapter} question={question} />;
+  return (
+    <div className="lt-QuestionEdit">
+      <QuestionInput chapterId={question.chapter} question={question} />
+    </div>
+  );
 };
 export default QuestionEdit;

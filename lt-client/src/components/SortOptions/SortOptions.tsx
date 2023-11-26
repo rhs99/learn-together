@@ -2,6 +2,7 @@ import { useState, MouseEvent, useEffect } from 'react';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '../../design-library/Button';
+import Icon from '../../design-library/Icon';
 
 import './_index.scss';
 
@@ -61,7 +62,7 @@ const SortOptions = ({ sortBy, sortOrder, handleSortOptionsChange, fetchSortedDa
         <MenuItem onClick={() => handleSortByClick('time')}>Time</MenuItem>
       </Menu>
       <span className="sortBy">{getName(sortBy)}</span>
-      <Button onClick={handleSortOrderClick} icon={sortOrder === 'desc' ? 'arrow-down-line' : 'arrow-up-line'} />
+      <Icon onClick={handleSortOrderClick} name={sortOrder === 'desc' ? 'arrow-down-line' : 'arrow-up-line'} />
     </div>
   );
 };

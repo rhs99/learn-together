@@ -1,10 +1,9 @@
 .lt-Navigation {
-    height: 5vh;
+    height: 7vh;
     width: 100%;
     background-color: var(--primary);
     display: flex;
     justify-content: space-between;
-    align-items: center;
 
     .gap {
         margin-left: 20px;
@@ -13,17 +12,20 @@
     .left {
         display: flex;
         margin-left: 10px;
+        align-items: center;
     }
 
     .right {
         display: flex;
         justify-content: space-between;
         margin-right: 10px;
+        align-items: center;
     }
 
     .right-loggedIn {
         display: flex;
         justify-content: space-between;
+        align-items: center;
     }
 
     a {

@@ -24,7 +24,9 @@ type QuestionInputProps = {
 };
 
 const QuestionInput = (props: QuestionInputProps) => {
-  const [tags, setTags] = useState<CustomTag[]>([]);
+  const [tags, setTags] = useState<CustomTag[]>(
+    props.question ? props.question.tags.map((tag) => ({ id: tag._id, text: tag.name })) : []
+  );
   const [imageLocations, _setImageLocations] = useState<string[]>([]);
   const [existingTags, setExistingTags] = useState<Tag[]>([]);
   const [editor, setEditor] = useState<Quill>();

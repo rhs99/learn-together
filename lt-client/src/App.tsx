@@ -11,7 +11,7 @@ import ChapterDetail from './pages/ChapterDetail/ChapterDetail';
 import AskQuestion from './pages/AskQuestion/AskQuestion';
 import QuestionDetail from './pages/QuestionDetail/QuestionDetail';
 import AnswerPage from './pages/AnswerPage/AnswerPage';
-import QuestionEdit from './pages/QuestionEdit';
+import QuestionEdit from './pages/QuestionEdit/QuestionEdit';
 import AnswerEdit from './pages/AnswerEdit/AnswerEdit';
 import AboutPage from './pages/AboutPage/AboutPage';
 import { AuthContextProvider } from './store/auth';
