@@ -31,6 +31,12 @@
         justify-content: flex-end;
     }
 
+    .qContainer{
+        width: 80%;
+        margin: auto;
+        margin-top: 12px;
+    }
+
     @media only screen and (max-width: 780px) {
         .empty {
             width: 100%;

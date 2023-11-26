@@ -146,6 +146,7 @@ const ChapterDetail = () => {
         </div>
       )}
 
+      <div className='qContainer'>
       {questions.map((question) => (
         <QACard
           key={question._id}
@@ -155,6 +156,7 @@ const ChapterDetail = () => {
           handleItemDelete={handleQuestionDelete}
         />
       ))}
+      </div>
 
       {paginationInfo.totalPage > 1 && (
         <Pagination
