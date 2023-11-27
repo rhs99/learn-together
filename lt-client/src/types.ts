@@ -49,7 +49,7 @@ export type Answer = {
   details: DeltaStatic;
   imageLocations: string[];
   question: string;
-  user: User;
+  userName: string;
   upVote: number;
   downVote: number;
 };
@@ -60,7 +60,7 @@ export type Question = {
   tags: Tag[];
   chapter: string;
   imageLocations: string[];
-  user: User;
+  userName: string;
   upVote: number;
   downVote: number;
   answers: string[];

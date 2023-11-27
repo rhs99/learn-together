@@ -12,7 +12,7 @@ const getAllTags = async (req, res) => {
 const addNewTag = async (req, res) => {
     try {
         const tag = await TagService.addNewTag(req.body);
-        res.status(201).json({ _id: tag._id });
+        res.status(201).json(tag);
     } catch (e) {
         res.status(400).json({ message: e.message });
     }

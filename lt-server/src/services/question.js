@@ -6,26 +6,31 @@ const User = require('../models/user');
 
 const addNewQuestion = async (body) => {
     try {
-        let question;
         if (body._id !== '') {
-            question = await Question.findOne({ _id: body._id }).exec();
+            const question = await Question.findOne({ _id: body._id }).exec();
             if (JSON.stringify(question.user) !== JSON.stringify(body.user)) {
                 throw new Error('unauth');
             }
             question.details = body.details;
             question.imageLocations = body.imageLocations;
             question.tags = body.tags;
-        } else {
-            delete body._id;
-            question = new Question(body);
-            const chapter = await Chapter.findById(body.chapter).exec();
-            chapter.questionsCount += 1;
-            await chapter.save();
-            const user = await User.findById(body.user).exec();
-            user.questions.push(question._id);
-            await user.save();
+            await question.save();
+            return;
         }
-        await question.save();
+
+        delete body._id;
+        const user = await User.findById(body.user).exec();
+        delete body.user;
+        body.userName = user.userName;
+
+        let question = new Question(body);
+        question = await question.save();
+
+        user.questions.push(question._id);
+        await user.save();
+        const chapter = await Chapter.findById(body.chapter).exec();
+        chapter.questions.push(question._id);
+        await chapter.save();
     } catch (e) {
         console.log(e.message);
         if (e.message === 'unauth') {
@@ -38,9 +43,14 @@ const getAllQuestions = async (body, query) => {
     const pageNumber = query.pageNumber || 1;
     const pageSize = query.pageSize || 5;
 
-    let q = { chapter: new mongoose.Types.ObjectId(body.chapterId) };
+    const chapter = await Chapter.findById(body.chapterId).exec();
+
+    let q = {
+        _id: { $in: chapter.questions },
+    };
+
     if (body.tagIds && body.tagIds.length > 0) {
-        q.tags = { $in: body.tagIds.map((_id) => new mongoose.Types.ObjectId(_id)) };
+        q.tags._id = { $in: body.tagIds.map((_id) => new mongoose.Types.ObjectId(_id)) };
     }
 
     let key = 'createdAt',
@@ -71,82 +81,47 @@ const getAllQuestions = async (body, query) => {
         }
     }
 
-    const sort = { [key]: val };
+    const sortOption = { [key]: val };
 
     try {
-        const results = await Question.aggregate([
-            {
-                $match: q,
-            },
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'user',
-                    foreignField: '_id',
-                    as: 'user',
-                },
-            },
-            {
-                $lookup: {
-                    from: 'tags',
-                    localField: 'tags',
-                    foreignField: '_id',
-                    as: 'tags',
-                },
-            },
-            {
-                $addFields: {
-                    vote: { $subtract: ['$upVote', '$downVote'] },
-                },
-            },
-            {
-                $unwind: '$user',
-            },
-            {
-                $sort: sort,
-            },
-            {
-                $facet: {
-                    totalCount: [{ $count: 'total' }],
-                    paginatedResults: [{ $skip: (pageNumber - 1) * pageSize }, { $limit: pageSize }],
-                },
-            },
-        ]).exec();
-        const totalCount = results[0].totalCount.length > 0 ? results[0].totalCount[0].total : 0;
-        const paginatedResults = results[0].paginatedResults;
-
-        return { totalCount, paginatedResults };
+        const allQuestions = await Question.find(q)
+            .sort(sortOption)
+            .skip((pageNumber - 1) * pageSize)
+            .limit(pageSize)
+            .exec();
+        return { totalCount: chapter.questions.length, paginatedResults: allQuestions };
     } catch (e) {
-        console.log(e.message);
+        console.log(e);
     }
 };
 
 const getQuestion = async (questionId) => {
     try {
-        const question = await Question.findOne({ _id: questionId }).populate('tags').populate('user').exec();
+        const question = await Question.findOne({ _id: questionId }).exec();
         return question;
     } catch (e) {
         console.log(e.message);
     }
 };
 
-const deleteQuestion = async (questionId, user) => {
+const deleteQuestion = async (questionId, userId) => {
     try {
+        const user = await User.findById(userId).exec();
         const question = await Question.findById(questionId).exec();
-        if (JSON.stringify(question.user) !== JSON.stringify(user)) {
+        if (question.userName !== user.userName) {
             throw new Error('unauth');
         }
         const promises = question.answers.map((_id) => {
             return Answer.deleteOne({ _id: _id }).exec();
         });
-        const chapter = await Chapter.findById(question.chapter).exec();
-        chapter.questionsCount -= 1;
-        await chapter.save();
-        const _user = await User.findById(user).exec();
-        _user.questions = _user.questions.filter((item) => JSON.stringify(item) !== JSON.stringify(questionId));
-        await _user.save();
-        await Question.deleteOne({ _id: questionId }).exec();
         await Promise.all(promises);
+
+        const chapter = await Chapter.findById(question.chapter).exec();
+        chapter.questions = chapter.questions.filter((item)=> JSON.stringify(item) !== JSON.stringify(questionId));
+        await chapter.save();
+        user.questions = user.questions.filter((item) => JSON.stringify(item) !== JSON.stringify(questionId));
+        await user.save();
+        await Question.deleteOne({ _id: questionId }).exec();
     } catch (e) {
         console.log(e.message);
         if (e.message === 'unauth') {

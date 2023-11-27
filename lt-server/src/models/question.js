@@ -14,9 +14,12 @@ const questionSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
-        user: {
-            type: mongoose.Types.ObjectId,
-            ref: 'User',
+        vote: {
+            type: Number,
+            default: 0,
+        },
+        userName: {
+            type: String,
             required: true,
         },
         chapter: {
@@ -26,8 +29,8 @@ const questionSchema = new mongoose.Schema(
         },
         tags: [
             {
-                type: mongoose.Types.ObjectId,
-                ref: 'Tag',
+                _id: mongoose.Types.ObjectId,
+                name: String,
             },
         ],
         imageLocations: [
@@ -38,6 +41,7 @@ const questionSchema = new mongoose.Schema(
         answers: [
             {
                 type: mongoose.Types.ObjectId,
+                ref: 'Answer'
             },
         ],
     },

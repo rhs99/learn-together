@@ -70,7 +70,7 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
     if (!isQuestion) {
       const url = `${Util.CONSTANTS.SERVER_URL}/questions/${qId}`;
       axios.get(url).then(({ data }) => {
-        setQOwner(data.user.userName);
+        setQOwner(data.userName);
       });
     }
   }, [isQuestion, qId]);
@@ -160,8 +160,8 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
     setOpenDeleteModal(false);
   };
 
-  const isOwner = authCtx.getStoredValue().userName === item.user.userName;
-  const isQOwner = authCtx.getStoredValue().userName === qOwner;
+  const isOwner = authCtx.getStoredValue().userName === item.userName;
+  const isQOwner = authCtx.getStoredValue().userName === qOwner && qOwner.length !== 0;
 
   const detailsClassName = clickableDetails ? 'detailsClickable' : '';
   const detailsOnClick = clickableDetails ? handleItemDetailsClick : undefined;
@@ -203,7 +203,7 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
       </div>
       <div className="bottom-pane">
         <span className="author">
-          {`${isQuestion ? 'Asked' : 'Answered'} by`} <span className="user-name">{item.user.userName}</span>
+          {`${isQuestion ? 'Asked' : 'Answered'} by`} <span className="user-name">{item.userName}</span>
         </span>
         <Icon className="share" onClick={handleShareClick} name="share" />
         <Icon className="edit" disabled={!isOwner} onClick={handleEdit} name="edit" />

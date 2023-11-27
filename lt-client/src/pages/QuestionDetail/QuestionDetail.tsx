@@ -46,7 +46,7 @@ const QuestionDetail = () => {
     });
   };
 
-  const isOwner = getStoredValue().userName === question?.user.userName;
+  const isOwner = getStoredValue().userName === question?.userName;
 
   if (!question) {
     return null;

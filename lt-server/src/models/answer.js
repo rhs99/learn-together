@@ -13,9 +13,12 @@ const answerSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
-        user: {
-            type: mongoose.Types.ObjectId,
-            ref: 'User',
+        vote: {
+            type: Number,
+            default: 0,
+        },
+        userName: {
+            type: String,
             required: true,
         },
         question: {

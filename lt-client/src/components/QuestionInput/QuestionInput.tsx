@@ -83,7 +83,7 @@ const QuestionInput = (props: QuestionInputProps) => {
       if (tag.id.length === 0) {
         newTags.push({ _id: '', name: tag.text, chapter: props.chapterId });
       } else {
-        (question.tags as string[]).push(tag.id);
+        (question.tags as any).push({ _id: tag.id, name: tag.text });
       }
     });
 
@@ -94,7 +94,7 @@ const QuestionInput = (props: QuestionInputProps) => {
     const allData = await Promise.all(tagPromises);
 
     allData.forEach(({ data }) => {
-      (question.tags as string[]).push(data._id);
+      (question.tags as any).push({ _id: data._id, name: data.name });
     });
 
     const questionURL = `${Util.CONSTANTS.SERVER_URL}/questions`;

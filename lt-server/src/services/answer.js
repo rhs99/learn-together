@@ -6,11 +6,13 @@ const connectedUsers = require('../common/connected-users');
 
 const addNewAnswer = async (body) => {
     try {
+        const user = await User.findById(body.user).exec();
         const question = await Question.findById(body.question).exec();
+
         let answer;
         if (body._id !== '') {
             answer = await Answer.findOne({ _id: body._id }).exec();
-            if (JSON.stringify(answer.user) !== JSON.stringify(body.user)) {
+            if (answer.userName !== user.userName) {
                 throw new Error('unauthorized');
             }
             answer.details = body.details;
@@ -18,15 +20,17 @@ const addNewAnswer = async (body) => {
             await answer.save();
         } else {
             delete body._id;
+            delete body.user;
+            body.userName = user.userName;
+
             answer = new Answer(body);
             answer = await answer.save();
-            const user = await User.findById(body.user).exec();
             user.answers.push(answer._id);
             await user.save();
             question.answers.push(answer._id);
             await question.save();
         }
-        const qOwner = await User.findById(question.user).exec();
+        const qOwner = await User.findOne({ userName: question.userName }).exec();
         if (!qOwner.notifications.includes(question._id)) {
             qOwner.notifications.push(question._id);
         }
@@ -47,7 +51,7 @@ const addNewAnswer = async (body) => {
 };
 const getAnswer = async (answerId) => {
     try {
-        const answer = await Answer.findOne({ _id: answerId }).populate('user').exec();
+        const answer = await Answer.findOne({ _id: answerId }).exec();
         return answer;
     } catch (e) {
         console.log(e.message);
@@ -56,30 +60,30 @@ const getAnswer = async (answerId) => {
 
 const getAllAnswers = async (questionId) => {
     try {
-        const answers = await Answer.find({ question: questionId }).populate('user').exec();
+        const answers = await Answer.find({ question: questionId }).exec();
         return answers;
     } catch (e) {
         console.log(e.message);
     }
 };
 
-const deleteAnswer = async (answerId, user) => {
+const deleteAnswer = async (answerId, userId) => {
     try {
         const answer = await Answer.findById(answerId).exec();
         const question = await Question.findById(answer.question).exec();
+        const user = await User.findById(userId).exec();
 
         if (
-            JSON.stringify(answer.user) !== JSON.stringify(user) &&
-            JSON.stringify(question.user) !== JSON.stringify(user)
+            answer.userName !== user.userName &&
+            question.userName !== user.userName
         ) {
             throw new Error('unauth');
         }
 
         question.answers = question.answers.filter((q) => JSON.stringify(q) !== JSON.stringify(answer._id));
         await question.save();
-        const _user = await User.findById(user).exec();
-        _user.answers = _user.answers.filter((item) => JSON.stringify(item) !== JSON.stringify(answerId));
-        await _user.save();
+        user.answers = user.answers.filter((item) => JSON.stringify(item) !== JSON.stringify(answerId));
+        await user.save();
         await Answer.deleteOne({ _id: answerId }).exec();
     } catch (e) {
         console.log(e.message);

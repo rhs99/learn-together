@@ -28,6 +28,7 @@ const updateVote = async (body) => {
             }
         }
 
+        qa.vote = qa.upVote - qa.downVote;
         qa = await qa.save();
         vote = await vote.save();
 

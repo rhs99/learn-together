@@ -6,8 +6,8 @@ const addNewTag = async (body) => {
         if (tag) {
             return tag;
         }
-        const newTag = new Tag(body);
-        await newTag.save();
+        let newTag = new Tag(body);
+        newTag = await newTag.save();
         return newTag;
     } catch (e) {
         console.log(e.message);
