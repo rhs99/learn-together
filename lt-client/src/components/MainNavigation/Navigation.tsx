@@ -152,7 +152,7 @@ const Navigation = () => {
               <Icon
                 onClick={handleNotificationFetch}
                 name="notification"
-                size={24}
+                size={22}
                 color={hasNewNotification ? 'red' : 'black'}
               />
             </div>
@@ -165,7 +165,7 @@ const Navigation = () => {
               className="notification-dropdown"
             />
             <div ref={accountAnchorEl}>
-              <Icon name="account" onClick={() => setShowAccountDropdown((prev) => !prev)} size={24} />
+              <Icon name="account" onClick={() => setShowAccountDropdown((prev) => !prev)} size={22} />
             </div>
             <Dropdown
               options={[

@@ -1,5 +1,7 @@
 .cl-SortOptions {
+    display: flex;
+    align-items: center;
     .sortBy {
-        margin: 8px 10px 0 10px;
+        margin: 0 10px 0 10px;
     }
 }

@@ -1,8 +1,7 @@
-import { useState, MouseEvent, useEffect } from 'react';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import { useState, MouseEvent, useEffect, useRef } from 'react';
 import Button from '../../design-library/Button';
 import Icon from '../../design-library/Icon';
+import Dropdown from '../../design-library/Dropdown/Dropdown';
 
 import './_index.scss';
 
@@ -14,26 +13,18 @@ type SortOptionsProps = {
 };
 
 const SortOptions = ({ sortBy, sortOrder, handleSortOptionsChange, fetchSortedData }: SortOptionsProps) => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-  const open = Boolean(anchorEl);
+  const [showSortby, setShowSortby] = useState(false);
+  const anchorEl = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     fetchSortedData();
   }, [fetchSortedData, sortBy, sortOrder]);
 
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
+  const handleSortByClick = (value: string) => {
+    handleSortOptionsChange('sortBy', value);
+    setShowSortby(false);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleSortByClick = (option: string) => {
-    handleSortOptionsChange('sortBy', option);
-    handleClose();
-  };
   const handleSortOrderClick = () => {
     const val = sortOrder === 'desc' ? 'asc' : 'desc';
     handleSortOptionsChange('sortOrder', val);
@@ -54,15 +45,27 @@ const SortOptions = ({ sortBy, sortOrder, handleSortOptionsChange, fetchSortedDa
 
   return (
     <div className="cl-SortOptions">
-      <Button onClick={handleClick}>Sort By</Button>
-      <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        <MenuItem onClick={() => handleSortByClick('vote')}>Vote</MenuItem>
-        <MenuItem onClick={() => handleSortByClick('upVote')}>Up Vote</MenuItem>
-        <MenuItem onClick={() => handleSortByClick('downVote')}>Down Vote</MenuItem>
-        <MenuItem onClick={() => handleSortByClick('time')}>Time</MenuItem>
-      </Menu>
+      <div ref={anchorEl}>
+        <Button onClick={() => setShowSortby((prev) => !prev)}>Sort By</Button>
+      </div>
+      <Dropdown
+        anchorElement={anchorEl?.current}
+        options={[
+          { label: 'Vote', value: 'vote' },
+          { label: 'Up Vote', value: 'upVote' },
+          { label: 'Down Vote', value: 'downVote' },
+          { label: 'Time', value: 'time' },
+        ]}
+        onSelect={handleSortByClick}
+        isShown={showSortby}
+        onClose={() => setShowSortby(false)}
+      />
       <span className="sortBy">{getName(sortBy)}</span>
-      <Icon onClick={handleSortOrderClick} name={sortOrder === 'desc' ? 'arrow-down-line' : 'arrow-up-line'} />
+      <Icon
+        onClick={handleSortOrderClick}
+        name={sortOrder === 'desc' ? 'arrow-down-line' : 'arrow-up-line'}
+        size={18}
+      />
     </div>
   );
 };

@@ -1,0 +1,43 @@
+.lt-Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lt-Modal {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  max-width: 80%;
+  overflow: hidden;
+
+  .modal-header {
+    background-color: #d11a38;
+    color: #fff;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h4 {
+      margin: 0;
+    }
+  }
+
+  .modal-body {
+    font-size: large;
+  }
+
+  .modal-footer {
+    background-color: #f1f1f1;
+    padding: 10px;
+    display: flex;
+    justify-content: flex-end;
+  }
+}

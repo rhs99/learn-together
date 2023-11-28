@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
 
-import { Modal } from '@mui/material';
 import { Question, Answer } from '../../types';
 import Util from '../../utils';
 import axios from 'axios';
@@ -9,6 +8,7 @@ import AuthContext from '../../store/auth';
 import ReactQuill from 'react-quill';
 import Button from '../../design-library/Button';
 import Icon from '../../design-library/Icon';
+import Modal from '../../design-library/Modal/Modal';
 
 import './_index.scss';
 
@@ -210,21 +210,25 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
         <Icon className="delete" disabled={!isOwner && !isQOwner} onClick={handleDelete} name="delete" />
       </div>
       {imageToShow.length > 0 && (
-        <Modal open={imageToShow.length > 0} onClose={handleImageModalClose}>
-          <div className="full-img">
-            <img src={imageToShow} style={{ width: '100%', height: 'auto' }} />
-          </div>
+        <Modal isShown={imageToShow.length > 0} onClose={handleImageModalClose}>
+          <img src={imageToShow} style={{ width: '100%', height: 'auto' }} />
         </Modal>
       )}
       {openDeleteModal && (
-        <Modal open={openDeleteModal} onClose={handleDeleteModalClose}>
-          <div className="dlt-modal">
-            <h6>Do you want to delete this question?</h6>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
+        <Modal
+          isShown={openDeleteModal}
+          onClose={handleDeleteModalClose}
+          title="Do you want to delete this question?"
+          footer={
+            <div style={{ display: 'flex', gap: '5px' }}>
               <Button onClick={handleDeleteModalClose}>Cancel</Button>
               <Button onClick={handleConfirmDelete}>Confirm</Button>
             </div>
-          </div>
+          }
+        >
+          <p style={{ padding: '20px' }}>
+            Click <strong>Confirm</strong> to delete!
+          </p>
         </Modal>
       )}
     </div>
