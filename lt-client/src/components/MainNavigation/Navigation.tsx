@@ -4,7 +4,6 @@ import { useContext, useState, useEffect } from 'react';
 import { IconButton, Menu, MenuItem, Stack, Typography, Box, Card, CardContent, CardActions } from '@mui/material';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import AuthContext from '../../store/auth';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import Util from '../../utils';
 import Popover from '@mui/material/Popover';
 import Icon from '../../design-library/Icon';
@@ -141,7 +140,12 @@ const Navigation = () => {
         )}
         {isLoggedIn && (
           <>
-            <Icon onClick={handleNotificationFetch} name="notification" size={18} />
+            <Icon
+              onClick={handleNotificationFetch}
+              name="notification"
+              size={18}
+              color={hasNewNotification ? 'red' : 'black'}
+            />
             <Popover
               id={id}
               open={open}
