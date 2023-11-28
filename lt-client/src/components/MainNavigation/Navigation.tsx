@@ -1,30 +1,27 @@
 import axios from 'axios';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useContext, useState, useEffect } from 'react';
-import { IconButton, Menu, MenuItem, Stack, Typography, Box, Card, CardContent, CardActions } from '@mui/material';
-import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import { useContext, useState, useEffect, useRef } from 'react';
 import AuthContext from '../../store/auth';
 import Util from '../../utils';
-import Popover from '@mui/material/Popover';
 import Icon from '../../design-library/Icon';
-import Button from '../../design-library/Button';
+import Dropdown from '../../design-library/Dropdown/Dropdown';
 
 import './_index.scss';
 
 const Navigation = () => {
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-  const [anchorElNotification, setAnchorElNotification] = useState<HTMLButtonElement | null>(null);
+  const [showAccountDropdown, setShowAccountDropdown] = useState(false);
+  const [showNotificationDropdown, setShowNotificationDropdown] = useState(false);
 
   const [notifications, setNotifications] = useState<string[]>([]);
   const [hasNewNotification, setHasNewNotification] = useState(false);
+  const accountAnchorEl = useRef<HTMLDivElement | null>(null);
+  const notificationAnchorEl = useRef<HTMLDivElement | null>(null);
 
   const authCtx = useContext(AuthContext);
   const { isLoggedIn, getStoredValue } = authCtx;
-  const navigate = useNavigate();
-
-  const open = Boolean(anchorElNotification);
-  const id = open ? 'simple-popover' : undefined;
   const currUserName = authCtx.getStoredValue().userName;
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -51,27 +48,16 @@ const Navigation = () => {
     };
   }, [isLoggedIn, currUserName]);
 
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
   const logoutHandler = () => {
     authCtx.logout();
-    setAnchorElUser(null);
     navigate('/');
   };
 
   const goToProfile = () => {
-    setAnchorElUser(null);
     navigate('/users/' + authCtx.getStoredValue().userName);
   };
 
   const goToSettings = () => {
-    setAnchorElUser(null);
     navigate('/users/' + authCtx.getStoredValue().userName + '/settings');
   };
 
@@ -82,22 +68,44 @@ const Navigation = () => {
     });
   };
 
-  const handleNotificationFetch = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorElNotification(event.currentTarget);
+  const handleNotificationFetch = async () => {
     await fetchNotifications();
     setHasNewNotification(false);
+    setShowNotificationDropdown((prev) => !prev);
   };
 
-  const handleNotificationClose = () => {
-    setAnchorElNotification(null);
-  };
-
-  const goToQuestion = (qId: string) => {
-    setAnchorElNotification(null);
-    const URL = `${Util.CONSTANTS.SERVER_URL}/users/${getStoredValue().userName}/notifications/${qId}`;
+  const handleGoToNotification = (value: string) => {
+    if (value.length === 0) {
+      return;
+    }
+    const URL = `${Util.CONSTANTS.SERVER_URL}/users/${getStoredValue().userName}/notifications/${value}`;
     axios.delete(URL).then(() => {
-      navigate(`/questions/${qId}`);
+      navigate(`/questions/${value}`);
     });
+  };
+
+  const handleOptionSelect = (value: string) => {
+    if (value === 'profile') {
+      goToProfile();
+    } else if (value === 'settings') {
+      goToSettings();
+    } else if (value === 'logout') {
+      logoutHandler();
+    }
+  };
+
+  const getNotificationOption = () => {
+    if (notifications.length === 0) {
+      return [{ value: '', component: <span>No Notification!</span> }];
+    }
+    const options = notifications.map((notification, index) => {
+      const option = {
+        component: <span>New answer!</span>,
+        value: notification,
+      };
+      return option;
+    });
+    return options;
   };
 
   return (
@@ -140,75 +148,37 @@ const Navigation = () => {
         )}
         {isLoggedIn && (
           <>
-            <Icon
-              onClick={handleNotificationFetch}
-              name="notification"
-              size={18}
-              color={hasNewNotification ? 'red' : 'black'}
+            <div ref={notificationAnchorEl}>
+              <Icon
+                onClick={handleNotificationFetch}
+                name="notification"
+                size={24}
+                color={hasNewNotification ? 'red' : 'black'}
+              />
+            </div>
+            <Dropdown
+              options={getNotificationOption()}
+              onSelect={handleGoToNotification}
+              isShown={showNotificationDropdown}
+              onClose={() => setShowNotificationDropdown(false)}
+              anchorElement={notificationAnchorEl?.current}
+              className="notification-dropdown"
             />
-            <Popover
-              id={id}
-              open={open}
-              anchorEl={anchorElNotification}
-              onClose={handleNotificationClose}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-            >
-              <Box>
-                {notifications.map((notification) => {
-                  return (
-                    <Card key={notification} sx={{ margin: '5px 10px', width: '250px' }}>
-                      <CardContent sx={{ padding: '5px' }}>
-                        <Typography>Your question got a new answer!</Typography>
-                      </CardContent>
-                      <CardActions sx={{ padding: '0' }}>
-                        <Button onClick={() => goToQuestion(notification)}>Check here</Button>
-                      </CardActions>
-                    </Card>
-                  );
-                })}
-                {notifications.length === 0 && <Typography sx={{ padding: '10px' }}>No notifications</Typography>}
-              </Box>
-            </Popover>
-            <IconButton onClick={handleOpenUserMenu}>
-              <AccountCircleRoundedIcon sx={{ color: 'primary' }} fontSize="medium" />
-            </IconButton>
-            <Menu
-              sx={{ mt: '20px' }}
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              <MenuItem onClick={goToProfile}>
-                <Stack direction="row" alignItems="center" gap={1}>
-                  <Icon name="profile" size={16} />
-                  <Typography variant="body1">Profile</Typography>
-                </Stack>
-              </MenuItem>
-              <MenuItem onClick={goToSettings}>
-                <Stack direction="row" alignItems="center" gap={1}>
-                  <Icon name="settings" size={16} />
-                  <Typography variant="body1">Settings</Typography>
-                </Stack>
-              </MenuItem>
-              <MenuItem onClick={logoutHandler}>
-                <Stack direction="row" alignItems="center" gap={1}>
-                  <Icon name="logout" size={16} />
-                  <Typography variant="body1">Logout</Typography>
-                </Stack>
-              </MenuItem>
-            </Menu>
+            <div ref={accountAnchorEl}>
+              <Icon name="account" onClick={() => setShowAccountDropdown((prev) => !prev)} size={24} />
+            </div>
+            <Dropdown
+              options={[
+                { value: 'profile', label: 'Profile', component: <Icon name="profile" /> },
+                { value: 'settings', label: 'Settings', component: <Icon name="settings" /> },
+                { value: 'logout', label: 'Logout', component: <Icon name="logout" /> },
+              ]}
+              onSelect={handleOptionSelect}
+              anchorElement={accountAnchorEl?.current}
+              isShown={showAccountDropdown}
+              onClose={() => setShowAccountDropdown(false)}
+              className="account-dropdown"
+            />
           </>
         )}
       </div>
