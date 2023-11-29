@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Util from '../../utils';
 import { Subject } from '../../types';
-import { TableContainer, TableHead, TableRow, TableCell, Typography, TableBody } from '@mui/material';
 import Table from '../../design-library/Table/Table';
 
 import './_index.scss';

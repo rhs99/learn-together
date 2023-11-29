@@ -8,12 +8,8 @@ import { Question } from '../../types';
 import AuthContext from '../../store/auth';
 import { Tag, CustomTag } from '../../types';
 import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
-import Stack from '@mui/material/Stack';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
 import Button from '../../design-library/Button';
 import TagInput from '../TagInput/TagInput';
-
 import Alert from '../../design-library/Alert/Alert';
 
 import './_index.scss';
@@ -167,11 +163,7 @@ const QuestionInput = (props: QuestionInputProps) => {
           Save
         </Button>
       </div>
-      {isUploading && (
-        <Box sx={{ position: 'fixed', top: '50%', left: '50%' }}>
-          <CircularProgress color="inherit" />
-        </Box>
-      )}
+      {isUploading && <p>Loading...</p>}
     </div>
   );
 };

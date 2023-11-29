@@ -1,15 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useContext, useCallback, ChangeEvent } from 'react';
-import { Button } from '@mui/material';
 import { Answer } from '../../types';
 import Util from '../../utils';
 import axios from 'axios';
 import AuthContext from '../../store/auth';
 import Quill, { DeltaStatic } from 'quill';
 import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
 import Alert from '../../design-library/Alert/Alert';
+import Button from '../../design-library/Button';
 
 import './_index.scss';
 
@@ -98,11 +96,7 @@ const AnswerInput = (props: AnswerInputProps) => {
   return (
     <div className="cl-AnswerInput">
       {showAlert && <Alert type="error" message="Answer description and files both cannot be empty!" />}
-      {isUploading && (
-        <Box sx={{ position: 'fixed', top: '50%', left: '50%' }}>
-          <CircularProgress color="inherit" />
-        </Box>
-      )}
+      {isUploading && <p>Loading...</p>}
       <div className="aHeader">
         <h3>Your Answer</h3>
       </div>
@@ -116,9 +110,7 @@ const AnswerInput = (props: AnswerInputProps) => {
         onChange={handleFileUpload}
       />
       <div className="btn-container">
-        <Button variant="outlined" onClick={handlePostAnswer}>
-          Save
-        </Button>
+        <Button onClick={handlePostAnswer}>Save</Button>
       </div>
     </div>
   );

@@ -45,7 +45,7 @@ const getAllQuestions = async (body, query) => {
 
     const chapter = await Chapter.findById(body.chapterId).exec();
 
-    let q = {
+    const q = {
         _id: { $in: chapter.questions },
     };
 

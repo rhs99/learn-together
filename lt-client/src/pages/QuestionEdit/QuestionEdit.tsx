@@ -1,7 +1,7 @@
+import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Util from '../../utils';
-import axios from 'axios';
 import { Question } from '../../types';
 import QuestionInput from '../../components/QuestionInput/QuestionInput';
 

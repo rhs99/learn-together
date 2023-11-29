@@ -3,8 +3,8 @@ import { useState, ChangeEvent, useContext, FormEvent } from 'react';
 import axios from 'axios';
 import Util from '../../utils';
 import AuthContext from '../../store/auth';
+
 import './_index.scss';
-import { Link } from '@mui/material';
 
 function LoginPage() {
   const [username, setUsername] = useState<string>('');
@@ -21,8 +21,7 @@ function LoginPage() {
     setPassword(event.target.value);
   };
 
-  const handleForgotPassword = (event: FormEvent) => {
-    event.preventDefault();
+  const handleForgotPassword = () => {
     navigate('/users/forgot-password');
   };
 
@@ -65,9 +64,9 @@ function LoginPage() {
           {err && (
             <>
               <p className="err">Invalid Credentials</p>
-              <Link href="" underline="none" target="_blank" onClick={handleForgotPassword}>
+              <a href="" onClick={handleForgotPassword}>
                 Forgot password?
-              </Link>
+              </a>
             </>
           )}
           <button type="submit">Login</button>

@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Question, Answer } from '../../types';
-import { Typography } from '@mui/material';
 import AuthContext from '../../store/auth';
 import Util from '../../utils';
 import AnswerInput from '../../components/AnswerInput/AnswerInput';
@@ -58,9 +57,7 @@ const QuestionDetail = () => {
       {isLoggedIn && !isOwner && (
         <AnswerInput fetchAnswer={handleAnsPost} answer={{ _id: '', question: questionId || '', imageLocations: [] }} />
       )}
-      <Typography variant="h5" className="ans-title">
-        {`${answers.length} Answers`}
-      </Typography>
+      <h5 className="ans-title">{`${answers.length} Answers`}</h5>
       {answers.map((answer) => (
         <QACard
           key={answer._id}

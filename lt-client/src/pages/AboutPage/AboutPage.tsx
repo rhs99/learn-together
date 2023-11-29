@@ -1,26 +1,21 @@
 import './_index.scss';
-import { Typography, Link } from '@mui/material';
 
 const AboutPage = () => {
   return (
     <div className="lt-AboutPage">
-      <Typography>
+      <p>
         Greetings!
         <br />
         This platform is developed keeping in mind of helping you to learn and grow together.
-      </Typography>
+      </p>
       <br />
-      <Typography>Contributors:</Typography>
+      <p>Contributors:</p>
       <ol>
         <li>
-          <Link href="https://rhs99.github.io/portfolio/" underline="none" target="_blank">
-            Md. Rakibul Hasan Sarker
-          </Link>
+          <a href="https://rhs99.github.io/portfolio/">Md. Rakibul Hasan Sarker</a>
         </li>
         <li>
-          <Link href="#" underline="none" target="_blank">
-            Tahmid Anjum
-          </Link>
+          <a href="#">Tahmid Anjum</a>
         </li>
       </ol>
     </div>
