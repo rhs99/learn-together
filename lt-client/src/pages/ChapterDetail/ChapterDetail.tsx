@@ -4,15 +4,13 @@ import axios from 'axios';
 import Util from '../../utils';
 import { Question, Breadcrumb } from '../../types';
 import AuthContext from '../../store/auth';
-import { Typography } from '@mui/material';
 import SortOptions from '../../components/SortOptions/SortOptions';
 import { Tag, CustomTag } from '../../types';
 import QACard from '../../components/QACard/QACard';
-import Pagination from '@mui/material/Pagination';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import TagInput from '../../components/TagInput/TagInput';
-
+import Pagination from '../../components/Pagination/Pagination';
 import Button from '../../design-library/Button';
 
 import './_index.scss';
@@ -110,7 +108,7 @@ const ChapterDetail = () => {
                 </Link>
               );
             })}
-            {<Typography>{breadcrumbs[breadcrumbs.length - 1].name}</Typography>}
+            {<span>{breadcrumbs[breadcrumbs.length - 1].name}</span>}
           </Breadcrumbs>
         )}
         <div className="filter">
@@ -140,9 +138,7 @@ const ChapterDetail = () => {
 
       {isEmpty && (
         <div className="empty">
-          <Typography variant="h3" color="gray">
-            No Questions
-          </Typography>
+          <h3>No Questions</h3>
         </div>
       )}
 
@@ -160,12 +156,9 @@ const ChapterDetail = () => {
 
       {paginationInfo.totalPage > 1 && (
         <Pagination
-          count={paginationInfo.totalPage}
+          totalPages={paginationInfo.totalPage}
           page={paginationInfo.currPage}
-          variant="outlined"
-          shape="rounded"
-          color="primary"
-          onChange={(e, page) => {
+          onPageChange={(page) => {
             setPaginationInfo((prev) => {
               return {
                 ...prev,
