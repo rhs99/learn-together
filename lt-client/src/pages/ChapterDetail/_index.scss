@@ -22,8 +22,8 @@
     }
 
     .empty {
-        width: 30%;
-        margin: 30vh auto;
+        display: flex;
+        justify-content: center;
     }
 
     .sort-options{

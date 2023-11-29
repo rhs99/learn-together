@@ -7,11 +7,9 @@ import axios from 'axios';
 import AuthContext from '../../store/auth';
 import Quill, { DeltaStatic } from 'quill';
 import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
-import AlertTitle from '@mui/material/AlertTitle';
-import Alert from '@mui/material/Alert';
-import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import Alert from '../../design-library/Alert/Alert';
 
 import './_index.scss';
 
@@ -99,19 +97,7 @@ const AnswerInput = (props: AnswerInputProps) => {
 
   return (
     <div className="cl-AnswerInput">
-      {showAlert && (
-        <Stack sx={{ width: '50%', margin: '10px auto' }}>
-          <Alert
-            severity="error"
-            onClose={() => {
-              setShowAlert(false);
-            }}
-          >
-            <AlertTitle>Error</AlertTitle>
-            Answer <strong>description and image</strong> both cannot be empty!
-          </Alert>
-        </Stack>
-      )}
+      {showAlert && <Alert type="error" message="Answer description and files both cannot be empty!" />}
       {isUploading && (
         <Box sx={{ position: 'fixed', top: '50%', left: '50%' }}>
           <CircularProgress color="inherit" />

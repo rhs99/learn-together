@@ -7,11 +7,10 @@ import AuthContext from '../../store/auth';
 import SortOptions from '../../components/SortOptions/SortOptions';
 import { Tag, CustomTag } from '../../types';
 import QACard from '../../components/QACard/QACard';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Link from '@mui/material/Link';
 import TagInput from '../../components/TagInput/TagInput';
 import Pagination from '../../components/Pagination/Pagination';
 import Button from '../../design-library/Button';
+import Breadcrumbs from '../../components/Breadcrumbs/Breadcrumbs';
 
 import './_index.scss';
 
@@ -100,16 +99,12 @@ const ChapterDetail = () => {
     <div className="cl-ChapterDetail">
       <div className="heading">
         {breadcrumbs.length > 0 && (
-          <Breadcrumbs separator="›" aria-label="breadcrumb">
-            {breadcrumbs.slice(0, -1).map((breadcrumb) => {
-              return (
-                <Link key={breadcrumb.name} href={breadcrumb.url} underline="hover">
-                  {breadcrumb.name}
-                </Link>
-              );
-            })}
-            {<span>{breadcrumbs[breadcrumbs.length - 1].name}</span>}
-          </Breadcrumbs>
+          <Breadcrumbs
+            items={breadcrumbs.map((breadcrumb, index) => ({
+              name: breadcrumb.name,
+              url: index < breadcrumbs.length - 1 ? breadcrumb.url : null,
+            }))}
+          />
         )}
         <div className="filter">
           <TagInput
@@ -138,7 +133,7 @@ const ChapterDetail = () => {
 
       {isEmpty && (
         <div className="empty">
-          <h3>No Questions</h3>
+          <h1>No Questions</h1>
         </div>
       )}
 

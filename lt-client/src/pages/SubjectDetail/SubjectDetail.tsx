@@ -3,9 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Util from '../../utils';
 import { Chapter, Breadcrumb } from '../../types';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Link from '@mui/material/Link';
 import Table from '../../design-library/Table/Table';
+import Breadcrumbs from '../../components/Breadcrumbs/Breadcrumbs';
 
 import './_index.scss';
 
@@ -45,16 +44,12 @@ const SubjectDetail = () => {
   return (
     <div className="lt-SubjectDetail">
       {breadcrumbs.length > 0 && (
-        <Breadcrumbs separator="›" aria-label="breadcrumb">
-          {breadcrumbs.slice(0, -1).map((breadcrumb) => {
-            return (
-              <Link key={breadcrumb.name} href={breadcrumb.url} underline="hover">
-                {breadcrumb.name}
-              </Link>
-            );
-          })}
-          {<span>{breadcrumbs[breadcrumbs.length - 1].name}</span>}
-        </Breadcrumbs>
+        <Breadcrumbs
+          items={breadcrumbs.map((breadcrumb, index) => ({
+            name: breadcrumb.name,
+            url: index < breadcrumbs.length - 1 ? breadcrumb.url : null,
+          }))}
+        />
       )}
       <Table rowData={rowData} onRowSelection={handleChapterOpen} />
     </div>

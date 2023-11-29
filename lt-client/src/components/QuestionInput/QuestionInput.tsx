@@ -8,13 +8,13 @@ import { Question } from '../../types';
 import AuthContext from '../../store/auth';
 import { Tag, CustomTag } from '../../types';
 import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
-import AlertTitle from '@mui/material/AlertTitle';
-import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Button from '../../design-library/Button';
 import TagInput from '../TagInput/TagInput';
+
+import Alert from '../../design-library/Alert/Alert';
 
 import './_index.scss';
 
@@ -140,19 +140,7 @@ const QuestionInput = (props: QuestionInputProps) => {
 
   return (
     <div className="cl-QuestionInput">
-      {showAlert && (
-        <Stack sx={{ width: '50%', margin: '10px auto' }}>
-          <Alert
-            severity="error"
-            onClose={() => {
-              setShowAlert(false);
-            }}
-          >
-            <AlertTitle>Error</AlertTitle>
-            Question <strong>description and tags</strong> cannot be empty!
-          </Alert>
-        </Stack>
-      )}
+      {showAlert && <Alert type="error" message="Question description and tags cannot be empty!" />}
       <div className="description-heading">
         <h3>Write Question Description</h3>
       </div>
