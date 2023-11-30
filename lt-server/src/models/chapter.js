@@ -6,7 +6,7 @@ const chapterSchema = new mongoose.Schema({
     questions: [
         {
             type: mongoose.Types.ObjectId,
-            ref: 'Question'
+            ref: 'Question',
         },
     ],
 });

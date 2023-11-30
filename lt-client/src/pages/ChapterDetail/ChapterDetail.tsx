@@ -5,19 +5,20 @@ import Util from '../../utils';
 import { Question, Breadcrumb } from '../../types';
 import AuthContext from '../../store/auth';
 import SortOptions from '../../components/SortOptions/SortOptions';
-import { Tag, CustomTag } from '../../types';
+import { Tag } from '../../types';
 import QACard from '../../components/QACard/QACard';
-import TagInput from '../../components/TagInput/TagInput';
+// import TagInput from '../../components/TagInput/TagInput';
 import Pagination from '../../components/Pagination/Pagination';
 import Button from '../../design-library/Button';
 import Breadcrumbs from '../../components/Breadcrumbs/Breadcrumbs';
+import TagInput from '../../components/TagInput/TagInput';
 
 import './_index.scss';
 
 const ChapterDetail = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [existingTags, setExistingTags] = useState<Tag[]>([]);
-  const [selectedTags, setSelectedTags] = useState<CustomTag[]>([]);
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [sortBy, setSortBy] = useState<string>('time');
   const [sortOrder, setSortOrder] = useState<string>('desc');
   const [paginationInfo, setPaginationInfo] = useState({ currPage: 1, totalPage: 1 });
@@ -35,7 +36,7 @@ const ChapterDetail = () => {
     queryString += `&pageNumber=${paginationInfo.currPage}`;
 
     const URL = `${Util.CONSTANTS.SERVER_URL}/questions/search?${queryString}`;
-    const selectedTagIds = selectedTags.filter((tag) => tag.id.length > 0).map((tag) => tag.id);
+    const selectedTagIds = selectedTags.filter((tag) => tag._id.length > 0).map((tag) => tag._id);
     axios.post(URL, { chapterId, tagIds: selectedTagIds }).then(({ data }) => {
       setQuestions(data.paginatedResults);
       setPaginationInfo((prev) => {
@@ -82,15 +83,8 @@ const ChapterDetail = () => {
     }
   };
 
-  const handleTagDelete = (i: number) => {
-    setSelectedTags(selectedTags.filter((tag, index) => index !== i));
-  };
-
-  const handleTagAddition = (tag: CustomTag) => {
-    if (tag.id === tag.text) {
-      return;
-    }
-    setSelectedTags([...selectedTags, tag]);
+  const onTagsChange = (tags: Tag[]) => {
+    setSelectedTags(tags);
   };
 
   const isEmpty = questions.length === 0;
@@ -108,11 +102,8 @@ const ChapterDetail = () => {
         )}
         <div className="filter">
           <TagInput
-            tags={selectedTags}
-            suggestions={existingTags.map((tag) => ({ id: tag._id, text: tag.name }))}
-            handleDelete={handleTagDelete}
-            handleAddition={handleTagAddition}
-            placeholder="Filter by tags"
+            suggestions={existingTags.map((tag) => ({ _id: tag._id, name: tag.name }))}
+            onTagsChange={onTagsChange}
           />
         </div>
         <Button disabled={!isLoggedIn} onClick={handleAskQuestion} className="ask-btn">

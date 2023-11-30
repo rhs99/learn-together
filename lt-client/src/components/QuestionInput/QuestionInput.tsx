@@ -6,11 +6,12 @@ import Util from '../../utils';
 import axios from 'axios';
 import { Question } from '../../types';
 import AuthContext from '../../store/auth';
-import { Tag, CustomTag } from '../../types';
+import { Tag } from '../../types';
 import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
 import Button from '../../design-library/Button';
-import TagInput from '../TagInput/TagInput';
+// import TagInput from '../TagInput/TagInput';
 import Alert from '../../design-library/Alert/Alert';
+import TagInput from '../TagInput/TagInput';
 
 import './_index.scss';
 
@@ -20,8 +21,8 @@ type QuestionInputProps = {
 };
 
 const QuestionInput = (props: QuestionInputProps) => {
-  const [tags, setTags] = useState<CustomTag[]>(
-    props.question ? props.question.tags.map((tag) => ({ id: tag._id, text: tag.name })) : []
+  const [tags, setTags] = useState<Tag[]>(
+    props.question ? props.question.tags.map((tag) => ({ _id: tag._id, name: tag.name })) : []
   );
   const [imageLocations, _setImageLocations] = useState<string[]>([]);
   const [existingTags, setExistingTags] = useState<Tag[]>([]);
@@ -76,10 +77,10 @@ const QuestionInput = (props: QuestionInputProps) => {
     const newTags: Tag[] = [];
 
     tags.forEach((tag) => {
-      if (tag.id.length === 0) {
-        newTags.push({ _id: '', name: tag.text, chapter: props.chapterId });
+      if (tag._id.length === 0) {
+        newTags.push({ _id: '', name: tag.name, chapter: props.chapterId });
       } else {
-        (question.tags as any).push({ _id: tag.id, name: tag.text });
+        (question.tags as Tag[]).push({ _id: tag._id, name: tag.name });
       }
     });
 
@@ -118,16 +119,9 @@ const QuestionInput = (props: QuestionInputProps) => {
     },
     [props.question?.details]
   );
-
-  const handleTagDelete = (i: number) => {
-    setTags(tags.filter((tag, index) => index !== i));
-  };
-
-  const handleTagAddition = (tag: CustomTag) => {
-    if (tag.id === tag.text) {
-      tag.id = '';
-    }
-    setTags([...tags, tag]);
+ 
+  const onTagsChange = (tags: Tag[]) => {
+    setTags(tags);
   };
 
   if (!authCtx.isLoggedIn) {
@@ -146,10 +140,8 @@ const QuestionInput = (props: QuestionInputProps) => {
       </div>
       <div className="tag-input-container">
         <TagInput
-          tags={tags}
-          suggestions={existingTags.map((tag) => ({ id: tag._id, text: tag.name }))}
-          handleDelete={handleTagDelete}
-          handleAddition={handleTagAddition}
+          suggestions={existingTags.map((tag) => ({ _id: tag._id, name: tag.name }))}
+          onTagsChange={onTagsChange}
         />
       </div>
       <div className="file-upload">

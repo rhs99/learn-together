@@ -36,12 +36,7 @@ export type User = {
 export type Tag = {
   name: string;
   _id: string;
-  chapter: string;
-};
-
-export type CustomTag = {
-  id: string;
-  text: string;
+  chapter?: string;
 };
 
 export type Answer = {

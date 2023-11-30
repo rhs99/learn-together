@@ -73,10 +73,7 @@ const deleteAnswer = async (answerId, userId) => {
         const question = await Question.findById(answer.question).exec();
         const user = await User.findById(userId).exec();
 
-        if (
-            answer.userName !== user.userName &&
-            question.userName !== user.userName
-        ) {
+        if (answer.userName !== user.userName && question.userName !== user.userName) {
             throw new Error('unauth');
         }
 

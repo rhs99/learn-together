@@ -43,47 +43,50 @@ const getAllQuestions = async (body, query) => {
     const pageNumber = query.pageNumber || 1;
     const pageSize = query.pageSize || 5;
 
-    const chapter = await Chapter.findById(body.chapterId).exec();
-
-    const q = {
-        _id: { $in: chapter.questions },
-    };
-
-    if (body.tagIds && body.tagIds.length > 0) {
-        q.tags._id = { $in: body.tagIds.map((_id) => new mongoose.Types.ObjectId(_id)) };
-    }
-
-    let key = 'createdAt',
-        val = -1;
-
-    if (query.sortBy && query.sortOrder) {
-        switch (query.sortBy) {
-            case 'upVote':
-                key = 'upVote';
-                break;
-            case 'downVote':
-                key = 'downVote';
-                break;
-            case 'time':
-                key = 'createdAt';
-                break;
-            case 'vote':
-                key = 'vote';
-                break;
-        }
-        switch (query.sortOrder) {
-            case 'desc':
-                val = -1;
-                break;
-            case 'asc':
-                val = 1;
-                break;
-        }
-    }
-
-    const sortOption = { [key]: val };
-
     try {
+        const chapter = await Chapter.findById(body.chapterId).exec();
+        let tagIds = [];
+
+        if (body.tagIds && body.tagIds.length > 0) {
+            tagIds = body.tagIds.map((_id) => new mongoose.Types.ObjectId(_id));
+        }
+
+        let key = 'createdAt',
+            val = -1;
+
+        if (query.sortBy && query.sortOrder) {
+            switch (query.sortBy) {
+                case 'upVote':
+                    key = 'upVote';
+                    break;
+                case 'downVote':
+                    key = 'downVote';
+                    break;
+                case 'time':
+                    key = 'createdAt';
+                    break;
+                case 'vote':
+                    key = 'vote';
+                    break;
+            }
+            switch (query.sortOrder) {
+                case 'desc':
+                    val = -1;
+                    break;
+                case 'asc':
+                    val = 1;
+                    break;
+            }
+        }
+
+        const sortOption = { [key]: val };
+
+        const q = { _id: { $in: chapter.questions } };
+
+        if (tagIds.length > 0) {
+            q['tags._id'] = { $in: tagIds };
+        }
+
         const allQuestions = await Question.find(q)
             .sort(sortOption)
             .skip((pageNumber - 1) * pageSize)
@@ -92,6 +95,7 @@ const getAllQuestions = async (body, query) => {
         return { totalCount: chapter.questions.length, paginatedResults: allQuestions };
     } catch (e) {
         console.log(e);
+        throw new Error(e);
     }
 };
 
@@ -101,6 +105,7 @@ const getQuestion = async (questionId) => {
         return question;
     } catch (e) {
         console.log(e.message);
+        throw new Error(e);
     }
 };
 
@@ -117,7 +122,7 @@ const deleteQuestion = async (questionId, userId) => {
         await Promise.all(promises);
 
         const chapter = await Chapter.findById(question.chapter).exec();
-        chapter.questions = chapter.questions.filter((item)=> JSON.stringify(item) !== JSON.stringify(questionId));
+        chapter.questions = chapter.questions.filter((item) => JSON.stringify(item) !== JSON.stringify(questionId));
         await chapter.save();
         user.questions = user.questions.filter((item) => JSON.stringify(item) !== JSON.stringify(questionId));
         await user.save();
