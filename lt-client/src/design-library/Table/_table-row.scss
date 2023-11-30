@@ -1,16 +1,16 @@
 .lt-TableRow {
-    .container {
+    &-container {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         padding: 10px;
     }
 
-    .header-cell {
+    &-headerCell {
         font-weight: bold;
     }
 
-    .clickable:hover {
+    &-clickable:hover {
         cursor: pointer;
         background-color: var(--primary);
     }

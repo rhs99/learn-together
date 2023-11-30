@@ -15,10 +15,10 @@ const TableRow = ({ rowData, onRowSelection, headerRow }: TableRowProps) => {
             onRowSelection?.(rowData.options._id);
           }
         }}
-        className={`container ${headerRow ? '' : 'clickable'}`}
+        className={`lt-TableRow-container ${headerRow ? '' : 'lt-TableRow-clickable'}`}
       >
         {rowData.value.map((col: any, index: number) => (
-          <div key={index} className={`${headerRow ? 'header-cell' : ''}`}>
+          <div key={index} className={`${headerRow ? 'lt-TableRow-headerCell' : ''}`}>
             {col}
           </div>
         ))}
