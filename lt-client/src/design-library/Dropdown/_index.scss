@@ -1,7 +1,7 @@
 .lt-Dropdown {
     position: absolute;
 
-    .options-list {
+    &-options-list {
         list-style: none;
         padding: 0;
         margin: 0;
@@ -12,17 +12,17 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    .options-list li {
+    &-option {
         padding: 5px;
         cursor: pointer;
         display: flex;
         flex-direction: row;
         align-items: center;
         gap: 5px;
-    }
 
-    .options-list li:hover {
-        background-color: #f0f0f0;
+        &:hover {
+            background-color: #f0f0f0;
+        }
     }
 
 }

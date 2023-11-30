@@ -25,7 +25,7 @@ const Dropdown = ({ options, onSelect, anchorElement, isShown, onClose, classNam
     if (!anchorElement) return {};
 
     const rect = anchorElement.getBoundingClientRect();
-    return { top: rect.bottom, left: rect.left - 100 };
+    return { top: rect.bottom, left: rect.left - 80 };
   };
 
   if (!isShown) {
@@ -34,9 +34,9 @@ const Dropdown = ({ options, onSelect, anchorElement, isShown, onClose, classNam
 
   return (
     <div className={`lt-Dropdown ${className}`} style={calculateDropdownPosition()}>
-      <ul className="options-list">
+      <ul className="lt-Dropdown-options-list">
         {options.map((option, index) => (
-          <li key={index} onClick={() => handleOptionClick(option)}>
+          <li className='lt-Dropdown-option' key={index} onClick={() => handleOptionClick(option)}>
             {Boolean(option.component) && option.component}
             {Boolean(option.label) && option.label}
           </li>
