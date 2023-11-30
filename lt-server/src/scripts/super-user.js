@@ -17,17 +17,13 @@ const createAdminPrivilege = async () => {
 
 const createAdminUser = async () => {
     try {
-        await mongoose.connect(DB_URL, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
-
+        await mongoose.connect(DB_URL);
         const adminPrivilege = await createAdminPrivilege();
 
         const superUser = new User({
             userName: 'admin',
             email: 'learntogether3009@gmail.com',
-            password: 'admin',
+            password: '123',
             privileges: [adminPrivilege._id],
         });
         await superUser.save();

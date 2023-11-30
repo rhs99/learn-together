@@ -63,15 +63,12 @@ try {
 const DB_URL = 'mongodb://mongo:27017/lt-db';
 
 const connectDB = async () => {
-    await mongoose
-        .connect(DB_URL, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        })
-        .then(() => console.log('Mongo connected successfully'))
-        .catch((e) => {
-            console.log(e.message);
-        });
+    try {
+        await mongoose.connect(DB_URL);
+        console.log('Mongo connected successfully');
+    } catch (e) {
+        console.log(e.message);
+    }
 };
 
 connectDB();
