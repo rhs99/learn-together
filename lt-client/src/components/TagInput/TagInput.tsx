@@ -33,7 +33,9 @@ const TagInput = ({ suggestions, onTagsChange }: TagInputProps) => {
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setInputValue(value);
-    const filtered = suggestions.filter((suggestion)=>!tags.some((tag)=>tag.name === suggestion.name)).filter((suggestion) => suggestion.name.toLowerCase().includes(value.toLowerCase()));
+    const filtered = suggestions
+      .filter((suggestion) => !tags.some((tag) => tag.name === suggestion.name))
+      .filter((suggestion) => suggestion.name.toLowerCase().includes(value.toLowerCase()));
     setFilteredSuggestions(filtered);
     setIsDropdownOpen(!!value && !!filtered.length);
     setHighlightedIndex(null);
@@ -41,7 +43,8 @@ const TagInput = ({ suggestions, onTagsChange }: TagInputProps) => {
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && inputValue.trim() !== '') {
-      const newTag = highlightedIndex !== null ? filteredSuggestions[highlightedIndex] : { name: inputValue.trim(), _id: '' };
+      const newTag =
+        highlightedIndex !== null ? filteredSuggestions[highlightedIndex] : { name: inputValue.trim(), _id: '' };
       setTags([...tags, newTag]);
       setInputValue('');
       setIsDropdownOpen(false);

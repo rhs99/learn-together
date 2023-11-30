@@ -119,7 +119,7 @@ const QuestionInput = (props: QuestionInputProps) => {
     },
     [props.question?.details]
   );
- 
+
   const onTagsChange = (tags: Tag[]) => {
     setTags(tags);
   };

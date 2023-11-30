@@ -1,3 +1,5 @@
+import { NavLink } from 'react-router-dom';
+
 import './_index.scss';
 
 type BreadcrumbsProps = {
@@ -12,7 +14,7 @@ const Breadcrumbs = ({ items }: BreadcrumbsProps) => {
           <li key={index}>
             {item.url ? (
               <>
-                <a href={item.url}>{item.name}</a>
+                <NavLink to={item.url}>{item.name}</NavLink>
                 <span className="sep">&gt;</span>
               </>
             ) : (
