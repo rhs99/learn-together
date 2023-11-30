@@ -17,9 +17,9 @@ const Alert = ({ type, message }: AlertProps) => {
   return (
     <>
       {!isClosed && (
-        <div className={`alert ${type}`}>
+        <div className={`lt-Alert lt-Alert-${type}`}>
           {message}
-          <span className="close-alert" onClick={handleClose}>
+          <span className="lt-Alert-close-btn" onClick={handleClose}>
             &times;
           </span>
         </div>
