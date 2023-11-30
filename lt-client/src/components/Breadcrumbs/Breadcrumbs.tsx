@@ -8,17 +8,19 @@ type BreadcrumbsProps = {
 
 const Breadcrumbs = ({ items }: BreadcrumbsProps) => {
   return (
-    <nav className="breadcrumbs">
-      <ul>
+    <nav className="lt-Breadcrumbs">
+      <ul className="lt-Breadcrumbs-list">
         {items.map((item, index) => (
-          <li key={index}>
+          <li key={index} className="lt-Breadcrumbs-item">
             {item.url ? (
               <>
-                <NavLink to={item.url}>{item.name}</NavLink>
-                <span className="sep">&gt;</span>
+                <NavLink to={item.url} className="lt-Breadcrumbs-link">
+                  {item.name}
+                </NavLink>
+                <span className="lt-Breadcrumbs-separator">&gt;</span>
               </>
             ) : (
-              <span>{item.name}</span>
+              <span className="lt-Breadcrumbs-nonlink">{item.name}</span>
             )}
           </li>
         ))}

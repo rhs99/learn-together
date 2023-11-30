@@ -7,7 +7,6 @@ import AuthContext from '../../store/auth';
 import SortOptions from '../../components/SortOptions/SortOptions';
 import { Tag } from '../../types';
 import QACard from '../../components/QACard/QACard';
-// import TagInput from '../../components/TagInput/TagInput';
 import Pagination from '../../components/Pagination/Pagination';
 import Button from '../../design-library/Button';
 import Breadcrumbs from '../../components/Breadcrumbs/Breadcrumbs';

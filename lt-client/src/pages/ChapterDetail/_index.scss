@@ -3,19 +3,19 @@
     margin: auto;
 
     .heading {
-        margin: 20px 0;
+        margin-bottom: 20px;
         display: flex;
         justify-content: space-between;
+        align-items: center;
     }
 
     .filter {
-        width: 50%;
+        width: 40%;
     }
 
     .ask-btn{
         background-color: rgb(132, 182, 226);
         border: 1px solid rgb(23, 184, 238);
-        width: 10%;
         height: 32px;
         border-radius: 5px;
         font-size: 1.2em;
