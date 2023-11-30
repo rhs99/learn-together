@@ -17,24 +17,20 @@
   max-width: 80%;
   overflow: hidden;
 
-  .modal-header {
+  &-header {
     background-color: #d11a38;
     color: #fff;
-    padding: 10px;
+    padding: 5px 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    h4 {
-      margin: 0;
-    }
   }
 
-  .modal-body {
+  &-body {
     font-size: large;
   }
 
-  .modal-footer {
+  &-footer {
     background-color: #f1f1f1;
     padding: 10px;
     display: flex;

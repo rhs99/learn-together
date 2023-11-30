@@ -42,12 +42,12 @@ const Modal = ({ isShown, onClose, title, children, footer }: ModalProps) => {
     <div className="lt-Overlay" onClick={handleOverlayClick}>
       <div className="lt-Modal">
         {title && (
-          <div className="modal-header">
+          <div className="lt-Modal-header">
             <h4>{title}</h4>
           </div>
         )}
-        <div className="modal-body">{children}</div>
-        {footer && <div className="modal-footer">{footer}</div>}
+        <div className="lt-Modal-body">{children}</div>
+        {footer && <div className="lt-Modal-footer">{footer}</div>}
       </div>
     </div>,
     modalRoot

@@ -226,7 +226,7 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
             </div>
           }
         >
-          <p style={{ padding: '20px' }}>
+          <p style={{paddingLeft: '10px'}}>
             Click <strong>Confirm</strong> to delete!
           </p>
         </Modal>
