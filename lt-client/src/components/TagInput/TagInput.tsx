@@ -83,19 +83,18 @@ const TagInput = ({ suggestions, onTagsChange }: TagInputProps) => {
   };
 
   return (
-    <div className="tag-input">
-      <div className="tags-container">
-        {tags.map((tag, index) => (
-          <div
-            key={tag.name}
-            className={`tag ${index === highlightedIndex ? 'highlighted' : ''}`}
-            onClick={() => handleTagClick(tag)}
-          >
+    <div className="lt-TagInput">
+      <div className="lt-TagInput-container">
+        {tags.map((tag) => (
+          <div key={tag.name} className={'lt-TagInput-tag'}>
             {tag.name}
-            <span className="tag-close-btn">&times;</span>
+            <span onClick={() => handleTagClick(tag)} className="lt-TagInput-tag-close">
+              &times;
+            </span>
           </div>
         ))}
         <input
+          className="lt-TagInput-inputBox"
           type="text"
           value={inputValue}
           onChange={handleInputChange}
@@ -106,11 +105,12 @@ const TagInput = ({ suggestions, onTagsChange }: TagInputProps) => {
       </div>
 
       {isDropdownOpen && (
-        <ul className="suggestions">
+        <ul className="lt-TagInput-suggestions">
           {filteredSuggestions.map((suggestion, index) => (
             <li
               key={suggestion.name}
-              className={index === highlightedIndex ? 'highlighted' : ''}
+              className={`lt-TagInput-suggestions-item 
+                  ${index === highlightedIndex ? ' lt-TagInput-suggestions-item-highlighted' : ''}`}
               onClick={() => handleSuggestionClick(suggestion)}
             >
               {suggestion.name}

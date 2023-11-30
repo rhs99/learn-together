@@ -1,48 +1,44 @@
-.tag-input {
+.lt-TagInput {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
 
-  .tags-container {
+  &-container {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     width: 100%;
-    padding: 8px;
+    padding: 3px;
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-bottom: 8px;
-
-    .tag {
-      background-color: #3498db;
-      color: #fff;
-      padding: 4px 8px;
-      margin: 4px;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-
-      .tag-close-btn {
-        margin-left: 4px;
-        cursor: pointer;
-      }
-
-      &.highlighted {
-        background-color: #2070a0;
-      }
-    }
-
-    input {
-      border: none;
-      outline: none;
-      padding: 4px;
-      margin: 4px;
-      flex-grow: 1;
-    }
   }
 
-  .suggestions {
+  &-tag {
+    background-color: var(--primary);
+    color: black;
+    padding: 1px 3px;
+    margin: 2px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+  }
+
+  &-tag-close {
+    color: red;
+    margin-left: 4px;
+    cursor: pointer;
+  }
+
+  &-inputBox {
+    border: none;
+    outline: none;
+    padding: 4px;
+    margin: 4px;
+    flex-grow: 1;
+  }
+
+  &-suggestions {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -51,20 +47,20 @@
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-height: 150px;
     overflow-y: auto;
+  }
 
-    li {
-      padding: 8px;
-      cursor: pointer;
 
-      &:hover {
-        background-color: #f0f0f0;
-      }
+  &-suggestions-item {
+    padding: 3px;
+    cursor: pointer;
 
-      &.highlighted {
-        background-color: #e0e0e0;
-      }
+    &:hover {
+      background-color: #f0f0f0;
     }
+  }
+
+  &-suggestions-item-highlighted {
+    background-color: var(--primary);
   }
 }
