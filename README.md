@@ -1,10 +1,26 @@
 # learn-together
 ### TODO
-1. Make endpoints REST compliance
-2. Handle errors properly. Check [this](https://www.toptal.com/nodejs/node-js-error-handling)
-3. Implement notification system using websocket
-4. Add logger in backend
-5. Replace Minio with S3
-6. Use Nginx/Apache as reverve proxy
-7. Deploy and test
-8. Build CI/CD
+<ol>
+<li>
+Move minio to backend
+</li>
+<li>
+Handle errors properly and give proper alert
+</li>
+<li>
+Add logger in backend
+</li>
+<li>
+Replace Minio with S3
+</li>
+<li>
+Use Nginx/Apache as reverve proxy
+</li>
+<li>
+Deploy and test
+</li>
+<li>
+Build CI/CD
+</li>
+
+</ol>
