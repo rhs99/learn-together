@@ -7,7 +7,7 @@ import AuthContext from '../../store/auth';
 import Quill, { DeltaStatic } from 'quill';
 import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
 import Alert from '../../design-library/Alert/Alert';
-import Button from '../../design-library/Button';
+import Button from '../../design-library/Button/Button';
 
 import './_index.scss';
 
@@ -110,7 +110,9 @@ const AnswerInput = (props: AnswerInputProps) => {
         onChange={handleFileUpload}
       />
       <div className="btn-container">
-        <Button onClick={handlePostAnswer}>Save</Button>
+        <Button onClick={handlePostAnswer} variant="success">
+          Save
+        </Button>
       </div>
     </div>
   );

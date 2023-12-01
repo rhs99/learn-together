@@ -11,7 +11,7 @@ import AddClass from './AddClass';
 import AddSubject from './AddSubject';
 import AddChapter from './AddChapter';
 import Dropdown from '../../design-library/Dropdown/Dropdown';
-import Button from '../../design-library/Button';
+import Button from '../../design-library/Button/Button';
 
 import './_index.scss';
 
@@ -82,9 +82,7 @@ const Settings = () => {
       <div className="header">
         <h3>{settingsOptions.find((option) => option.value === currOption)?.label}</h3>
         <div ref={settingsRef} className="menu">
-          <Button className="menu-btn" onClick={() => setShowSettingsDropdown((prev) => !prev)}>
-            Settings
-          </Button>
+          <Button onClick={() => setShowSettingsDropdown((prev) => !prev)}>Settings</Button>
         </div>
       </div>
       <Dropdown

@@ -6,7 +6,7 @@ import Util from '../../utils';
 import axios from 'axios';
 import AuthContext from '../../store/auth';
 import ReactQuill from 'react-quill';
-import Button from '../../design-library/Button';
+import Button from '../../design-library/Button/Button';
 import Icon from '../../design-library/Icon';
 import Modal from '../../design-library/Modal/Modal';
 
@@ -221,12 +221,16 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
           title="Do you want to delete this question?"
           footer={
             <div style={{ display: 'flex', gap: '5px' }}>
-              <Button onClick={handleDeleteModalClose}>Cancel</Button>
-              <Button onClick={handleConfirmDelete}>Confirm</Button>
+              <Button onClick={handleDeleteModalClose} variant="secondary">
+                Cancel
+              </Button>
+              <Button onClick={handleConfirmDelete} variant="danger">
+                Confirm
+              </Button>
             </div>
           }
         >
-          <p style={{paddingLeft: '10px'}}>
+          <p style={{ paddingLeft: '10px' }}>
             Click <strong>Confirm</strong> to delete!
           </p>
         </Modal>

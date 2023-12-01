@@ -1,5 +1,5 @@
-import { useState, MouseEvent, useEffect, useRef } from 'react';
-import Button from '../../design-library/Button';
+import { useState, useEffect, useRef } from 'react';
+import Button from '../../design-library/Button/Button';
 import Icon from '../../design-library/Icon';
 import Dropdown from '../../design-library/Dropdown/Dropdown';
 
@@ -46,7 +46,9 @@ const SortOptions = ({ sortBy, sortOrder, handleSortOptionsChange, fetchSortedDa
   return (
     <div className="cl-SortOptions">
       <div ref={anchorEl}>
-        <Button onClick={() => setShowSortby((prev) => !prev)}>Sort By</Button>
+        <Button variant="secondary" onClick={() => setShowSortby((prev) => !prev)}>
+          Sort By
+        </Button>
       </div>
       <Dropdown
         anchorElement={anchorEl?.current}

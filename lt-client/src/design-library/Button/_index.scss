@@ -1,0 +1,28 @@
+.lt-Button {
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  border-radius: 4px;
+  border: none;
+
+  &-primary {
+    background-color: var(--primary);
+    color: black;
+  }
+
+  &-secondary {
+    padding: 0;
+    background: none;
+  }
+
+  &-danger {
+    background-color: #e74c3c;
+    color: #fff;
+
+  }
+
+  &-success {
+    background-color: #2ecc71;
+    color: #fff;
+  }
+}

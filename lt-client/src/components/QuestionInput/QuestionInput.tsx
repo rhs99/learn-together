@@ -8,8 +8,7 @@ import { Question } from '../../types';
 import AuthContext from '../../store/auth';
 import { Tag } from '../../types';
 import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
-import Button from '../../design-library/Button';
-// import TagInput from '../TagInput/TagInput';
+import Button from '../../design-library/Button/Button';
 import Alert from '../../design-library/Alert/Alert';
 import TagInput from '../TagInput/TagInput';
 
@@ -148,10 +147,10 @@ const QuestionInput = (props: QuestionInputProps) => {
         <input type="file" accept="image/*" multiple={false} onChange={handleFileUpload} />
       </div>
       <div className="btn-container">
-        <Button onClick={handleClose} className="close-btn">
+        <Button onClick={handleClose} variant="secondary">
           Close
         </Button>
-        <Button onClick={handleSave} className="save-btn">
+        <Button onClick={handleSave} variant="success">
           Save
         </Button>
       </div>

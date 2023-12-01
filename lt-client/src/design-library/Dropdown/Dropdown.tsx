@@ -36,7 +36,7 @@ const Dropdown = ({ options, onSelect, anchorElement, isShown, onClose, classNam
     <div className={`lt-Dropdown ${className}`} style={calculateDropdownPosition()}>
       <ul className="lt-Dropdown-options-list">
         {options.map((option, index) => (
-          <li className='lt-Dropdown-option' key={index} onClick={() => handleOptionClick(option)}>
+          <li className="lt-Dropdown-option" key={index} onClick={() => handleOptionClick(option)}>
             {Boolean(option.component) && option.component}
             {Boolean(option.label) && option.label}
           </li>

@@ -8,7 +8,7 @@ import SortOptions from '../../components/SortOptions/SortOptions';
 import { Tag } from '../../types';
 import QACard from '../../components/QACard/QACard';
 import Pagination from '../../components/Pagination/Pagination';
-import Button from '../../design-library/Button';
+import Button from '../../design-library/Button/Button';
 import Breadcrumbs from '../../components/Breadcrumbs/Breadcrumbs';
 import TagInput from '../../components/TagInput/TagInput';
 
@@ -105,7 +105,7 @@ const ChapterDetail = () => {
             onTagsChange={onTagsChange}
           />
         </div>
-        <Button disabled={!isLoggedIn} onClick={handleAskQuestion} className="ask-btn">
+        <Button disabled={!isLoggedIn} onClick={handleAskQuestion}>
           Ask Question
         </Button>
       </div>

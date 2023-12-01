@@ -27,10 +27,6 @@
     border: 1px solid #ccc;
     border-radius: 3px;
     outline: none;
-
-    &:focus {
-      border-color: #2c3e50;
-    }
   }
 
   select{
@@ -39,19 +35,14 @@
   
   button[type='submit'] {
     display: block;
-    width: 20%;
-    background-color: var(--secondary);
-    color: #fff;
+    background-color: rgb(168, 200, 212);
+    color: black;
     border: none;
     border-radius: 3px;
     font-size: 16px;
-    padding: 5px;
+    padding: 10px 20px;
     margin-top: 20px;
     cursor: pointer;
     margin-left: auto;
-
-    &:hover {
-      background-color: #1d2731;
-    }
   }
 }
