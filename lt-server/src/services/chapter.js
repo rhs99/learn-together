@@ -29,7 +29,12 @@ const getChapterBreadcrumb = async (id) => {
 const getChapters = async (subjectId) => {
     try {
         const chapters = await Chapter.find({ subject: subjectId });
-        return chapters;
+        const resp = chapters.map((chapter) => ({
+            _id: chapter._id,
+            name: chapter.name,
+            questionsCount: chapter.questions.length,
+        }));
+        return resp;
     } catch (e) {
         console.log(e.message);
     }

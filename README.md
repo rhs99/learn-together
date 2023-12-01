@@ -8,6 +8,9 @@ Move minio to backend
 Handle errors properly and give proper alert
 </li>
 <li>
+Optimize queries
+</li>
+<li>
 Add logger in backend
 </li>
 <li>

@@ -86,8 +86,8 @@ const getAllQuestions = async (body, query) => {
 
         if (filterBy === 'favourite') {
             q = { $and: [{ _id: { $in: chapter.questions } }, { _id: { $in: user.favourites } }] };
-        }else if(filterBy === 'mine'){
-            q['userName'] = {$eq: user.userName};
+        } else if (filterBy === 'mine') {
+            q['userName'] = { $eq: user.userName };
         }
 
         if (tagIds.length > 0) {
