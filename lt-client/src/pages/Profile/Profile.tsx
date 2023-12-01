@@ -24,12 +24,16 @@ const Profile = () => {
 
   return (
     <div className="lt-Profile">
-      <p>Username: {user.userName}</p>
-      <p>Class: {user.class}</p>
-      <p>Questions Asked: {user.questions}</p>
-      <p>Answers Given: {user.answers}</p>
-      <p>Up Votes: {user.upVote}</p>
-      <p>Down Votes: {user.downVote}</p>
+      <div>
+        <p>Questions: {user.questions}</p>
+        <p>Answers: {user.answers}</p>
+        <p>Up Votes: {user.upVote}</p>
+        <p>Down Votes: {user.downVote}</p>
+      </div>
+      <div>
+        <p>Username: {user.userName}</p>
+        <p>Class: {user.class || 'N/A'}</p>
+      </div>
     </div>
   );
 };

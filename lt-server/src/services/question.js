@@ -6,9 +6,11 @@ const User = require('../models/user');
 
 const addNewQuestion = async (body) => {
     try {
+        const user = await User.findById(body.user).exec();
+
         if (body._id !== '') {
             const question = await Question.findOne({ _id: body._id }).exec();
-            if (JSON.stringify(question.user) !== JSON.stringify(body.user)) {
+            if (question.userName !== user.userName) {
                 throw new Error('unauth');
             }
             question.details = body.details;
@@ -19,7 +21,6 @@ const addNewQuestion = async (body) => {
         }
 
         delete body._id;
-        const user = await User.findById(body.user).exec();
         delete body.user;
         body.userName = user.userName;
 
