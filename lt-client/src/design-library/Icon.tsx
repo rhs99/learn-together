@@ -14,6 +14,9 @@ const Icon = ({ name, size = 16, color = 'black', onClick, className, disabled }
     onClick: {
       cursor: 'pointer',
     },
+    disabled: {
+      cursor: 'not-allowed',
+    },
   };
   return (
     <svg
@@ -22,7 +25,7 @@ const Icon = ({ name, size = 16, color = 'black', onClick, className, disabled }
       height={size}
       onClick={disabled ? null : onClick}
       className={className}
-      style={onClick && !disabled ? styles.onClick : {}}
+      style={onClick && !disabled ? styles.onClick : disabled ? styles.disabled : {}}
     >
       <use xlinkHref={`${Icons}#icon-${name}`} />
     </svg>

@@ -1,0 +1,44 @@
+.lt-TooltipContainer {
+  position: relative;
+  margin: 0;
+
+  &-tooltip {
+    position: absolute;
+    color: rgb(10, 2, 156);
+    font-size: 0.9em;
+    padding: 1px;
+    border-radius: 1px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+
+    &.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    &.top {
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    &.bottom {
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    &.left {
+      top: 50%;
+      right: 100%;
+      transform: translateY(-50%);
+    }
+
+    &.right {
+      top: 50%;
+      left: 100%;
+      transform: translateY(-50%);
+    }
+  }
+}

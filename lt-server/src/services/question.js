@@ -43,8 +43,38 @@ const addNewQuestion = async (body) => {
 const getAllQuestions = async (body, query) => {
     const pageNumber = query.pageNumber || 1;
     const pageSize = query.pageSize || 5;
+    let key = 'createdAt',
+        val = -1;
+
+    if (query.sortBy && query.sortOrder) {
+        switch (query.sortBy) {
+            case 'upVote':
+                key = 'upVote';
+                break;
+            case 'downVote':
+                key = 'downVote';
+                break;
+            case 'time':
+                key = 'createdAt';
+                break;
+            case 'vote':
+                key = 'vote';
+                break;
+        }
+        switch (query.sortOrder) {
+            case 'desc':
+                val = -1;
+                break;
+            case 'asc':
+                val = 1;
+                break;
+        }
+    }
+    const sortOption = { [key]: val };
+    const filterBy = query.filterBy || 'all';
 
     try {
+        const user = await User.findById(body.user).exec();
         const chapter = await Chapter.findById(body.chapterId).exec();
         let tagIds = [];
 
@@ -52,37 +82,13 @@ const getAllQuestions = async (body, query) => {
             tagIds = body.tagIds.map((_id) => new mongoose.Types.ObjectId(_id));
         }
 
-        let key = 'createdAt',
-            val = -1;
+        let q = { _id: { $in: chapter.questions } };
 
-        if (query.sortBy && query.sortOrder) {
-            switch (query.sortBy) {
-                case 'upVote':
-                    key = 'upVote';
-                    break;
-                case 'downVote':
-                    key = 'downVote';
-                    break;
-                case 'time':
-                    key = 'createdAt';
-                    break;
-                case 'vote':
-                    key = 'vote';
-                    break;
-            }
-            switch (query.sortOrder) {
-                case 'desc':
-                    val = -1;
-                    break;
-                case 'asc':
-                    val = 1;
-                    break;
-            }
+        if (filterBy === 'favourite') {
+            q = { $and: [{ _id: { $in: chapter.questions } }, { _id: { $in: user.favourites } }] };
+        }else if(filterBy === 'mine'){
+            q['userName'] = {$eq: user.userName};
         }
-
-        const sortOption = { [key]: val };
-
-        const q = { _id: { $in: chapter.questions } };
 
         if (tagIds.length > 0) {
             q['tags._id'] = { $in: tagIds };
@@ -93,9 +99,25 @@ const getAllQuestions = async (body, query) => {
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
             .exec();
-        return { totalCount: chapter.questions.length, paginatedResults: allQuestions };
+
+        const searchResponse = allQuestions.map((question) => {
+            if (filterBy === 'favourite') {
+                return {
+                    ...question._doc,
+                    isFavourite: true,
+                };
+            }
+            const isPresent = user.favourites.some(
+                (questionId) => JSON.stringify(questionId) === JSON.stringify(question._id),
+            );
+            return {
+                ...question._doc,
+                isFavourite: isPresent,
+            };
+        });
+
+        return { totalCount: chapter.questions.length, paginatedResults: searchResponse };
     } catch (e) {
-        console.log(e);
         throw new Error(e);
     }
 };
@@ -136,4 +158,24 @@ const deleteQuestion = async (questionId, userId) => {
     }
 };
 
-module.exports = { addNewQuestion, getAllQuestions, getQuestion, deleteQuestion };
+const addToFavourite = async (body) => {
+    try {
+        const user = await User.findById(body.user).exec();
+        const isPresent = user.favourites.some(
+            (questionId) => JSON.stringify(questionId) === JSON.stringify(body.questionId),
+        );
+        if (!isPresent) {
+            user.favourites.push(body.questionId);
+        } else {
+            user.favourites = user.favourites.filter(
+                (questionId) => JSON.stringify(questionId) !== JSON.stringify(body.questionId),
+            );
+        }
+        await user.save();
+        return { favourite: !isPresent };
+    } catch (e) {
+        throw new Error(e);
+    }
+};
+
+module.exports = { addNewQuestion, getAllQuestions, getQuestion, deleteQuestion, addToFavourite };

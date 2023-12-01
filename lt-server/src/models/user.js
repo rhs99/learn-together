@@ -38,6 +38,12 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'Class',
     },
+    favourites: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: 'Question',
+        },
+    ],
     notifications: [
         {
             type: mongoose.Types.ObjectId,

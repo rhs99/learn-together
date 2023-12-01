@@ -2,6 +2,7 @@ const QuestionService = require('../services/question');
 
 const getAllQuestions = async (req, res) => {
     try {
+        req.body.user = req.user;
         const questions = await QuestionService.getAllQuestions(req.body, req.query);
         res.status(200).json(questions);
     } catch (e) {
@@ -37,4 +38,14 @@ const deleteQuestion = async (req, res) => {
     }
 };
 
-module.exports = { getAllQuestions, addNewQuestion, getQuestion, deleteQuestion };
+const addToFavourite = async (req, res) => {
+    try {
+        req.body.user = req.user;
+        const status = await QuestionService.addToFavourite(req.body);
+        res.status(200).json(status);
+    } catch (e) {
+        res.status(400).json({ message: e.message });
+    }
+};
+
+module.exports = { getAllQuestions, addNewQuestion, getQuestion, deleteQuestion, addToFavourite };

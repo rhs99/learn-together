@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, useCallback } from 'react';
+import { useEffect, useState, useContext, useCallback, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Util from '../../utils';
@@ -11,8 +11,10 @@ import Pagination from '../../components/Pagination/Pagination';
 import Button from '../../design-library/Button/Button';
 import Breadcrumbs from '../../components/Breadcrumbs/Breadcrumbs';
 import TagInput from '../../components/TagInput/TagInput';
+import Alert, { AlertProps } from '../../design-library/Alert/Alert';
 
 import './_index.scss';
+import FilterOptions from '../../components/FilterOptions/FilterOptions';
 
 const ChapterDetail = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -22,30 +24,48 @@ const ChapterDetail = () => {
   const [sortOrder, setSortOrder] = useState<string>('desc');
   const [paginationInfo, setPaginationInfo] = useState({ currPage: 1, totalPage: 1 });
   const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([]);
+  const [filterBy, setFilterBy] = useState('all');
+  const [alert, setAlert] = useState<AlertProps | null>(null);
 
   const navigate = useNavigate();
   const { chapterId } = useParams();
 
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, getStoredValue } = useContext(AuthContext);
+  const token = getStoredValue().token;
 
   const fetchQuestion = useCallback(() => {
     let queryString = '';
     queryString += `sortBy=${sortBy}`;
     queryString += `&sortOrder=${sortOrder}`;
+    queryString += `&filterBy=${filterBy}`;
     queryString += `&pageNumber=${paginationInfo.currPage}`;
 
     const URL = `${Util.CONSTANTS.SERVER_URL}/questions/search?${queryString}`;
     const selectedTagIds = selectedTags.filter((tag) => tag._id.length > 0).map((tag) => tag._id);
-    axios.post(URL, { chapterId, tagIds: selectedTagIds }).then(({ data }) => {
-      setQuestions(data.paginatedResults);
-      setPaginationInfo((prev) => {
-        return {
-          ...prev,
-          totalPage: Math.ceil(data.totalCount / 5),
-        };
+    const payload = {
+      chapterId,
+      tagIds: selectedTagIds,
+    };
+    axios
+      .post(URL, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(({ data }) => {
+        setQuestions(data.paginatedResults);
+        setPaginationInfo((prev) => {
+          return {
+            ...prev,
+            totalPage: Math.ceil(data.totalCount / 5),
+          };
+        });
+      })
+      .catch(() => {
+        setAlert({ type: 'error', message: 'Log in to view questions!' });
       });
-    });
-  }, [selectedTags, chapterId, paginationInfo.currPage, sortBy, sortOrder]);
+  }, [selectedTags, chapterId, paginationInfo.currPage, sortBy, sortOrder, filterBy, token]);
 
   useEffect(() => {
     fetchQuestion();
@@ -82,6 +102,10 @@ const ChapterDetail = () => {
     }
   };
 
+  const handleFilterOptionsChange = (value: string) => {
+    setFilterBy(value);
+  };
+
   const onTagsChange = (tags: Tag[]) => {
     setSelectedTags(tags);
   };
@@ -90,6 +114,7 @@ const ChapterDetail = () => {
 
   return (
     <div className="cl-ChapterDetail">
+      {alert && <Alert {...alert} />}
       <div className="heading">
         {breadcrumbs.length > 0 && (
           <Breadcrumbs
@@ -103,6 +128,7 @@ const ChapterDetail = () => {
           <TagInput
             suggestions={existingTags.map((tag) => ({ _id: tag._id, name: tag.name }))}
             onTagsChange={onTagsChange}
+            placeholder="Filter by tags..."
           />
         </div>
         <Button disabled={!isLoggedIn} onClick={handleAskQuestion}>
@@ -111,14 +137,17 @@ const ChapterDetail = () => {
       </div>
 
       <div className="sort-options">
-        {!isEmpty && (
-          <SortOptions
-            sortBy={sortBy}
-            sortOrder={sortOrder}
-            handleSortOptionsChange={handleSortOptionsChange}
-            fetchSortedData={fetchQuestion}
-          />
-        )}
+        <FilterOptions
+          filterBy={filterBy}
+          handleFilterOptionsChange={handleFilterOptionsChange}
+          fetchSortedData={fetchQuestion}
+        />
+        <SortOptions
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          handleSortOptionsChange={handleSortOptionsChange}
+          fetchSortedData={fetchQuestion}
+        />
       </div>
 
       {isEmpty && (

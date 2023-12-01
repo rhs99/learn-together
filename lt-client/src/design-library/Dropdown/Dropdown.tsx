@@ -13,9 +13,18 @@ type DropdownProps = {
   isShown: boolean;
   onClose: () => void;
   className?: string;
+  shift?: number;
 };
 
-const Dropdown = ({ options, onSelect, anchorElement, isShown, onClose, className = '' }: DropdownProps) => {
+const Dropdown = ({
+  options,
+  onSelect,
+  anchorElement,
+  isShown,
+  onClose,
+  className = '',
+  shift = 80,
+}: DropdownProps) => {
   const handleOptionClick = (option: Option) => {
     onSelect(option.value);
     onClose();
@@ -25,7 +34,7 @@ const Dropdown = ({ options, onSelect, anchorElement, isShown, onClose, classNam
     if (!anchorElement) return {};
 
     const rect = anchorElement.getBoundingClientRect();
-    return { top: rect.bottom, left: rect.left - 80 };
+    return { top: rect.bottom, left: rect.left - shift };
   };
 
   if (!isShown) {

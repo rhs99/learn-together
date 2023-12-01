@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import Button from '../../design-library/Button/Button';
 import Icon from '../../design-library/Icon';
 import Dropdown from '../../design-library/Dropdown/Dropdown';
+import Tooltip from '../../design-library/Tooltip/Tooltip';
 
 import './_index.scss';
 
@@ -61,13 +62,16 @@ const SortOptions = ({ sortBy, sortOrder, handleSortOptionsChange, fetchSortedDa
         onSelect={handleSortByClick}
         isShown={showSortby}
         onClose={() => setShowSortby(false)}
+        shift={40}
       />
       <span className="sortBy">{getName(sortBy)}</span>
-      <Icon
-        onClick={handleSortOrderClick}
-        name={sortOrder === 'desc' ? 'arrow-down-line' : 'arrow-up-line'}
-        size={18}
-      />
+      <Tooltip content={sortOrder}>
+        <Icon
+          onClick={handleSortOrderClick}
+          name={sortOrder === 'desc' ? 'arrow-down-line' : 'arrow-up-line'}
+          size={18}
+        />
+      </Tooltip>
     </div>
   );
 };

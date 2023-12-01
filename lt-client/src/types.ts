@@ -59,6 +59,7 @@ export type Question = {
   upVote: number;
   downVote: number;
   answers: string[];
+  isFavourite: boolean;
 };
 
 export type Breadcrumb = {

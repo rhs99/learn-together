@@ -6,9 +6,10 @@ import './_index.scss';
 interface TagInputProps {
   suggestions: Tag[];
   onTagsChange: (tags: Tag[]) => void;
+  placeholder?: string;
 }
 
-const TagInput = ({ suggestions, onTagsChange }: TagInputProps) => {
+const TagInput = ({ suggestions, onTagsChange, placeholder = 'Add tags...' }: TagInputProps) => {
   const [inputValue, setInputValue] = useState('');
   const [tags, setTags] = useState<Tag[]>([]);
   const [filteredSuggestions, setFilteredSuggestions] = useState<Tag[]>([]);
@@ -99,7 +100,7 @@ const TagInput = ({ suggestions, onTagsChange }: TagInputProps) => {
           value={inputValue}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          placeholder="Add tags..."
+          placeholder={placeholder}
           ref={inputRef}
         />
       </div>

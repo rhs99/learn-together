@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import './_index.scss';
 
-type AlertProps = {
+export type AlertProps = {
   type: 'success' | 'info' | 'warning' | 'error';
   message: string;
 };

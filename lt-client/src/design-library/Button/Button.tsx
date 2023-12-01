@@ -7,13 +7,14 @@ type ButtonType = 'primary' | 'secondary' | 'danger' | 'success';
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
   variant?: ButtonType;
+  disabled?: boolean;
 }
 
-const Button = ({ children, variant = 'primary', ...rest }: ButtonProps) => {
-  const buttonClassName = `lt-Button lt-Button-${variant}`;
+const Button = ({ children, variant = 'primary', disabled = false, ...rest }: ButtonProps) => {
+  const buttonClassName = `lt-Button lt-Button-${variant} lt-Button-${disabled ? 'disabled' : ''}`;
 
   return (
-    <button className={buttonClassName} {...rest}>
+    <button className={buttonClassName} disabled={disabled} {...rest}>
       {children}
     </button>
   );

@@ -9,6 +9,7 @@ import ReactQuill from 'react-quill';
 import Button from '../../design-library/Button/Button';
 import Icon from '../../design-library/Icon';
 import Modal from '../../design-library/Modal/Modal';
+import Tooltip from '../../design-library/Tooltip/Tooltip';
 
 import './_index.scss';
 
@@ -25,6 +26,7 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
   const [udCnt, setUdCnt] = useState({ upVote: item.upVote, downVote: item.downVote });
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [qOwner, setQOwner] = useState('');
+  const [isFavourite, setIsFavourite] = useState(isQuestion && (item as Question).isFavourite);
 
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
@@ -126,6 +128,25 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
     setOpenDeleteModal(true);
   };
 
+  const handleToggleFavourite = async () => {
+    if (!isQuestion) {
+      return;
+    }
+    const url = `${Util.CONSTANTS.SERVER_URL}/questions/favourite`;
+    const payload = {
+      questionId: item._id,
+    };
+
+    const { data } = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${authCtx.getStoredValue().token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    setIsFavourite(data.favourite);
+  };
+
   const deleteImageLocations = async () => {
     const images = item.imageLocations ? item.imageLocations : [];
     if (isQuestion) {
@@ -205,9 +226,18 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
         <span className="author">
           {`${isQuestion ? 'Asked' : 'Answered'} by`} <span className="user-name">{item.userName}</span>
         </span>
-        <Icon className="share" onClick={handleShareClick} name="share" />
-        <Icon className="edit" disabled={!isOwner} onClick={handleEdit} name="edit" />
-        <Icon className="delete" disabled={!isOwner && !isQOwner} onClick={handleDelete} name="delete" />
+        <Tooltip content="favourite">
+          <Icon color={isFavourite ? 'red' : 'black'} name="favourite" onClick={handleToggleFavourite} />
+        </Tooltip>
+        <Tooltip content="share">
+          <Icon onClick={handleShareClick} name="share" />
+        </Tooltip>
+        <Tooltip content="edit">
+          <Icon disabled={!isOwner} onClick={handleEdit} name="edit" />
+        </Tooltip>
+        <Tooltip content="delete">
+          <Icon disabled={!isOwner && !isQOwner} onClick={handleDelete} name="delete" />
+        </Tooltip>
       </div>
       {imageToShow.length > 0 && (
         <Modal isShown={imageToShow.length > 0} onClose={handleImageModalClose}>
