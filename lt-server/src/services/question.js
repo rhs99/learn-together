@@ -3,6 +3,7 @@ const Question = require('../models/question');
 const Answer = require('../models/answer');
 const Chapter = require('../models/chapter');
 const User = require('../models/user');
+const Utils = require('../common/utils');
 
 const addNewQuestion = async (body) => {
     try {
@@ -13,6 +14,11 @@ const addNewQuestion = async (body) => {
             if (question.userName !== user.userName) {
                 throw new Error('unauth');
             }
+
+            if (question.imageLocations.length > 0 && body.imageLocations.length > 0) {
+                Utils.deleteFile(question.imageLocations);
+            }
+
             question.details = body.details;
             question.imageLocations = body.imageLocations;
             question.tags = body.tags;
@@ -101,6 +107,10 @@ const getAllQuestions = async (body, query) => {
             .exec();
 
         const searchResponse = allQuestions.map((question) => {
+            question.imageLocations = question.imageLocations.map((fileName) => {
+                return Utils.getFileUrl(fileName);
+            });
+
             if (filterBy === 'favourite') {
                 return {
                     ...question._doc,
@@ -125,6 +135,9 @@ const getAllQuestions = async (body, query) => {
 const getQuestion = async (questionId) => {
     try {
         const question = await Question.findOne({ _id: questionId }).exec();
+        question.imageLocations = question.imageLocations.map((fileName) => {
+            return Utils.getFileUrl(fileName);
+        });
         return question;
     } catch (e) {
         console.log(e.message);
@@ -139,17 +152,23 @@ const deleteQuestion = async (questionId, userId) => {
         if (question.userName !== user.userName) {
             throw new Error('unauth');
         }
+        const allFiles = question.imageLocations;
         const promises = question.answers.map((_id) => {
-            return Answer.deleteOne({ _id: _id }).exec();
+            return Answer.findOneAndDelete({ _id: _id }).exec();
         });
-        await Promise.all(promises);
-
+        const answers = await Promise.all(promises);
+        answers.forEach((answer) => {
+            allFiles.push(...answer.imageLocations);
+        });
         const chapter = await Chapter.findById(question.chapter).exec();
         chapter.questions = chapter.questions.filter((item) => JSON.stringify(item) !== JSON.stringify(questionId));
         await chapter.save();
         user.questions = user.questions.filter((item) => JSON.stringify(item) !== JSON.stringify(questionId));
         await user.save();
         await Question.deleteOne({ _id: questionId }).exec();
+        if (allFiles.length > 0) {
+            Utils.deleteFile(allFiles);
+        }
     } catch (e) {
         console.log(e.message);
         if (e.message === 'unauth') {

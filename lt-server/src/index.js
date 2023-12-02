@@ -16,6 +16,7 @@ const questionRouter = require('./routes/question');
 const answerRouter = require('./routes/answer');
 const tagRouter = require('./routes/tag');
 const qaRouter = require('./routes/qavote');
+const uploader = require('./routes/upload');
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use('/questions', questionRouter);
 app.use('/answers', answerRouter);
 app.use('/tags', tagRouter);
 app.use('/votes', qaRouter);
+app.use('/upload', uploader);
 
 const server = http.createServer(app);
 

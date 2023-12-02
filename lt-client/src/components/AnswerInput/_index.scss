@@ -1,14 +1,10 @@
-.cl-AnswerInput{
-    .aHeader{
+.lt-AnswerInput{
+    &-header{
         margin-top: 10px;
     }
 
-    .file-input{
-        margin-top: 20px;
+    &-file-upload{
+        margin: 20px 0;
     }
 
-    .btn-container{
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
 }

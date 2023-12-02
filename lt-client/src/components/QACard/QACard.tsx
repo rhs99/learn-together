@@ -21,7 +21,7 @@ type QACardProps = {
 };
 
 const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACardProps) => {
-  const [fileData, setFileData] = useState<string[]>([]);
+  const [fileData, setFileData] = useState<string[]>(item.imageLocations);
   const [imageToShow, setImageToShow] = useState<string>('');
   const [udCnt, setUdCnt] = useState({ upVote: item.upVote, downVote: item.downVote });
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -40,33 +40,6 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
   const handleImageModalClose = () => {
     setImageToShow('');
   };
-
-  useEffect(() => {
-    if (item.imageLocations.length === 0) {
-      return;
-    }
-    Util.minioClient.getObject(Util.CONSTANTS.MINIO_BUCKET, item.imageLocations[0], (err: any, dataStream1: any) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      if (item.imageLocations.length > 1) {
-        Util.minioClient.getObject(
-          Util.CONSTANTS.MINIO_BUCKET,
-          item.imageLocations[1],
-          (err: any, dataStream2: any) => {
-            if (err) {
-              console.log(err);
-              return;
-            }
-            setFileData([dataStream1.url, dataStream2.url]);
-          }
-        );
-      } else {
-        setFileData([dataStream1.url]);
-      }
-    });
-  }, [item.imageLocations]);
 
   useEffect(() => {
     if (!isQuestion) {
@@ -147,24 +120,7 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
     setIsFavourite(data.favourite);
   };
 
-  const deleteImageLocations = async () => {
-    const images = item.imageLocations ? item.imageLocations : [];
-    if (isQuestion) {
-      const URL = `${Util.CONSTANTS.SERVER_URL}/answers?questionId=${item._id}`;
-      const { data } = await axios.get(URL);
-      if (data.length > 0) {
-        (data as Answer[]).forEach((answer) => {
-          if (answer.imageLocations?.length > 0) images.push(...answer.imageLocations);
-        });
-      }
-    }
-    images.forEach((image) => {
-      Util.deleteFile(image);
-    });
-  };
-
   const handleConfirmDelete = async () => {
-    await deleteImageLocations();
     const url = `${Util.CONSTANTS.SERVER_URL}/${isQuestion ? 'questions' : 'answers'}/${item._id}`;
     axios
       .delete(url, {

@@ -1,6 +1,7 @@
 const Answer = require('../models/answer');
 const Question = require('../models/question');
 const User = require('../models/user');
+const Utils = require('../common/utils');
 
 const connectedUsers = require('../common/connected-users');
 
@@ -14,6 +15,9 @@ const addNewAnswer = async (body) => {
             answer = await Answer.findOne({ _id: body._id }).exec();
             if (answer.userName !== user.userName) {
                 throw new Error('unauthorized');
+            }
+            if (answer.imageLocations.length > 0 && body.imageLocations.length > 0) {
+                Utils.deleteFile(answer.imageLocations);
             }
             answer.details = body.details;
             answer.imageLocations = body.imageLocations;
@@ -61,7 +65,15 @@ const getAnswer = async (answerId) => {
 const getAllAnswers = async (questionId) => {
     try {
         const answers = await Answer.find({ question: questionId }).exec();
-        return answers;
+        const resp = answers.map((answer) => {
+            answer.imageLocations = answer.imageLocations.map((fileName) => {
+                return Utils.getFileUrl(fileName);
+            });
+            return {
+                ...answer._doc,
+            };
+        });
+        return resp;
     } catch (e) {
         console.log(e.message);
     }
@@ -76,12 +88,12 @@ const deleteAnswer = async (answerId, userId) => {
         if (answer.userName !== user.userName && question.userName !== user.userName) {
             throw new Error('unauth');
         }
-
         question.answers = question.answers.filter((q) => JSON.stringify(q) !== JSON.stringify(answer._id));
         await question.save();
         user.answers = user.answers.filter((item) => JSON.stringify(item) !== JSON.stringify(answerId));
         await user.save();
         await Answer.deleteOne({ _id: answerId }).exec();
+        Utils.deleteFile(answer.imageLocations);
     } catch (e) {
         console.log(e.message);
         if (e.message === 'unauth') {

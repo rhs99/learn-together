@@ -11,6 +11,7 @@ import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
 import Button from '../../design-library/Button/Button';
 import Alert from '../../design-library/Alert/Alert';
 import TagInput from '../TagInput/TagInput';
+import FileUploader from '../FileUploader/FileUploader';
 
 import './_index.scss';
 
@@ -27,7 +28,6 @@ const QuestionInput = (props: QuestionInputProps) => {
   const [existingTags, setExistingTags] = useState<Tag[]>([]);
   const [editor, setEditor] = useState<Quill>();
   const [showAlert, setShowAlert] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
 
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
@@ -37,22 +37,10 @@ const QuestionInput = (props: QuestionInputProps) => {
     axios.get(URL).then((data) => setExistingTags(data.data));
   }, [props.chapterId]);
 
-  const setImageLocations = (image: string) => {
+  const setImageLocations = (images: string[]) => {
     _setImageLocations((prev) => {
-      return [...prev, image];
+      return [...prev, ...images];
     });
-  };
-
-  const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
-    setIsUploading(true);
-    props.question?.imageLocations?.forEach((image) => {
-      Util.deleteFile(image);
-    });
-    if (event.target.files) {
-      const file = event.target.files[0];
-      await Util.uploadFile(file, setImageLocations);
-    }
-    setIsUploading(false);
   };
 
   const handleSave = async () => {
@@ -143,9 +131,7 @@ const QuestionInput = (props: QuestionInputProps) => {
           onTagsChange={onTagsChange}
         />
       </div>
-      <div className="file-upload">
-        <input type="file" accept="image/*" multiple={false} onChange={handleFileUpload} />
-      </div>
+      <FileUploader onUploadComplete={setImageLocations} className="file-upload" />
       <div className="btn-container">
         <Button onClick={handleClose} variant="secondary">
           Close
@@ -154,7 +140,6 @@ const QuestionInput = (props: QuestionInputProps) => {
           Save
         </Button>
       </div>
-      {isUploading && <p>Loading...</p>}
     </div>
   );
 };

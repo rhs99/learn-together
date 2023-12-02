@@ -2,9 +2,6 @@
 ### TODO
 <ol>
 <li>
-Move minio to backend
-</li>
-<li>
 Handle errors properly and give proper alert
 </li>
 <li>

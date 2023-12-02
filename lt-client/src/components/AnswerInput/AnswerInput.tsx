@@ -8,6 +8,7 @@ import Quill, { DeltaStatic } from 'quill';
 import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
 import Alert from '../../design-library/Alert/Alert';
 import Button from '../../design-library/Button/Button';
+import FileUploader from '../FileUploader/FileUploader';
 
 import './_index.scss';
 
@@ -26,24 +27,10 @@ const AnswerInput = (props: AnswerInputProps) => {
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const setImageLocations = (image: string) => {
+  const setImageLocations = (images: string[]) => {
     _setImageLocations((prev) => {
-      return [...prev, image];
+      return [...prev, ...images];
     });
-  };
-
-  const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
-    setIsUploading(true);
-    props.answer.imageLocations?.forEach((image) => {
-      Util.deleteFile(image);
-    });
-    if (event.target.files) {
-      await Util.uploadFile(event.target.files[0], setImageLocations);
-      if (event.target.files.length > 1) {
-        await Util.uploadFile(event.target.files[1], setImageLocations);
-      }
-    }
-    setIsUploading(false);
   };
 
   const handlePostAnswer = async () => {
@@ -94,26 +81,17 @@ const AnswerInput = (props: AnswerInputProps) => {
   );
 
   return (
-    <div className="cl-AnswerInput">
+    <div className="lt-AnswerInput">
       {showAlert && <Alert type="error" message="Answer description and files both cannot be empty!" />}
       {isUploading && <p>Loading...</p>}
-      <div className="aHeader">
+      <div className="lt-AnswerInput-header">
         <h3>Your Answer</h3>
       </div>
       <QuillTextEditor onEditorReady={onEditorReady} />
-      <input
-        className="file-input"
-        type="file"
-        accept="image/*"
-        multiple
-        ref={(ref) => setInputRef(ref)}
-        onChange={handleFileUpload}
-      />
-      <div className="btn-container">
-        <Button onClick={handlePostAnswer} variant="success">
-          Save
-        </Button>
-      </div>
+      <FileUploader onUploadComplete={setImageLocations} multiple={true} className="lt-AnswerInput-file-upload" />
+      <Button onClick={handlePostAnswer} variant="success">
+        Save
+      </Button>
     </div>
   );
 };

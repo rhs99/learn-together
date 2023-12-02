@@ -37,8 +37,6 @@ const hasAdminPrivilege = async (req, res, next) => {
         }
     }
 
-    console.log(isAdmin);
-
     if (isAdmin) {
         next();
     } else {
