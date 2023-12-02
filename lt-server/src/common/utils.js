@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 
-const privateKey = '69h441HbITlmUTQJ5atXpJ7Givt1utqjeSf3VrNNUfY=';
+const privateKey = process.env.SECRET_KEY;
 
 const createToken = (data) => {
     const token = jwt.sign(data, privateKey);

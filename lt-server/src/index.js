@@ -4,9 +4,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+require('dotenv').config();
 
 const connectedUsers = require('./common/connected-users');
-
 const classRouter = require('./routes/class');
 const privilegeRouter = require('./routes/privilege');
 const subjectRouter = require('./routes/subject');
@@ -49,7 +49,7 @@ wss.on('connection', (socket, req) => {
     }
 });
 
-const PORT = 5000;
+const PORT = process.env.PORT;
 try {
     server.listen(PORT, () => {
         console.log(`Connected successfully on port ${PORT}`);
@@ -60,7 +60,7 @@ try {
     }
 }
 
-const DB_URL = 'mongodb://mongo:27017/lt-db';
+const DB_URL = process.env.MONGODB_URI;
 
 const connectDB = async () => {
     try {

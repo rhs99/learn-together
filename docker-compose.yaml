@@ -13,6 +13,8 @@ services:
   lt-server:
     build: ./lt-server
     container_name: lt-server
+    env_file:
+      - ./lt-server/.env
     ports:
       - "5000:5000"
     volumes:

@@ -2,11 +2,15 @@ const mongoose = require('mongoose');
 const Privilege = require('../models/privilege');
 const User = require('../models/user');
 
-const DB_URL = 'mongodb://mongo:27017/lt-db';
+const DB_URL = process.env.MONGODB_URI;
 
 const createAdminPrivilege = async () => {
     try {
-        let adminPrivilege = new Privilege({ name: 'admin' });
+        let adminPrivilege = await Privilege.findOne({ name: 'admin' }).exec();
+        if (adminPrivilege) {
+            return adminPrivilege;
+        }
+        adminPrivilege = new Privilege({ name: 'admin' });
         adminPrivilege = await adminPrivilege.save();
         return adminPrivilege;
     } catch (error) {
@@ -21,9 +25,9 @@ const createAdminUser = async () => {
         const adminPrivilege = await createAdminPrivilege();
 
         const superUser = new User({
-            userName: 'admin',
-            email: 'learntogether3009@gmail.com',
-            password: '123',
+            userName: process.env.ADMIN_USERNAME,
+            email: process.env.ADMIN_EMAIL,
+            password: process.env.ADMIN_PASSWORD,
             privileges: [adminPrivilege._id],
         });
         await superUser.save();
