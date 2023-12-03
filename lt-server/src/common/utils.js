@@ -3,6 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const Config = require('../config');
+const fs = require('fs');
 
 const privateKey = process.env.SECRET_KEY;
 
@@ -55,19 +56,19 @@ const sendEmail = async (email, subject, text) => {
     }
 };
 
-const uploadFile = async (file, cb) => {
+const uploadFile = async (filePath, fileName, cb) => {
     const metaData = {
         'Content-Type': 'application/octet-stream',
     };
 
-    const fileStream = Buffer.from(file.buffer);
-    const uniqueName = uuid() + file.originalname;
+    const fileStream = fs.createReadStream(filePath);
 
-    minioClient.putObject(Config.MINIO_BUCKET, uniqueName, fileStream, metaData, (err, etag) => {
+    minioClient.putObject(Config.MINIO_BUCKET, fileName, fileStream, metaData, (err, etag) => {
+        fs.unlinkSync(filePath);
         if (err) {
             cb(err, null);
         }
-        cb(null, { fileName: uniqueName });
+        cb(null, { fileName: fileName });
     });
 };
 
@@ -91,4 +92,13 @@ const uuid = () => {
     return uuidv4();
 };
 
-module.exports = { createToken, createTokenForPassword, verityToken, sendEmail, uploadFile, getFileUrl, deleteFile };
+module.exports = {
+    createToken,
+    createTokenForPassword,
+    verityToken,
+    sendEmail,
+    uploadFile,
+    getFileUrl,
+    deleteFile,
+    uuid,
+};

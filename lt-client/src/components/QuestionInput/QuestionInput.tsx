@@ -12,6 +12,7 @@ import Button from '../../design-library/Button/Button';
 import Alert from '../../design-library/Alert/Alert';
 import TagInput from '../TagInput/TagInput';
 import FileUploader from '../FileUploader/FileUploader';
+import useFileUploader from '../../hooks/file-uploader';
 
 import './_index.scss';
 
@@ -24,24 +25,20 @@ const QuestionInput = (props: QuestionInputProps) => {
   const [tags, setTags] = useState<Tag[]>(
     props.question ? props.question.tags.map((tag) => ({ _id: tag._id, name: tag.name })) : []
   );
-  const [imageLocations, _setImageLocations] = useState<string[]>([]);
   const [existingTags, setExistingTags] = useState<Tag[]>([]);
   const [editor, setEditor] = useState<Quill>();
   const [showAlert, setShowAlert] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const { handleFileChange, handleUpload } = useFileUploader();
 
   useEffect(() => {
     const URL = `${Util.CONSTANTS.SERVER_URL}/tags?chapterId=${props.chapterId}`;
     axios.get(URL).then((data) => setExistingTags(data.data));
   }, [props.chapterId]);
-
-  const setImageLocations = (images: string[]) => {
-    _setImageLocations((prev) => {
-      return [...prev, ...images];
-    });
-  };
 
   const handleSave = async () => {
     const description = editor?.getContents();
@@ -51,6 +48,8 @@ const QuestionInput = (props: QuestionInputProps) => {
       setShowAlert(true);
       return;
     }
+
+    const imageLocations = await handleUpload();
 
     const tagURL = `${Util.CONSTANTS.SERVER_URL}/tags`;
     const question = {
@@ -131,7 +130,7 @@ const QuestionInput = (props: QuestionInputProps) => {
           onTagsChange={onTagsChange}
         />
       </div>
-      <FileUploader onUploadComplete={setImageLocations} className="file-upload" />
+      <FileUploader handleFileChange={handleFileChange} className="file-upload" />
       <div className="btn-container">
         <Button onClick={handleClose} variant="secondary">
           Close

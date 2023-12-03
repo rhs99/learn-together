@@ -5,15 +5,18 @@ const Utils = require('../common/utils');
 
 const router = express.Router();
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage, limits: { files: 1 } });
+const storage = multer.diskStorage({
+    filename: function (req, file, cb) {
+        cb(null, file.originalname + '-' + Utils.uuid());
+    },
+});
+
+const upload = multer({ storage: storage });
 
 router.post('/', extractAndVerifyToken, upload.array('files', 1), (req, res) => {
-    if (!req.files || req.files.length === 0) {
-        return res.status(400).json({ message: 'No files uploaded.' });
+    if (!req.files || req.files.length !== 1) {
+        res.status(400).json({ msg: 'Upload a single file' });
     }
-
-    const file = req.files[0];
 
     const cb = (err, result) => {
         if (err) {
@@ -22,7 +25,9 @@ router.post('/', extractAndVerifyToken, upload.array('files', 1), (req, res) => 
             res.status(200).json(result);
         }
     };
-    Utils.uploadFile(file, cb);
+
+    const file = req.files[0];
+    Utils.uploadFile(file.path, file.filename, cb);
 });
 
 module.exports = router;

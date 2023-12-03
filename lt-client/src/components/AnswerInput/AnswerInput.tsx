@@ -9,6 +9,7 @@ import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
 import Alert from '../../design-library/Alert/Alert';
 import Button from '../../design-library/Button/Button';
 import FileUploader from '../FileUploader/FileUploader';
+import useFileUploader from '../../hooks/file-uploader';
 
 import './_index.scss';
 
@@ -18,26 +19,22 @@ type AnswerInputProps = {
 };
 
 const AnswerInput = (props: AnswerInputProps) => {
-  const [imageLocations, _setImageLocations] = useState<string[]>([]);
   const [editor, setEditor] = useState<Quill>();
-  const [inputRef, setInputRef] = useState<HTMLInputElement | null>();
+  const [isLoading, setIsLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
 
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const setImageLocations = (images: string[]) => {
-    _setImageLocations((prev) => {
-      return [...prev, ...images];
-    });
-  };
+  const { handleFileChange, handleUpload } = useFileUploader();
 
   const handlePostAnswer = async () => {
     const description = editor?.getContents();
     const text = editor?.getText() || '';
 
-    if (text.trim().length === 0 && imageLocations.length === 0) {
+    const imageLocations = await handleUpload();
+
+    if (text.trim().length === 0 && imageLocations?.length === 0) {
       setShowAlert(true);
       return;
     }
@@ -62,10 +59,6 @@ const AnswerInput = (props: AnswerInputProps) => {
     } else if (props.fetchAnswer) {
       props.fetchAnswer().then(() => {
         if (editor) editor.setContents({} as DeltaStatic);
-        _setImageLocations([]);
-        if (inputRef) {
-          inputRef.value = '';
-        }
       });
     }
   };
@@ -83,12 +76,11 @@ const AnswerInput = (props: AnswerInputProps) => {
   return (
     <div className="lt-AnswerInput">
       {showAlert && <Alert type="error" message="Answer description and files both cannot be empty!" />}
-      {isUploading && <p>Loading...</p>}
       <div className="lt-AnswerInput-header">
         <h3>Your Answer</h3>
       </div>
       <QuillTextEditor onEditorReady={onEditorReady} />
-      <FileUploader onUploadComplete={setImageLocations} multiple={true} className="lt-AnswerInput-file-upload" />
+      <FileUploader handleFileChange={handleFileChange} multiple={true} className="lt-AnswerInput-file-upload" />
       <Button onClick={handlePostAnswer} variant="success">
         Save
       </Button>

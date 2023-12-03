@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const Privilege = require('../models/privilege');
 const User = require('../models/user');
+const Class = require('../models/class');
+const Subject = require('../models/subject');
+const Chapter = require('../models/chapter');
 
 const DB_URL = process.env.MONGODB_URI;
 
@@ -19,7 +22,22 @@ const createAdminPrivilege = async () => {
     }
 };
 
-const createAdminUser = async () => {
+const createOneClassSubjectChapter = async () => {
+    try {
+        let cls = new Class({ name: '8' });
+        cls = await cls.save();
+
+        let subject = new Subject({ name: 'Math', class: cls._id });
+        subject = await subject.save();
+
+        let chapter = new Chapter({ name: 'Geometry', subject: subject._id });
+        await chapter.save();
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const setup = async () => {
     try {
         await mongoose.connect(DB_URL);
         const adminPrivilege = await createAdminPrivilege();
@@ -32,10 +50,19 @@ const createAdminUser = async () => {
         });
         await superUser.save();
 
+        const testUser = new User({
+            userName: 'test',
+            email: 'test@gmail.com',
+            password: '123',
+        });
+        await testUser.save();
+
+        await createOneClassSubjectChapter();
+
         mongoose.disconnect();
     } catch (error) {
         console.log(error);
     }
 };
 
-createAdminUser();
+setup();
