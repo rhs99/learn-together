@@ -11,7 +11,7 @@ import Pagination from '../../components/Pagination/Pagination';
 import Button from '../../design-library/Button/Button';
 import Breadcrumbs from '../../components/Breadcrumbs/Breadcrumbs';
 import TagInput from '../../components/TagInput/TagInput';
-import Alert, { AlertProps } from '../../design-library/Alert/Alert';
+import Alert from '../../design-library/Alert/Alert';
 
 import './_index.scss';
 import FilterOptions from '../../components/FilterOptions/FilterOptions';
@@ -25,7 +25,7 @@ const ChapterDetail = () => {
   const [paginationInfo, setPaginationInfo] = useState({ currPage: 1, totalPage: 1 });
   const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([]);
   const [filterBy, setFilterBy] = useState('all');
-  const [alert, setAlert] = useState<AlertProps | null>(null);
+  const [alert, setAlert] = useState<any>(null);
 
   const navigate = useNavigate();
   const { chapterId } = useParams();
@@ -114,7 +114,9 @@ const ChapterDetail = () => {
 
   return (
     <div className="cl-ChapterDetail">
-      {alert && <Alert {...alert} />}
+      {alert && (
+        <Alert type={alert.type} message={alert.message} isShown={Boolean(alert)} handleClose={() => setAlert(null)} />
+      )}
       <div className="heading">
         {breadcrumbs.length > 0 && (
           <Breadcrumbs

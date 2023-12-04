@@ -13,6 +13,7 @@ import Alert from '../../design-library/Alert/Alert';
 import TagInput from '../TagInput/TagInput';
 import FileUploader from '../FileUploader/FileUploader';
 import useFileUploader from '../../hooks/file-uploader';
+import Spinner from '../../design-library/Spinner/Spinner';
 
 import './_index.scss';
 
@@ -43,14 +44,12 @@ const QuestionInput = (props: QuestionInputProps) => {
   const handleSave = async () => {
     const description = editor?.getContents();
     const text = editor?.getText() || '';
-
     if (text.trim().length === 0 || tags.length === 0) {
       setShowAlert(true);
       return;
     }
-
+    setIsLoading(true);
     const imageLocations = await handleUpload();
-
     const tagURL = `${Util.CONSTANTS.SERVER_URL}/tags`;
     const question = {
       _id: props.question?._id || '',
@@ -89,6 +88,7 @@ const QuestionInput = (props: QuestionInputProps) => {
       },
     });
 
+    setIsLoading(false);
     navigate(`/chapters/${props.chapterId}`);
   };
 
@@ -116,7 +116,15 @@ const QuestionInput = (props: QuestionInputProps) => {
 
   return (
     <div className="cl-QuestionInput">
-      {showAlert && <Alert type="error" message="Question description and tags cannot be empty!" />}
+      {showAlert && (
+        <Alert
+          type="error"
+          message="Question description and tags cannot be empty!"
+          isShown={showAlert}
+          handleClose={() => setShowAlert(false)}
+        />
+      )}
+      {isLoading && <Spinner isLoading={isLoading} />}
       <div className="description-heading">
         <h3>Write Question Description</h3>
       </div>

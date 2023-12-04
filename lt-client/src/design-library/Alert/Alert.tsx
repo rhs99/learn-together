@@ -2,29 +2,24 @@ import { useState } from 'react';
 
 import './_index.scss';
 
-export type AlertProps = {
+type AlertProps = {
   type: 'success' | 'info' | 'warning' | 'error';
   message: string;
+  handleClose: () => void;
+  isShown: boolean;
 };
 
-const Alert = ({ type, message }: AlertProps) => {
-  const [isClosed, setIsClosed] = useState(false);
-
-  const handleClose = () => {
-    setIsClosed(true);
-  };
-
+const Alert = ({ type, message, handleClose, isShown }: AlertProps) => {
+  if (!isShown) {
+    return null;
+  }
   return (
-    <>
-      {!isClosed && (
-        <div className={`lt-Alert lt-Alert-${type}`}>
-          {message}
-          <span className="lt-Alert-close-btn" onClick={handleClose}>
-            &times;
-          </span>
-        </div>
-      )}
-    </>
+    <div className={`lt-Alert lt-Alert-${type}`}>
+      {message}
+      <span className="lt-Alert-close-btn" onClick={handleClose}>
+        &times;
+      </span>
+    </div>
   );
 };
 

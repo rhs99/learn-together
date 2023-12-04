@@ -36,7 +36,14 @@ function ForgotPasswordPage() {
 
   return (
     <div className="cl-ForgotPassword" onSubmit={handleSubmit}>
-      {showAlert && <Alert type="info" message="A password reset link has been sent to your email" />}
+      {showAlert && (
+        <Alert
+          type="info"
+          message="A password reset link has been sent to your email"
+          handleClose={() => setShowAlert(false)}
+          isShown={showAlert}
+        />
+      )}
       <h4>Forgot Password</h4>
       <form method="POST" className="form-container">
         <label>Username:</label>

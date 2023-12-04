@@ -10,6 +10,7 @@ import Alert from '../../design-library/Alert/Alert';
 import Button from '../../design-library/Button/Button';
 import FileUploader from '../FileUploader/FileUploader';
 import useFileUploader from '../../hooks/file-uploader';
+import Spinner from '../../design-library/Spinner/Spinner';
 
 import './_index.scss';
 
@@ -33,11 +34,13 @@ const AnswerInput = (props: AnswerInputProps) => {
     const text = editor?.getText() || '';
 
     const imageLocations = await handleUpload();
-
-    if (text.trim().length === 0 && imageLocations?.length === 0) {
+    if (text.trim().length === 0 && (!imageLocations || imageLocations.length === 0)) {
       setShowAlert(true);
+      setIsLoading(false);
       return;
     }
+
+    setIsLoading(true);
 
     const answer: Partial<Answer> = {
       _id: props.answer._id,
@@ -55,12 +58,14 @@ const AnswerInput = (props: AnswerInputProps) => {
     });
 
     if (props.answer._id !== '') {
+      setIsLoading(false);
       navigate(-1);
     } else if (props.fetchAnswer) {
       props.fetchAnswer().then(() => {
         if (editor) editor.setContents({} as DeltaStatic);
       });
     }
+    setIsLoading(false);
   };
 
   const onEditorReady = useCallback(
@@ -75,7 +80,15 @@ const AnswerInput = (props: AnswerInputProps) => {
 
   return (
     <div className="lt-AnswerInput">
-      {showAlert && <Alert type="error" message="Answer description and files both cannot be empty!" />}
+      {showAlert && (
+        <Alert
+          isShown={showAlert}
+          handleClose={() => setShowAlert(false)}
+          type="error"
+          message="Answer description and files both cannot be empty!"
+        />
+      )}
+      {isLoading && <Spinner isLoading={isLoading} />}
       <div className="lt-AnswerInput-header">
         <h3>Your Answer</h3>
       </div>
