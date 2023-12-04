@@ -13,7 +13,7 @@
         width: 12%;
         margin-left: 15px;
 
-        box-shadow: 2px 0px lightblue;
+        box-shadow: 1px 1px lightblue;
 
         .UD-container {
             display: flex;
@@ -27,8 +27,12 @@
             .tag {
                 color: rgb(24, 177, 70);
                 margin-bottom: 10px;
-                font-size: 0.9em;
+                font-size: 1em;
             }
+        }
+
+        .info{
+            font-size: 0.9em;
         }
 
         @media only screen and (max-width: 780px) {
@@ -82,7 +86,6 @@
 
 
     .bottom-pane {
-        margin-top: 20px;
         display: flex;
         flex-direction: row;
         justify-content: flex-end;
@@ -94,6 +97,11 @@
                 color: rgb(25, 165, 178);
             }
         }
+    }
+
+    .ql-tooltip{
+        height: 0;
+        width: 0;
     }
 
 }

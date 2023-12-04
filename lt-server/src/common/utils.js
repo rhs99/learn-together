@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const Config = require('../config');
 const fs = require('fs');
+const sharp = require('sharp');
 
 const privateKey = process.env.SECRET_KEY;
 
@@ -61,7 +62,7 @@ const uploadFile = async (filePath, fileName, cb) => {
         'Content-Type': 'application/octet-stream',
     };
 
-    const fileStream = fs.createReadStream(filePath);
+    const fileStream = await sharp(filePath).resize({ width: 600 }).webp({ minSize: true, loop: 1 }).toBuffer();
 
     minioClient.putObject(Config.MINIO_BUCKET, fileName, fileStream, metaData, (err, etag) => {
         fs.unlinkSync(filePath);

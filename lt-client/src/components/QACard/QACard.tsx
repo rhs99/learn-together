@@ -21,7 +21,6 @@ type QACardProps = {
 };
 
 const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACardProps) => {
-  const [fileData, setFileData] = useState<string[]>(item.imageLocations);
   const [imageToShow, setImageToShow] = useState<string>('');
   const [udCnt, setUdCnt] = useState({ upVote: item.upVote, downVote: item.downVote });
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -171,11 +170,13 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
           <div className={detailsClassName} onClick={detailsOnClick}>
             <ReactQuill value={item.details} readOnly={true} theme={'bubble'} />
           </div>
-          <div className="imageContainer">
-            {fileData.map((file, index) => (
-              <img key={index} src={file} className="image" onClick={() => handleImageModalOpen(file)} />
-            ))}
-          </div>
+          {item.imageLocations.length > 0 && (
+            <div className="imageContainer">
+              {item.imageLocations.map((file, index) => (
+                <img key={index} src={file} className="image" onClick={() => handleImageModalOpen(file)} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
       <div className="bottom-pane">

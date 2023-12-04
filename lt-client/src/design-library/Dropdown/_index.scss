@@ -13,7 +13,7 @@
     }
 
     &-option {
-        padding: 5px;
+        padding: 5px 10px;
         cursor: pointer;
         display: flex;
         flex-direction: row;
@@ -23,6 +23,10 @@
         &:hover {
             background-color: #f0f0f0;
         }
+    }
+
+    &-option-item{
+        font-size: 0.8em;
     }
 
 }

@@ -32,7 +32,7 @@ const Settings = () => {
 
     const URL = `${Util.CONSTANTS.SERVER_URL}/users/${userName}`;
     axios.get(URL).then(({ data }) => {
-      data.privileges.forEach((privilege: Privilege) => {
+      data.privileges?.forEach((privilege: Privilege) => {
         if (privilege.name === 'admin') {
           setHasAdminPrivilege(true);
           return;

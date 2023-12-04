@@ -47,7 +47,7 @@ const Dropdown = ({
         {options.map((option, index) => (
           <li className="lt-Dropdown-option" key={index} onClick={() => handleOptionClick(option)}>
             {Boolean(option.component) && option.component}
-            {Boolean(option.label) && option.label}
+            {Boolean(option.label) && <span className="lt-Dropdown-option-item">{option.label}</span>}
           </li>
         ))}
       </ul>

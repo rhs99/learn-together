@@ -7,7 +7,7 @@ const router = express.Router();
 
 const storage = multer.diskStorage({
     filename: function (req, file, cb) {
-        cb(null, file.originalname + '-' + Utils.uuid());
+        cb(null, Utils.uuid() + '.webp');
     },
 });
 
