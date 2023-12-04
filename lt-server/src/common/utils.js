@@ -62,15 +62,18 @@ const uploadFile = async (filePath, fileName, cb) => {
         'Content-Type': 'application/octet-stream',
     };
 
-    const fileStream = await sharp(filePath).resize({ width: 600 }).webp({ minSize: true, loop: 1 }).toBuffer();
-
-    minioClient.putObject(Config.MINIO_BUCKET, fileName, fileStream, metaData, (err, etag) => {
-        fs.unlinkSync(filePath);
-        if (err) {
-            cb(err, null);
-        }
-        cb(null, { fileName: fileName });
-    });
+    try {
+        const fileStream = await sharp(filePath).resize({ width: 600 }).webp({ minSize: true, loop: 1 }).toBuffer();
+        minioClient.putObject(Config.MINIO_BUCKET, fileName, fileStream, metaData, (err, etag) => {
+            fs.unlinkSync(filePath);
+            if (err) {
+                cb(err, null);
+            }
+            cb(null, { fileName: fileName });
+        });
+    } catch (err) {
+        cb(err, null);
+    }
 };
 
 const getFileUrl = (fileName) => {

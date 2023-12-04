@@ -66,9 +66,9 @@ const ChapterDetail = () => {
         });
       })
       .catch(() => {
-        setAlert({ type: 'error', message: 'Log in to view questions!' });
+        setAlert({ type: 'error', message: 'Something went wrong!' });
       });
-  }, [selectedTags, chapterId, paginationInfo.currPage, sortBy, sortOrder, filterBy, token]);
+  }, [selectedTags, chapterId, sortBy, sortOrder, filterBy, token]);
 
   useEffect(() => {
     fetchQuestion();
