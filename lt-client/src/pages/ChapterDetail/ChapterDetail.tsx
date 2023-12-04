@@ -16,6 +16,8 @@ import Alert from '../../design-library/Alert/Alert';
 import './_index.scss';
 import FilterOptions from '../../components/FilterOptions/FilterOptions';
 
+const PAGE_SIZE = 10;
+
 const ChapterDetail = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [existingTags, setExistingTags] = useState<Tag[]>([]);
@@ -39,6 +41,7 @@ const ChapterDetail = () => {
     queryString += `&sortOrder=${sortOrder}`;
     queryString += `&filterBy=${filterBy}`;
     queryString += `&pageNumber=${paginationInfo.currPage}`;
+    queryString += `&pageSize=${PAGE_SIZE}`;
 
     const URL = `${Util.CONSTANTS.SERVER_URL}/questions/search?${queryString}`;
     const selectedTagIds = selectedTags.filter((tag) => tag._id.length > 0).map((tag) => tag._id);
@@ -58,7 +61,7 @@ const ChapterDetail = () => {
         setPaginationInfo((prev) => {
           return {
             ...prev,
-            totalPage: Math.ceil(data.totalCount / 5),
+            totalPage: Math.ceil(data.totalCount / PAGE_SIZE),
           };
         });
       })

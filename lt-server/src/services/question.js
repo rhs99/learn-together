@@ -48,7 +48,10 @@ const addNewQuestion = async (body) => {
 
 const getAllQuestions = async (body, query) => {
     const pageNumber = query.pageNumber || 1;
-    const pageSize = query.pageSize || 5;
+    let pageSize = query.pageSize || 10;
+    if (pageSize > 10){
+        pageSize = 10;
+    }
     let key = 'createdAt',
         val = -1;
 

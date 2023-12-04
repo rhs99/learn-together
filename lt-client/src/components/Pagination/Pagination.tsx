@@ -82,7 +82,7 @@ const Pagination = ({ totalPages, onPageChange, page }: PaginationProps) => {
             className={currentPage === 1 ? 'page-btn disabled' : 'page-btn'}
             onClick={() => handlePageChange(currentPage - 1)}
           >
-            &lt; Prev
+            &lt;
           </button>
         </li>
         {renderPageNumbers()}
@@ -91,7 +91,7 @@ const Pagination = ({ totalPages, onPageChange, page }: PaginationProps) => {
             className={currentPage === totalPages ? 'page-btn disabled' : 'page-btn'}
             onClick={() => handlePageChange(currentPage + 1)}
           >
-            Next &gt;
+            &gt;
           </button>
         </li>
       </ul>
