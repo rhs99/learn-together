@@ -1,5 +1,8 @@
 import { useEffect, useRef } from 'react';
 import Quill from 'quill';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
+window.katex = katex;
 
 import './_index.scss';
 
@@ -9,6 +12,7 @@ const toolbarOptions = [
   [{ list: 'ordered' }, { list: 'bullet' }],
   [{ script: 'sub' }, { script: 'super' }],
   [{ align: [] }],
+  ['formula'],
 ];
 
 type QuillTextEditorProps = {
