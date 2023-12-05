@@ -1,15 +1,15 @@
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState, useContext } from 'react';
-
+import { useEffect, useState, useContext, useCallback } from 'react';
+import Quill from 'quill';
 import { Question, Answer } from '../../types';
 import Util from '../../utils';
 import axios from 'axios';
 import AuthContext from '../../store/auth';
-import ReactQuill from 'react-quill';
 import Button from '../../design-library/Button/Button';
 import Icon from '../../design-library/Icon';
 import Modal from '../../design-library/Modal/Modal';
 import Tooltip from '../../design-library/Tooltip/Tooltip';
+import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
 
 import './_index.scss';
 
@@ -136,6 +136,16 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
     setOpenDeleteModal(false);
   };
 
+
+  const onEditorReady = useCallback(
+    (editor: Quill) => {
+      if (item?.details) {
+        editor.setContents(item?.details);
+      }
+    },
+    [item]
+  );
+
   const isOwner = authCtx.getStoredValue().userName === item.userName;
   const isQOwner = authCtx.getStoredValue().userName === qOwner && qOwner.length !== 0;
 
@@ -168,7 +178,7 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
         </div>
         <div className="right-pane">
           <div className={detailsClassName} onClick={detailsOnClick}>
-            <ReactQuill value={item.details} readOnly={true} theme={'bubble'} />
+            <QuillTextEditor onEditorReady={onEditorReady} readOnly={true} showToolbar={false}/>
           </div>
           {item.imageLocations.length > 0 && (
             <div className="imageContainer">

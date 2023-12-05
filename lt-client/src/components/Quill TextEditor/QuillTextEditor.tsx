@@ -17,18 +17,22 @@ const toolbarOptions = [
 
 type QuillTextEditorProps = {
   onEditorReady: (editor: Quill) => void;
+  readOnly?: boolean;
+  showToolbar?: boolean;
+
 };
 
-const QuillTextEditor = ({ onEditorReady }: QuillTextEditorProps) => {
+const QuillTextEditor = ({ onEditorReady, readOnly=false, showToolbar=true }: QuillTextEditorProps) => {
   const editorRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (editorRef.current) {
       const quill = new Quill(editorRef.current, {
         modules: {
-          toolbar: toolbarOptions,
+          toolbar: showToolbar ? toolbarOptions : false,
         },
         theme: 'snow',
+        readOnly: readOnly,
       });
 
       onEditorReady(quill);
