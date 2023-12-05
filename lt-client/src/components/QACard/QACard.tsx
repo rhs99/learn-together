@@ -136,7 +136,6 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
     setOpenDeleteModal(false);
   };
 
-
   const onEditorReady = useCallback(
     (editor: Quill) => {
       if (item?.details) {
@@ -178,7 +177,7 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
         </div>
         <div className="right-pane">
           <div className={detailsClassName} onClick={detailsOnClick}>
-            <QuillTextEditor onEditorReady={onEditorReady} readOnly={true} showToolbar={false}/>
+            <QuillTextEditor onEditorReady={onEditorReady} readOnly={true} showToolbar={false} />
           </div>
           {item.imageLocations.length > 0 && (
             <div className="imageContainer">

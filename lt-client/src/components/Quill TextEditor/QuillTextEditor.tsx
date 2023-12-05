@@ -4,7 +4,7 @@ import katex from 'katex';
 import 'katex/dist/katex.min.css';
 window.katex = katex;
 
-import './_index.scss';
+import './snow.css';
 
 const toolbarOptions = [
   [{ size: ['small', false, 'large', 'huge'] }],
@@ -19,10 +19,9 @@ type QuillTextEditorProps = {
   onEditorReady: (editor: Quill) => void;
   readOnly?: boolean;
   showToolbar?: boolean;
-
 };
 
-const QuillTextEditor = ({ onEditorReady, readOnly=false, showToolbar=true }: QuillTextEditorProps) => {
+const QuillTextEditor = ({ onEditorReady, readOnly = false, showToolbar = true }: QuillTextEditorProps) => {
   const editorRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -31,15 +30,15 @@ const QuillTextEditor = ({ onEditorReady, readOnly=false, showToolbar=true }: Qu
         modules: {
           toolbar: showToolbar ? toolbarOptions : false,
         },
-        theme: 'snow',
         readOnly: readOnly,
+        theme: 'snow',
       });
 
       onEditorReady(quill);
     }
   }, [onEditorReady]);
 
-  return <div ref={editorRef} className="cl-Editor" />;
+  return <div ref={editorRef} style={readOnly ? {} : {height: '150px'}} />;
 };
 
 export default QuillTextEditor;

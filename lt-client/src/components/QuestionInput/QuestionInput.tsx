@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useContext, useEffect, useCallback, ChangeEvent } from 'react';
 import Quill from 'quill';
-import 'react-quill/dist/quill.snow.css';
 import Util from '../../utils';
 import axios from 'axios';
 import { Question } from '../../types';

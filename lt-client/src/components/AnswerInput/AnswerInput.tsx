@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useContext, useCallback, ChangeEvent } from 'react';
+import { useState, useContext, useCallback } from 'react';
 import { Answer } from '../../types';
 import Util from '../../utils';
 import axios from 'axios';
 import AuthContext from '../../store/auth';
-import Quill, { DeltaStatic } from 'quill';
+import Quill from 'quill';
 import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
 import Alert from '../../design-library/Alert/Alert';
 import Button from '../../design-library/Button/Button';
@@ -62,7 +62,7 @@ const AnswerInput = (props: AnswerInputProps) => {
       navigate(-1);
     } else if (props.fetchAnswer) {
       props.fetchAnswer().then(() => {
-        if (editor) editor.setContents({} as DeltaStatic);
+        if (editor) editor.setContents({} as any);
       });
     }
     setIsLoading(false);
