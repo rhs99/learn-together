@@ -15,7 +15,7 @@ const upload = multer({ storage: storage });
 
 router.post('/', extractAndVerifyToken, upload.array('files', 1), (req, res) => {
     if (!req.files || req.files.length !== 1) {
-        res.status(400).json({ msg: 'Upload a single file' });
+        return res.status(400).json({ msg: 'Upload a single file' });
     }
 
     const cb = (err, result) => {

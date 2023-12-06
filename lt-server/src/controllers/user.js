@@ -41,12 +41,12 @@ const addNewUser = async (req, res) => {
 const logInUser = async (req, res) => {
     try {
         const user = await UserService.logInUser(req.body);
-        if (user) {
-            const token = Util.createToken({ _id: user._id });
-            res.status(200).json({ token, class: user.class });
-        } else {
-            res.status(401).json({ msg: 'login failed' });
+        if (!user) {
+            throw new Error('Login failed!');
         }
+
+        const token = Util.createToken({ _id: user._id });
+        res.status(200).json({ token, class: user.class });
     } catch (e) {
         res.status(400).json({ message: e.message });
     }
@@ -82,14 +82,15 @@ const updatePrivilege = async (req, res) => {
 const forgotPassword = async (req, res) => {
     try {
         const user = await UserService.forgotPassword(req.body);
-        if (user) {
-            const token = Util.createTokenForPassword({ _id: user._id, email: user.email });
-            const resetLink = `http://localhost:3000/users/reset-password/${user._id}/${token}`;
-            sendEmail(user.email, 'Reset password', resetLink);
-            res.status(200).json({ token, userId: user._id });
-        } else {
-            res.status(401).json({ msg: 'Username not found!' });
+        if (!user) {
+            throw new Error('User not found!');
         }
+
+        const token = Util.createTokenForPassword({ _id: user._id, email: user.email });
+        const resetLink = `http://localhost:3000/users/reset-password/${user._id}/${token}`;
+        sendEmail(user.email, 'Reset password', resetLink);
+
+        res.status(200).json({ token, userId: user._id });
     } catch (e) {
         res.status(400).json({ message: e.message });
     }
