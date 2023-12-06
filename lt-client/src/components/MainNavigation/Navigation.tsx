@@ -98,7 +98,7 @@ const Navigation = () => {
     if (notifications.length === 0) {
       return [{ value: '', component: <span>No Notification!</span> }];
     }
-    const options = notifications.map((notification, index) => {
+    const options = notifications.map((notification) => {
       const option = {
         component: <span>New answer!</span>,
         value: notification,

@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import Button from '../../design-library/Button/Button';
-import Icon from '../../design-library/Icon';
 import Dropdown from '../../design-library/Dropdown/Dropdown';
-import Tooltip from '../../design-library/Tooltip/Tooltip';
 
 import './_index.scss';
 

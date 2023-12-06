@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, useCallback, useRef } from 'react';
+import { useEffect, useState, useContext, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Util from '../../utils';
@@ -68,7 +68,7 @@ const ChapterDetail = () => {
       .catch(() => {
         setAlert({ type: 'error', message: 'Something went wrong!' });
       });
-  }, [selectedTags, chapterId, sortBy, sortOrder, filterBy, token]);
+  }, [selectedTags, chapterId, sortBy, sortOrder, filterBy, token, paginationInfo.currPage]);
 
   useEffect(() => {
     fetchQuestion();

@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import './_index.scss';
 
 type AlertProps = {

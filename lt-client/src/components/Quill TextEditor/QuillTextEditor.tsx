@@ -36,9 +36,9 @@ const QuillTextEditor = ({ onEditorReady, readOnly = false, showToolbar = true }
 
       onEditorReady(quill);
     }
-  }, [onEditorReady]);
+  }, [onEditorReady, readOnly, showToolbar]);
 
-  return <div ref={editorRef} style={readOnly ? {} : {height: '150px'}} />;
+  return <div ref={editorRef} style={readOnly ? {} : { height: '150px' }} />;
 };
 
 export default QuillTextEditor;
