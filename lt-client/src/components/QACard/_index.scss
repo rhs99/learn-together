@@ -55,6 +55,12 @@
         margin-left: 12px;
 
 
+        .detailsClickable{
+            .ql-container.ql-snow {
+                border: 0;
+            }
+        }
+
         .detailsClickable:hover {
             color: rgb(33, 139, 210);
             cursor: pointer;
