@@ -9,6 +9,7 @@ const connectedUsers = require('../common/connected-users');
 const addNewAnswer = async (body) => {
     const user = await User.findById(body.user).exec();
     const question = await Question.findById(body.question).exec();
+    body.imageLocations = body.imageLocations || [];
 
     let answer;
     if (body._id !== '') {
@@ -19,8 +20,8 @@ const addNewAnswer = async (body) => {
         if (answer.imageLocations.length > 0 && body.imageLocations.length > 0) {
             Utils.deleteFile(answer.imageLocations);
         }
-        answer.details = body.details;
-        answer.imageLocations = body.imageLocations;
+        answer.details = body.details || answer.details;
+        answer.imageLocations = body.imageLocations.length === 0 ? answer.imageLocations : body.imageLocations;
         await answer.save();
     } else {
         delete body._id;

@@ -24,6 +24,7 @@
 
         .tags {
             margin-top: 12px;
+
             .tag {
                 color: rgb(24, 177, 70);
                 margin-bottom: 10px;
@@ -31,7 +32,7 @@
             }
         }
 
-        .info{
+        .info {
             font-size: 0.9em;
         }
 
@@ -43,7 +44,7 @@
         }
     }
 
-    .left-pane p{
+    .left-pane p {
         font-size: .9em;
         margin: 0;
         padding: 0;
@@ -54,11 +55,8 @@
         flex-direction: column;
         margin-left: 12px;
 
-
-        .detailsClickable{
-            .ql-container.ql-snow {
-                border: 0;
-            }
+        .ql-container.ql-snow {
+            border: 0;
         }
 
         .detailsClickable:hover {
@@ -105,7 +103,7 @@
         }
     }
 
-    .ql-tooltip{
+    .ql-tooltip {
         height: 0;
         width: 0;
     }

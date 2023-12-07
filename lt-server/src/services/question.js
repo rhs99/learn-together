@@ -8,18 +8,20 @@ const Utils = require('../common/utils');
 const addNewQuestion = async (body) => {
     const user = await User.findById(body.user).exec();
 
+    body.imageLocations = body.imageLocations || [];
+    body.tags = body.tags || [];
+
     if (body._id !== '') {
         const question = await Question.findOne({ _id: body._id }).exec();
         if (question.userName !== user.userName) {
             throw new Error('unauth');
         }
-
         if (question.imageLocations.length > 0 && body.imageLocations.length > 0) {
             Utils.deleteFile(question.imageLocations);
         }
 
-        question.details = body.details;
-        question.imageLocations = body.imageLocations;
+        question.details = body.details || question.details;
+        question.imageLocations = body.imageLocations.length === 0 ? question.imageLocations : body.imageLocations;
         question.tags = body.tags;
         await question.save();
         return;
