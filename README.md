@@ -1,26 +1,20 @@
 # learn-together
-### TODO
-<ol>
-<li>
-Handle errors properly and give proper alert
-</li>
-<li>
-Optimize queries
-</li>
-<li>
-Add logger in backend
-</li>
-<li>
-Replace Minio with S3
-</li>
-<li>
-Use Nginx/Apache as reverve proxy
-</li>
-<li>
-Deploy and test
-</li>
-<li>
-Build CI/CD
-</li>
+## Tech stack: NodeJS, ReactJS, MongoDB
+### Features:
+- Users can asks questions and give answers.
+- Question and answer can include images and mathematical complex equations/expressions.
+- Users can add questions to their favourite list.
+- Users can up or down vote each question or answer.
+- Questions can be filtered based on tags, favourites and asked by me.
+- Questions can sorted by time, up or down vote and net vote.
+- Users can get realtime notification if any of their questions get answered.
 
-</ol>
+#### TODO
+- Error handling
+- Optimize queries
+- Add logger
+- Replace Minio with S3
+- Use Nginx/Apache as reverve proxy
+- Deploy and test
+- Build CI/CD
+
