@@ -30,7 +30,7 @@ const createOneClassSubjectChapter = async () => {
         let subject = new Subject({ name: 'Math', class: cls._id });
         subject = await subject.save();
 
-        let chapter = new Chapter({ name: 'Geometry', subject: subject._id });
+        const chapter = new Chapter({ name: 'Geometry', subject: subject._id });
         await chapter.save();
     } catch (error) {
         console.log(error);
@@ -39,7 +39,7 @@ const createOneClassSubjectChapter = async () => {
 
 const setup = async () => {
     try {
-        await mongoose.connect(DB_URL);
+        await mongoose.connect(DB_URL, {dbName: 'lt-db'});
         const adminPrivilege = await createAdminPrivilege();
 
         const superUser = new User({

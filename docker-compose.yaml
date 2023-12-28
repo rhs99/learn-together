@@ -20,13 +20,3 @@ services:
     volumes:
       - ./lt-server:/app
       - /app/node_modules
-    depends_on:
-      - mongo
-  mongo:
-    container_name: lt-mongo
-    image: mongo
-    volumes:
-      - ./data:/data/db
-    ports:
-      - "27017:27017"
-   
