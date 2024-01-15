@@ -193,7 +193,12 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
           {`${isQuestion ? 'Asked' : 'Answered'} by`} <span className="user-name">{item.userName}</span>
         </span>
         <Tooltip content="favourite">
-          <Icon color={isFavourite ? 'red' : 'black'} name="favourite" onClick={handleToggleFavourite} />
+          <Icon
+            disabled={!authCtx.isLoggedIn}
+            color={isFavourite ? 'red' : 'black'}
+            name="favourite"
+            onClick={handleToggleFavourite}
+          />
         </Tooltip>
         <Tooltip content="share">
           <Icon onClick={handleShareClick} name="share" />

@@ -35,8 +35,8 @@
   
   button[type='submit'] {
     display: block;
-    background-color: rgb(168, 200, 212);
-    color: black;
+    background-color: var(--form-btn);
+    color: white;
     border: none;
     border-radius: 3px;
     font-size: 16px;

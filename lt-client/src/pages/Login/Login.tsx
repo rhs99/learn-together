@@ -51,7 +51,7 @@ function LoginPage() {
   return (
     <div className="cl-Login" onSubmit={handleSubmit}>
       <div className="login-form-container">
-        <h2>Login</h2>
+        <p className="header">Login</p>
         <form method="POST" className="login-form">
           <label>
             Username:
