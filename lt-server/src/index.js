@@ -66,7 +66,7 @@ const DB_URL = process.env.MONGODB_URI;
 
 const connectDB = async () => {
     try {
-        await mongoose.connect(DB_URL, {dbName: 'lt-db'});
+        await mongoose.connect(DB_URL, { dbName: 'lt-db' });
         console.log('Mongo connected successfully');
     } catch (e) {
         console.log(e.message);

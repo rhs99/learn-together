@@ -2,7 +2,7 @@ const QuestionService = require('../services/question');
 
 const getAllQuestions = async (req, res) => {
     try {
-        req.body.user = req.user;
+        req.body.user = req.user || null;
         const questions = await QuestionService.getAllQuestions(req.body, req.query);
         res.status(200).json(questions);
     } catch (e) {

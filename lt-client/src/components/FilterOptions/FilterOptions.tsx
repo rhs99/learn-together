@@ -8,9 +8,10 @@ type FilterOptionsProps = {
   filterBy: string;
   handleFilterOptionsChange: (value: string) => void;
   fetchSortedData: () => void;
+  disabled: boolean;
 };
 
-const FilterOptions = ({ filterBy, handleFilterOptionsChange, fetchSortedData }: FilterOptionsProps) => {
+const FilterOptions = ({ filterBy, handleFilterOptionsChange, fetchSortedData, disabled }: FilterOptionsProps) => {
   const [showFilterPanel, setShowFilterPanel] = useState(false);
   const anchorEl = useRef<HTMLDivElement | null>(null);
 
@@ -37,7 +38,7 @@ const FilterOptions = ({ filterBy, handleFilterOptionsChange, fetchSortedData }:
   return (
     <div className="cl-FilterOptions">
       <div ref={anchorEl}>
-        <Button variant="secondary" onClick={() => setShowFilterPanel((prev) => !prev)}>
+        <Button disabled={disabled} variant="secondary" onClick={() => setShowFilterPanel((prev) => !prev)}>
           Filter By
         </Button>
       </div>

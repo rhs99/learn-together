@@ -39,7 +39,7 @@ const createOneClassSubjectChapter = async () => {
 
 const setup = async () => {
     try {
-        await mongoose.connect(DB_URL, {dbName: 'lt-db'});
+        await mongoose.connect(DB_URL, { dbName: 'lt-db' });
         const adminPrivilege = await createAdminPrivilege();
 
         const superUser = new User({

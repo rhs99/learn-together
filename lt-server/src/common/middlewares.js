@@ -1,6 +1,25 @@
 const Util = require('./utils');
 const User = require('../models/user');
 
+const extractAndVerifyTokenIfPresent = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    let user = null;
+
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        const token = authHeader.slice(7);
+        try {
+            const data = Util.verityToken(token);
+            user = data._id;
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+    if (user) {
+        req.user = user;
+    }
+    next();
+};
+
 const extractAndVerifyToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
     let user = null;
@@ -44,4 +63,4 @@ const hasAdminPrivilege = async (req, res, next) => {
     }
 };
 
-module.exports = { extractAndVerifyToken, hasAdminPrivilege };
+module.exports = { extractAndVerifyToken, hasAdminPrivilege, extractAndVerifyTokenIfPresent };

@@ -49,12 +49,17 @@ const ChapterDetail = () => {
       chapterId,
       tagIds: selectedTagIds,
     };
-    axios
-      .post(URL, payload, {
-        headers: {
+
+    const header = isLoggedIn
+      ? {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
-        },
+        }
+      : {};
+
+    axios
+      .post(URL, payload, {
+        headers: header,
       })
       .then(({ data }) => {
         setQuestions(data.paginatedResults);
@@ -146,6 +151,7 @@ const ChapterDetail = () => {
           filterBy={filterBy}
           handleFilterOptionsChange={handleFilterOptionsChange}
           fetchSortedData={fetchQuestion}
+          disabled={!isLoggedIn}
         />
         <SortOptions
           sortBy={sortBy}

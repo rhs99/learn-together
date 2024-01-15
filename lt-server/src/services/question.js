@@ -77,7 +77,9 @@ const getAllQuestions = async (body, query) => {
     const sortOption = { [key]: val };
     const filterBy = query.filterBy || 'all';
 
-    const user = await User.findById(body.user).exec();
+    let user = null;
+    if (body.user) await User.findById(body.user).exec();
+
     const chapter = await Chapter.findById(body.chapterId).exec();
     let tagIds = [];
 
@@ -114,9 +116,9 @@ const getAllQuestions = async (body, query) => {
                 isFavourite: true,
             };
         }
-        const isPresent = user.favourites.some(
-            (questionId) => JSON.stringify(questionId) === JSON.stringify(question._id),
-        );
+        const isPresent = user
+            ? user.favourites.some((questionId) => JSON.stringify(questionId) === JSON.stringify(question._id))
+            : false;
         return {
             ...question._doc,
             isFavourite: isPresent,
