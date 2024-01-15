@@ -150,7 +150,7 @@ const removeNotification = async (userName, qId) => {
 };
 
 const forgotPassword = async (body) => {
-    const user = await User.findOne({ userName: body.userName }).exec();
+    const user = await User.findOne({ userName: body.userName, email: body.email }).exec();
     if (!user) {
         return null;
     }
