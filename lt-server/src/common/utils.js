@@ -82,7 +82,7 @@ const uploadFile = async (filePath, fileName, cb) => {
 };
 
 const getFileUrl = (fileName) => {
-    return `http://${Config.MINIO_HOST}:${Config.MINIO_PORT}/${Config.MINIO_BUCKET}/${fileName}`;
+    return `http://localhost:${Config.MINIO_PORT}/${Config.MINIO_BUCKET}/${fileName}`;
 };
 
 const deleteFile = (fileNames) => {

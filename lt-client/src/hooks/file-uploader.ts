@@ -28,7 +28,7 @@ const useFileUploader = () => {
 
   const handleUpload = async () => {
     if (!files || files.length === 0) {
-      return;
+      return [];
     }
     const uploadPromise = [uploadFile(files[0])];
     if (files.length > 1) {

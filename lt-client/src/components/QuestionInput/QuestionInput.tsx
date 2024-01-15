@@ -26,7 +26,7 @@ const QuestionInput = (props: QuestionInputProps) => {
     props.question ? props.question.tags.map((tag) => ({ _id: tag._id, name: tag.name })) : []
   );
   const [existingTags, setExistingTags] = useState<Tag[]>([]);
-  const [editor, setEditor] = useState<Quill>();
+  const [editor, setEditor] = useState<Quill | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -47,9 +47,11 @@ const QuestionInput = (props: QuestionInputProps) => {
       setShowAlert(true);
       return;
     }
+
     setIsLoading(true);
+
     const imageLocations = await handleUpload();
-    const tagURL = `${Util.CONSTANTS.SERVER_URL}/tags`;
+
     const question = {
       _id: props.question?._id || '',
       details: description,
@@ -68,6 +70,7 @@ const QuestionInput = (props: QuestionInputProps) => {
       }
     });
 
+    const tagURL = `${Util.CONSTANTS.SERVER_URL}/tags`;
     const tagPromises = newTags.map((tag) => {
       return axios.post(tagURL, { name: tag.name, chapter: tag.chapter });
     });
@@ -75,7 +78,7 @@ const QuestionInput = (props: QuestionInputProps) => {
     const allData = await Promise.all(tagPromises);
 
     allData.forEach(({ data }) => {
-      (question.tags as any).push({ _id: data._id, name: data.name });
+      (question.tags as Tag[]).push({ _id: data._id, name: data.name });
     });
 
     const questionURL = `${Util.CONSTANTS.SERVER_URL}/questions`;
