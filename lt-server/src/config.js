@@ -1,5 +1,6 @@
 const Config = {
-    MINIO_HOST: 'host.docker.internal',
+    // MINIO_HOST: 'host.docker.internal',
+    MINIO_HOST: 'localhost',
     MINIO_PORT: 9000,
     MINIO_BUCKET: 'lt-bucket',
 };
