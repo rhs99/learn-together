@@ -78,7 +78,9 @@ const getAllQuestions = async (body, query) => {
     const filterBy = query.filterBy || 'all';
 
     let user = null;
-    if (body.user) await User.findById(body.user).exec();
+    if (body.user) {
+        user = await User.findById(body.user).exec();
+    }
 
     const chapter = await Chapter.findById(body.chapterId).exec();
     let tagIds = [];
