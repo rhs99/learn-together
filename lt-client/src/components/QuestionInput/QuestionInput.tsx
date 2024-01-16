@@ -142,7 +142,7 @@ const QuestionInput = (props: QuestionInputProps) => {
       </div>
       <FileUploader handleFileChange={handleFileChange} className="file-upload" />
       <div className="btn-container">
-        <Button onClick={handleClose} variant="secondary">
+        <Button onClick={handleClose} variant="danger">
           Close
         </Button>
         <Button onClick={handleSave} variant="success">
