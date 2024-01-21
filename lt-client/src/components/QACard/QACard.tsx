@@ -189,9 +189,7 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
         </div>
       </div>
       <div className="bottom-pane">
-        <span className="author">
-          {`${isQuestion ? 'Asked' : 'Answered'} by`} <span className="user-name">{item.userName}</span>
-        </span>
+        <span className="author">{item.userName}</span>
         <Tooltip content="favourite">
           <Icon
             disabled={!authCtx.isLoggedIn}

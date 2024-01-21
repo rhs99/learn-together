@@ -41,8 +41,8 @@ const Tooltip: React.FC<TooltipProps> = ({ children, content, position = 'top' }
 
   return (
     <div className="lt-TooltipContainer" ref={tooltipRef}>
-      {children}
       <div className={tooltipClassName}>{content}</div>
+      {children}
     </div>
   );
 };

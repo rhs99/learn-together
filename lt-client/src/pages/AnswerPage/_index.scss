@@ -1,4 +1,8 @@
-.cl-AnswerPage{
+.cl-AnswerPage {
     width: 80%;
     margin: 20px auto;
+
+    @media only screen and (max-width: 780px) {
+        width: 90%;
+    }
 }

@@ -13,7 +13,7 @@ const AnswerPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const URL = `${Util.CONSTANTS.SERVER_URL}/answers?answerId=${answerId}`;
+    const URL = `${Util.CONSTANTS.SERVER_URL}/answers/${answerId}`;
     axios.get(URL).then(({ data }) => {
       setAnswer(data);
     });
@@ -29,7 +29,7 @@ const AnswerPage = () => {
 
   return (
     <div className="cl-AnswerPage">
-      <QACard item={answer} handleItemDelete={handleAnswerDelete} isQuestion={false} clickableDetails={false} />;
+      <QACard item={answer} handleItemDelete={handleAnswerDelete} isQuestion={false} clickableDetails={false} />
     </div>
   );
 };

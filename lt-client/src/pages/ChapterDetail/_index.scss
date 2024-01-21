@@ -18,28 +18,35 @@
         justify-content: center;
     }
 
-    .sort-options{
+    .sort-options {
         display: flex;
         justify-content: flex-end;
         gap: 20px;
     }
 
-    .qContainer{
-        width: 80%;
+    .qContainer {
+        width: 60%;
         margin: auto;
         margin-top: 12px;
     }
 
     @media only screen and (max-width: 780px) {
-        .empty {
+        .heading {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .filter {
+            width: 90%;
+        }
+
+        .sort-options {
+            margin-bottom: 16px;
+        }
+
+        .qContainer {
             width: 100%;
-        }
-        .filter{
-            display: none;
-        }
-        .filter-mbl{
-            visibility: visible;
-            margin-bottom: 20px;
         }
     }
 }

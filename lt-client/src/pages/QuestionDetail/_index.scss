@@ -1,21 +1,31 @@
-.cl-QuestionDetail{
-    width: 80%;
-    margin: auto; 
-    padding: 20px;
-    .aHeader{
+.cl-QuestionDetail {
+    width: 60%;
+    margin: auto;
+    padding: 20px 0;
+
+
+    @media only screen and (max-width: 780px) {
+        width: 90%;
+    }
+
+    .aHeader {
         margin-top: 10px;
     }
-    .editor{
+
+    .editor {
         height: 150px;
     }
+
     .file-upload {
         margin-top: 80px;
     }
-    .btn-container{
+
+    .btn-container {
         margin-top: 20px;
         margin-bottom: 20px;
     }
-    .ans-title{
+
+    .ans-title {
         margin: 15px 0;
     }
 }

@@ -51,6 +51,9 @@ const addNewAnswer = async (body) => {
 
 const getAnswer = async (answerId) => {
     const answer = await Answer.findOne({ _id: answerId }).exec();
+    answer.imageLocations = answer.imageLocations.map((fileName) => {
+        return Utils.getFileUrl(fileName);
+    });
     return answer;
 };
 
