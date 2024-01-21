@@ -34,6 +34,7 @@ const createOneClassSubjectChapter = async () => {
         await chapter.save();
     } catch (error) {
         console.log(error);
+        throw new Error(error);
     }
 };
 
@@ -49,13 +50,6 @@ const setup = async () => {
             privileges: [adminPrivilege._id],
         });
         await superUser.save();
-
-        const testUser = new User({
-            userName: 'test',
-            email: 'test@gmail.com',
-            password: '123',
-        });
-        await testUser.save();
 
         await createOneClassSubjectChapter();
 
