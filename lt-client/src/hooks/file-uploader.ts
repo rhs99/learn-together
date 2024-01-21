@@ -14,16 +14,25 @@ const useFileUploader = () => {
   };
 
   const uploadFile = async (file: File) => {
-    const url = `${Util.CONSTANTS.SERVER_URL}/upload`;
-    const formData = new FormData();
-    formData.append('files', file);
-    const { data } = await axios.post(url, formData, {
+    const url = `${Util.CONSTANTS.SERVER_URL}/upload/presigned-url`;
+    const fileData = { fileName: file.name };
+
+    const { data } = await axios.post(url, fileData, {
       headers: {
         Authorization: `Bearer ${authCtx.getStoredValue().token}`,
-        'Content-Type': 'multipart/form-data',
       },
     });
-    return data.fileName;
+
+    await axios({
+      method: 'PUT',
+      url: data.uploadUrl,
+      data: file,
+      headers: {
+        'Content-Type': file.type,
+      },
+    });
+
+    return file.name;
   };
 
   const handleUpload = async () => {

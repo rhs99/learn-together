@@ -1,33 +1,21 @@
 const express = require('express');
-const multer = require('multer');
 const { extractAndVerifyToken } = require('../common/middlewares');
 const Utils = require('../common/utils');
 
 const router = express.Router();
 
-const storage = multer.diskStorage({
-    filename: function (req, file, cb) {
-        cb(null, Utils.uuid() + '.webp');
-    },
-});
+router.post('/presigned-url', extractAndVerifyToken, (req, res) => {
+    const data = req.body;
 
-const upload = multer({ storage: storage });
-
-router.post('/', extractAndVerifyToken, upload.array('files', 1), (req, res) => {
-    if (!req.files || req.files.length !== 1) {
-        return res.status(400).json({ msg: 'Upload a single file' });
-    }
-
-    const cb = (err, result) => {
+    const cb = (err, url) => {
         if (err) {
-            res.status(400).json({ msg: err.message });
+            return res.status(400).json();
         } else {
-            res.status(200).json(result);
+            return res.status(200).json({ uploadUrl: url });
         }
     };
 
-    const file = req.files[0];
-    Utils.uploadFile(file.path, file.filename, cb);
+    Utils.getPresignedUrl(data.fileName, cb);
 });
 
 module.exports = router;

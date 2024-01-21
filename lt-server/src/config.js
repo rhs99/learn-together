@@ -1,5 +1,5 @@
 const Config = {
-    MINIO_HOST: 'minio',
+    MINIO_HOST: 'play.min.io',
     MINIO_PORT: 9000,
     MINIO_BUCKET: 'lt-bucket',
 };

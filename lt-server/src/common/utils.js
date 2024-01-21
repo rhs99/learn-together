@@ -3,17 +3,15 @@ const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const Config = require('../config');
-const fs = require('fs');
-const sharp = require('sharp');
 
 const privateKey = process.env.SECRET_KEY;
 
 const minioClient = new Minio.Client({
-    endPoint: Config.MINIO_HOST,
-    port: Config.MINIO_PORT,
-    useSSL: false,
-    accessKey: '',
-    secretKey: '',
+    endPoint: 'play.min.io',
+    port: 9000,
+    useSSL: true,
+    accessKey: 'Q3AM3UQ867SPQQA43P2F',
+    secretKey: 'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG',
 });
 
 const createToken = (data) => {
@@ -57,32 +55,17 @@ const sendEmail = async (email, subject, text) => {
     }
 };
 
-const uploadFile = async (filePath, fileName, cb) => {
-    const metaData = {
-        'Content-Type': 'application/octet-stream',
-    };
-
-    sharp(filePath)
-        .resize({ width: 600 })
-        .webp({ minSize: true, loop: 1 })
-        .toBuffer()
-        .then((fileStream) => {
-            minioClient.putObject(Config.MINIO_BUCKET, fileName, fileStream, metaData, (err, etag) => {
-                fs.unlinkSync(filePath);
-                if (err) {
-                    cb(err, null);
-                } else {
-                    cb(null, { fileName: fileName });
-                }
-            });
-        })
-        .catch((err) => {
-            cb(err, null);
-        });
+const getFileUrl = (fileName) => {
+    return `https://${Config.MINIO_HOST}:${Config.MINIO_PORT}/${Config.MINIO_BUCKET}/${fileName}`;
 };
 
-const getFileUrl = (fileName) => {
-    return `http://localhost:${Config.MINIO_PORT}/${Config.MINIO_BUCKET}/${fileName}`;
+const getPresignedUrl = (fileName, cb) => {
+    minioClient.presignedPutObject(Config.MINIO_BUCKET, fileName, (err, url) => {
+        if (err) {
+            return cb(err);
+        }
+        cb(null, url);
+    });
 };
 
 const deleteFile = (fileNames) => {
@@ -106,8 +89,8 @@ module.exports = {
     createTokenForPassword,
     verityToken,
     sendEmail,
-    uploadFile,
     getFileUrl,
     deleteFile,
     uuid,
+    getPresignedUrl,
 };
