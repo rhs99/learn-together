@@ -59,12 +59,13 @@ const getFileUrl = (fileName) => {
     return `https://${Config.MINIO_HOST}:${Config.MINIO_PORT}/${Config.MINIO_BUCKET}/${fileName}`;
 };
 
-const getPresignedUrl = (fileName, cb) => {
-    minioClient.presignedPutObject(Config.MINIO_BUCKET, fileName, (err, url) => {
+const getPresignedUrl = (data, cb) => {
+    const key = data.userId + '/' + uuid() + data.fileName;
+    minioClient.presignedPutObject(Config.MINIO_BUCKET, key, (err, uploadUrl) => {
         if (err) {
             return cb(err);
         }
-        cb(null, url);
+        cb(null, { uploadUrl, key });
     });
 };
 
@@ -84,6 +85,11 @@ const uuid = () => {
     return uuidv4();
 };
 
+const formatTagName = (name) => {
+    let newName = name.charAt(0).toUpperCase() + name.slice(1);
+    return newName.trim().split(/\s+/).join('-');
+};
+
 module.exports = {
     createToken,
     createTokenForPassword,
@@ -93,4 +99,5 @@ module.exports = {
     deleteFile,
     uuid,
     getPresignedUrl,
+    formatTagName,
 };

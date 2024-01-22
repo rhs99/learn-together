@@ -32,7 +32,7 @@ const useFileUploader = () => {
       },
     });
 
-    return file.name;
+    return data.key;
   };
 
   const handleUpload = async () => {

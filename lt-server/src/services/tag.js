@@ -1,6 +1,9 @@
 const Tag = require('../models/tag');
 
+const { formatTagName } = require('../common/utils');
+
 const addNewTag = async (body) => {
+    body.name = formatTagName(body.name);
     const tag = await Tag.findOne({ name: body.name, chapter: body.chapter }).exec();
     if (tag) {
         return tag;

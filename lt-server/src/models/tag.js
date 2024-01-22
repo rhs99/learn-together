@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const { formatTagName } = require('../common/utils');
+
 const tagSchema = new mongoose.Schema({
     name: { type: String, required: true },
     chapter: { type: mongoose.Types.ObjectId, ref: 'Chapter', required: true },
@@ -8,10 +10,7 @@ const tagSchema = new mongoose.Schema({
 tagSchema.index({ name: 1, chapter: 1 }, { unique: true });
 
 tagSchema.pre('save', function (next) {
-    let name = this.name;
-    name = name.charAt(0).toUpperCase() + name.slice(1);
-    name = name.trim().split(/\s+/).join('-');
-    this.name = name;
+    this.name = formatTagName(this.name);
     return next();
 });
 
