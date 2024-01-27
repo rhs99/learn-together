@@ -5,6 +5,8 @@ const Chapter = require('../models/chapter');
 const User = require('../models/user');
 const Utils = require('../common/utils');
 
+const { clearCache } = require('../services/cache');
+
 const addNewQuestion = async (body) => {
     const user = await User.findById(body.user).exec();
 
@@ -39,6 +41,7 @@ const addNewQuestion = async (body) => {
     const chapter = await Chapter.findById(body.chapter).exec();
     chapter.questions.push(question._id);
     await chapter.save();
+    await clearCache(body.chapter);
 };
 
 const getAllQuestions = async (body, query) => {
@@ -105,7 +108,9 @@ const getAllQuestions = async (body, query) => {
         .sort(sortOption)
         .skip((pageNumber - 1) * pageSize)
         .limit(pageSize)
-        .exec();
+        .cache({
+            key: body.chapterId,
+        });
 
     const searchResponse = allQuestions.map((question) => {
         question.imageLocations = question.imageLocations.map((fileName) => {

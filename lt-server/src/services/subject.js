@@ -1,6 +1,8 @@
 const Class = require('../models/class');
 const Subject = require('../models/subject');
 
+const { clearCache } = require('./cache');
+
 const getSubjectBreadcrumb = async (id) => {
     const subject = await Subject.findById(id).exec();
     const _class = await Class.findById(subject.class).exec();
@@ -17,7 +19,9 @@ const getSubjectBreadcrumb = async (id) => {
 };
 
 const getSubjects = async (classId) => {
-    const subjects = await Subject.find({ class: classId });
+    const subjects = await Subject.find({ class: classId }).cache({
+        key: `subjects-${classId}`
+    });
     return subjects;
 };
 
@@ -27,6 +31,7 @@ const addNewSubject = async (body) => {
     const _class = await Class.findById(body.class).exec();
     _class.subjects.push(subject._id);
     await _class.save();
+    clearCache(`subjects-${body.class}`)
 };
 
 module.exports = { getSubjects, addNewSubject, getSubjectBreadcrumb };
