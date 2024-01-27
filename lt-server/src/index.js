@@ -18,6 +18,8 @@ const tagRouter = require('./routes/tag');
 const qaRouter = require('./routes/qavote');
 const uploader = require('./routes/upload');
 
+require('./services/cache');
+
 const app = express();
 
 app.use(cors());
