@@ -161,9 +161,9 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
             <Icon onClick={handleDownVote} name="arrow-down" size={20} />
           </div>
           <div className="info">
-            <p>Up vote: {udCnt.upVote}</p>
-            <p>Down vote: {udCnt.downVote}</p>
-            {isQuestion && <p>Answers: {(item as Question).answers.length}</p>}
+            <p>Up: {udCnt.upVote}</p>
+            <p>Down: {udCnt.downVote}</p>
+            {isQuestion && <p>Ans: {(item as Question).answers.length}</p>}
           </div>
           {isQuestion && (
             <div className="tags">
