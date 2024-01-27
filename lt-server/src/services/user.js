@@ -2,16 +2,22 @@ const User = require('../models/user');
 const Question = require('../models/question');
 const Answer = require('../models/answer');
 const Class = require('../models/class');
+const Privilege = require('../models/privilege');
 
 const addNewUser = async (body) => {
+    const defaultPrivilege = await Privilege.findOne({ name: 'default' }).exec();
+
     const newUserInfo = {
         userName: body.userName,
         email: body.email,
         password: body.password,
+        privileges: [defaultPrivilege._id],
     };
+
     if (body.class && body.class.trim().length > 0) {
         newUserInfo.class = body.class;
     }
+
     const user = new User(newUserInfo);
     await user.save();
 };
