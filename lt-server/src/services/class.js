@@ -3,7 +3,9 @@ const Class = require('../models/class');
 const { clearCache } = require('./cache');
 
 const getClass = async (id) => {
-    const _class = await Class.findById(id).exec();
+    const _class = await Class.findById(id).cache({
+        key: `classes-${id}`,
+    });
     return _class;
 };
 
