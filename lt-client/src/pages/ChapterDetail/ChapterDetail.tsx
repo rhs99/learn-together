@@ -27,6 +27,7 @@ const ChapterDetail = () => {
   const [paginationInfo, setPaginationInfo] = useState({ currPage: 1, totalPage: 1 });
   const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([]);
   const [filterBy, setFilterBy] = useState('all');
+  const [isLoading, setIsLoading] = useState(true);
   const [alert, setAlert] = useState<any>(null);
 
   const navigate = useNavigate();
@@ -72,6 +73,9 @@ const ChapterDetail = () => {
       })
       .catch(() => {
         setAlert({ type: 'error', message: 'Something went wrong!' });
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, [selectedTags, chapterId, sortBy, sortOrder, filterBy, token, paginationInfo.currPage]);
 
@@ -161,11 +165,13 @@ const ChapterDetail = () => {
         />
       </div>
 
-      {isEmpty && (
+      {!isLoading && isEmpty && (
         <div className="empty">
           <h1>No Questions</h1>
         </div>
       )}
+
+      {isLoading && <div className="loading">Loading...</div>}
 
       <div className="qContainer">
         {questions.map((question) => (
