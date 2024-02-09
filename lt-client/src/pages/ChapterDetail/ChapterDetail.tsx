@@ -37,6 +37,7 @@ const ChapterDetail = () => {
   const token = getStoredValue().token;
 
   const fetchQuestion = useCallback(() => {
+    setIsLoading(true);
     let queryString = '';
     queryString += `sortBy=${sortBy}`;
     queryString += `&sortOrder=${sortOrder}`;
@@ -173,19 +174,21 @@ const ChapterDetail = () => {
 
       {isLoading && <div className="loading">Loading...</div>}
 
-      <div className="qContainer">
-        {questions.map((question) => (
-          <QACard
-            key={question._id}
-            item={question}
-            clickableDetails={true}
-            isQuestion={true}
-            handleItemDelete={handleQuestionDelete}
-          />
-        ))}
-      </div>
+      {!isLoading && (
+        <div className="qContainer">
+          {questions.map((question) => (
+            <QACard
+              key={question._id}
+              item={question}
+              clickableDetails={true}
+              isQuestion={true}
+              handleItemDelete={handleQuestionDelete}
+            />
+          ))}
+        </div>
+      )}
 
-      {paginationInfo.totalPage > 1 && (
+      {!isLoading && paginationInfo.totalPage > 1 && (
         <Pagination
           totalPages={paginationInfo.totalPage}
           page={paginationInfo.currPage}
