@@ -1,29 +1,28 @@
 .cl-QuestionInput {
-    margin: auto;
-    padding: 20px;
+  margin: auto;
+  padding: 20px;
 
-    .description-heading {
-        margin: 10px 0;
+  .description-heading {
+    margin: 10px 0;
+  }
+
+  .tag-input-container {
+    margin-top: -10px;
+
+    .tag-input {
+      width: 100%;
     }
+  }
 
-    .tag-input-container {
-        margin-top: -10px;
+  .file-upload {
+    margin-top: 10px;
+  }
 
-        .tag-input {
-            width: 100%;
-        }
-    }
-
-    .file-upload {
-        margin-top: 10px;
-    }
-
-    .btn-container {
-        display: flex;
-        flex-direction: row;
-        margin-top: 20px;
-        justify-content: flex-end;
-        gap: 20px;
-    }
-
+  .btn-container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+    justify-content: flex-end;
+    gap: 20px;
+  }
 }

@@ -1,139 +1,134 @@
-.cl-QACard {
-    background-color: var(--primary);
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 20px;
+.lt-QACard {
+  background-color: var(--primary);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+
+  @media only screen and (max-width: 780px) {
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  &-body {
+    display: flex;
+    flex-direction: row;
+  }
+
+  &-left-pane {
+    width: 7%;
+
+    &-UD-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    &-info {
+      margin-top: 12px;
+      font-size: 1em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
     @media only screen and (max-width: 780px) {
-        padding: 10px;
-        border-radius: 5px;
+      width: 12%;
+      &-info {
+        font-size: 0.8em;
+      }
+    }
+  }
+
+  &-right-pane {
+    display: flex;
+    flex-direction: column;
+    margin-left: 12px;
+
+    .ql-editor {
+      padding: 0;
     }
 
-    .qa-Body {
-        display: flex;
-        flex-direction: row;
+    .ql-container.ql-snow {
+      border: 0;
     }
 
-    .left-pane {
-        width: 12%;
-        box-shadow: 1px 0px lightblue;
-
-        .UD-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .tags {
-            margin-top: 12px;
-
-            .tag {
-                color: rgb(24, 177, 70);
-                margin-bottom: 10px;
-                font-size: 1em;
-
-                @media only screen and (max-width: 780px) {
-                    font-size: .8em;
-                }
-            }
-        }
-
-        .info {
-            font-size: 0.9em;
-        }
-
-        @media only screen and (max-width: 780px) {
-            box-shadow: none;
-            .info {
-                display: none;
-            }
-        }
+    &-details-clickable:hover {
+      color: rgb(33, 139, 210);
+      cursor: pointer;
     }
 
-    .left-pane p {
-        font-size: .9em;
-        margin: 0;
-        padding: 0;
+    &-image-container {
+      margin-top: 16px;
     }
 
-    .right-pane {
-        width: 88%;
-        display: flex;
-        flex-direction: column;
-        margin-left: 12px;
-
-        .ql-container.ql-snow {
-            border: 0;
-        }
-
-        .detailsClickable:hover {
-            color: rgb(33, 139, 210);
-            cursor: pointer;
-        }
-
-        .imageContainer {
-            margin: 20px 0;
-            height: 100px;
-
-            .image {
-                width: auto;
-                max-height: 100px;
-                max-width: 45%;
-                margin-left: 10px;
-            }
-
-            @media only screen and (max-width: 780px) {
-                .image {
-                    max-height: 90px;
-                }
-            }
-
-            .image:hover {
-                cursor: pointer;
-            }
-        }
-
+    &-image {
+      width: 250px;
+      height: 100px;
+      border-radius: 5px;
     }
 
-    .bottom-pane {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-        align-items: center;
-        gap: 20px;
-
-        .author {
-            color: rgb(25, 165, 178);
-        }
-
-        @media only screen and (max-width: 780px) {
-            gap: 15px;
-        }
+    &-image:hover {
+      cursor: pointer;
     }
 
-    .ql-tooltip {
-        height: 0;
-        width: 0;
+    &-tags {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
     }
 
+    &-tag {
+      border-radius: 8px;
+      background-color: lightblue;
+      padding: 3px;
+      font-size: 0.9em;
+    }
+
+    @media only screen and (max-width: 780px) {
+      &-image {
+        width: 120px;
+      }
+
+      &-tag {
+        font-size: 0.8em;
+      }
+    }
+  }
+
+  &-bottom-pane {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+
+    &-author {
+      color: rgb(25, 165, 178);
+    }
+
+    @media only screen and (max-width: 780px) {
+      gap: 15px;
+    }
+  }
 }
 
 .full-img {
-    position: absolute;
-    left: 25%;
-    max-width: 50%;
-    max-height: 50%;
-    border: 2px solid grey;
+  position: absolute;
+  left: 25%;
+  max-width: 50%;
+  max-height: 50%;
+  border: 2px solid grey;
 }
 
 .dlt-modal {
-    position: absolute;
-    top: 40%;
-    left: 30%;
-    width: 30%;
-    height: 20%;
-    border-radius: 5px;
-    padding: 15px;
-    background-color: rgb(198, 78, 38);
+  position: absolute;
+  top: 40%;
+  left: 30%;
+  width: 30%;
+  height: 20%;
+  border-radius: 5px;
+  padding: 15px;
+  background-color: rgb(198, 78, 38);
 }

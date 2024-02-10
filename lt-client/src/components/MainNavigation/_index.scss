@@ -1,59 +1,57 @@
 .lt-Navigation {
-    height: 7vh;
-    width: 100%;
-    background-color: var(--primary);
+  height: 7vh;
+  width: 100%;
+  background-color: var(--primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .gap {
+    margin-left: 20px;
+  }
+
+  .left {
+    display: flex;
+    margin-left: 10px;
+    align-items: center;
+  }
+
+  .right {
     display: flex;
     justify-content: space-between;
+    margin-right: 10px;
     align-items: center;
+  }
 
-    .gap {
-        margin-left: 20px;
-    }
+  .right-loggedIn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    margin-right: 10px;
+  }
 
-    .left {
-        display: flex;
-        margin-left: 10px;
-        align-items: center;
-    }
+  a {
+    text-decoration: none;
+  }
 
-    .right {
-        display: flex;
-        justify-content: space-between;
-        margin-right: 10px;
-        align-items: center;
-    }
+  .idle {
+    color: black;
+  }
 
-    .right-loggedIn {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 20px;
-        margin-right: 10px;
-    }
+  .pending {
+    opacity: 0.5;
+  }
 
-    a {
-        text-decoration: none;
-    }
+  .active {
+    color: #1976d2;
+  }
 
-    .idle {
-        color: black;
-    }
+  .notification-dropdown {
+    width: 150px;
+  }
 
-    .pending {
-        opacity: 0.5;
-    }
-
-    .active {
-        color: #1976d2;
-    }
-    
-    .notification-dropdown{
-        width: 150px;
-    }
-
-    .account-dropdown{
-        width: 100px;
-    }
-
-
+  .account-dropdown {
+    width: 100px;
+  }
 }

@@ -3,13 +3,13 @@
   margin: 0 auto;
   margin-top: 50px;
 
-  .header{
+  .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 
-  .menu{
+  .menu {
     margin: 10px 0;
   }
 
@@ -29,10 +29,10 @@
     outline: none;
   }
 
-  select{
+  select {
     margin-bottom: 10px;
   }
-  
+
   button[type='submit'] {
     display: block;
     background-color: var(--form-btn);

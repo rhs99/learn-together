@@ -5,6 +5,7 @@ import Util from '../../utils';
 import { User } from '../../types';
 
 import './_index.scss';
+import Table from '../../design-library/Table/Table';
 
 const Profile = () => {
   const [user, setUser] = useState<User>();
@@ -22,18 +23,19 @@ const Profile = () => {
     return null;
   }
 
+  const rows: any = [
+    { value: ['Info', 'Value'] },
+    { value: ['Username', user.userName] },
+    { value: ['Class', user.class || 'N/A'] },
+    { value: ['Questions', user.questions] },
+    { value: ['Answers', user.answers] },
+    { value: ['Up votes', user.upVote] },
+    { value: ['Down Votes', user.downVote] },
+  ];
+
   return (
     <div className="lt-Profile">
-      <div>
-        <p>Questions: {user.questions}</p>
-        <p>Answers: {user.answers}</p>
-        <p>Up Votes: {user.upVote}</p>
-        <p>Down Votes: {user.downVote}</p>
-      </div>
-      <div>
-        <p>Username: {user.userName}</p>
-        <p>Class: {user.class || 'N/A'}</p>
-      </div>
+      <Table rowData={rows} />
     </div>
   );
 };

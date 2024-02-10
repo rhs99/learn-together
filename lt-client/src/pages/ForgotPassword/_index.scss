@@ -9,10 +9,10 @@
   flex-direction: column;
 
   @media only screen and (max-width: 780px) {
-      width: 80%;
+    width: 80%;
   }
 
-  .form-container{
+  .form-container {
     display: flex;
     flex-direction: column;
     gap: 10px;

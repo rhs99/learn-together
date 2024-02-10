@@ -148,48 +148,52 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
   const isOwner = authCtx.getStoredValue().userName === item.userName;
   const isQOwner = authCtx.getStoredValue().userName === qOwner && qOwner.length !== 0;
 
-  const detailsClassName = clickableDetails ? 'detailsClickable' : '';
+  const detailsClassName = clickableDetails ? 'lt-QACard-right-pane-details-clickable' : '';
   const detailsOnClick = clickableDetails ? handleItemDetailsClick : undefined;
 
   return (
-    <div className="cl-QACard">
-      <div className="qa-Body">
-        <div className="left-pane">
-          <div className="UD-container">
+    <div className="lt-QACard">
+      <div className="lt-QACard-body">
+        <div className="lt-QACard-left-pane">
+          <div className="lt-QACard-left-pane-UD-container">
             <Icon onClick={handleUpVote} name="arrow-up" size={20} />
-            <p>{udCnt.upVote - udCnt.downVote}</p>
+            <span>{udCnt.upVote - udCnt.downVote}</span>
             <Icon onClick={handleDownVote} name="arrow-down" size={20} />
           </div>
-          <div className="info">
-            <p>Up: {udCnt.upVote}</p>
-            <p>Down: {udCnt.downVote}</p>
-            {isQuestion && <p>Ans: {(item as Question).answers.length}</p>}
+          <div className="lt-QACard-left-pane-info">
+            {isQuestion && <span>Ans: {(item as Question).answers.length}</span>}
           </div>
+        </div>
+        <div className="lt-QACard-right-pane">
+          <div className={detailsClassName} onClick={detailsOnClick}>
+            <QuillTextEditor onEditorReady={onEditorReady} readOnly={true} showToolbar={false} />
+          </div>
+          {item.imageLocations.length > 0 && (
+            <div className="lt-QACard-right-pane-image-container">
+              {item.imageLocations.map((file, index) => (
+                <img
+                  key={index}
+                  src={file}
+                  className="lt-QACard-right-pane-image"
+                  onClick={() => handleImageModalOpen(file)}
+                />
+              ))}
+            </div>
+          )}
+
           {isQuestion && (
-            <div className="tags">
+            <div className="lt-QACard-right-pane-tags">
               {(item as Question).tags.map((tag) => (
-                <span key={tag._id} className="tag">
+                <span key={tag._id} className="lt-QACard-right-pane-tag">
                   {tag.name}{' '}
                 </span>
               ))}
             </div>
           )}
         </div>
-        <div className="right-pane">
-          <div className={detailsClassName} onClick={detailsOnClick}>
-            <QuillTextEditor onEditorReady={onEditorReady} readOnly={true} showToolbar={false} />
-          </div>
-          {item.imageLocations.length > 0 && (
-            <div className="imageContainer">
-              {item.imageLocations.map((file, index) => (
-                <img key={index} src={file} className="image" onClick={() => handleImageModalOpen(file)} />
-              ))}
-            </div>
-          )}
-        </div>
       </div>
-      <div className="bottom-pane">
-        <span className="author">{item.userName}</span>
+      <div className="lt-QACard-bottom-pane">
+        <span className="lt-QACard-bottom-pane-author">{item.userName}</span>
         <Tooltip content="favourite">
           <Icon
             disabled={!authCtx.isLoggedIn}
