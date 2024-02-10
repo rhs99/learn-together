@@ -4,6 +4,7 @@ const Answer = require('../models/answer');
 const Chapter = require('../models/chapter');
 const User = require('../models/user');
 const Utils = require('../common/utils');
+const {clearCache} = require('./cache');
 
 const addNewQuestion = async (body) => {
     const user = await User.findById(body.user).exec();
@@ -38,7 +39,8 @@ const addNewQuestion = async (body) => {
     await user.save();
     const chapter = await Chapter.findById(body.chapter).exec();
     chapter.questions.push(question._id);
-    await chapter.save();
+    await chapter.save(); 
+    clearCache(`chapters-${chapter.subject}`);
 };
 
 const getAllQuestions = async (body, query) => {
@@ -161,6 +163,7 @@ const deleteQuestion = async (questionId, userId) => {
     if (allFiles.length > 0) {
         Utils.deleteFile(allFiles);
     }
+    clearCache(`chapters-${chapter.subject}`);
 };
 
 const addToFavourite = async (body) => {
