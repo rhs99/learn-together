@@ -126,6 +126,16 @@ const Navigation = () => {
             About
           </NavLink>
         </div>
+        {isLoggedIn && (
+          <div className="gap">
+            <NavLink
+              to="/donate"
+              className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
+            >
+              Donate
+            </NavLink>
+          </div>
+        )}
       </div>
       <div className={isLoggedIn ? 'right-loggedIn' : 'right'}>
         {!isLoggedIn && (
