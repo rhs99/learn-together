@@ -1,0 +1,68 @@
+.cl-Donation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5vh;
+
+  .donation-form-container {
+    width: 35%;
+    padding: 10px 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .header {
+    margin: 10px;
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+
+  input[type='text'],
+  input[type='number'],
+  input[type='date'],
+  select {
+    width: 100%;
+    padding: 5px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    outline: none;
+
+    &:focus {
+      border-color: #2c3e50;
+    }
+  }
+
+  .err {
+    color: red;
+    font-size: 0.7rem;
+  }
+
+  button[type='submit'] {
+    display: block;
+    width: 100%;
+    background-color: var(--form-btn);
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    font-size: 1.2em;
+    padding: 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+
+  @media only screen and (max-width: 780px) {
+    .donation-form-container {
+      width: 80%;
+    }
+  }
+}
