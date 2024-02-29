@@ -131,7 +131,8 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
       })
       .then(() => {
         handleItemDelete(item._id);
-      }).finally(()=>{
+      })
+      .finally(() => {
         setIsLoading(false);
       });
   };
@@ -184,37 +185,38 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
               ))}
             </div>
           )}
-
-          {isQuestion && (
-            <div className="lt-QACard-right-pane-tags">
-              {(item as Question).tags.map((tag) => (
-                <span key={tag._id} className="lt-QACard-right-pane-tag">
-                  {tag.name}{' '}
-                </span>
-              ))}
-            </div>
-          )}
         </div>
       </div>
       <div className="lt-QACard-bottom-pane">
-        <span className="lt-QACard-bottom-pane-author">{item.userName}</span>
-        <Tooltip content="favourite">
-          <Icon
-            disabled={!authCtx.isLoggedIn}
-            color={isFavourite ? 'red' : 'black'}
-            name="favourite"
-            onClick={handleToggleFavourite}
-          />
-        </Tooltip>
-        <Tooltip content="share">
-          <Icon onClick={handleShareClick} name="share" />
-        </Tooltip>
-        <Tooltip content="edit">
-          <Icon disabled={!isOwner} onClick={handleEdit} name="edit" />
-        </Tooltip>
-        <Tooltip content="delete">
-          <Icon disabled={!isOwner && !isQOwner} onClick={handleDelete} name="delete" />
-        </Tooltip>
+        {isQuestion && (
+          <div className="lt-QACard-bottom-pane-tags">
+            {(item as Question).tags.map((tag) => (
+              <span key={tag._id} className="lt-QACard-bottom-pane-tag">
+                {tag.name}{' '}
+              </span>
+            ))}
+          </div>
+        )}
+        <div className="lt-QACard-bottom-pane-actions">
+          <span className="lt-QACard-bottom-pane-author">{item.userName}</span>
+          <Tooltip content="favourite">
+            <Icon
+              disabled={!authCtx.isLoggedIn}
+              color={isFavourite ? 'red' : 'black'}
+              name="favourite"
+              onClick={handleToggleFavourite}
+            />
+          </Tooltip>
+          <Tooltip content="share">
+            <Icon onClick={handleShareClick} name="share" />
+          </Tooltip>
+          <Tooltip content="edit">
+            <Icon disabled={!isOwner} onClick={handleEdit} name="edit" />
+          </Tooltip>
+          <Tooltip content="delete">
+            <Icon disabled={!isOwner && !isQOwner} onClick={handleDelete} name="delete" />
+          </Tooltip>
+        </div>
       </div>
       {imageToShow.length > 0 && (
         <Modal isShown={imageToShow.length > 0} onClose={handleImageModalClose}>

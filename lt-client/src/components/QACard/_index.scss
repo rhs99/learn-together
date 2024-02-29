@@ -71,11 +71,22 @@
       cursor: pointer;
     }
 
+    @media only screen and (max-width: 780px) {
+      &-image {
+        width: 120px;
+      }
+    }
+  }
+
+  &-bottom-pane {
+    display: flex;
+    flex-direction: column;
+
     &-tags {
-      margin-top: 12px;
       display: flex;
       flex-direction: row;
       gap: 5px;
+      margin-top: 8px;
     }
 
     &-tag {
@@ -86,31 +97,21 @@
       font-size: 0.9em;
     }
 
-    @media only screen and (max-width: 780px) {
-      &-image {
-        width: 120px;
-      }
-
-      &-tag {
-        font-size: 0.8em;
-      }
+    &-actions {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      gap: 20px;
     }
-  }
-
-  &-bottom-pane {
-    margin-top: 8px;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 20px;
 
     &-author {
       color: rgb(25, 165, 178);
     }
 
     @media only screen and (max-width: 780px) {
-      gap: 15px;
+      &-tag {
+        font-size: 0.7em;
+      }
     }
   }
 }
