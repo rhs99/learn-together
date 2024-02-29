@@ -1,12 +1,16 @@
 import { useNavigate } from 'react-router-dom';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useState, useContext } from 'react';
 import axios from 'axios';
 
 import Util from '../../utils';
 
 import './_index.scss';
+import AuthContext from '../../store/auth';
+import Switch from '../../design-library/Switch/Switch';
 
 const DonationPage = () => {
+  const { isLoggedIn } = useContext(AuthContext);
+
   const [donationDate, setDonationDate] = useState('');
   const [amount, setAmount] = useState(0);
   const [method, setMethod] = useState('');
@@ -14,6 +18,7 @@ const DonationPage = () => {
   const [accountNo, setAccountNo] = useState(0);
   const [contactNo, setContactNo] = useState(0);
   const [furtherInfo, setFurtherInfo] = useState('');
+  const [isAnonymous, setIsAnonymous] = useState(!isLoggedIn);
   const [err, setErr] = useState('');
 
   const navigate = useNavigate();
@@ -36,6 +41,7 @@ const DonationPage = () => {
       accountNo: accountNo,
       contactNo: contactNo,
       furtherInfo: furtherInfo,
+      isAnonymous: isAnonymous,
     };
 
     console.log(donationInfo);
@@ -54,7 +60,11 @@ const DonationPage = () => {
   return (
     <div className="cl-Donation">
       <div className="donation-form-container">
-        <p className="header">Fill up your Donation Info</p>
+        <p className="header">Fill up your Donation Infonnn</p>
+        <div className="anonymous">
+          <label>Anonymous donation</label>
+          <Switch isChecked={isAnonymous} onChange={() => setIsAnonymous(!isAnonymous)} />
+        </div>
         <form onSubmit={handleDonation}>
           <label htmlFor="donationDate">Date of Donation</label>
           <input
@@ -118,6 +128,7 @@ const DonationPage = () => {
             value={furtherInfo}
             onChange={(event) => setFurtherInfo(event.target.value)}
           />
+          <div></div>
           <button type="submit">Submit</button>
         </form>
       </div>
