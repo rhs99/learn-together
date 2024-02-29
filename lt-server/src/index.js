@@ -17,6 +17,7 @@ const answerRouter = require('./routes/answer');
 const tagRouter = require('./routes/tag');
 const qaRouter = require('./routes/qavote');
 const uploader = require('./routes/upload');
+const paymentMethod = require('./routes/paymentMethod');
 
 require('./services/cache');
 
@@ -36,6 +37,7 @@ app.use('/answers', answerRouter);
 app.use('/tags', tagRouter);
 app.use('/votes', qaRouter);
 app.use('/upload', uploader);
+app.use('/paymentMethods', paymentMethod);
 
 const server = http.createServer(app);
 

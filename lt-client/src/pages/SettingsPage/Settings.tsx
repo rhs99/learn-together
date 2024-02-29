@@ -14,6 +14,7 @@ import Dropdown from '../../design-library/Dropdown/Dropdown';
 import Button from '../../design-library/Button/Button';
 
 import './_index.scss';
+import AddPaymentMethod from './AddPaymentMethod';
 
 const Settings = () => {
   const [hasAdminPrivilege, setHasAdminPrivilege] = useState(false);
@@ -50,7 +51,8 @@ const Settings = () => {
       options.push(
         { label: 'Add class', value: 'add-class' },
         { label: 'Add subject', value: 'add-subject' },
-        { label: 'Add chapter', value: 'add-chapter' }
+        { label: 'Add chapter', value: 'add-chapter' },
+        { label: 'Add Payment Method', value: 'add-payment-method' }
       );
     }
 
@@ -72,6 +74,8 @@ const Settings = () => {
       return <AddSubject classes={classes} />;
     } else if (currOption === 'add-chapter') {
       return <AddChapter classes={classes} />;
+    } else if (currOption === 'add-payment-method') {
+      return <AddPaymentMethod />;
     } else {
       return <p>Nothing!</p>;
     }
