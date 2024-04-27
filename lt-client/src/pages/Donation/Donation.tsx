@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { ChangeEvent, FormEvent, useState, useContext } from 'react';
+import { ChangeEvent, FormEvent, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 
 import Util from '../../utils';
@@ -8,20 +8,29 @@ import './_index.scss';
 import AuthContext from '../../store/auth';
 import Switch from '../../design-library/Switch/Switch';
 
-const DonationPage = () => {
-  const { isLoggedIn } = useContext(AuthContext);
+type PaymentMethod = {
+  _id: string;
+  name: string;
+};
 
+const DonationPage = () => {
   const [donationDate, setDonationDate] = useState('');
   const [amount, setAmount] = useState(0);
   const [method, setMethod] = useState('');
   const [transactionID, setTransactionID] = useState('');
-  const [accountNo, setAccountNo] = useState(0);
   const [contactNo, setContactNo] = useState(0);
   const [furtherInfo, setFurtherInfo] = useState('');
-  const [isAnonymous, setIsAnonymous] = useState(!isLoggedIn);
-  const [err, setErr] = useState('');
+  const [isAnonymous, setIsAnonymous] = useState(false);
+  const [availableMethods, setAvailableMethods] = useState<PaymentMethod[]>([]);
 
+  const { getStoredValue } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    axios.get(`${Util.CONSTANTS.SERVER_URL}/paymentMethods`).then((res) => {
+      setAvailableMethods(res.data);
+    });
+  }, []);
 
   const onValueChange = (event: ChangeEvent<HTMLInputElement>) => {
     setMethod(event.target.value);
@@ -30,37 +39,34 @@ const DonationPage = () => {
   const handleDonation = async (event: FormEvent) => {
     event.preventDefault();
 
-    const URL = Util.CONSTANTS.SERVER_URL + '/gg';
+    const URL = Util.CONSTANTS.SERVER_URL + '/donations';
+
+    let selectedMethod = '';
+    availableMethods.forEach((currMethod) => {
+      if (currMethod.name === method) {
+        selectedMethod = currMethod._id;
+      }
+    });
 
     const donationInfo: { [key: string]: any } = {
-      userName: localStorage.getItem('userName'),
+      donor: getStoredValue().userName,
       amount: amount,
-      date: donationDate,
-      method: method,
+      dateOfDonation: donationDate,
+      method: selectedMethod,
       transactionID: transactionID,
-      accountNo: accountNo,
       contactNo: contactNo,
       furtherInfo: furtherInfo,
-      isAnonymous: isAnonymous,
     };
 
-    console.log(donationInfo);
-    navigate('/');
-
-    // axios
-    //   .post(URL, donationInfo)
-    //   .then(() => {
-    //     navigate('/');
-    //   })
-    //   .catch((err) => {
-    //     setErr(err.response.data.message);
-    //   });
+    axios.post(URL, donationInfo).then((res) => {
+      navigate('/');
+    });
   };
 
   return (
     <div className="cl-Donation">
       <div className="donation-form-container">
-        <p className="header">Fill up your Donation Infonnn</p>
+        <p className="header">Fill up your Donation Info</p>
         <div className="anonymous">
           <label>Anonymous donation</label>
           <Switch isChecked={isAnonymous} onChange={() => setIsAnonymous(!isAnonymous)} />
@@ -84,33 +90,20 @@ const DonationPage = () => {
             required
           />
           <label>Select your Payment Method</label>
-          <label>
-            <input type="radio" value="bKash" checked={method === 'bKash'} onChange={onValueChange} />
-            bKash
-          </label>
-          <label>
-            <input type="radio" value="Nagad" checked={method === 'Nagad'} onChange={onValueChange} />
-            Nagad
-          </label>
-          <label>
-            <input type="radio" value="Rocket" checked={method === 'Rocket'} onChange={onValueChange} />
-            Rocket
-          </label>
+          {availableMethods.map((option) => {
+            return (
+              <label key={option.name}>
+                <input type="radio" value={option.name} checked={method === option.name} onChange={onValueChange} />
+                {option.name}
+              </label>
+            );
+          })}
           <label htmlFor="transactionID">Transaction ID</label>
           <input
             type="text"
             name="transactionID"
             value={transactionID}
             onChange={(event) => setTransactionID(event.target.value)}
-            required
-          />
-          <label htmlFor="accountNo">Account Number</label>
-          <input
-            type="number"
-            name="accountNo"
-            min={0}
-            value={accountNo === 0 ? '' : accountNo}
-            onChange={(event) => setAccountNo(Number(event.target.value))}
             required
           />
           <label htmlFor="contactNo">Contact Number(optional)</label>
@@ -132,7 +125,6 @@ const DonationPage = () => {
           <button type="submit">Submit</button>
         </form>
       </div>
-      {err && <div className="err">{err}</div>}
     </div>
   );
 };

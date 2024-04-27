@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 
 const donationSchema = new mongoose.Schema({
     donor: {
-        type: mongoose.Types.ObjectId,
-        ref: 'User',
+        type: String,
     },
     amount: {
         type: Number,
@@ -20,12 +19,18 @@ const donationSchema = new mongoose.Schema({
     },
     transactionID: {
         type: String,
+        unique: true,
     },
     contactNo: {
         type: String,
     },
     furtherInfo: {
         type: String,
+    },
+    status: {
+        type: String,
+        enum: ['pending', 'completed'],
+        default: 'pending',
     },
 });
 
