@@ -7,28 +7,22 @@ const donationSchema = new mongoose.Schema({
     },
     amount: {
         type: Number,
-        default: 0,
         required: true,
     },
     dateOfDonation: {
         type: Date,
-        default: Date.now,
         required: true,
     },
     method: {
         type: mongoose.Types.ObjectId,
         ref: 'PaymentMethod',
+        required: true,
     },
     transactionID: {
         type: String,
-        required: true,
-    },
-    accountNo: {
-        type: Number,
-        required: true,
     },
     contactNo: {
-        type: Number,
+        type: String,
     },
     furtherInfo: {
         type: String,
