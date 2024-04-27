@@ -18,6 +18,7 @@ const tagRouter = require('./routes/tag');
 const qaRouter = require('./routes/qavote');
 const uploader = require('./routes/upload');
 const paymentMethod = require('./routes/paymentMethod');
+const donation = require('./routes/donation');
 
 require('./services/cache');
 
@@ -38,6 +39,7 @@ app.use('/tags', tagRouter);
 app.use('/votes', qaRouter);
 app.use('/upload', uploader);
 app.use('/paymentMethods', paymentMethod);
+app.use('/donations', donation);
 
 const server = http.createServer(app);
 

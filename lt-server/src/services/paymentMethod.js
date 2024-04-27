@@ -1,7 +1,7 @@
 const PaymentMethod = require('../models/paymentMetod');
 
 const getPaymentMethods = async () => {
-    const paymentMethods = await PaymentMethod.find();
+    const paymentMethods = await PaymentMethod.find({}).lean();
     return paymentMethods;
 };
 
