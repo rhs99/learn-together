@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   lt-client:
     build: ./lt-client
@@ -22,8 +21,21 @@ services:
       - /app/node_modules
     depends_on:
       - lt-cache
+      - lt-database
   lt-cache:
     image: redis:7.0-alpine
     restart: always
     ports:
       - "6379:6379"
+  lt-database:
+    image: mongo:latest
+    container_name: lt-database
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: lt-db
+    volumes:
+      - mongodb_data:/data/db
+volumes:
+  mongodb_data:
