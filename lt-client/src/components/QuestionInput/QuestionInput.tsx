@@ -7,12 +7,13 @@ import { Question } from '../../types';
 import AuthContext from '../../store/auth';
 import { Tag } from '../../types';
 import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
-import Button from '../../design-library/Button/Button';
 import Alert from '../../design-library/Alert/Alert';
 import TagInput from '../TagInput/TagInput';
 import FileUploader from '../FileUploader/FileUploader';
 import useFileUploader from '../../hooks/file-uploader';
 import Spinner from '../../design-library/Spinner/Spinner';
+
+import { Button } from '@optiaxiom/react';
 
 import './_index.scss';
 
@@ -142,12 +143,10 @@ const QuestionInput = (props: QuestionInputProps) => {
       </div>
       <FileUploader handleFileChange={handleFileChange} className="file-upload" />
       <div className="btn-container">
-        <Button onClick={handleClose} variant="danger">
+        <Button onClick={handleClose} appearance="danger">
           Close
         </Button>
-        <Button onClick={handleSave} variant="success">
-          Save
-        </Button>
+        <Button onClick={handleSave}>Save</Button>
       </div>
     </div>
   );

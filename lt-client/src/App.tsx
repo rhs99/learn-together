@@ -1,4 +1,5 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { AxiomProvider } from '@optiaxiom/react';
 
 import RootLayout from './pages/RootLayout';
 import HoomePage from './pages/Homepage/Homepage';
@@ -92,9 +93,11 @@ const router = createBrowserRouter([
 
 const App = () => {
   return (
-    <AuthContextProvider>
-      <RouterProvider router={router} />
-    </AuthContextProvider>
+    <AxiomProvider>
+      <AuthContextProvider>
+        <RouterProvider router={router} />
+      </AuthContextProvider>
+    </AxiomProvider>
   );
 };
 
