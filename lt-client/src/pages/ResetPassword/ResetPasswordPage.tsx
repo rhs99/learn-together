@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { FormEvent, useState } from 'react';
 import axios from 'axios';
+import { NavLink } from 'react-router-dom';
 
 import Util from '../../utils';
 
@@ -41,7 +42,7 @@ const ResetPasswordPage = () => {
   return (
     <div className="cl-Reset-Password">
       <div className="rp-form-container">
-        <h2>Reset Password</h2>
+        <h1 className="header">Reset Password</h1>
         <form onSubmit={handleReset}>
           <label htmlFor="password">Password</label>
           <input
@@ -62,6 +63,9 @@ const ResetPasswordPage = () => {
           {err && <span className="err">{err}</span>}
           <button type="submit">Reset Password</button>
         </form>
+        <div className="login-link">
+          Remember your password? <NavLink to="/users/login">Log In</NavLink>
+        </div>
       </div>
     </div>
   );

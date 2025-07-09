@@ -2,6 +2,7 @@ import { useLoaderData, useNavigate } from 'react-router-dom';
 import { FormEvent, useState } from 'react';
 import { Class } from '../../types';
 import axios from 'axios';
+import { NavLink } from 'react-router-dom';
 
 import Util from '../../utils';
 
@@ -56,7 +57,7 @@ const SignupPage = () => {
   return (
     <div className="cl-Signup">
       <div className="signup-form-container">
-        <p className="header">Create an Account</p>
+        <h1 className="header">Create an Account</h1>
         <form onSubmit={handleSignup}>
           <label htmlFor="username">Username</label>
           <input
@@ -96,6 +97,9 @@ const SignupPage = () => {
           </select>
           <button type="submit">Sign Up</button>
         </form>
+        <div className="login-link">
+          Already have an account? <NavLink to="/users/login">Log In</NavLink>
+        </div>
       </div>
     </div>
   );

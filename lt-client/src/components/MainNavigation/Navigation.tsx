@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import AuthContext from '../../store/auth';
 import Util from '../../utils';
 
@@ -12,12 +12,20 @@ import { CiLogout } from 'react-icons/ci';
 
 import {
   Box,
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  Flex,
+  Heading,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Separator,
+  Text,
 } from '@optiaxiom/react';
 
 import './_index.scss';
@@ -94,11 +102,19 @@ const Navigation = () => {
 
   const getNotificationOption = () => {
     if (notifications.length === 0) {
-      return [{ value: '', component: <span>No Notification!</span> }];
+      return [{ value: '', component: <Text color="fg.tertiary">No Notification!</Text> }];
     }
     const options = notifications.map((notification) => {
       const option = {
-        component: <span>New answer!</span>,
+        component: (
+          <Text
+            color="fg.accent.hovered"
+            onClick={() => handleGoToNotification(notification)}
+            style={{ cursor: 'pointer' }}
+          >
+            New answer!
+          </Text>
+        ),
         value: notification,
       };
       return option;
@@ -153,22 +169,21 @@ const Navigation = () => {
           </Box>
         )}
         {isLoggedIn && (
-          <Box>
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                onClick={handleNotificationFetch}
+          <Flex flexDirection="row" gap="8">
+            <Popover>
+              <PopoverTrigger
                 icon={<IoIosNotificationsOutline color={hasNewNotification ? 'red' : 'black'} />}
+                onClick={handleNotificationFetch}
               />
-              <DropdownMenuContent>
-                <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {getNotificationOption().map((option) => (
-                  <DropdownMenuItem key={option.value} onClick={() => handleGoToNotification(option.value)}>
+              <PopoverContent>
+                {getNotificationOption().map((option, index) => (
+                  <React.Fragment key={option.value}>
                     {option.component}
-                  </DropdownMenuItem>
+                    {index < getNotificationOption().length - 1 && <Separator />}
+                  </React.Fragment>
                 ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </PopoverContent>
+            </Popover>
 
             <DropdownMenu>
               <DropdownMenuTrigger icon={<CgProfile />} />
@@ -186,7 +201,7 @@ const Navigation = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </Box>
+          </Flex>
         )}
       </Box>
     </Box>

@@ -1,5 +1,9 @@
 .lt-Table {
   display: flex;
   flex-direction: column;
-  border: 2px solid gray;
+  border: 2px solid var(--blue-grotto);
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--card-bg);
+  box-shadow: 0 3px 10px rgba(5, 68, 94, 0.15);
 }

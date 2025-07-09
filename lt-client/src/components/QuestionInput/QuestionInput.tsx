@@ -137,7 +137,9 @@ const QuestionInput = (props: QuestionInputProps) => {
         <Button onClick={handleClose} appearance="danger">
           Close
         </Button>
-        <Button onClick={handleSave}>Save</Button>
+        <Button onClick={handleSave} appearance="primary">
+          Save
+        </Button>
       </div>
     </div>
   );

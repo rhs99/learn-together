@@ -2,6 +2,7 @@ import { useState, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
 import Util from '../../utils';
 import useAlert from '../../hooks/use-alert';
+import { NavLink } from 'react-router-dom';
 
 import './_index.scss';
 
@@ -42,30 +43,42 @@ function ForgotPasswordPage() {
   };
 
   return (
-    <div className="cl-ForgotPassword" onSubmit={handleSubmit}>
-      <h3>Forgot Password</h3>
-      <form method="POST" className="form-container">
-        <label>
-          Username:
+    <div className="cl-ForgotPassword">
+      <div className="forgot-password-container">
+        <h1 className="header">Reset Password</h1>
+        <form method="POST" className="form-container" onSubmit={handleSubmit}>
+          <label htmlFor="username">Username</label>
           <input
             type="text"
             name="username"
+            id="username"
             disabled={emailSent}
             value={username}
             onChange={handleUsernameChange}
             required
           />
-        </label>
 
-        {err && <span className="err">Invalid Username</span>}
-        <label>
-          Email:
-          <input type="text" name="email" disabled={emailSent} value={email} onChange={handleEmailChange} required />
-        </label>
-        <button type="submit" disabled={emailSent}>
-          Send Link
-        </button>
-      </form>
+          {err && <span className="err">Invalid username or email</span>}
+
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            disabled={emailSent}
+            value={email}
+            onChange={handleEmailChange}
+            required
+          />
+
+          <button type="submit" disabled={emailSent}>
+            {emailSent ? 'Email Sent' : 'Send Reset Link'}
+          </button>
+        </form>
+        <div className="login-link">
+          Remember your password? <NavLink to="/users/login">Log In</NavLink>
+        </div>
+      </div>
     </div>
   );
 }

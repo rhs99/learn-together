@@ -1,31 +1,24 @@
-import { NavLink } from 'react-router-dom';
-
-import './_index.scss';
+import { useNavigate } from 'react-router-dom';
+import { Breadcrumb } from '@optiaxiom/react/unstable';
 
 type BreadcrumbsProps = {
   items: { name: string; url?: string | null }[];
 };
 
 const Breadcrumbs = ({ items }: BreadcrumbsProps) => {
+  const navigate = useNavigate();
+
   return (
-    <nav className="lt-Breadcrumbs">
-      <ul className="lt-Breadcrumbs-list">
-        {items.map((item, index) => (
-          <li key={index} className="lt-Breadcrumbs-item">
-            {item.url ? (
-              <>
-                <NavLink to={item.url} className="lt-Breadcrumbs-link">
-                  {item.name}
-                </NavLink>
-                <span className="lt-Breadcrumbs-separator">&gt;</span>
-              </>
-            ) : (
-              <span className="lt-Breadcrumbs-nonlink">{item.name}</span>
-            )}
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <Breadcrumb
+      items={items.map((item) => ({
+        label: item.name,
+        execute: () => {
+          if (item.url) {
+            navigate(item.url);
+          }
+        },
+      }))}
+    />
   );
 };
 

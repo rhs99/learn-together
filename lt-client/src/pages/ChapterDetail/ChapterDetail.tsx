@@ -7,12 +7,11 @@ import AuthContext from '../../store/auth';
 import SortOptions from '../../components/SortOptions/SortOptions';
 import { Tag } from '../../types';
 import QACard from '../../components/QACard/QACard';
-import Pagination from '../../components/Pagination/Pagination';
 import Breadcrumbs from '../../components/Breadcrumbs/Breadcrumbs';
 import TagInput from '../../components/TagInput/TagInput';
 import useAlert from '../../hooks/use-alert';
 
-import { Button, Box } from '@optiaxiom/react';
+import { Button, Box, Pagination } from '@optiaxiom/react';
 
 import './_index.scss';
 import FilterOptions from '../../components/FilterOptions/FilterOptions';
@@ -189,7 +188,8 @@ const ChapterDetail = () => {
 
       {!isLoading && paginationInfo.totalPage > 1 && (
         <Pagination
-          totalPages={paginationInfo.totalPage}
+          style={{ display: 'flex', justifyContent: 'center' }}
+          total={paginationInfo.totalPage}
           page={paginationInfo.currPage}
           onPageChange={(page) => {
             setPaginationInfo((prev) => {

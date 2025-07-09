@@ -3,6 +3,7 @@ import { useState, ChangeEvent, useContext, FormEvent } from 'react';
 import axios from 'axios';
 import Util from '../../utils';
 import AuthContext from '../../store/auth';
+import { NavLink } from 'react-router-dom';
 
 import './_index.scss';
 
@@ -51,26 +52,33 @@ function LoginPage() {
   return (
     <div className="cl-Login" onSubmit={handleSubmit}>
       <div className="login-form-container">
-        <p className="header">Login</p>
+        <h1 className="header">Login</h1>
         <form method="POST" className="login-form">
-          <label>
-            Username:
-            <input type="text" name="username" value={username} onChange={handleUsernameChange} required />
-          </label>
-          <label>
-            Password:
-            <input type="password" name="password" value={password} onChange={handlePasswordChange} required />
-          </label>
+          <label htmlFor="username">Username</label>
+          <input type="text" name="username" id="username" value={username} onChange={handleUsernameChange} required />
+
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            value={password}
+            onChange={handlePasswordChange}
+            required
+          />
           {err && (
             <>
               <p className="err">Invalid Credentials</p>
-              <a href="" onClick={handleForgotPassword}>
+              <a href="#" className="forgot-password" onClick={handleForgotPassword}>
                 Forgot password?
               </a>
             </>
           )}
           <button type="submit">Login</button>
         </form>
+        <div className="signup-link">
+          Don't have an account? <NavLink to="/users/signup">Sign Up</NavLink>
+        </div>
       </div>
     </div>
   );

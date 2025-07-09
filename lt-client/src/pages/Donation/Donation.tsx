@@ -66,7 +66,7 @@ const DonationPage = () => {
   return (
     <div className="cl-Donation">
       <div className="donation-form-container">
-        <p className="header">Fill up your Donation Info</p>
+        <h1 className="header">Make a Donation</h1>
         <div className="anonymous">
           <label>Anonymous donation</label>
           <Switch onChange={() => setIsAnonymous(!isAnonymous)} />
@@ -80,6 +80,7 @@ const DonationPage = () => {
             onChange={(event) => setDonationDate(event.target.value)}
             required
           />
+
           <label htmlFor="amount">Amount</label>
           <input
             type="number"
@@ -89,15 +90,25 @@ const DonationPage = () => {
             onChange={(event) => setAmount(Number(event.target.value))}
             required
           />
+
           <label>Select your Payment Method</label>
-          {availableMethods.map((option) => {
-            return (
-              <label key={option.name}>
-                <input type="radio" value={option.name} checked={method === option.name} onChange={onValueChange} />
-                {option.name}
-              </label>
-            );
-          })}
+          <div className="payment-methods">
+            {availableMethods.map((option) => {
+              return (
+                <div className="radio-option" key={option.name}>
+                  <input
+                    type="radio"
+                    id={option.name}
+                    value={option.name}
+                    checked={method === option.name}
+                    onChange={onValueChange}
+                  />
+                  <label htmlFor={option.name}>{option.name}</label>
+                </div>
+              );
+            })}
+          </div>
+
           <label htmlFor="transactionID">Transaction ID</label>
           <input
             type="text"
@@ -106,7 +117,8 @@ const DonationPage = () => {
             onChange={(event) => setTransactionID(event.target.value)}
             required
           />
-          <label htmlFor="contactNo">Contact Number(optional)</label>
+
+          <label htmlFor="contactNo">Contact Number (optional)</label>
           <input
             type="number"
             name="contactNo"
@@ -114,15 +126,16 @@ const DonationPage = () => {
             value={contactNo === 0 ? '' : contactNo}
             onChange={(event) => setContactNo(Number(event.target.value))}
           />
-          <label htmlFor="furtherInfo">Further Info(optional)</label>
+
+          <label htmlFor="furtherInfo">Further Information (optional)</label>
           <input
             type="text"
             name="furtherInfo"
             value={furtherInfo}
             onChange={(event) => setFurtherInfo(event.target.value)}
           />
-          <div></div>
-          <button type="submit">Submit</button>
+
+          <button type="submit">Make Donation</button>
         </form>
       </div>
     </div>

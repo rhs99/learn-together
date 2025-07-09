@@ -103,6 +103,8 @@ const getAllQuestions = async (body, query) => {
         q['tags._id'] = { $in: tagIds };
     }
 
+    const totalFilteredCount = await Question.countDocuments(q).exec();
+
     const allQuestions = await Question.find(q)
         .sort(sortOption)
         .skip((pageNumber - 1) * pageSize)
@@ -129,7 +131,7 @@ const getAllQuestions = async (body, query) => {
         };
     });
 
-    return { totalCount: chapter.questions.length, paginatedResults: searchResponse };
+    return { totalCount: totalFilteredCount, paginatedResults: searchResponse };
 };
 
 const getQuestion = async (questionId) => {

@@ -1,3 +1,9 @@
+// Import design system components
+@use './design-library/typography';
+@use './design-library/form-elements';
+@use './design-library/buttons';
+@use './design-library/layout';
+
 html {
   box-sizing: border-box;
 }
@@ -7,27 +13,47 @@ html {
   box-sizing: inherit;
 }
 
-body {
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-    'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-}
+// Typography styles are now handled in the typography design file
 
 html,
 body {
   height: 100%;
   margin: 0;
   line-height: 1.5;
-  color: #121212;
+  color: var(--text-dark);
+  background-color: var(--background);
+}
+
+/* Added styles for main element to account for fixed navigation bar */
+main {
+  padding-top: calc(7vh + 20px); /* 7vh matches the height of the navigation bar + some extra padding */
+  min-height: calc(100vh - 7vh);
 }
 
 :root {
-  --primary: rgb(231, 235, 240);
-  --form-btn: #2c3e50;
+  /* Color palette */
+  --navy-blue: #05445e;
+  --blue-grotto: #189ab4;
+  --blue-green: #75e6da;
+  --baby-blue: #d4f1f4;
+
+  /* Extended palette for better contrast */
+  --light-bg: #eef8fb; /* Lighter background */
+  --white: #ffffff;
+  --off-white: #f9fdfe;
+  --gray-light: #e9f1f3;
+
+  /* Theme usage */
+  --primary: var(--navy-blue);
+  --primary-light: var(--blue-grotto);
+  --secondary: var(--blue-green);
+  --background: var(--light-bg); /* Changed from baby-blue to light-bg */
+  --card-bg: var(--white); /* New variable for card backgrounds */
+  --text-dark: var(--navy-blue);
+  --text-light: var(--baby-blue);
+  --accent: var(--blue-green);
+  --form-btn: var(--navy-blue);
+
+  /* Legacy variables maintained for compatibility */
+  --primary-legacy: rgb(231, 235, 240);
 }

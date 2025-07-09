@@ -1,16 +1,16 @@
 .lt-QACard {
-  background: #ffffff;
-  border: 1px solid #e1e5e9;
+  background: var(--card-bg);
+  border: 1px solid var(--blue-green);
   border-radius: 12px;
   padding: 0;
   margin-bottom: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 3px 10px rgba(5, 68, 94, 0.15);
   transition: all 0.2s ease;
   overflow: hidden;
 
   &:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    border-color: #d0d7de;
+    box-shadow: 0 4px 16px rgba(5, 68, 94, 0.15);
+    border-color: var(--blue-grotto);
   }
 
   &-body {
@@ -27,9 +27,9 @@
 
     &-details-clickable {
       &:hover {
-        background: #f6f8fa;
+        background: rgba(117, 230, 218, 0.1);
         .ql-editor {
-          color: #0969da;
+          color: var(--navy-blue);
         }
       }
     }
@@ -53,13 +53,13 @@
 
   &-bottom-pane {
     padding: 16px 20px;
-    border-top: 1px solid #e1e5e9;
-    background: #f6f8fa;
+    border-top: 1px solid var(--blue-green);
+    background: var(--gray-light);
 
     &-tag {
-      background: #ddf4ff;
-      color: #0969da;
-      border: 1px solid #54aeff;
+      background: rgba(24, 154, 180, 0.2);
+      color: var(--navy-blue);
+      border: 1px solid var(--blue-grotto);
       border-radius: 5px;
       padding: 4px 12px;
       font-weight: 500;

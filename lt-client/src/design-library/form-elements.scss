@@ -1,0 +1,55 @@
+// Enhanced form elements styling with our color palette
+
+// Select elements
+select {
+  appearance: none;
+  background-color: var(--white);
+  border: 1px solid var(--blue-grotto);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 1rem;
+  color: var(--navy-blue);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%2305445e' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 30px;
+
+  &:hover {
+    border-color: var(--navy-blue);
+  }
+
+  &:focus {
+    border-color: var(--blue-green);
+    box-shadow: 0 0 0 2px rgba(117, 230, 218, 0.3);
+    outline: none;
+  }
+
+  option {
+    background-color: var(--white);
+    color: var(--navy-blue);
+    padding: 8px;
+
+    &:hover {
+      background-color: var(--blue-grotto);
+      color: var(--white);
+    }
+  }
+}
+
+// Input focus states
+input[type='text'],
+input[type='password'],
+input[type='email'],
+input[type='number'],
+input[type='search'],
+input[type='tel'],
+input[type='url'],
+textarea {
+  &:focus {
+    border-color: var(--blue-green);
+    box-shadow: 0 0 0 2px rgba(117, 230, 218, 0.3);
+    outline: none;
+  }
+}
