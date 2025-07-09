@@ -1,4 +1,4 @@
-FROM node:20.10-slim
+FROM node:22.17-slim
 RUN npm install -g nodemon
 WORKDIR /app
 COPY package.json .
