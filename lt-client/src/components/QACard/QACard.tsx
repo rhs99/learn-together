@@ -5,11 +5,24 @@ import { Question, Answer } from '../../types';
 import Util from '../../utils';
 import axios from 'axios';
 import AuthContext from '../../store/auth';
-import Button from '../../design-library/Button/Button';
-import Icon from '../../design-library/Icon';
-import Modal from '../../design-library/Modal/Modal';
-import Tooltip from '../../design-library/Tooltip/Tooltip';
+import ConfirmationModal from '../../design-library/ConfirmationModal/ConfirmationModal';
 import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
+
+import { Box, Button, Tooltip, Badge, Text, Flex } from '@optiaxiom/react';
+import {
+  Dialog,
+  DialogBody,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+  theme,
+} from '@optiaxiom/react';
+import { BiShare, BiHeart, BiEdit, BiTrash } from 'react-icons/bi';
+import { GoArrowUp, GoArrowDown } from 'react-icons/go';
+
+import useAlert from '../../hooks/use-alert';
 
 import './_index.scss';
 
@@ -30,6 +43,7 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
 
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
+  const onAlert = useAlert();
 
   const qId = isQuestion ? '' : (item as Answer).question;
 
@@ -57,6 +71,7 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
   const handleShareClick = () => {
     const url = `${Util.CONSTANTS.CLIENT_URL}/${isQuestion ? 'questions' : 'answers'}/${item._id}`;
     navigator.clipboard.writeText(url);
+    onAlert('Link copied to clipboard', 'success');
   };
 
   const handleUpVote = async () => {
@@ -157,24 +172,23 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
   const detailsOnClick = clickableDetails ? handleItemDetailsClick : undefined;
 
   return (
-    <div className="lt-QACard">
-      <div className="lt-QACard-body">
-        <div className="lt-QACard-left-pane">
-          <div className="lt-QACard-left-pane-UD-container">
-            <Icon onClick={handleUpVote} name="arrow-up" size={20} />
-            <span>{udCnt.upVote - udCnt.downVote}</span>
-            <Icon onClick={handleDownVote} name="arrow-down" size={20} />
-          </div>
-          <div className="lt-QACard-left-pane-info">
-            {isQuestion && <span>Ans: {(item as Question).answers.length}</span>}
-          </div>
-        </div>
-        <div className="lt-QACard-right-pane">
-          <div className={detailsClassName} onClick={detailsOnClick}>
+    <Box className="lt-QACard">
+      <Flex flexDirection="row" gap="16" className="lt-QACard-body">
+        <Flex flexDirection="column" gap="16">
+          <Flex flexDirection="column" gap="2" alignItems="center">
+            <Button aria-label="upvote" icon={<GoArrowUp onClick={handleUpVote} size={20} />} />
+            <Text>{udCnt.upVote - udCnt.downVote}</Text>
+            <Button aria-label="downvote" icon={<GoArrowDown onClick={handleDownVote} size={20} />} />
+          </Flex>
+          {isQuestion && <Text>Ans: {(item as Question).answers.length}</Text>}
+        </Flex>
+
+        <Flex flexDirection="row" gap="24" className="lt-QACard-right-pane">
+          <Box className={detailsClassName} onClick={detailsOnClick}>
             <QuillTextEditor onEditorReady={onEditorReady} readOnly={true} showToolbar={false} />
-          </div>
+          </Box>
           {item.imageLocations.length > 0 && (
-            <div className="lt-QACard-right-pane-image-container">
+            <Flex flexDirection="row" gap="8">
               {item.imageLocations.map((file, index) => (
                 <img
                   key={index}
@@ -183,68 +197,69 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
                   onClick={() => handleImageModalOpen(file)}
                 />
               ))}
-            </div>
+            </Flex>
           )}
-        </div>
-      </div>
-      <div className="lt-QACard-bottom-pane">
+        </Flex>
+      </Flex>
+      <Box className="lt-QACard-bottom-pane">
         {isQuestion && (
-          <div className="lt-QACard-bottom-pane-tags">
+          <Flex flexDirection="row" gap="2">
             {(item as Question).tags.map((tag) => (
-              <span key={tag._id} className="lt-QACard-bottom-pane-tag">
+              <Badge key={tag._id} className="lt-QACard-bottom-pane-tag">
                 {tag.name}{' '}
-              </span>
+              </Badge>
             ))}
-          </div>
+          </Flex>
         )}
-        <div className="lt-QACard-bottom-pane-actions">
-          <span className="lt-QACard-bottom-pane-author">{item.userName}</span>
-          <Tooltip content="favourite">
-            <Icon
-              disabled={!authCtx.isLoggedIn}
-              color={isFavourite ? 'red' : 'black'}
-              name="favourite"
-              onClick={handleToggleFavourite}
-            />
-          </Tooltip>
-          <Tooltip content="share">
-            <Icon onClick={handleShareClick} name="share" />
-          </Tooltip>
-          <Tooltip content="edit">
-            <Icon disabled={!isOwner} onClick={handleEdit} name="edit" />
-          </Tooltip>
-          <Tooltip content="delete">
-            <Icon disabled={!isOwner && !isQOwner} onClick={handleDelete} name="delete" />
-          </Tooltip>
-        </div>
-      </div>
+        <Flex flexDirection="row" justifyContent="space-between">
+          <Text>{item.userName}</Text>
+          <Flex flexDirection="row" gap="2">
+            <Tooltip content="Add to favourites">
+              <Button
+                aria-label="favourite"
+                disabled={!authCtx.isLoggedIn}
+                icon={<BiHeart color={isFavourite ? 'red' : 'currentColor'} onClick={handleToggleFavourite} />}
+              />
+            </Tooltip>
+            <Tooltip content="Share">
+              <Button aria-label="share" disabled={!authCtx.isLoggedIn} icon={<BiShare onClick={handleShareClick} />} />
+            </Tooltip>
+            <Tooltip content="Edit">
+              <Button aria-label="edit" disabled={!isOwner} icon={<BiEdit onClick={handleEdit} />} />
+            </Tooltip>
+            <Tooltip content="Delete">
+              <Button aria-label="delete" disabled={!isOwner && !isQOwner} icon={<BiTrash onClick={handleDelete} />} />
+            </Tooltip>
+          </Flex>
+        </Flex>
+      </Box>
+
       {imageToShow.length > 0 && (
-        <Modal isShown={imageToShow.length > 0} onClose={handleImageModalClose}>
-          <img src={imageToShow} style={{ width: '100%', height: 'auto' }} />
-        </Modal>
+        <Dialog open={imageToShow.length > 0} onOpenChange={handleImageModalClose}>
+          <DialogContent>
+            <DialogHeader>Image Preview</DialogHeader>
+            <DialogBody>
+              <img src={imageToShow} alt="Enlarged view" className="lt-QACard-modal-image" />
+            </DialogBody>
+          </DialogContent>
+          <DialogFooter>
+            <DialogClose>Close</DialogClose>
+          </DialogFooter>
+        </Dialog>
       )}
       {openDeleteModal && (
-        <Modal
+        <ConfirmationModal
           isShown={openDeleteModal}
-          onClose={handleDeleteModalClose}
-          title="Do you want to delete this question?"
-          footer={
-            <div style={{ display: 'flex', gap: '5px' }}>
-              <Button onClick={handleDeleteModalClose} variant="secondary">
-                Cancel
-              </Button>
-              <Button onClick={handleConfirmDelete} variant="danger" disabled={isLoading}>
-                Confirm
-              </Button>
-            </div>
-          }
+          onCancel={handleDeleteModalClose}
+          onConfirm={handleConfirmDelete}
+          title="Confirm Deletion"
+          action="Delete"
+          appearance="danger"
         >
-          <p style={{ paddingLeft: '10px' }}>
-            Click <strong>Confirm</strong> to delete!
-          </p>
-        </Modal>
+          Are you sure you want to delete this {isQuestion ? 'question' : 'answer'}? This action cannot be undone.
+        </ConfirmationModal>
       )}
-    </div>
+    </Box>
   );
 };
 

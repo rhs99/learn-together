@@ -8,10 +8,11 @@ import SortOptions from '../../components/SortOptions/SortOptions';
 import { Tag } from '../../types';
 import QACard from '../../components/QACard/QACard';
 import Pagination from '../../components/Pagination/Pagination';
-import Button from '../../design-library/Button/Button';
 import Breadcrumbs from '../../components/Breadcrumbs/Breadcrumbs';
 import TagInput from '../../components/TagInput/TagInput';
-import Alert from '../../design-library/Alert/Alert';
+import useAlert from '../../hooks/use-alert';
+
+import { Button, Box } from '@optiaxiom/react';
 
 import './_index.scss';
 import FilterOptions from '../../components/FilterOptions/FilterOptions';
@@ -28,7 +29,8 @@ const ChapterDetail = () => {
   const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([]);
   const [filterBy, setFilterBy] = useState('all');
   const [isLoading, setIsLoading] = useState(true);
-  const [alert, setAlert] = useState<any>(null);
+
+  const onAlert = useAlert();
 
   const navigate = useNavigate();
   const { chapterId } = useParams();
@@ -73,7 +75,7 @@ const ChapterDetail = () => {
         });
       })
       .catch(() => {
-        setAlert({ type: 'error', message: 'Something went wrong!' });
+        onAlert('Something went wrong!', 'danger');
       })
       .finally(() => {
         setIsLoading(false);
@@ -126,11 +128,8 @@ const ChapterDetail = () => {
   const isEmpty = questions.length === 0;
 
   return (
-    <div className="cl-ChapterDetail">
-      {alert && (
-        <Alert type={alert.type} message={alert.message} isShown={Boolean(alert)} handleClose={() => setAlert(null)} />
-      )}
-      <div className="heading">
+    <Box className="cl-ChapterDetail">
+      <Box className="heading">
         {breadcrumbs.length > 0 && (
           <Breadcrumbs
             items={breadcrumbs.map((breadcrumb, index) => ({
@@ -139,19 +138,19 @@ const ChapterDetail = () => {
             }))}
           />
         )}
-        <div className="filter">
+        <Box className="filter">
           <TagInput
             suggestions={existingTags.map((tag) => ({ _id: tag._id, name: tag.name }))}
             onTagsChange={onTagsChange}
             placeholder="Filter by tags..."
           />
-        </div>
+        </Box>
         <Button disabled={!isLoggedIn} onClick={handleAskQuestion}>
           Ask Question
         </Button>
-      </div>
+      </Box>
 
-      <div className="sort-options">
+      <Box className="sort-options">
         <FilterOptions
           filterBy={filterBy}
           handleFilterOptionsChange={handleFilterOptionsChange}
@@ -164,18 +163,18 @@ const ChapterDetail = () => {
           handleSortOptionsChange={handleSortOptionsChange}
           fetchSortedData={fetchQuestion}
         />
-      </div>
+      </Box>
 
       {!isLoading && isEmpty && (
-        <div className="empty">
+        <Box className="empty">
           <h1>No Questions</h1>
-        </div>
+        </Box>
       )}
 
       {isLoading && <div className="loading">Loading...</div>}
 
       {!isLoading && (
-        <div className="qContainer">
+        <Box className="qContainer">
           {questions.map((question) => (
             <QACard
               key={question._id}
@@ -185,7 +184,7 @@ const ChapterDetail = () => {
               handleItemDelete={handleQuestionDelete}
             />
           ))}
-        </div>
+        </Box>
       )}
 
       {!isLoading && paginationInfo.totalPage > 1 && (
@@ -202,7 +201,7 @@ const ChapterDetail = () => {
           }}
         />
       )}
-    </div>
+    </Box>
   );
 };
 

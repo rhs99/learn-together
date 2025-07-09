@@ -2,11 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import { ChangeEvent, FormEvent, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 
+import { Switch } from '@optiaxiom/react';
 import Util from '../../utils';
+import AuthContext from '../../store/auth';
 
 import './_index.scss';
-import AuthContext from '../../store/auth';
-import Switch from '../../design-library/Switch/Switch';
 
 type PaymentMethod = {
   _id: string;
@@ -69,7 +69,7 @@ const DonationPage = () => {
         <p className="header">Fill up your Donation Info</p>
         <div className="anonymous">
           <label>Anonymous donation</label>
-          <Switch isChecked={isAnonymous} onChange={() => setIsAnonymous(!isAnonymous)} />
+          <Switch onChange={() => setIsAnonymous(!isAnonymous)} />
         </div>
         <form onSubmit={handleDonation}>
           <label htmlFor="donationDate">Date of Donation</label>

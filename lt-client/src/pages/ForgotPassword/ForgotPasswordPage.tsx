@@ -1,7 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
 import Util from '../../utils';
-import Alert from '../../design-library/Alert/Alert';
+import useAlert from '../../hooks/use-alert';
 
 import './_index.scss';
 
@@ -10,7 +10,8 @@ function ForgotPasswordPage() {
   const [email, setEmail] = useState<string>('');
   const [err, setErr] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
+
+  const onAlert = useAlert();
 
   const handleUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
@@ -32,7 +33,7 @@ function ForgotPasswordPage() {
       .post(URL, userInfo)
       .then(() => {
         setEmailSent(true);
-        setShowAlert(true);
+        onAlert('A password reset link has been sent to your email', 'success');
         setErr(false);
       })
       .catch(() => {
@@ -42,14 +43,6 @@ function ForgotPasswordPage() {
 
   return (
     <div className="cl-ForgotPassword" onSubmit={handleSubmit}>
-      {showAlert && (
-        <Alert
-          type="info"
-          message="A password reset link has been sent to your email"
-          handleClose={() => setShowAlert(false)}
-          isShown={showAlert}
-        />
-      )}
       <h3>Forgot Password</h3>
       <form method="POST" className="form-container">
         <label>

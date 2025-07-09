@@ -10,8 +10,16 @@ import ChangePassword from './ChangePassword';
 import AddClass from './AddClass';
 import AddSubject from './AddSubject';
 import AddChapter from './AddChapter';
-import Dropdown from '../../design-library/Dropdown/Dropdown';
-import Button from '../../design-library/Button/Button';
+
+import {
+  Box,
+  Text,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  Flex,
+} from '@optiaxiom/react';
 
 import './_index.scss';
 import AddPaymentMethod from './AddPaymentMethod';
@@ -19,8 +27,6 @@ import AddPaymentMethod from './AddPaymentMethod';
 const Settings = () => {
   const [hasAdminPrivilege, setHasAdminPrivilege] = useState(false);
   const [currOption, setCurrOption] = useState('change-class');
-  const [showSettingsDropdown, setShowSettingsDropdown] = useState(false);
-  const settingsRef = useRef<HTMLDivElement | null>(null);
 
   const classes = useLoaderData() as Class[];
   const authCtx = useContext(AuthContext);
@@ -82,22 +88,23 @@ const Settings = () => {
   };
 
   return (
-    <div className="lt-settings">
-      <div className="header">
-        <h3>{settingsOptions.find((option) => option.value === currOption)?.label}</h3>
-        <div ref={settingsRef} className="menu">
-          <Button onClick={() => setShowSettingsDropdown((prev) => !prev)}>Settings</Button>
-        </div>
-      </div>
-      <Dropdown
-        options={settingsOptions}
-        anchorElement={settingsRef?.current}
-        isShown={showSettingsDropdown}
-        onClose={() => setShowSettingsDropdown(false)}
-        onSelect={handleSettingsOptionSelect}
-      />
+    <Flex flexDirection="column" gap="12" className="lt-settings">
+      <Flex flexDirection="row" justifyContent="space-between">
+        <Text>{settingsOptions.find((option) => option.value === currOption)?.label}</Text>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger>Settings</DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {settingsOptions.map((option) => (
+              <DropdownMenuItem key={option.value} onClick={() => handleSettingsOptionSelect(option.value)}>
+                {option.label}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </Flex>
       {getComponent()}
-    </div>
+    </Flex>
   );
 };
 

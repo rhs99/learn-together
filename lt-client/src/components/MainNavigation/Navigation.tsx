@@ -1,21 +1,30 @@
 import axios from 'axios';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useContext, useState, useEffect, useRef } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import AuthContext from '../../store/auth';
 import Util from '../../utils';
-import Icon from '../../design-library/Icon';
-import Dropdown from '../../design-library/Dropdown/Dropdown';
+
+import { IoIosNotificationsOutline } from 'react-icons/io';
+import { CgProfile } from 'react-icons/cg';
+import { ImProfile } from 'react-icons/im';
+import { IoSettingsOutline } from 'react-icons/io5';
+import { CiLogout } from 'react-icons/ci';
+
+import {
+  Box,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@optiaxiom/react';
 
 import './_index.scss';
 
 const Navigation = () => {
-  const [showAccountDropdown, setShowAccountDropdown] = useState(false);
-  const [showNotificationDropdown, setShowNotificationDropdown] = useState(false);
-
   const [notifications, setNotifications] = useState<string[]>([]);
   const [hasNewNotification, setHasNewNotification] = useState(false);
-  const accountAnchorEl = useRef<HTMLDivElement | null>(null);
-  const notificationAnchorEl = useRef<HTMLDivElement | null>(null);
 
   const authCtx = useContext(AuthContext);
   const { isLoggedIn, getStoredValue } = authCtx;
@@ -71,7 +80,6 @@ const Navigation = () => {
   const handleNotificationFetch = async () => {
     await fetchNotifications();
     setHasNewNotification(false);
-    setShowNotificationDropdown((prev) => !prev);
   };
 
   const handleGoToNotification = (value: string) => {
@@ -82,16 +90,6 @@ const Navigation = () => {
     axios.delete(URL).then(() => {
       navigate(`/questions/${value}`);
     });
-  };
-
-  const handleOptionSelect = (value: string) => {
-    if (value === 'profile') {
-      goToProfile();
-    } else if (value === 'settings') {
-      goToSettings();
-    } else if (value === 'logout') {
-      logoutHandler();
-    }
   };
 
   const getNotificationOption = () => {
@@ -109,8 +107,8 @@ const Navigation = () => {
   };
 
   return (
-    <div className="lt-Navigation">
-      <div className="left">
+    <Box className="lt-Navigation">
+      <Box className="left">
         <NavLink
           to="/"
           className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
@@ -118,24 +116,24 @@ const Navigation = () => {
         >
           Home
         </NavLink>
-        <div className="gap">
+        <Box className="gap">
           <NavLink
             to="/about"
             className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
           >
             About
           </NavLink>
-        </div>
-        <div className="gap">
+        </Box>
+        <Box className="gap">
           <NavLink
             to="/donate"
             className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
           >
             Donate
           </NavLink>
-        </div>
-      </div>
-      <div className={isLoggedIn ? 'right-loggedIn' : 'right'}>
+        </Box>
+      </Box>
+      <Box className={isLoggedIn ? 'right-loggedIn' : 'right'}>
         {!isLoggedIn && (
           <NavLink
             to="/users/login"
@@ -145,52 +143,53 @@ const Navigation = () => {
           </NavLink>
         )}
         {!isLoggedIn && (
-          <div className="gap">
+          <Box className="gap">
             <NavLink
               className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
               to="/users/signup"
             >
               Signup
             </NavLink>
-          </div>
+          </Box>
         )}
         {isLoggedIn && (
-          <>
-            <div ref={notificationAnchorEl}>
-              <Icon
+          <Box>
+            <DropdownMenu>
+              <DropdownMenuTrigger
                 onClick={handleNotificationFetch}
-                name="notification"
-                size={22}
-                color={hasNewNotification ? 'red' : 'black'}
+                icon={<IoIosNotificationsOutline color={hasNewNotification ? 'red' : 'black'} />}
               />
-            </div>
-            <Dropdown
-              options={getNotificationOption()}
-              onSelect={handleGoToNotification}
-              isShown={showNotificationDropdown}
-              onClose={() => setShowNotificationDropdown(false)}
-              anchorElement={notificationAnchorEl?.current}
-              className="notification-dropdown"
-            />
-            <div ref={accountAnchorEl}>
-              <Icon name="account" onClick={() => setShowAccountDropdown((prev) => !prev)} size={22} />
-            </div>
-            <Dropdown
-              options={[
-                { value: 'profile', label: 'Profile', component: <Icon name="profile" /> },
-                { value: 'settings', label: 'Settings', component: <Icon name="settings" /> },
-                { value: 'logout', label: 'Logout', component: <Icon name="logout" /> },
-              ]}
-              onSelect={handleOptionSelect}
-              anchorElement={accountAnchorEl?.current}
-              isShown={showAccountDropdown}
-              onClose={() => setShowAccountDropdown(false)}
-              className="account-dropdown"
-            />
-          </>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {getNotificationOption().map((option) => (
+                  <DropdownMenuItem key={option.value} onClick={() => handleGoToNotification(option.value)}>
+                    {option.component}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger icon={<CgProfile />} />
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={goToProfile}>
+                  <ImProfile /> Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={goToSettings}>
+                  <IoSettingsOutline /> Settings
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={logoutHandler}>
+                  <CiLogout /> Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </Box>
         )}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

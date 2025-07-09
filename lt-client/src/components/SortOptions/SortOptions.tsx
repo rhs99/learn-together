@@ -1,10 +1,16 @@
-import { useState, useEffect, useRef } from 'react';
-import Button from '../../design-library/Button/Button';
-import Icon from '../../design-library/Icon';
-import Dropdown from '../../design-library/Dropdown/Dropdown';
-import Tooltip from '../../design-library/Tooltip/Tooltip';
+import { useEffect } from 'react';
 
-import './_index.scss';
+import {
+  Button,
+  Tooltip,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  Flex,
+} from '@optiaxiom/react';
+import { GoArrowUp, GoArrowDown } from 'react-icons/go';
 
 type SortOptionsProps = {
   sortBy: string;
@@ -14,16 +20,12 @@ type SortOptionsProps = {
 };
 
 const SortOptions = ({ sortBy, sortOrder, handleSortOptionsChange, fetchSortedData }: SortOptionsProps) => {
-  const [showSortby, setShowSortby] = useState(false);
-  const anchorEl = useRef<HTMLDivElement | null>(null);
-
   useEffect(() => {
     fetchSortedData();
   }, [fetchSortedData, sortBy, sortOrder]);
 
   const handleSortByClick = (value: string) => {
     handleSortOptionsChange('sortBy', value);
-    setShowSortby(false);
   };
 
   const handleSortOrderClick = () => {
@@ -45,34 +47,27 @@ const SortOptions = ({ sortBy, sortOrder, handleSortOptionsChange, fetchSortedDa
   };
 
   return (
-    <div className="cl-SortOptions">
-      <div ref={anchorEl}>
-        <Button variant="secondary" onClick={() => setShowSortby((prev) => !prev)}>
-          Sort By
-        </Button>
-      </div>
-      <Dropdown
-        anchorElement={anchorEl?.current}
-        options={[
-          { label: 'Vote', value: 'vote' },
-          { label: 'Up Vote', value: 'upVote' },
-          { label: 'Down Vote', value: 'downVote' },
-          { label: 'Time', value: 'time' },
-        ]}
-        onSelect={handleSortByClick}
-        isShown={showSortby}
-        onClose={() => setShowSortby(false)}
-        shift={40}
-      />
-      <span className="sortBy">{getName(sortBy)}</span>
+    <Flex flexDirection="row" gap="4">
+      <DropdownMenu>
+        <DropdownMenuTrigger>{getName(sortBy)}</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => handleSortByClick('vote')}>Vote</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleSortByClick('upVote')}>Up Vote</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleSortByClick('downVote')}>Down Vote</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleSortByClick('time')}>Time</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
       <Tooltip content={sortOrder}>
-        <Icon
+        <Button
+          aria-label="Sort Order"
+          appearance="subtle"
           onClick={handleSortOrderClick}
-          name={sortOrder === 'desc' ? 'arrow-down-line' : 'arrow-up-line'}
-          size={18}
+          icon={sortOrder === 'desc' ? <GoArrowDown /> : <GoArrowUp />}
         />
       </Tooltip>
-    </div>
+    </Flex>
   );
 };
 

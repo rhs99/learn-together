@@ -6,11 +6,11 @@ import axios from 'axios';
 import AuthContext from '../../store/auth';
 import Quill from 'quill';
 import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
-import Alert from '../../design-library/Alert/Alert';
-import Button from '../../design-library/Button/Button';
 import FileUploader from '../FileUploader/FileUploader';
 import useFileUploader from '../../hooks/file-uploader';
-import Spinner from '../../design-library/Spinner/Spinner';
+import useAlert from '../../hooks/use-alert';
+
+import { Button, Spinner } from '@optiaxiom/react';
 
 import './_index.scss';
 
@@ -22,10 +22,10 @@ type AnswerInputProps = {
 const AnswerInput = (props: AnswerInputProps) => {
   const [editor, setEditor] = useState<Quill>();
   const [isLoading, setIsLoading] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
 
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
+  const onAlert = useAlert();
 
   const { handleFileChange, handleUpload } = useFileUploader();
 
@@ -35,7 +35,7 @@ const AnswerInput = (props: AnswerInputProps) => {
 
     const imageLocations = await handleUpload();
     if (text.trim().length === 0 && (!imageLocations || imageLocations.length === 0)) {
-      setShowAlert(true);
+      onAlert('Answer description and files both cannot be empty!', 'danger');
       setIsLoading(false);
       return;
     }
@@ -80,23 +80,13 @@ const AnswerInput = (props: AnswerInputProps) => {
 
   return (
     <div className="lt-AnswerInput">
-      {showAlert && (
-        <Alert
-          isShown={showAlert}
-          handleClose={() => setShowAlert(false)}
-          type="error"
-          message="Answer description and files both cannot be empty!"
-        />
-      )}
-      {isLoading && <Spinner isLoading={isLoading} />}
+      {isLoading && <Spinner />}
       <div className="lt-AnswerInput-header">
         <h3>Your Answer</h3>
       </div>
       <QuillTextEditor onEditorReady={onEditorReady} />
       <FileUploader handleFileChange={handleFileChange} multiple={true} className="lt-AnswerInput-file-upload" />
-      <Button onClick={handlePostAnswer} variant="success">
-        Save
-      </Button>
+      <Button onClick={handlePostAnswer}>Save</Button>
     </div>
   );
 };

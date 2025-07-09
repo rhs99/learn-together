@@ -7,13 +7,12 @@ import { Question } from '../../types';
 import AuthContext from '../../store/auth';
 import { Tag } from '../../types';
 import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
-import Alert from '../../design-library/Alert/Alert';
 import TagInput from '../TagInput/TagInput';
 import FileUploader from '../FileUploader/FileUploader';
 import useFileUploader from '../../hooks/file-uploader';
-import Spinner from '../../design-library/Spinner/Spinner';
+import useAlert from '../../hooks/use-alert';
 
-import { Button } from '@optiaxiom/react';
+import { Button, Spinner } from '@optiaxiom/react';
 
 import './_index.scss';
 
@@ -28,11 +27,11 @@ const QuestionInput = (props: QuestionInputProps) => {
   );
   const [existingTags, setExistingTags] = useState<Tag[]>([]);
   const [editor, setEditor] = useState<Quill | null>(null);
-  const [showAlert, setShowAlert] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
+  const onAlert = useAlert();
 
   const { handleFileChange, handleUpload } = useFileUploader();
 
@@ -45,7 +44,7 @@ const QuestionInput = (props: QuestionInputProps) => {
     const description = editor?.getContents();
     const text = editor?.getText() || '';
     if (text.trim().length === 0 || tags.length === 0) {
-      setShowAlert(true);
+      onAlert('Question description and tags cannot be empty!', 'danger');
       return;
     }
 
@@ -119,15 +118,7 @@ const QuestionInput = (props: QuestionInputProps) => {
 
   return (
     <div className="cl-QuestionInput">
-      {showAlert && (
-        <Alert
-          type="error"
-          message="Question description and tags cannot be empty!"
-          isShown={showAlert}
-          handleClose={() => setShowAlert(false)}
-        />
-      )}
-      {isLoading && <Spinner isLoading={isLoading} />}
+      {isLoading && <Spinner />}
       <div className="description-heading">
         <h3>Write Question Description</h3>
       </div>

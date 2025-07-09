@@ -1,136 +1,80 @@
 .lt-QACard {
-  background-color: var(--primary);
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 20px;
+  background: #ffffff;
+  border: 1px solid #e1e5e9;
+  border-radius: 12px;
+  padding: 0;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+  overflow: hidden;
 
-  @media only screen and (max-width: 780px) {
-    padding: 10px;
-    border-radius: 5px;
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border-color: #d0d7de;
   }
 
   &-body {
-    display: flex;
-    flex-direction: row;
-  }
-
-  &-left-pane {
-    width: 7%;
-
-    &-UD-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    &-info {
-      margin-top: 12px;
-      font-size: 0.9em;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    @media only screen and (max-width: 780px) {
-      width: 12%;
-      &-info {
-        font-size: 0.8em;
-      }
-    }
+    padding: 20px;
   }
 
   &-right-pane {
-    display: flex;
-    flex-direction: column;
-    margin-left: 12px;
-
-    .ql-editor {
-      padding: 0;
-    }
-
+    margin-top: -15px;
     .ql-container.ql-snow {
       border: 0;
+      margin-bottom: 10px;
+      font-size: large;
     }
 
-    &-details-clickable:hover {
-      color: rgb(33, 139, 210);
-      cursor: pointer;
-    }
-
-    &-image-container {
-      margin-top: 16px;
+    &-details-clickable {
+      &:hover {
+        background: #f6f8fa;
+        .ql-editor {
+          color: #0969da;
+        }
+      }
     }
 
     &-image {
-      width: 250px;
-      height: 100px;
-      border-radius: 5px;
-    }
-
-    &-image:hover {
+      max-width: 200px;
+      max-height: 120px;
+      border-radius: 8px;
+      object-fit: contain;
+      border: 1px solid #e1e5e9;
+      transition: all 0.2s ease;
       cursor: pointer;
-    }
+      background: #f6f8fa;
 
-    @media only screen and (max-width: 780px) {
-      &-image {
-        width: 120px;
+      &:hover {
+        transform: scale(1.02);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       }
     }
   }
 
   &-bottom-pane {
-    display: flex;
-    flex-direction: column;
-
-    &-tags {
-      display: flex;
-      flex-direction: row;
-      gap: 5px;
-      margin-top: 8px;
-    }
+    padding: 16px 20px;
+    border-top: 1px solid #e1e5e9;
+    background: #f6f8fa;
 
     &-tag {
-      border: 1px solid;
+      background: #ddf4ff;
+      color: #0969da;
+      border: 1px solid #54aeff;
       border-radius: 5px;
-      color: rgb(24, 177, 70);
-      padding: 3px;
-      font-size: 0.9em;
-    }
-
-    &-actions {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-end;
-      gap: 20px;
-    }
-
-    &-author {
-      color: rgb(25, 165, 178);
-    }
-
-    @media only screen and (max-width: 780px) {
-      &-tag {
-        font-size: 0.7em;
-      }
+      padding: 4px 12px;
+      font-weight: 500;
     }
   }
-}
 
-.full-img {
-  position: absolute;
-  left: 25%;
-  max-width: 50%;
-  max-height: 50%;
-  border: 2px solid grey;
-}
-
-.dlt-modal {
-  position: absolute;
-  top: 40%;
-  left: 30%;
-  width: 30%;
-  height: 20%;
-  border-radius: 5px;
-  padding: 15px;
-  background-color: rgb(198, 78, 38);
+  &-modal-image {
+    max-width: 100%;
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
 }

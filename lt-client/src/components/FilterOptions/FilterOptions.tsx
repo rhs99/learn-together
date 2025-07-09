@@ -1,8 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
-import Button from '../../design-library/Button/Button';
-import Dropdown from '../../design-library/Dropdown/Dropdown';
-
-import './_index.scss';
+import { useEffect } from 'react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@optiaxiom/react';
+import { CiFilter } from 'react-icons/ci';
 
 type FilterOptionsProps = {
   filterBy: string;
@@ -12,16 +10,12 @@ type FilterOptionsProps = {
 };
 
 const FilterOptions = ({ filterBy, handleFilterOptionsChange, fetchSortedData, disabled }: FilterOptionsProps) => {
-  const [showFilterPanel, setShowFilterPanel] = useState(false);
-  const anchorEl = useRef<HTMLDivElement | null>(null);
-
   useEffect(() => {
     fetchSortedData();
   }, [fetchSortedData, filterBy]);
 
   const handleFilterByClick = (value: string) => {
     handleFilterOptionsChange(value);
-    setShowFilterPanel(false);
   };
 
   const getName = (val: string) => {
@@ -32,30 +26,20 @@ const FilterOptions = ({ filterBy, handleFilterOptionsChange, fetchSortedData, d
         return 'Favourites';
       case 'mine':
         return 'Asked by me';
+      default:
+        return 'All';
     }
   };
 
   return (
-    <div className="cl-FilterOptions">
-      <div ref={anchorEl}>
-        <Button disabled={disabled} variant="secondary" onClick={() => setShowFilterPanel((prev) => !prev)}>
-          Filter By
-        </Button>
-      </div>
-      <span className="filterBy">{getName(filterBy)}</span>
-      <Dropdown
-        options={[
-          { label: 'All', value: 'all' },
-          { label: 'Favourites', value: 'favourite' },
-          { label: 'Asked by me', value: 'mine' },
-        ]}
-        anchorElement={anchorEl?.current}
-        isShown={showFilterPanel}
-        onClose={() => setShowFilterPanel(false)}
-        onSelect={handleFilterByClick}
-        shift={40}
-      />
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger disabled={disabled}>{getName(filterBy)}</DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem onClick={() => handleFilterByClick('all')}>All</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleFilterByClick('favourite')}>Favourites</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleFilterByClick('mine')}>Asked by me</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 
