@@ -15,10 +15,13 @@ export default defineConfig({
     port: 3000,
     open: false, // Disable auto-opening browser in Docker environment
     host: '0.0.0.0', // Listen on all network interfaces
+    watch: {
+      usePolling: true,
+      interval: 1000,
+    },
     hmr: {
-      overlay: true,
-      clientPort: 3000, // Ensure HMR connections use the correct port
-      host: 'localhost', // Connect to WebSockets via localhost
+      port: 3000,
+      host: 'localhost',
     },
   },
   build: {
