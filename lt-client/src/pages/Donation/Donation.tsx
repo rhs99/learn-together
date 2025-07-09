@@ -58,7 +58,7 @@ const DonationPage = () => {
       furtherInfo: furtherInfo,
     };
 
-    axios.post(URL, donationInfo).then((res) => {
+    axios.post(URL, donationInfo).then((_res) => {
       navigate('/');
     });
   };

@@ -4,9 +4,6 @@ services:
     container_name: lt-client
     ports:
       - "3000:3000"
-    volumes:
-      - ./lt-client:/app
-      - /app/node_modules
     depends_on:
       - lt-server
   lt-server:

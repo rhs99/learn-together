@@ -1,8 +1,17 @@
 import { useEffect, useRef } from 'react';
 import Quill from 'quill';
-import katex from 'katex';
+import * as katexModule from 'katex';
 import 'katex/dist/katex.min.css';
-window.katex = katex;
+
+// Create a global declaration to fix TypeScript error
+declare global {
+  interface Window {
+    katex: any;
+  }
+}
+
+// Assign katex to the window object
+window.katex = katexModule;
 
 import './snow.css';
 
