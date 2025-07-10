@@ -13,12 +13,10 @@ describe('Table Component', () => {
   test('renders table with correct data', () => {
     render(<Table rowData={mockRowData} />);
 
-    // Check if headers are rendered
     expect(screen.getByText('Header 1')).toBeInTheDocument();
     expect(screen.getByText('Header 2')).toBeInTheDocument();
     expect(screen.getByText('Header 3')).toBeInTheDocument();
 
-    // Check if data rows are rendered
     expect(screen.getByText('Row 1 Col 1')).toBeInTheDocument();
     expect(screen.getByText('Row 1 Col 2')).toBeInTheDocument();
     expect(screen.getByText('Row 1 Col 3')).toBeInTheDocument();
@@ -33,7 +31,6 @@ describe('Table Component', () => {
 
     render(<Table rowData={mockRowData} onRowSelection={mockOnRowSelection} />);
 
-    // Find and click on the first data row
     const firstRow = screen.getByText('Row 1 Col 1').closest('.lt-TableRow-container');
     if (firstRow) {
       await user.click(firstRow);
