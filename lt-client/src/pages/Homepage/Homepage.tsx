@@ -16,12 +16,9 @@ const HomePage = () => {
   const rowData = useMemo(() => {
     const rows: any = [{ value: ['Class Name', 'Subjects Available'] }];
     (classes as Class[]).forEach((_class) => {
-      const data = { 
-        value: [
-          _class.name, 
-          _class.subjects.length,
-        ], 
-        options: { _id: _class._id } 
+      const data = {
+        value: [_class.name, _class.subjects.length],
+        options: { _id: _class._id },
       };
       rows.push(data);
     });
@@ -42,7 +39,7 @@ const HomePage = () => {
           </button>
         </div>
       </div>
-      
+
       <div className="content-wrapper">
         <div className="section-header">
           <h2>Available Classes</h2>

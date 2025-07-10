@@ -43,15 +43,36 @@ const SubjectDetail = () => {
 
   return (
     <div className="lt-SubjectDetail">
-      {breadcrumbs.length > 0 && (
-        <Breadcrumbs
-          items={breadcrumbs.map((breadcrumb, index) => ({
-            name: breadcrumb.name,
-            url: index < breadcrumbs.length - 1 ? breadcrumb.url : null,
-          }))}
-        />
-      )}
-      <Table rowData={rowData} onRowSelection={handleChapterOpen} />
+      <div className="subject-header">
+        <div className="header-content">
+          {breadcrumbs.length > 0 && (
+            <Breadcrumbs
+              items={breadcrumbs.map((breadcrumb, index) => ({
+                name: breadcrumb.name,
+                url: index < breadcrumbs.length - 1 ? breadcrumb.url : null,
+              }))}
+            />
+          )}
+          <h1>{breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1].name : 'Subject Detail'}</h1>
+          <p className="description">Explore chapters and learning materials for this subject</p>
+        </div>
+        <button
+          className="lt-button lt-button-secondary"
+          onClick={() => navigate(`/classes/${breadcrumbs[0]?.url.split('/').pop()}`)}
+        >
+          Back to Subjects
+        </button>
+      </div>
+
+      <div className="content-wrapper">
+        <div className="section-header">
+          <h2>Available Chapters</h2>
+          <p>Select a chapter to view questions and learning materials</p>
+        </div>
+        <div className="table-container">
+          <Table rowData={rowData} onRowSelection={handleChapterOpen} />
+        </div>
+      </div>
     </div>
   );
 };

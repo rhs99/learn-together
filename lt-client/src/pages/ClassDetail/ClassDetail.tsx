@@ -42,8 +42,25 @@ const ClassDetail = () => {
 
   return (
     <div className="lt-ClassDetail">
-      <p>{className}</p>
-      <Table rowData={rowData} onRowSelection={handleSubjectClick} />
+      <div className="class-header">
+        <div className="header-content">
+          <h1>{className}</h1>
+          <p className="description">Explore subjects and learning materials for this class</p>
+        </div>
+        <button className="lt-button lt-button-secondary" onClick={() => navigate('/')}>
+          Back to Classes
+        </button>
+      </div>
+
+      <div className="content-wrapper">
+        <div className="section-header">
+          <h2>Available Subjects</h2>
+          <p>Select a subject to view chapters and learning materials</p>
+        </div>
+        <div className="table-container">
+          <Table rowData={rowData} onRowSelection={handleSubjectClick} />
+        </div>
+      </div>
     </div>
   );
 };
