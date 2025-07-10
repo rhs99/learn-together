@@ -5,37 +5,64 @@ import Util from '../../utils';
 import { User } from '../../types';
 
 import './_index.scss';
-import Table from '../../design-library/Table/Table';
 
 const Profile = () => {
   const [user, setUser] = useState<User>();
+  const [isLoading, setIsLoading] = useState(true);
 
   const { userName } = useParams();
 
   useEffect(() => {
+    setIsLoading(true);
     const URL = `${Util.CONSTANTS.SERVER_URL}/users/${userName}`;
-    axios.get(URL).then(({ data }) => {
-      setUser(data);
-    });
+    axios
+      .get(URL)
+      .then(({ data }) => {
+        setUser(data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch user profile:', error);
+        setIsLoading(false);
+      });
   }, [userName]);
 
-  if (!user) {
-    return null;
+  if (isLoading) {
+    return <div className="lt-Profile__loading">Loading profile...</div>;
   }
 
-  const rows: any = [
-    { value: ['Info', 'Value'] },
-    { value: ['Username', user.userName] },
-    { value: ['Class', user.class || 'N/A'] },
-    { value: ['Questions', user.questions] },
-    { value: ['Answers', user.answers] },
-    { value: ['Up votes', user.upVote] },
-    { value: ['Down Votes', user.downVote] },
-  ];
+  if (!user) {
+    return <div className="lt-Profile__error">User not found</div>;
+  }
 
   return (
     <div className="lt-Profile">
-      <Table rowData={rows} />
+      <div className="lt-Profile__container">
+        <div className="lt-Profile__header">
+          <div className="lt-Profile__avatar">{user.userName?.charAt(0).toUpperCase()}</div>
+          <h1 className="lt-Profile__username">{user.userName}</h1>
+          {user.class && <div className="lt-Profile__class">{user.class}</div>}
+        </div>
+
+        <div className="lt-Profile__stats">
+          <div className="lt-Profile__stat-card">
+            <span className="lt-Profile__stat-value">{user.questions || 0}</span>
+            <span className="lt-Profile__stat-label">Questions</span>
+          </div>
+          <div className="lt-Profile__stat-card">
+            <span className="lt-Profile__stat-value">{user.answers || 0}</span>
+            <span className="lt-Profile__stat-label">Answers</span>
+          </div>
+          <div className="lt-Profile__stat-card">
+            <span className="lt-Profile__stat-value">{user.upVote || 0}</span>
+            <span className="lt-Profile__stat-label">Upvotes</span>
+          </div>
+          <div className="lt-Profile__stat-card">
+            <span className="lt-Profile__stat-value">{user.downVote || 0}</span>
+            <span className="lt-Profile__stat-label">Downvotes</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

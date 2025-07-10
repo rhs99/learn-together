@@ -1,9 +1,119 @@
 .lt-Profile {
-  border-radius: 10px;
   margin: 5vh auto;
-  width: 40%;
+  width: 80%;
+  max-width: 800px;
+
+  &__container {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+
+  &__loading,
+  &__error {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+    color: var(--text-dark);
+  }
+
+  &__error {
+    color: #d9534f; /* Keeping error color as is since there's no matching variable */
+  }
+
+  &__header {
+    background: linear-gradient(135deg, var(--blue-grotto), var(--navy-blue));
+    color: var(--white);
+    padding: 40px 30px;
+    text-align: center;
+    position: relative;
+  }
+
+  &__avatar {
+    width: 100px;
+    height: 100px;
+    background-color: var(--white);
+    color: var(--navy-blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    font-weight: bold;
+    margin: 0 auto 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  &__username {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 10px;
+  }
+
+  &__class {
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 5px;
+  }
+
+  &__stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 30px;
+    background-color: var(--gray-light);
+  }
+
+  &__stat-card {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    padding: 20px;
+    min-width: 120px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin: 10px;
+    flex: 1;
+    transition:
+      transform 0.2s ease-in-out,
+      box-shadow 0.2s ease-in-out;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &__stat-value {
+    display: block;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--blue-grotto);
+    margin-bottom: 8px;
+  }
+
+  &__stat-label {
+    display: block;
+    color: var(--navy-blue);
+    font-size: 14px;
+    font-weight: 500;
+  }
 
   @media only screen and (max-width: 780px) {
-    width: 80%;
+    width: 95%;
+
+    &__stats {
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    &__stat-card {
+      margin: 8px 0;
+      min-width: auto;
+    }
   }
 }
