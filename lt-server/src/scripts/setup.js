@@ -48,14 +48,14 @@ const setup = async () => {
         console.log(`Connecting to database at ${DB_URL}...`);
         await mongoose.connect(DB_URL, { dbName: 'lt-db' });
         console.log('Successfully connected to database');
-        
+
         console.log('Setting up admin privilege...');
         const adminPrivilege = await createAdminPrivilege();
 
         console.log('Creating super user with credentials:');
         console.log(`- Username: ${process.env.ADMIN_USERNAME}`);
         console.log(`- Email: ${process.env.ADMIN_EMAIL}`);
-        
+
         // Check if admin user already exists
         const existingAdmin = await User.findOne({ email: process.env.ADMIN_EMAIL });
         if (existingAdmin) {
@@ -95,11 +95,11 @@ const setup = async () => {
 // Check if required environment variables are present
 const checkEnvVariables = () => {
     const requiredVars = ['MONGODB_URI', 'ADMIN_USERNAME', 'ADMIN_EMAIL', 'ADMIN_PASSWORD'];
-    const missingVars = requiredVars.filter(varName => !process.env[varName]);
-    
+    const missingVars = requiredVars.filter((varName) => !process.env[varName]);
+
     if (missingVars.length > 0) {
         console.error('Error: Missing required environment variables:');
-        missingVars.forEach(varName => {
+        missingVars.forEach((varName) => {
             console.error(`- ${varName}`);
         });
         console.error('Please make sure these variables are defined in your .env file');
@@ -113,13 +113,15 @@ console.log('==================================');
 console.log('Starting Learn Together setup script');
 console.log('==================================');
 checkEnvVariables();
-setup().then(() => {
-    console.log('==================================');
-    console.log('Setup completed successfully');
-    console.log('==================================');
-}).catch(err => {
-    console.error('==================================');
-    console.error('Setup failed with error:', err.message);
-    console.error('==================================');
-    process.exit(1);
-});
+setup()
+    .then(() => {
+        console.log('==================================');
+        console.log('Setup completed successfully');
+        console.log('==================================');
+    })
+    .catch((err) => {
+        console.error('==================================');
+        console.error('Setup failed with error:', err.message);
+        console.error('==================================');
+        process.exit(1);
+    });
