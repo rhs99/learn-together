@@ -2,9 +2,9 @@ import { useNavigate } from 'react-router-dom';
 import { ChangeEvent, FormEvent, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 
-import { Switch } from '@optiaxiom/react';
 import Util from '../../utils';
 import AuthContext from '../../store/auth';
+import { RadioGroup, Radio } from '@optiaxiom/react';
 
 import './_index.scss';
 
@@ -18,9 +18,7 @@ const DonationPage = () => {
   const [amount, setAmount] = useState(0);
   const [method, setMethod] = useState('');
   const [transactionID, setTransactionID] = useState('');
-  const [contactNo, setContactNo] = useState(0);
-  const [furtherInfo, setFurtherInfo] = useState('');
-  const [isAnonymous, setIsAnonymous] = useState(false);
+  const [contactInfo, setContactInfo] = useState('');
   const [availableMethods, setAvailableMethods] = useState<PaymentMethod[]>([]);
 
   const { getStoredValue } = useContext(AuthContext);
@@ -54,8 +52,7 @@ const DonationPage = () => {
       dateOfDonation: donationDate,
       method: selectedMethod,
       transactionID: transactionID,
-      contactNo: contactNo,
-      furtherInfo: furtherInfo,
+      contactInfo: contactInfo,
     };
 
     axios.post(URL, donationInfo).then((_res) => {
@@ -67,10 +64,6 @@ const DonationPage = () => {
     <div className="cl-Donation">
       <div className="donation-form-container">
         <h1 className="header">Make a Donation</h1>
-        <div className="anonymous">
-          <label>Anonymous donation</label>
-          <Switch onChange={() => setIsAnonymous(!isAnonymous)} />
-        </div>
         <form onSubmit={handleDonation}>
           <label htmlFor="donationDate">Date of Donation</label>
           <input
@@ -92,22 +85,13 @@ const DonationPage = () => {
           />
 
           <label>Select your Payment Method</label>
-          <div className="payment-methods">
-            {availableMethods.map((option) => {
-              return (
-                <div className="radio-option" key={option.name}>
-                  <input
-                    type="radio"
-                    id={option.name}
-                    value={option.name}
-                    checked={method === option.name}
-                    onChange={onValueChange}
-                  />
-                  <label htmlFor={option.name}>{option.name}</label>
-                </div>
-              );
-            })}
-          </div>
+          <RadioGroup value={method} onChange={onValueChange} className="payment-method-radio">
+            {availableMethods.map((option) => (
+              <Radio key={option._id} value={option.name} className="radio-option">
+                {option.name}
+              </Radio>
+            ))}
+          </RadioGroup>
 
           <label htmlFor="transactionID">Transaction ID</label>
           <input
@@ -118,23 +102,14 @@ const DonationPage = () => {
             required
           />
 
-          <label htmlFor="contactNo">Contact Number (optional)</label>
-          <input
-            type="number"
-            name="contactNo"
-            min={0}
-            value={contactNo === 0 ? '' : contactNo}
-            onChange={(event) => setContactNo(Number(event.target.value))}
-          />
-
-          <label htmlFor="furtherInfo">Further Information (optional)</label>
+          <label htmlFor="contactInfo">Contact Information (optional)</label>
           <input
             type="text"
-            name="furtherInfo"
-            value={furtherInfo}
-            onChange={(event) => setFurtherInfo(event.target.value)}
+            name="contactInfo"
+            min={0}
+            value={contactInfo}
+            onChange={(event) => setContactInfo(event.target.value)}
           />
-
           <button type="submit">Make Donation</button>
         </form>
       </div>

@@ -10,6 +10,7 @@ import ChangePassword from './ChangePassword';
 import AddClass from './AddClass';
 import AddSubject from './AddSubject';
 import AddChapter from './AddChapter';
+import ManageDonations from './ManageDonations';
 
 import { Text, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Flex } from '@optiaxiom/react';
 
@@ -51,7 +52,8 @@ const Settings = () => {
         { label: 'Add class', value: 'add-class' },
         { label: 'Add subject', value: 'add-subject' },
         { label: 'Add chapter', value: 'add-chapter' },
-        { label: 'Add Payment Method', value: 'add-payment-method' }
+        { label: 'Add Payment Method', value: 'add-payment-method' },
+        { label: 'Manage Donations', value: 'manage-donations' }
       );
     }
 
@@ -75,6 +77,8 @@ const Settings = () => {
       return <AddChapter classes={classes} />;
     } else if (currOption === 'add-payment-method') {
       return <AddPaymentMethod />;
+    } else if (currOption === 'manage-donations') {
+      return <ManageDonations />;
     } else {
       return null;
     }

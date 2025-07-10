@@ -1,9 +1,6 @@
 const mongoose = require('mongoose');
 
 const donationSchema = new mongoose.Schema({
-    donor: {
-        type: String,
-    },
     amount: {
         type: Number,
         required: true,
@@ -21,10 +18,7 @@ const donationSchema = new mongoose.Schema({
         type: String,
         unique: true,
     },
-    contactNo: {
-        type: String,
-    },
-    furtherInfo: {
+    contactInfo: {
         type: String,
     },
     status: {
