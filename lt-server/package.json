@@ -7,6 +7,8 @@
     "dev": "nodemon src/index.js",
     "lint": "eslint src/**/*.js --fix",
     "format": "prettier --write src/",
+    "setup": "node src/scripts/setup.js",
+    "populate-data": "node src/scripts/populate-data.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

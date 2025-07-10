@@ -2,12 +2,9 @@ const Chapter = require('../models/chapter');
 
 const { getClass } = require('./class');
 const { getSubject } = require('./subject');
-const { clearCache } = require('./cache');
 
 const getChapter = async (id) => {
-    const chapter = await Chapter.findById(id).cache({
-        key: `chapters-${id}`,
-    });
+    const chapter = await Chapter.findById(id).exec();
     return chapter;
 };
 
@@ -33,9 +30,7 @@ const getChapterBreadcrumb = async (id) => {
 };
 
 const getChapters = async (subjectId) => {
-    const chapters = await Chapter.find({ subject: subjectId }).cache({
-        key: `chapters-${subjectId}`,
-    });
+    const chapters = await Chapter.find({ subject: subjectId }).exec();
     const resp = chapters.map((chapter) => ({
         _id: chapter._id,
         name: chapter.name,
@@ -50,7 +45,6 @@ const addNewChapter = async (body) => {
     const sub = await getSubject(body.subject);
     sub.chapters.push(chapter._id);
     await sub.save();
-    clearCache(`chapters-${body.subject}`);
 };
 
 module.exports = { getChapter, getChapters, addNewChapter, getChapterBreadcrumb };
