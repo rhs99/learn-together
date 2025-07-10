@@ -1,4 +1,4 @@
-name: Run Tests
+name: CI/CD Pipeline
 
 on:
   push:
@@ -6,18 +6,24 @@ on:
   pull_request:
     branches: [ main, master ]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     strategy:
       matrix:
         node-version: [22.x]
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
     
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Setup Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
@@ -26,12 +32,16 @@ jobs:
     
     - name: Install dependencies
       working-directory: ./lt-client
-      run: npm ci
+      run: npm ci --prefer-offline --no-audit
+    
+    - name: Run lint check
+      working-directory: ./lt-client
+      run: npm run lint
+    
+    - name: Run type check
+      working-directory: ./lt-client
+      run: npm run typecheck
     
     - name: Run tests
       working-directory: ./lt-client
-      run: npm test -- --passWithNoTests
-    
-    - name: Type Check
-      working-directory: ./lt-client
-      run: npm run typecheck
+      run: npm test -- --run --passWithNoTests --reporter=verbose

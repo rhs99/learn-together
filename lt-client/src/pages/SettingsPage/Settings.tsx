@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useContext, useEffect, useState, useRef, useMemo, useCallback } from 'react';
+import { useContext, useEffect, useState, useMemo, useCallback } from 'react';
 import { useLoaderData } from 'react-router-dom';
 
 import { Class, Privilege } from '../../types';

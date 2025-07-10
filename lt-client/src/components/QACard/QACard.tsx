@@ -9,16 +9,7 @@ import ConfirmationModal from '../../design-library/ConfirmationModal/Confirmati
 import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
 
 import { Box, Button, Tooltip, Badge, Text, Flex } from '@optiaxiom/react';
-import {
-  Dialog,
-  DialogBody,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTrigger,
-  theme,
-} from '@optiaxiom/react';
+import { Dialog, DialogBody, DialogClose, DialogContent, DialogFooter, DialogHeader } from '@optiaxiom/react';
 import { BiShare, BiHeart, BiEdit, BiTrash } from 'react-icons/bi';
 import { GoArrowUp, GoArrowDown } from 'react-icons/go';
 
@@ -39,7 +30,6 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [qOwner, setQOwner] = useState('');
   const [isFavourite, setIsFavourite] = useState(isQuestion && (item as Question).isFavourite);
-  const [isLoading, setIsLoading] = useState(false);
 
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
@@ -136,7 +126,6 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
   };
 
   const handleConfirmDelete = async () => {
-    setIsLoading(true);
     const url = `${Util.CONSTANTS.SERVER_URL}/${isQuestion ? 'questions' : 'answers'}/${item._id}`;
     axios
       .delete(url, {
@@ -146,9 +135,6 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
       })
       .then(() => {
         handleItemDelete(item._id);
-      })
-      .finally(() => {
-        setIsLoading(false);
       });
   };
 

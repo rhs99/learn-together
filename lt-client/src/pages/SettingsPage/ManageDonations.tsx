@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useCallback } from 'react';
 import axios from 'axios';
 import Util from '../../utils';
 import AuthContext from '../../store/auth';
@@ -23,7 +23,7 @@ const ManageDonations = () => {
   const [message, setMessage] = useState({ text: '', type: '' });
   const { getStoredValue } = useContext(AuthContext);
 
-  const fetchDonations = async () => {
+  const fetchDonations = useCallback(async () => {
     setIsLoading(true);
     setMessage({ text: '', type: '' });
     try {
@@ -43,11 +43,11 @@ const ManageDonations = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [getStoredValue]);
 
   useEffect(() => {
-    fetchDonations();
-  }, []);
+    void fetchDonations();
+  }, [fetchDonations]);
 
   const handleApprove = async (id: string) => {
     setMessage({ text: '', type: '' });
