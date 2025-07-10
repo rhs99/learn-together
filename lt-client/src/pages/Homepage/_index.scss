@@ -119,6 +119,12 @@
 
         .footer-link {
           cursor: pointer;
+
+          &.active {
+            color: var(--navy-blue);
+            font-weight: var(--fw-semibold);
+            text-decoration: underline;
+          }
         }
 
         .social-links {

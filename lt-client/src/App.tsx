@@ -15,6 +15,7 @@ import AnswerPage from './pages/AnswerPage/AnswerPage';
 import QuestionEdit from './pages/QuestionEdit/QuestionEdit';
 import AnswerEdit from './pages/AnswerEdit/AnswerEdit';
 import AboutPage from './pages/AboutPage/AboutPage';
+import FAQPage from './pages/FAQPage/FAQPage';
 import DonationPage from './pages/Donation/Donation';
 import { AuthContextProvider } from './store/auth';
 import Profile from './pages/Profile/Profile';
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <HomePage />, loader: ClassLoader },
           { path: '/about', element: <AboutPage /> },
+          { path: '/faq', element: <FAQPage /> },
           { path: '/donate', element: <DonationPage /> },
           { path: '/users/:userName', element: <Profile /> },
           { path: '/users/:userName/settings', element: <Settings />, loader: ClassLoader },
