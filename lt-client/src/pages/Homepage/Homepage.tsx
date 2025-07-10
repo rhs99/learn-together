@@ -19,6 +19,22 @@ import {
 
 import './_index.scss';
 
+const CLASS_ORDER = [
+  { range: [6], order: 0 },
+  { range: [7], order: 1 },
+  { range: [8], order: 2 },
+  { range: [9, 10], order: 3 },
+  { range: [11, 12], order: 4 },
+];
+
+const getClassOrder = (className: string): number => {
+  const classNumber = className.match(/\d+/g);
+  if (!classNumber) return 999;
+  const num = parseInt(classNumber[0]);
+  const match = CLASS_ORDER.find((item) => item.range.includes(num));
+  return match ? match.order : 999;
+};
+
 const HomePage = () => {
   const classes = useLoaderData();
   const navigate = useNavigate();
@@ -29,8 +45,12 @@ const HomePage = () => {
   };
 
   const rowData = useMemo(() => {
+    const sortedClasses = [...(classes as Class[])].sort((a, b) => {
+      return getClassOrder(a.name) - getClassOrder(b.name);
+    });
+
     const rows: any = [{ value: ['Class', 'Subjects'] }];
-    (classes as Class[]).forEach((_class) => {
+    sortedClasses.forEach((_class) => {
       const data = {
         value: [_class.name, _class.subjects.length],
         options: { _id: _class._id },
