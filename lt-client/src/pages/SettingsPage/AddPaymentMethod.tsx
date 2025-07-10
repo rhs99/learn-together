@@ -5,6 +5,7 @@ import AuthContext from '../../store/auth';
 
 const AddPaymentMethod = () => {
   const [newPaymentMethod, setNewPaymentMethod] = useState('');
+  const [err, setErr] = useState('');
 
   const authCtx = useContext(AuthContext);
 
@@ -14,27 +15,39 @@ const AddPaymentMethod = () => {
     const payload = {
       name: newPaymentMethod,
     };
-    await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${authCtx.getStoredValue().token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    setNewPaymentMethod('');
+
+    try {
+      await axios.post(url, payload, {
+        headers: {
+          Authorization: `Bearer ${authCtx.getStoredValue().token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      setNewPaymentMethod('');
+      setErr('');
+    } catch (error: any) {
+      setErr(error.response?.data?.message || 'Failed to add payment method');
+    }
   };
 
   return (
-    <form onSubmit={handleAddPaymentMethod}>
-      <label htmlFor="add-payment-method">Payment Method Name</label>
-      <input
-        type="text"
-        name="addPaymentMethod"
-        value={newPaymentMethod}
-        onChange={(event) => setNewPaymentMethod(event.target.value)}
-        required
-      />
-      <button type="submit">Add</button>
-    </form>
+    <div className="settings-form-container">
+      <h2 className="header">Add Payment Method</h2>
+      <form onSubmit={handleAddPaymentMethod}>
+        <label htmlFor="add-payment-method">Payment Method Name</label>
+        <input
+          type="text"
+          name="addPaymentMethod"
+          value={newPaymentMethod}
+          onChange={(event) => setNewPaymentMethod(event.target.value)}
+          required
+        />
+        {err && <span className="err">{err}</span>}
+        <button type="submit" className="settings-button">
+          Add
+        </button>
+      </form>
+    </div>
   );
 };
 

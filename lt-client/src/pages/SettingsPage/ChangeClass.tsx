@@ -10,6 +10,7 @@ type ChangeClassProps = {
 
 const ChangeClass = ({ classes }: ChangeClassProps) => {
   const [_class, setClass] = useState('');
+  const [err, setErr] = useState('');
 
   const authCtx = useContext(AuthContext);
 
@@ -21,27 +22,39 @@ const ChangeClass = ({ classes }: ChangeClassProps) => {
       _class: _class,
     };
 
-    await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${authCtx.getStoredValue().token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    setClass('');
+    try {
+      await axios.post(url, payload, {
+        headers: {
+          Authorization: `Bearer ${authCtx.getStoredValue().token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      setClass('');
+      setErr('');
+    } catch (error: any) {
+      setErr(error.response?.data?.message || 'Failed to update class');
+    }
   };
 
   return (
-    <form onSubmit={handleChangeClass}>
-      <select value={_class} onChange={(event) => setClass(event.target.value)} name="class" required>
-        <option value="">Select class</option>
-        {(classes as Class[]).map((_class) => (
-          <option value={_class._id} key={_class._id}>
-            {_class.name}
-          </option>
-        ))}
-      </select>
-      <button type="submit">Change</button>
-    </form>
+    <div className="settings-form-container">
+      <h2 className="header">Change Class</h2>
+      <form onSubmit={handleChangeClass}>
+        <label htmlFor="class">Class</label>
+        <select value={_class} onChange={(event) => setClass(event.target.value)} name="class" required>
+          <option value="">Select class</option>
+          {(classes as Class[]).map((_class) => (
+            <option value={_class._id} key={_class._id}>
+              {_class.name}
+            </option>
+          ))}
+        </select>
+        {err && <span className="err">{err}</span>}
+        <button type="submit" className="settings-button">
+          Change
+        </button>
+      </form>
+    </div>
   );
 };
 

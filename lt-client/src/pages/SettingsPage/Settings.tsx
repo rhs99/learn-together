@@ -11,18 +11,11 @@ import AddClass from './AddClass';
 import AddSubject from './AddSubject';
 import AddChapter from './AddChapter';
 
-import {
-  Box,
-  Text,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  Flex,
-} from '@optiaxiom/react';
+import { Text, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Flex } from '@optiaxiom/react';
+
+import AddPaymentMethod from './AddPaymentMethod';
 
 import './_index.scss';
-import AddPaymentMethod from './AddPaymentMethod';
 
 const Settings = () => {
   const [hasAdminPrivilege, setHasAdminPrivilege] = useState(false);
@@ -83,12 +76,12 @@ const Settings = () => {
     } else if (currOption === 'add-payment-method') {
       return <AddPaymentMethod />;
     } else {
-      return <p>Nothing!</p>;
+      return null;
     }
   };
 
   return (
-    <Flex flexDirection="column" gap="12" className="lt-settings">
+    <Flex flexDirection="column" gap="12" style={{ width: '50%', margin: '0 auto' }}>
       <Flex flexDirection="row" justifyContent="space-between">
         <Text>{settingsOptions.find((option) => option.value === currOption)?.label}</Text>
 

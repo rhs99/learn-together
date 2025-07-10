@@ -5,6 +5,7 @@ import AuthContext from '../../store/auth';
 
 const AddClass = () => {
   const [newClass, setNewClass] = useState('');
+  const [err, setErr] = useState('');
 
   const authCtx = useContext(AuthContext);
 
@@ -14,27 +15,39 @@ const AddClass = () => {
     const payload = {
       name: newClass,
     };
-    await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${authCtx.getStoredValue().token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    setNewClass('');
+
+    try {
+      await axios.post(url, payload, {
+        headers: {
+          Authorization: `Bearer ${authCtx.getStoredValue().token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      setNewClass('');
+      setErr('');
+    } catch (error: any) {
+      setErr(error.response?.data?.message || 'Failed to add class');
+    }
   };
 
   return (
-    <form onSubmit={handleAddClass}>
-      <label htmlFor="add-class">Class Name</label>
-      <input
-        type="text"
-        name="addClass"
-        value={newClass}
-        onChange={(event) => setNewClass(event.target.value)}
-        required
-      />
-      <button type="submit">Add</button>
-    </form>
+    <div className="settings-form-container">
+      <h2 className="header">Add Class</h2>
+      <form onSubmit={handleAddClass}>
+        <label htmlFor="add-class">Class Name</label>
+        <input
+          type="text"
+          name="addClass"
+          value={newClass}
+          onChange={(event) => setNewClass(event.target.value)}
+          required
+        />
+        {err && <span className="err">{err}</span>}
+        <button type="submit" className="settings-button">
+          Add
+        </button>
+      </form>
+    </div>
   );
 };
 
