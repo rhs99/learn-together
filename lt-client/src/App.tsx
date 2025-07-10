@@ -2,7 +2,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { AxiomProvider } from '@optiaxiom/react';
 
 import RootLayout from './pages/RootLayout';
-import HoomePage from './pages/Homepage/Homepage';
+import HomePage from './pages/Homepage/Homepage';
 import ErrorPage from './pages/Errorpage';
 import SignupPage, { loader as ClassLoader } from './pages/Signup/Signup';
 import LoginPage from './pages/Login/Login';
@@ -31,7 +31,7 @@ const router = createBrowserRouter([
       {
         errorElement: <ErrorPage />,
         children: [
-          { index: true, element: <HoomePage />, loader: ClassLoader },
+          { index: true, element: <HomePage />, loader: ClassLoader },
           { path: '/about', element: <AboutPage /> },
           { path: '/donate', element: <DonationPage /> },
           { path: '/users/:userName', element: <Profile /> },
