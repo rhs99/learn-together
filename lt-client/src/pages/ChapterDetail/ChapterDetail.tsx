@@ -7,7 +7,6 @@ import AuthContext from '../../store/auth';
 import SortOptions from '../../components/SortOptions/SortOptions';
 import { Tag } from '../../types';
 import QACard from '../../components/QACard/QACard';
-import Breadcrumbs from '../../components/Breadcrumbs/Breadcrumbs';
 import TagInput from '../../components/TagInput/TagInput';
 import useAlert from '../../hooks/use-alert';
 
@@ -128,79 +127,88 @@ const ChapterDetail = () => {
 
   return (
     <Box className="cl-ChapterDetail">
-      <Box className="heading">
-        {breadcrumbs.length > 0 && (
-          <Breadcrumbs
-            items={breadcrumbs.map((breadcrumb, index) => ({
-              name: breadcrumb.name,
-              url: index < breadcrumbs.length - 1 ? breadcrumb.url : null,
-            }))}
-          />
-        )}
-        <Box className="filter">
-          <TagInput
-            suggestions={existingTags.map((tag) => ({ _id: tag._id, name: tag.name }))}
-            onTagsChange={onTagsChange}
-            placeholder="Filter by tags..."
-          />
-        </Box>
-        <Button disabled={!isLoggedIn} onClick={handleAskQuestion}>
+      <div className="chapter-header">
+        <div className="header-content">
+          {breadcrumbs.length > 1 && (
+            <Button className="back-button" onClick={() => navigate(breadcrumbs[breadcrumbs.length - 2].url)}>
+              Back to Chapters
+            </Button>
+          )}
+          <h1>{breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1].name : 'Chapter Detail'}</h1>
+          <p className="description">Explore questions and answers from this chapter</p>
+        </div>
+        <Button className="ask-button" disabled={!isLoggedIn} onClick={handleAskQuestion}>
           Ask Question
         </Button>
-      </Box>
+      </div>
 
-      <Box className="sort-options">
-        <FilterOptions
-          filterBy={filterBy}
-          handleFilterOptionsChange={handleFilterOptionsChange}
-          fetchSortedData={fetchQuestion}
-          disabled={!isLoggedIn}
-        />
-        <SortOptions
-          sortBy={sortBy}
-          sortOrder={sortOrder}
-          handleSortOptionsChange={handleSortOptionsChange}
-          fetchSortedData={fetchQuestion}
-        />
-      </Box>
-
-      {!isLoading && isEmpty && (
-        <Box className="empty">
-          <h1>No Questions</h1>
-        </Box>
-      )}
-
-      {isLoading && <div className="loading">Loading...</div>}
-
-      {!isLoading && (
-        <Box className="qContainer">
-          {questions.map((question) => (
-            <QACard
-              key={question._id}
-              item={question}
-              clickableDetails={true}
-              isQuestion={true}
-              handleItemDelete={handleQuestionDelete}
+      <div className="content-wrapper">
+        <div className="filters-section">
+          <Box className="filter">
+            <TagInput
+              suggestions={existingTags.map((tag) => ({ _id: tag._id, name: tag.name }))}
+              onTagsChange={onTagsChange}
+              placeholder="Filter by tags..."
             />
-          ))}
-        </Box>
-      )}
+          </Box>
 
-      {!isLoading && paginationInfo.totalPage > 1 && (
-        <Pagination
-          style={{ display: 'flex', justifyContent: 'center' }}
-          total={paginationInfo.totalPage}
-          page={paginationInfo.currPage}
-          onPageChange={(page) => {
-            setPaginationInfo((prev) => {
-              return {
-                ...prev,
-                currPage: page,
-              };
-            });
-          }}
-        />
-      )}
+          <Box className="sort-options">
+            <FilterOptions
+              filterBy={filterBy}
+              handleFilterOptionsChange={handleFilterOptionsChange}
+              fetchSortedData={fetchQuestion}
+              disabled={!isLoggedIn}
+            />
+            <SortOptions
+              sortBy={sortBy}
+              sortOrder={sortOrder}
+              handleSortOptionsChange={handleSortOptionsChange}
+              fetchSortedData={fetchQuestion}
+            />
+          </Box>
+        </div>
+
+        {!isLoading && isEmpty && (
+          <Box className="empty">
+            <h2>No Questions Found</h2>
+            <p>Be the first to ask a question in this chapter!</p>
+          </Box>
+        )}
+
+        {isLoading && <div className="loading">Loading questions...</div>}
+
+        {!isLoading && (
+          <Box className="qContainer">
+            {questions.map((question) => (
+              <QACard
+                key={question._id}
+                item={question}
+                clickableDetails={true}
+                isQuestion={true}
+                handleItemDelete={handleQuestionDelete}
+              />
+            ))}
+          </Box>
+        )}
+
+        {!isLoading && paginationInfo.totalPage > 1 && (
+          <div className="pagination-container">
+            <Pagination
+              style={{ display: 'flex', justifyContent: 'center' }}
+              total={paginationInfo.totalPage}
+              page={paginationInfo.currPage}
+              onPageChange={(page) => {
+                setPaginationInfo((prev) => {
+                  return {
+                    ...prev,
+                    currPage: page,
+                  };
+                });
+              }}
+            />
+          </div>
+        )}
+      </div>
     </Box>
   );
 };

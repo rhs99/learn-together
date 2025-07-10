@@ -47,7 +47,7 @@ const SubjectDetail = () => {
         <div className="header-content">
           {breadcrumbs.length > 0 && (
             <Breadcrumbs
-              items={breadcrumbs.map((breadcrumb, index) => ({
+              items={breadcrumbs.slice(0, -1).map((breadcrumb, index) => ({
                 name: breadcrumb.name,
                 url: index < breadcrumbs.length - 1 ? breadcrumb.url : null,
               }))}
