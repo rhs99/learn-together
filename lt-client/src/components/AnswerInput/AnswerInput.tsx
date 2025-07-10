@@ -80,13 +80,30 @@ const AnswerInput = (props: AnswerInputProps) => {
 
   return (
     <div className="lt-AnswerInput">
-      {isLoading && <Spinner />}
+      {isLoading && (
+        <div className="spinner-overlay">
+          <Spinner />
+        </div>
+      )}
       <div className="lt-AnswerInput-header">
         <h3>Your Answer</h3>
+        <p className="subtitle">Share your knowledge and help others learn</p>
       </div>
-      <QuillTextEditor onEditorReady={onEditorReady} />
-      <FileUploader handleFileChange={handleFileChange} multiple={true} className="lt-AnswerInput-file-upload" />
-      <Button onClick={handlePostAnswer}>Save</Button>
+      <div className="editor-container">
+        <QuillTextEditor onEditorReady={onEditorReady} />
+      </div>
+      <div className="file-section">
+        <h4>Add Supporting Images</h4>
+        <FileUploader handleFileChange={handleFileChange} multiple={true} className="lt-AnswerInput-file-upload" />
+      </div>
+      <div className="button-container">
+        <Button onClick={() => navigate(-1)} className="cancel-button">
+          Cancel
+        </Button>
+        <Button onClick={handlePostAnswer} className="save-button">
+          Submit Answer
+        </Button>
+      </div>
     </div>
   );
 };
