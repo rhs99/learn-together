@@ -1,13 +1,27 @@
 .cl-QuestionInput {
   margin: auto;
-  padding: 20px;
 
   .description-heading {
-    margin: 10px 0;
+    margin-bottom: 1rem;
+
+    h3 {
+      font-family: var(--font-heading);
+      font-size: var(--fs-xl);
+      color: var(--navy-blue);
+      font-weight: var(--fw-semibold);
+    }
+  }
+
+  h4 {
+    font-family: var(--font-heading);
+    font-size: var(--fs-lg);
+    color: var(--navy-blue);
+    font-weight: var(--fw-medium);
+    margin: 1.5rem 0 1rem;
   }
 
   .tag-input-container {
-    margin-top: -10px;
+    margin-bottom: 1.5rem;
 
     .tag-input {
       width: 100%;
@@ -15,14 +29,26 @@
   }
 
   .file-upload {
-    margin-top: 10px;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    border: 2px dashed var(--baby-blue);
+    border-radius: 8px;
+    background-color: rgba(211, 239, 247, 0.2);
+
+    &:hover {
+      background-color: rgba(211, 239, 247, 0.4);
+    }
   }
 
   .btn-container {
     display: flex;
     flex-direction: row;
-    margin-top: 20px;
+    margin-top: 2rem;
     justify-content: flex-end;
-    gap: 20px;
+    gap: 1rem;
+
+    button {
+      font-weight: var(--fw-medium);
+    }
   }
 }
