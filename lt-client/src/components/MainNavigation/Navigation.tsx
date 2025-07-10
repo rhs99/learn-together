@@ -12,7 +12,6 @@ import { CiLogout } from 'react-icons/ci';
 
 import {
   Box,
-  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -20,7 +19,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   Flex,
-  Heading,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -30,8 +28,14 @@ import {
 
 import './_index.scss';
 
+type Notification = {
+  _id: string;
+  type: string;
+  details: string;
+};
+
 const Navigation = () => {
-  const [notifications, setNotifications] = useState<string[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [hasNewNotification, setHasNewNotification] = useState(false);
 
   const authCtx = useContext(AuthContext);
@@ -90,13 +94,13 @@ const Navigation = () => {
     setHasNewNotification(false);
   };
 
-  const handleGoToNotification = (value: string) => {
-    if (value.length === 0) {
+  const handleGoToNotification = (questionId: string, notificationId: string) => {
+    if (questionId.length === 0 || notificationId.length === 0) {
       return;
     }
-    const URL = `${Util.CONSTANTS.SERVER_URL}/users/${getStoredValue().userName}/notifications/${value}`;
+    const URL = `${Util.CONSTANTS.SERVER_URL}/users/${getStoredValue().userName}/notifications/${notificationId}`;
     axios.delete(URL).then(() => {
-      navigate(`/questions/${value}`);
+      navigate(`/questions/${questionId}`);
     });
   };
 
@@ -109,13 +113,13 @@ const Navigation = () => {
         component: (
           <Text
             color="fg.accent.hovered"
-            onClick={() => handleGoToNotification(notification)}
+            onClick={() => handleGoToNotification(notification.details, notification._id)}
             style={{ cursor: 'pointer' }}
           >
             New answer!
           </Text>
         ),
-        value: notification,
+        value: notification._id,
       };
       return option;
     });

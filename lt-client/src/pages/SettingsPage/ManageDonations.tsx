@@ -30,15 +30,15 @@ const ManageDonations = () => {
       const token = getStoredValue().token;
       const { data } = await axios.get(`${Util.CONSTANTS.SERVER_URL}/donations`, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
       setDonations(data);
     } catch (error) {
       console.error('Error fetching donations:', error);
-      setMessage({ 
-        text: 'Failed to load donations. Please try again.', 
-        type: 'error' 
+      setMessage({
+        text: 'Failed to load donations. Please try again.',
+        type: 'error',
       });
     } finally {
       setIsLoading(false);
@@ -55,49 +55,45 @@ const ManageDonations = () => {
       if (!id) {
         throw new Error('Donation ID is missing');
       }
-      
+
       console.log(`Approving donation with ID: ${id}`);
       const token = getStoredValue().token;
-      
+
       if (!token) {
         throw new Error('Authentication token is missing');
       }
-      
+
       const response = await axios.put(
-        `${Util.CONSTANTS.SERVER_URL}/donations/${id}/approve`, 
+        `${Util.CONSTANTS.SERVER_URL}/donations/${id}/approve`,
         {}, // Empty body as we're just changing status
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
-      
+
       console.log('Approval response:', response.data);
-      
+
       // Update the local state to reflect the change
-      setDonations(prevDonations => 
-        prevDonations.map(donation => 
-          donation._id === id ? { ...donation, status: 'completed' } : donation
-        )
+      setDonations((prevDonations) =>
+        prevDonations.map((donation) => (donation._id === id ? { ...donation, status: 'completed' } : donation))
       );
-      setMessage({ 
-        text: 'Donation approved successfully!', 
-        type: 'success' 
+      setMessage({
+        text: 'Donation approved successfully!',
+        type: 'success',
       });
     } catch (error: any) {
       console.error('Error approving donation:', error);
-      
+
       // Extract the most specific error message possible
-      const errorMessage = error.response?.data?.message || 
-                          error.message || 
-                          'Failed to approve donation';
-                          
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to approve donation';
+
       console.error('Error details:', errorMessage);
-      
-      setMessage({ 
-        text: `Failed to approve donation: ${errorMessage}`, 
-        type: 'error' 
+
+      setMessage({
+        text: `Failed to approve donation: ${errorMessage}`,
+        type: 'error',
       });
     }
   };
@@ -116,13 +112,9 @@ const ManageDonations = () => {
             {isLoading ? 'Loading...' : 'Refresh'}
           </Button>
         </Flex>
-        
-        {message.text && (
-          <div className={`message ${message.type}`}>
-            {message.text}
-          </div>
-        )}
-        
+
+        {message.text && <div className={`message ${message.type}`}>{message.text}</div>}
+
         {donations.length > 0 ? (
           <Table>
             <TableHeader>
@@ -143,7 +135,9 @@ const ManageDonations = () => {
                   <TableCell>{donation.method?.name || 'N/A'}</TableCell>
                   <TableCell>{donation.transactionID}</TableCell>
                   <TableCell>
-                    <span className={`status-badge ${donation.status === 'pending' ? 'status-pending' : 'status-completed'}`}>
+                    <span
+                      className={`status-badge ${donation.status === 'pending' ? 'status-pending' : 'status-completed'}`}
+                    >
                       {donation.status}
                     </span>
                   </TableCell>
@@ -159,9 +153,7 @@ const ManageDonations = () => {
             </TableBody>
           </Table>
         ) : (
-          <Text className="no-donations-text">
-            {isLoading ? 'Loading donations...' : 'No donations found'}
-          </Text>
+          <Text className="no-donations-text">{isLoading ? 'Loading donations...' : 'No donations found'}</Text>
         )}
       </Flex>
     </div>

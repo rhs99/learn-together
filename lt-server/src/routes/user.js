@@ -7,7 +7,7 @@ const UserController = require('../controllers/user');
 
 router.get('/:userName', UserController.getUser);
 router.get('/:userName/notifications', UserController.getNotifictions);
-router.delete('/:userName/notifications/:qId', UserController.removeNotification);
+router.delete('/:userName/notifications/:id', UserController.removeNotification);
 router.post('/', UserController.addNewUser);
 router.post('/login', UserController.logInUser);
 router.post('/forgot-password', UserController.forgotPassword);

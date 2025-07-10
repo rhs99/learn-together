@@ -1,6 +1,7 @@
 const Answer = require('../models/answer');
 const Question = require('../models/question');
 const User = require('../models/user');
+const Notification = require('../models/notification');
 const Utils = require('../common/utils');
 const { UnauthorizedError } = require('../common/error');
 
@@ -36,13 +37,15 @@ const addNewAnswer = async (body) => {
         await question.save();
     }
     const qOwner = await User.findOne({ userName: question.userName }).exec();
-    if (!qOwner.notifications.includes(question._id)) {
-        qOwner.notifications.push(question._id);
-    }
-    if (qOwner.notifications.length > 10) {
-        qOwner.notifications = qOwner.notifications.slice(1);
-    }
-    await qOwner.save();
+
+    const notification = new Notification({
+        userId: qOwner._id,
+        type: 'new_answer',
+        details: question._id,
+        read: false,
+    });
+    await notification.save();
+
     const socket = connectedUsers.get(qOwner.userName);
     if (socket) {
         socket.send('new answer');

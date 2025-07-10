@@ -22,7 +22,7 @@ const getNotifictions = async (req, res) => {
 
 const removeNotification = async (req, res) => {
     try {
-        await UserService.removeNotification(req.params.userName, req.params.qId);
+        await UserService.removeNotification(req.params.userName, req.params.id);
         res.status(200).json();
     } catch (e) {
         res.status(400).json({ message: e.message });

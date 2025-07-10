@@ -3,6 +3,7 @@ const Question = require('../models/question');
 const Answer = require('../models/answer');
 const Class = require('../models/class');
 const Privilege = require('../models/privilege');
+const Notification = require('../models/notification');
 
 const addNewUser = async (body) => {
     const defaultPrivilege = await Privilege.findOne({ name: 'default' }).exec();
@@ -141,18 +142,34 @@ const getNotifications = async (userName) => {
     if (!user) {
         return [];
     }
-    return user.notifications;
+    const notifications = await Notification.find({
+        userId: user._id,
+        read: false,
+    })
+        .sort({ createdAt: -1 })
+        .exec();
+
+    return notifications;
 };
 
-const removeNotification = async (userName, qId) => {
+const removeNotification = async (userName, notificationId) => {
     const user = await User.findOne({ userName }).exec();
     if (!user) {
         return [];
     }
-    user.notifications = user.notifications.filter(
-        (notification) => JSON.stringify(notification) !== JSON.stringify(qId),
-    );
-    await user.save();
+
+    const notification = await Notification.findById(notificationId).exec();
+
+    if (!notification) {
+        throw new Error('Notification not found');
+    }
+
+    if (JSON.stringify(notification.userId) !== JSON.stringify(user._id)) {
+        throw new Error('unauth');
+    }
+
+    notification.read = true;
+    await notification.save();
 };
 
 const forgotPassword = async (body) => {

@@ -7,8 +7,9 @@
     "dev": "nodemon src/index.js",
     "lint": "eslint src/**/*.js --fix",
     "format": "prettier --write src/",
-    "setup": "node src/scripts/setup.js",
+    "create-admin": "node src/scripts/create-admin.js",
     "populate-data": "node src/scripts/populate-data.js",
+    "setup": "npm run create-admin && npm run populate-data",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

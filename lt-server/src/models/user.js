@@ -44,11 +44,6 @@ const userSchema = new mongoose.Schema({
             ref: 'Question',
         },
     ],
-    notifications: [
-        {
-            type: mongoose.Types.ObjectId,
-        },
-    ],
 });
 
 userSchema.pre('save', async function (next) {
