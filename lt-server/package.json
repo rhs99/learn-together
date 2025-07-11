@@ -5,8 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "lint": "eslint src/**/*.js --fix",
-    "format": "prettier --write src/",
+    "lint": "eslint \"src/**/*.js\" \"__tests__/**/*.js\" --fix",
+    "format": "prettier --write \"src/\" \"__tests__/\"",
     "create-admin": "node src/scripts/create-admin.js",
     "populate-data": "node src/scripts/populate-data.js",
     "setup": "npm run create-admin && npm run populate-data",

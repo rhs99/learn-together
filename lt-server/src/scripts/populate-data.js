@@ -65,7 +65,7 @@ async function createClasses() {
     const classPromises = classData.map(async (classInfo) => {
         try {
             // Check if class already exists
-            let existingClass = await Class.findOne({ name: classInfo.name });
+            const existingClass = await Class.findOne({ name: classInfo.name });
             if (existingClass) {
                 console.log(`Class ${classInfo.name} already exists. Skipping creation.`);
                 return existingClass;
