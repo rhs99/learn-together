@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const sinon = require('sinon');
 const Tag = require('../../../src/models/tag');
 const TagService = require('../../../src/services/tag');
 const { cacheService } = require('../../../src/services/cache');
@@ -8,7 +7,6 @@ describe('Tag Service Tests', () => {
     const chapterId = new mongoose.Types.ObjectId().toString();
 
     beforeEach(() => {
-        // Reset all mocks
         jest.clearAllMocks();
     });
 
@@ -19,12 +17,10 @@ describe('Tag Service Tests', () => {
                 chapter: chapterId,
             };
 
-            // Mock Tag.findOne to return null (tag doesn't exist)
             const findOneMock = jest.spyOn(Tag, 'findOne').mockImplementation(() => ({
                 exec: jest.fn().mockResolvedValue(null),
             }));
 
-            // Mock Tag.prototype.save
             const saveSpy = jest.spyOn(Tag.prototype, 'save').mockImplementation(function () {
                 this._id = new mongoose.Types.ObjectId();
                 return Promise.resolve(this);
@@ -39,7 +35,6 @@ describe('Tag Service Tests', () => {
             expect(result.name).toBe('Javascript');
             expect(result.chapter.toString()).toBe(chapterId);
 
-            // Clean up mocks
             findOneMock.mockRestore();
             saveSpy.mockRestore();
         });
@@ -56,7 +51,6 @@ describe('Tag Service Tests', () => {
                 chapter: chapterId,
             };
 
-            // Mock Tag.findOne to return an existing tag
             const findOneMock = jest.spyOn(Tag, 'findOne').mockImplementation(() => ({
                 exec: jest.fn().mockResolvedValue(existingTag),
             }));
@@ -64,10 +58,9 @@ describe('Tag Service Tests', () => {
             const result = await TagService.addNewTag(tagData);
 
             expect(findOneMock).toHaveBeenCalledWith({ name: 'Javascript', chapter: chapterId });
-            expect(cacheService.del).not.toHaveBeenCalled(); // Cache should not be deleted
+            expect(cacheService.del).not.toHaveBeenCalled();
             expect(result).toBe(existingTag);
 
-            // Clean up mock
             findOneMock.mockRestore();
         });
     });
@@ -79,7 +72,6 @@ describe('Tag Service Tests', () => {
                 { _id: new mongoose.Types.ObjectId(), name: 'React', chapter: chapterId },
             ];
 
-            // Mock cache hit
             cacheService.get.mockResolvedValue(cachedTags);
 
             const result = await TagService.getAllTags(chapterId);
@@ -96,15 +88,12 @@ describe('Tag Service Tests', () => {
                 new Tag({ _id: new mongoose.Types.ObjectId(), name: 'React', chapter: chapterId }),
             ];
 
-            // Mock cache miss
             cacheService.get.mockResolvedValue(null);
 
-            // Mock Tag.find
             const findMock = jest.spyOn(Tag, 'find').mockImplementation(() => ({
                 exec: jest.fn().mockResolvedValue(dbTags),
             }));
 
-            // Mock toObject on Tag
             dbTags.forEach((tag) => {
                 tag.toObject = jest.fn().mockReturnValue({
                     _id: tag._id,
@@ -124,7 +113,6 @@ describe('Tag Service Tests', () => {
             );
             expect(result).toBe(dbTags);
 
-            // Clean up mock
             findMock.mockRestore();
         });
     });

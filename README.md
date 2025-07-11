@@ -19,6 +19,7 @@ Learn Together is a collaborative knowledge-sharing platform where users can ask
 - **API Framework:** Express.js
 - **Authentication:** JWT (JSON Web Tokens)
 - **Real-time Communication:** WebSockets
+- **Validation:** Zod
 
 ### Database
 - **Primary Database:** MongoDB
