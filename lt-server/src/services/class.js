@@ -44,10 +44,10 @@ const getClasses = async () => {
 
 const addNewClass = async (body) => {
     const newClass = new Class(body);
-    await newClass.save();
+    const savedClass = await newClass.save();
 
     await cacheService.del(CACHE_KEYS.CLASSES);
-    await cacheService.del(`${CACHE_KEYS.CLASS_PREFIX}${newClass._id}`);
+    await cacheService.del(`${CACHE_KEYS.CLASS_PREFIX}${savedClass._id}`);
 };
 
 module.exports = {

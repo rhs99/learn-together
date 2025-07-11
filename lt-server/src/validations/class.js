@@ -29,7 +29,7 @@ const createClassSchema = {
                 .array(
                     z.string().refine((id) => mongoose.Types.ObjectId.isValid(id), {
                         message: 'Invalid Subject ObjectId format',
-                    })
+                    }),
                 )
                 .optional(),
         })

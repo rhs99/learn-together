@@ -18,10 +18,10 @@ describe('Class Model Tests', () => {
     it('should create a class with subjects successfully', async () => {
         const subjectId1 = new mongoose.Types.ObjectId();
         const subjectId2 = new mongoose.Types.ObjectId();
-        
+
         const classData = {
             name: 'Grade 11',
-            subjects: [subjectId1, subjectId2]
+            subjects: [subjectId1, subjectId2],
         };
 
         const newClass = new Class(classData);
@@ -36,9 +36,9 @@ describe('Class Model Tests', () => {
 
     it('should not create a class without a name', async () => {
         const classData = {};
-        
+
         const newClass = new Class(classData);
-        
+
         await expect(newClass.save()).rejects.toThrow();
     });
 
@@ -48,9 +48,9 @@ describe('Class Model Tests', () => {
         };
 
         await new Class(classData).save();
-        
+
         const duplicateClass = new Class(classData);
-        
+
         await expect(duplicateClass.save()).rejects.toThrow();
     });
 });
