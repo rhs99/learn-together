@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { FormEvent, useState, useContext } from 'react';
-import { Class } from '../../types';
+import { Class, HttpError } from '../../types';
 import Util from '../../utils';
 import AuthContext from '../../store/auth';
 
@@ -31,8 +31,9 @@ const ChangeClass = ({ classes }: ChangeClassProps) => {
       });
       setClass('');
       setErr('');
-    } catch (error: any) {
-      setErr(error.response?.data?.message || 'Failed to update class');
+    } catch (error: unknown) {
+      const httpError = error as HttpError;
+      setErr(httpError.response?.data?.message || 'Failed to update class');
     }
   };
 

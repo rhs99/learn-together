@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import Util from '../../utils';
 import AuthContext from '../../store/auth';
+import { DonationInfo } from '../../types';
 import { RadioGroup, Radio } from '@optiaxiom/react';
 
 import './_index.scss';
@@ -46,7 +47,7 @@ const DonationPage = () => {
       }
     });
 
-    const donationInfo: { [key: string]: any } = {
+    const donationInfo: DonationInfo = {
       donor: getStoredValue().userName,
       amount: amount,
       dateOfDonation: donationDate,

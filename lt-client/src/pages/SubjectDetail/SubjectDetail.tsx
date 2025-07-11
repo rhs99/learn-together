@@ -33,9 +33,9 @@ const SubjectDetail = () => {
   };
 
   const rowData = useMemo(() => {
-    const rows: any = [{ value: ['Chapter', 'Questions'] }];
+    const rows = [{ value: ['Chapter', 'Questions'] }];
     chapters.forEach((chap) => {
-      const data = { value: [chap.name, chap.questionsCount], options: { _id: chap._id } };
+      const data = { value: [chap.name, String(chap.questionsCount)], options: { _id: chap._id } };
       rows.push(data);
     });
     return rows;

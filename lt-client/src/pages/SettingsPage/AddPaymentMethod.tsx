@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { FormEvent, useState, useContext } from 'react';
 import Util from '../../utils';
+import { HttpError } from '../../types';
 import AuthContext from '../../store/auth';
 
 const AddPaymentMethod = () => {
@@ -25,8 +26,9 @@ const AddPaymentMethod = () => {
       });
       setNewPaymentMethod('');
       setErr('');
-    } catch (error: any) {
-      setErr(error.response?.data?.message || 'Failed to add payment method');
+    } catch (error: unknown) {
+      const httpError = error as HttpError;
+      setErr(httpError.response?.data?.message || 'Failed to add payment method');
     }
   };
 

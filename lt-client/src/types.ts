@@ -1,3 +1,5 @@
+import { Delta } from 'quill';
+
 export type Class = {
   name: string;
   _id: string;
@@ -39,7 +41,7 @@ export type Tag = {
 
 export type Answer = {
   _id: string;
-  details: any;
+  details: Delta;
   imageLocations: string[];
   question: string;
   userName: string;
@@ -48,7 +50,7 @@ export type Answer = {
 };
 
 export type Question = {
-  details: any;
+  details: Delta;
   _id: string;
   tags: Tag[];
   chapter: string;
@@ -63,4 +65,37 @@ export type Question = {
 export type Breadcrumb = {
   name: string;
   url: string;
+};
+
+// API and Error types
+export type ApiError = {
+  message: string;
+  status?: number;
+  data?: unknown;
+};
+
+export type HttpError = {
+  response?: {
+    data?: {
+      message?: string;
+    };
+    status?: number;
+  };
+  message?: string;
+};
+
+export type DonationInfo = {
+  donor: string;
+  amount: number;
+  dateOfDonation: string;
+  method: string;
+  transactionID: string;
+  contactInfo: string;
+};
+
+export type PaymentMethod = {
+  _id: string;
+  name: string;
+  accountNumber?: string;
+  details?: string;
 };

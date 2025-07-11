@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { FormEvent, useState, useContext } from 'react';
 import Util from '../../utils';
-import { Class, Subject } from '../../types';
+import { Class, Subject, HttpError } from '../../types';
 import AuthContext from '../../store/auth';
 
 type AddChapterProps = {
@@ -23,8 +23,9 @@ const AddChapter = ({ classes }: AddChapterProps) => {
       const { data } = await axios.get(URL);
       setSubjects(data);
       setErr('');
-    } catch (error: any) {
-      setErr(error.response?.data?.message || 'Failed to fetch subjects');
+    } catch (error: unknown) {
+      const httpError = error as HttpError;
+      setErr(httpError.response?.data?.message || 'Failed to fetch subjects');
     }
   };
 
@@ -47,8 +48,9 @@ const AddChapter = ({ classes }: AddChapterProps) => {
       setNewChapter('');
       setSubjectForChapter('');
       setErr('');
-    } catch (error: any) {
-      setErr(error.response?.data?.message || 'Failed to add chapter');
+    } catch (error: unknown) {
+      const httpError = error as HttpError;
+      setErr(httpError.response?.data?.message || 'Failed to add chapter');
     }
   };
 

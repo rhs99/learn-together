@@ -6,7 +6,7 @@ import 'katex/dist/katex.min.css';
 // Create a global declaration to fix TypeScript error
 declare global {
   interface Window {
-    katex: any;
+    katex: typeof katexModule;
   }
 }
 

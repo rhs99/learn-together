@@ -1,8 +1,15 @@
 import './_table-row.scss';
 
+export type RowData = {
+  value: string[];
+  options?: {
+    _id?: string;
+  };
+};
+
 type TableRowProps = {
-  rowData: any;
-  onRowSelection?: (data: any) => void;
+  rowData: RowData;
+  onRowSelection?: (id: string) => void;
   headerRow?: boolean;
 };
 
@@ -17,7 +24,7 @@ const TableRow = ({ rowData, onRowSelection, headerRow }: TableRowProps) => {
         }}
         className={`lt-TableRow-container ${headerRow ? '' : onRowSelection ? 'lt-TableRow-clickable' : ''}`}
       >
-        {rowData.value.map((col: any, index: number) => (
+        {rowData.value.map((col, index) => (
           <div key={index} className={`${headerRow ? 'lt-TableRow-headerCell' : ''}`}>
             {col}
           </div>
