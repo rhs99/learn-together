@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Client CI Pipeline
 
 on:
   push:
@@ -37,6 +37,10 @@ jobs:
     - name: Run lint check
       working-directory: ./lt-client
       run: npm run lint
+    
+    - name: Run format check
+      working-directory: ./lt-client
+      run: npx prettier --check "src/**/*.{ts,tsx,scss}"
     
     - name: Run type check
       working-directory: ./lt-client
