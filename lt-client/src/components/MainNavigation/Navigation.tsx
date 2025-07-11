@@ -176,6 +176,7 @@ const Navigation = () => {
           <Flex flexDirection="row" gap="8">
             <Popover>
               <PopoverTrigger
+                aria-label="Notifications"
                 icon={<IoIosNotificationsOutline color={hasNewNotification ? 'red' : 'black'} />}
                 onClick={handleNotificationFetch}
               />
@@ -190,7 +191,7 @@ const Navigation = () => {
             </Popover>
 
             <DropdownMenu>
-              <DropdownMenuTrigger icon={<CgProfile />} />
+              <DropdownMenuTrigger aria-label="Profile" icon={<CgProfile />} />
               <DropdownMenuContent>
                 <DropdownMenuLabel>Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
