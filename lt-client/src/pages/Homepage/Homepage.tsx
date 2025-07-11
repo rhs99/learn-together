@@ -49,10 +49,10 @@ const HomePage = () => {
       return getClassOrder(a.name) - getClassOrder(b.name);
     });
 
-    const rows: any = [{ value: ['Class', 'Subjects'] }];
+    const rows = [{ value: ['Class', 'Subjects'] }];
     sortedClasses.forEach((_class) => {
       const data = {
-        value: [_class.name, _class.subjects.length],
+        value: [_class.name, String(_class.subjects.length)],
         options: { _id: _class._id },
       };
       rows.push(data);

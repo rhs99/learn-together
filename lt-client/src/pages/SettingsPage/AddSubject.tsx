@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { FormEvent, useState, useContext } from 'react';
 import Util from '../../utils';
-import { Class } from '../../types';
+import { Class, HttpError } from '../../types';
 import AuthContext from '../../store/auth';
 
 type AddSubjectProps = {
@@ -33,8 +33,9 @@ const AddSubject = ({ classes }: AddSubjectProps) => {
       setNewSubject('');
       setClassForSubject('');
       setErr('');
-    } catch (error: any) {
-      setErr(error.response?.data?.message || 'Failed to add subject');
+    } catch (error: unknown) {
+      const httpError = error as HttpError;
+      setErr(httpError.response?.data?.message || 'Failed to add subject');
     }
   };
 

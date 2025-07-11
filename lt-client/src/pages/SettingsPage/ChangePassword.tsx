@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { FormEvent, useState, useContext } from 'react';
 import Util from '../../utils';
+import { HttpError } from '../../types';
 import AuthContext from '../../store/auth';
 
 const ChangePassword = () => {
@@ -36,8 +37,9 @@ const ChangePassword = () => {
       setPassword('');
       setConfirmPassword('');
       setErr('');
-    } catch (error: any) {
-      setErr(error.response?.data?.message || 'Failed to update password');
+    } catch (error: unknown) {
+      const httpError = error as HttpError;
+      setErr(httpError.response?.data?.message || 'Failed to update password');
     }
   };
 

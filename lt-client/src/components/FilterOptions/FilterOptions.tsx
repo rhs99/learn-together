@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@optiaxiom/react';
-import { CiFilter } from 'react-icons/ci';
 
 type FilterOptionsProps = {
   filterBy: string;

@@ -4,7 +4,7 @@ import { Answer } from '../../types';
 import Util from '../../utils';
 import axios from 'axios';
 import AuthContext from '../../store/auth';
-import Quill from 'quill';
+import Quill, { Delta } from 'quill';
 import QuillTextEditor from '../Quill TextEditor/QuillTextEditor';
 import FileUploader from '../FileUploader/FileUploader';
 import useFileUploader from '../../hooks/file-uploader';
@@ -62,7 +62,7 @@ const AnswerInput = (props: AnswerInputProps) => {
       navigate(-1);
     } else if (props.fetchAnswer) {
       props.fetchAnswer().then(() => {
-        if (editor) editor.setContents({} as any);
+        if (editor) editor.setContents(new Delta());
       });
     }
     setIsLoading(false);

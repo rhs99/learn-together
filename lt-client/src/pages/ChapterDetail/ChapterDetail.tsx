@@ -78,7 +78,7 @@ const ChapterDetail = () => {
       .finally(() => {
         setIsLoading(false);
       });
-  }, [selectedTags, chapterId, sortBy, sortOrder, filterBy, token, paginationInfo.currPage]);
+  }, [selectedTags, chapterId, sortBy, sortOrder, filterBy, token, paginationInfo.currPage, isLoggedIn, onAlert]);
 
   useEffect(() => {
     fetchQuestion();

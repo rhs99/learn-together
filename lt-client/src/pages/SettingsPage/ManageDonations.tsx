@@ -1,7 +1,8 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useCallback } from 'react';
 import axios from 'axios';
 import Util from '../../utils';
 import AuthContext from '../../store/auth';
+import { HttpError } from '../../types';
 import { Flex, Text, Button, Table, TableHeader, TableRow, TableCell, TableBody } from '@optiaxiom/react';
 
 type Donation = {
@@ -23,7 +24,7 @@ const ManageDonations = () => {
   const [message, setMessage] = useState({ text: '', type: '' });
   const { getStoredValue } = useContext(AuthContext);
 
-  const fetchDonations = async () => {
+  const fetchDonations = useCallback(async () => {
     setIsLoading(true);
     setMessage({ text: '', type: '' });
     try {
@@ -43,11 +44,11 @@ const ManageDonations = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [getStoredValue]);
 
   useEffect(() => {
-    fetchDonations();
-  }, []);
+    void fetchDonations();
+  }, [fetchDonations]);
 
   const handleApprove = async (id: string) => {
     setMessage({ text: '', type: '' });
@@ -83,11 +84,12 @@ const ManageDonations = () => {
         text: 'Donation approved successfully!',
         type: 'success',
       });
-    } catch (error: any) {
-      console.error('Error approving donation:', error);
+    } catch (error: unknown) {
+      const httpError = error as HttpError;
+      console.error('Error approving donation:', httpError);
 
       // Extract the most specific error message possible
-      const errorMessage = error.response?.data?.message || error.message || 'Failed to approve donation';
+      const errorMessage = httpError.response?.data?.message || httpError.message || 'Failed to approve donation';
 
       console.error('Error details:', errorMessage);
 

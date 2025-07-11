@@ -32,9 +32,9 @@ const ClassDetail = () => {
   };
 
   const rowData = useMemo(() => {
-    const rows: any = [{ value: ['Subject', 'Chapters'] }];
+    const rows = [{ value: ['Subject', 'Chapters'] }];
     subjects.forEach((sub) => {
-      const data = { value: [sub.name, sub.chapters.length], options: { _id: sub._id } };
+      const data = { value: [sub.name, String(sub.chapters.length)], options: { _id: sub._id } };
       rows.push(data);
     });
     return rows;
