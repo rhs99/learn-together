@@ -55,30 +55,65 @@ const validate = (schema) => (req, res, next) => {
 /**
  * Extract errors from Zod validation result
  * @param {z.ZodError} zodError - The Zod error to format
- * @param {string} source - Source of the error (query, body, params)
  * @returns {Array} Formatted error array
  */
 const extractZodErrors = (zodError) => {
-    if (!zodError || !zodError.errors || !Array.isArray(zodError.errors)) {
+    // First check if zodError is an object
+    if (!zodError || typeof zodError !== 'object') {
         return [{ path: 'unknown', message: 'Unknown validation error' }];
     }
 
-    return zodError.errors.map((err) => {
-        // Get the field name from the path or code
-        let fieldName = 'unknown';
+    try {
+        // Handle the specific ZodError format we're seeing
+        if (zodError.name === 'ZodError' && zodError.message) {
+            // The message is a stringified JSON array
+            let parsedErrors = [];
+            try {
+                parsedErrors = JSON.parse(zodError.message);
+            } catch {
+                // Fallback if parsing fails
+                return [{ path: 'unknown', message: zodError.message || 'Validation error' }];
+            }
 
-        if (err.path && Array.isArray(err.path) && err.path.length > 0) {
-            fieldName = err.path[err.path.length - 1];
-        } else if (err.code === 'invalid_type' && err.received === 'undefined') {
-            // Handle required field errors
-            fieldName = err.path ? err.path[0] : 'unknown';
+            return parsedErrors.map((err) => {
+                // Extract the field name from the path
+                const fieldName =
+                    err.path && Array.isArray(err.path) && err.path.length > 0
+                        ? err.path[err.path.length - 1]
+                        : 'unknown';
+
+                return {
+                    path: fieldName,
+                    message: err.message || 'Validation error',
+                };
+            });
         }
 
-        return {
-            path: fieldName,
-            message: err.message,
-        };
-    });
+        // Standard format for ZodError in Zod
+        if (zodError.errors && Array.isArray(zodError.errors)) {
+            return zodError.errors.map((err) => {
+                // Get the field name from the path or code
+                let fieldName = 'unknown';
+
+                if (err.path && Array.isArray(err.path) && err.path.length > 0) {
+                    fieldName = err.path[err.path.length - 1];
+                } else if (err.code === 'invalid_type' && err.received === 'undefined') {
+                    // Handle required field errors
+                    fieldName = err.path && Array.isArray(err.path) && err.path.length > 0 ? err.path[0] : 'unknown';
+                }
+
+                return {
+                    path: fieldName,
+                    message: err.message || 'Validation error',
+                };
+            });
+        }
+    } catch (e) {
+        console.error('Error parsing validation errors:', e);
+    }
+
+    // If we can't extract errors properly, return a generic error
+    return [{ path: 'unknown', message: 'Unknown validation error' }];
 };
 
 module.exports = { validate };

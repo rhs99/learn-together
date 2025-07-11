@@ -143,10 +143,12 @@ describe('Tag Controller Integration Tests', () => {
             expect(response.status).toBe(400);
             expect(response.body).toHaveProperty('message', 'Validation failed');
             expect(response.body.errors).toBeInstanceOf(Array);
-
             expect(response.body.errors.length).toBeGreaterThan(0);
-        });
 
+            const nameError = response.body.errors.find((err) => err.path === 'name');
+            expect(nameError).toBeDefined();
+            expect(nameError.message).toBe('Tag name can only contain letters, numbers, spaces, and hyphens');
+        });
         it('should return validation error when name is too long', async () => {
             const longName = 'a'.repeat(51);
 
@@ -156,7 +158,9 @@ describe('Tag Controller Integration Tests', () => {
             expect(response.body).toHaveProperty('message', 'Validation failed');
             expect(response.body.errors).toBeInstanceOf(Array);
 
-            expect(response.body.errors.length).toBeGreaterThan(0);
+            const nameError = response.body.errors.find((err) => err.path === 'name');
+            expect(nameError).toBeDefined();
+            expect(nameError.message).toBe('Tag name cannot exceed 50 characters');
         });
     });
 });
