@@ -1,5 +1,5 @@
 const Class = require('../models/class');
-const { cacheService, clearCache } = require('./cache');
+const { cacheService } = require('./cache');
 
 const CACHE_KEYS = {
     CLASS: 'class',

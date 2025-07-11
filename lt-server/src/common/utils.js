@@ -86,7 +86,7 @@ const uuid = () => {
 };
 
 const formatTagName = (name) => {
-    let newName = name.charAt(0).toUpperCase() + name.slice(1);
+    const newName = name.charAt(0).toUpperCase() + name.slice(1);
     return newName.trim().split(/\s+/).join('-');
 };
 
