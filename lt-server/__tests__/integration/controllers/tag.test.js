@@ -5,13 +5,15 @@ const bodyParser = require('body-parser');
 const Tag = require('../../../src/models/tag');
 const TagController = require('../../../src/controllers/tag');
 const TagService = require('../../../src/services/tag');
+const { validate } = require('../../../src/common/validation');
+const { getTagsSchema, createTagSchema } = require('../../../src/validations/tag');
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/api/tags', TagController.getAllTags);
-app.post('/api/tags', TagController.addNewTag);
+app.get('/api/tags', validate(getTagsSchema), TagController.getAllTags);
+app.post('/api/tags', validate(createTagSchema), TagController.addNewTag);
 
 describe('Tag Controller Integration Tests', () => {
     const chapterId = new mongoose.Types.ObjectId().toString();
@@ -50,6 +52,26 @@ describe('Tag Controller Integration Tests', () => {
             expect(response.status).toBe(200);
             expect(response.body).toBeInstanceOf(Array);
             expect(response.body.length).toBe(0);
+        });
+
+        it('should return validation error if chapterId is missing', async () => {
+            const response = await request(app).get('/api/tags');
+
+            expect(response.status).toBe(400);
+            expect(response.body).toHaveProperty('message', 'Validation failed');
+            expect(response.body.errors).toBeInstanceOf(Array);
+
+            expect(response.body.errors.length).toBeGreaterThan(0);
+        });
+
+        it('should return validation error if chapterId is invalid', async () => {
+            const response = await request(app).get('/api/tags').query({ chapterId: 'invalid-id' });
+
+            expect(response.status).toBe(400);
+            expect(response.body).toHaveProperty('message', 'Validation failed');
+            expect(response.body.errors).toBeInstanceOf(Array);
+
+            expect(response.body.errors.length).toBeGreaterThan(0);
         });
 
         it('should handle errors properly', async () => {
@@ -95,11 +117,46 @@ describe('Tag Controller Integration Tests', () => {
             expect(count).toBe(1);
         });
 
-        it('should handle validation errors', async () => {
+        it('should return validation error when name is missing', async () => {
+            const response = await request(app).post('/api/tags').send({ chapter: chapterId });
+
+            expect(response.status).toBe(400);
+            expect(response.body).toHaveProperty('message', 'Validation failed');
+            expect(response.body.errors).toBeInstanceOf(Array);
+
+            expect(response.body.errors.length).toBeGreaterThan(0);
+        });
+
+        it('should return validation error when chapter is missing', async () => {
             const response = await request(app).post('/api/tags').send({ name: 'javascript' });
 
             expect(response.status).toBe(400);
-            expect(response.body).toHaveProperty('message');
+            expect(response.body).toHaveProperty('message', 'Validation failed');
+            expect(response.body.errors).toBeInstanceOf(Array);
+
+            expect(response.body.errors.length).toBeGreaterThan(0);
+        });
+
+        it('should return validation error when name contains invalid characters', async () => {
+            const response = await request(app).post('/api/tags').send({ name: 'javascript#$%^', chapter: chapterId });
+
+            expect(response.status).toBe(400);
+            expect(response.body).toHaveProperty('message', 'Validation failed');
+            expect(response.body.errors).toBeInstanceOf(Array);
+
+            expect(response.body.errors.length).toBeGreaterThan(0);
+        });
+
+        it('should return validation error when name is too long', async () => {
+            const longName = 'a'.repeat(51);
+
+            const response = await request(app).post('/api/tags').send({ name: longName, chapter: chapterId });
+
+            expect(response.status).toBe(400);
+            expect(response.body).toHaveProperty('message', 'Validation failed');
+            expect(response.body.errors).toBeInstanceOf(Array);
+
+            expect(response.body.errors.length).toBeGreaterThan(0);
         });
     });
 });

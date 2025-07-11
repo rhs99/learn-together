@@ -58,7 +58,7 @@ describe('Tag Service Tests', () => {
             const result = await TagService.addNewTag(tagData);
 
             expect(findOneMock).toHaveBeenCalledWith({ name: 'Javascript', chapter: chapterId });
-            expect(cacheService.del).not.toHaveBeenCalled(); 
+            expect(cacheService.del).not.toHaveBeenCalled();
             expect(result).toBe(existingTag);
 
             findOneMock.mockRestore();

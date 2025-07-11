@@ -56,7 +56,6 @@ describe('Tag Model Tests', () => {
             chapter: chapterId,
         };
 
-
         const tagData2 = {
             name: 'algorithms',
             chapter: anotherChapterId,
