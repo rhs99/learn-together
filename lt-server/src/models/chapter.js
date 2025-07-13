@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const chapterSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    subject: { type: mongoose.Types.ObjectId, ref: 'Subject' },
+    subject: { type: mongoose.Types.ObjectId, ref: 'Subject', required: true },
     questions: [
         {
             type: mongoose.Types.ObjectId,
