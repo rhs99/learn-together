@@ -49,7 +49,7 @@ describe('Chapter Service Tests', () => {
                 name: 'Introduction to Algebra',
                 subject: subjectId,
                 questions: [],
-                toObject: jest.fn().mockReturnValue({
+                toJSON: jest.fn().mockReturnValue({
                     _id: chapterId,
                     name: 'Introduction to Algebra',
                     subject: subjectId,
@@ -65,7 +65,7 @@ describe('Chapter Service Tests', () => {
 
             expect(cacheService.get).toHaveBeenCalledWith(`chapter:${chapterId}`);
             expect(findByIdMock).toHaveBeenCalledWith(chapterId);
-            expect(cacheService.set).toHaveBeenCalledWith(`chapter:${chapterId}`, chapterData.toObject(), 1800);
+            expect(cacheService.set).toHaveBeenCalledWith(`chapter:${chapterId}`, chapterData.toJSON(), 1800);
             expect(result).toBe(chapterData);
 
             findByIdMock.mockRestore();

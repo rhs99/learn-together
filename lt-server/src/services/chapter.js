@@ -22,9 +22,10 @@ const getChapter = async (id) => {
         const chapter = await Chapter.findById(id).exec();
 
         if (chapter) {
-            // Handle cases where chapter doesn't have toObject method (for tests)
-            const chapterData = typeof chapter.toObject === 'function' ? chapter.toObject() : { ...chapter };
-
+            // Convert Mongoose document to plain object for caching
+            // Using lean() or toJSON() would be better alternatives in real queries
+            const chapterData = chapter.toJSON ? chapter.toJSON() : chapter;
+            
             await cacheService.set(cacheKey, chapterData, 1800);
         }
 
