@@ -17,9 +17,7 @@ const getClass = async (id) => {
 
     const _class = await Class.findById(id).exec();
 
-    if (_class) {
-        await cacheService.set(cacheKey, _class.toObject(), 1800);
-    }
+    await cacheService.set(cacheKey, _class.toObject(), 1800);
 
     return _class;
 };
@@ -48,7 +46,7 @@ const addNewClass = async (body) => {
 
     await cacheService.del(CACHE_KEYS.CLASSES);
     await cacheService.del(`${CACHE_KEYS.CLASS_PREFIX}${newClass._id}`);
-    
+
     return newClass;
 };
 

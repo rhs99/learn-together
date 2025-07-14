@@ -47,18 +47,13 @@ describe('Class Controller Integration Tests', () => {
             expect(response.body.message).toBe('Validation failed');
         });
 
-        it('should return null for non-existent id with 200 status', async () => {
+        it('should return 400 for non-existent id', async () => {
             const nonExistentId = new mongoose.Types.ObjectId();
-
-            // Mock the service to simulate not finding the class
-            jest.spyOn(Class, 'findById').mockImplementationOnce(() => ({
-                exec: jest.fn().mockResolvedValue(null),
-            }));
 
             const response = await global.testRequest.get(`/classes/${nonExistentId}`);
 
-            expect(response.status).toBe(200);
-            expect(response.body).toBeNull();
+            expect(response.status).toBe(400);
+            expect(response.body.message).toBeDefined();
         });
     });
 

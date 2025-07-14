@@ -20,8 +20,8 @@ const getSubjects = async (req, res) => {
 
 const addNewSubject = async (req, res) => {
     try {
-        await SubjectService.addNewSubject(req.body);
-        res.status(201).json();
+        const newSubject = await SubjectService.addNewSubject(req.body);
+        res.status(201).json(newSubject);
     } catch (e) {
         res.status(400).json({ message: e.message });
     }

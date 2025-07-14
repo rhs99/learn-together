@@ -19,9 +19,7 @@ const getSubject = async (id) => {
 
     const subject = await Subject.findById(id).populate('class').exec();
 
-    if (subject) {
-        await cacheService.set(cacheKey, subject.toObject(), 1800);
-    }
+    await cacheService.set(cacheKey, subject.toObject(), 1800);
 
     return subject;
 };
@@ -36,7 +34,6 @@ const getSubjectBreadcrumb = async (id) => {
 
     const subject = await getSubject(id);
 
-    // Safety check to prevent null reference errors
     if (!subject || !subject.class) {
         return [];
     }
@@ -79,13 +76,10 @@ const getSubjects = async (classId) => {
 const addNewSubject = async (body) => {
     let subject = new Subject(body);
     subject = await subject.save();
-    const _class = await getClass(body.class);
 
-    // Safety check to prevent null reference errors
-    if (_class && _class.subjects) {
-        _class.subjects.push(subject._id);
-        await _class.save();
-    }
+    const _class = await getClass(body.class);
+    _class.subjects.push(subject._id);
+    await _class.save();
 
     await cacheService.del(`${CACHE_KEYS.SUBJECTS_BY_CLASS}${body.class}`);
     return subject;
