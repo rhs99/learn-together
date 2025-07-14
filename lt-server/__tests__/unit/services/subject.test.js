@@ -1,60 +1,56 @@
 const mongoose = require('mongoose');
 const Subject = require('../../../src/models/subject');
 const Class = require('../../../src/models/class');
-const SubjectService = require('../../../src/services/subject');
 const { cacheService } = require('../../../src/services/cache');
-
-// Mock cache service
-jest.mock('../../../src/services/cache');
-
-// Mock the class service module
-jest.mock('../../../src/services/class', () => ({
-    getClass: jest.fn(),
-}));
-
-// Import the mocked class service
-const ClassService = require('../../../src/services/class');
+const SubjectService = require('../../../src/services/subject');
 
 describe('Subject Service Tests', () => {
-    const classId = new mongoose.Types.ObjectId();
-    const subjectId = new mongoose.Types.ObjectId();
-
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
     describe('getSubject', () => {
         it('should return a subject from cache if available', async () => {
+            const subjectId = new mongoose.Types.ObjectId().toString();
             const cachedSubject = {
                 _id: subjectId,
-                name: 'Algebra',
-                class: classId,
+                name: 'Mathematics',
+                class: new mongoose.Types.ObjectId(),
+                chapters: [],
             };
+
             cacheService.get.mockResolvedValue(cachedSubject);
 
             const result = await SubjectService.getSubject(subjectId);
 
             expect(cacheService.get).toHaveBeenCalledWith(`subject:${subjectId}`);
             expect(result).toBeInstanceOf(Subject);
-            expect(result._id.toString()).toBe(subjectId.toString());
+            expect(result._id.toString()).toBe(subjectId);
+            expect(result.name).toBe('Mathematics');
         });
 
         it('should fetch subject from database if not in cache', async () => {
+            const subjectId = new mongoose.Types.ObjectId();
+            const classId = new mongoose.Types.ObjectId();
             const subjectData = {
                 _id: subjectId,
-                name: 'Algebra',
-                class: { _id: classId, name: 'Grade 9' },
+                name: 'Physics',
+                class: { _id: classId, name: 'Grade 10' },
+                chapters: [],
                 toObject: jest.fn().mockReturnValue({
                     _id: subjectId,
-                    name: 'Algebra',
-                    class: { _id: classId, name: 'Grade 9' },
+                    name: 'Physics',
+                    class: { _id: classId, name: 'Grade 10' },
+                    chapters: [],
                 }),
             };
+
             cacheService.get.mockResolvedValue(null);
-            const findByIdMock = jest.spyOn(Subject, 'findById').mockReturnValue({
+
+            const findByIdMock = jest.spyOn(Subject, 'findById').mockImplementation(() => ({
                 populate: jest.fn().mockReturnThis(),
                 exec: jest.fn().mockResolvedValue(subjectData),
-            });
+            }));
 
             const result = await SubjectService.getSubject(subjectId);
 
@@ -67,12 +63,120 @@ describe('Subject Service Tests', () => {
         });
     });
 
+    describe('getSubjectBreadcrumb', () => {
+        it('should return breadcrumb from cache if available', async () => {
+            const subjectId = new mongoose.Types.ObjectId().toString();
+            const cachedBreadcrumb = [
+                { name: 'Grade 10', url: '/classes/classid' },
+                { name: 'Mathematics', url: '#' },
+            ];
+
+            cacheService.get.mockResolvedValue(cachedBreadcrumb);
+
+            const result = await SubjectService.getSubjectBreadcrumb(subjectId);
+
+            expect(cacheService.get).toHaveBeenCalledWith(`subject:breadcrumb:${subjectId}`);
+            expect(result).toEqual(cachedBreadcrumb);
+        });
+
+        it('should build breadcrumb from subject data if not in cache', async () => {
+            const subjectId = new mongoose.Types.ObjectId();
+            const classId = new mongoose.Types.ObjectId();
+            const subjectData = {
+                _id: subjectId,
+                name: 'Chemistry',
+                class: { _id: classId, name: 'Grade 11' },
+                chapters: [],
+                toObject: jest.fn().mockReturnValue({
+                    _id: subjectId,
+                    name: 'Chemistry',
+                    class: { _id: classId, name: 'Grade 11' },
+                    chapters: [],
+                }),
+            };
+
+            // First call is for breadcrumb cache, second call is for subject cache in getSubject
+            cacheService.get
+                .mockResolvedValueOnce(null) // breadcrumb cache miss
+                .mockResolvedValueOnce(null); // subject cache miss
+
+            const findByIdMock = jest.spyOn(Subject, 'findById').mockImplementation(() => ({
+                populate: jest.fn().mockReturnThis(),
+                exec: jest.fn().mockResolvedValue(subjectData),
+            }));
+
+            const expectedBreadcrumb = [
+                { name: 'Grade 11', url: `/classes/${classId}` },
+                { name: 'Chemistry', url: '#' },
+            ];
+
+            const result = await SubjectService.getSubjectBreadcrumb(subjectId);
+
+            expect(cacheService.get).toHaveBeenCalledWith(`subject:breadcrumb:${subjectId}`);
+            expect(cacheService.set).toHaveBeenCalledWith(`subject:breadcrumb:${subjectId}`, expectedBreadcrumb, 3600);
+            expect(result).toEqual(expectedBreadcrumb);
+
+            findByIdMock.mockRestore();
+        });
+
+        it('should return empty array if subject not found', async () => {
+            const subjectId = new mongoose.Types.ObjectId();
+
+            // Mock breadcrumb cache miss
+            cacheService.get.mockResolvedValueOnce(null);
+
+            // Mock getSubject to return null directly (simulating subject not found)
+            jest.spyOn(SubjectService, 'getSubject').mockResolvedValueOnce(null);
+
+            const result = await SubjectService.getSubjectBreadcrumb(subjectId);
+
+            expect(result).toEqual([]);
+
+            // Restore the spy
+            SubjectService.getSubject.mockRestore();
+        });
+
+        it('should return empty array if subject has no class', async () => {
+            const subjectId = new mongoose.Types.ObjectId();
+            const subjectData = {
+                _id: subjectId,
+                name: 'Mathematics',
+                class: null,
+                chapters: [],
+                toObject: jest.fn().mockReturnValue({
+                    _id: subjectId,
+                    name: 'Mathematics',
+                    class: null,
+                    chapters: [],
+                }),
+            };
+
+            // First call is for breadcrumb cache, second call is for subject cache in getSubject
+            cacheService.get
+                .mockResolvedValueOnce(null) // breadcrumb cache miss
+                .mockResolvedValueOnce(null); // subject cache miss
+
+            const findByIdMock = jest.spyOn(Subject, 'findById').mockImplementation(() => ({
+                populate: jest.fn().mockReturnThis(),
+                exec: jest.fn().mockResolvedValue(subjectData),
+            }));
+
+            const result = await SubjectService.getSubjectBreadcrumb(subjectId);
+
+            expect(result).toEqual([]);
+
+            findByIdMock.mockRestore();
+        });
+    });
+
     describe('getSubjects', () => {
         it('should return subjects from cache if available', async () => {
+            const classId = new mongoose.Types.ObjectId().toString();
             const cachedSubjects = [
-                { _id: new mongoose.Types.ObjectId(), name: 'Algebra', class: classId },
-                { _id: new mongoose.Types.ObjectId(), name: 'Geometry', class: classId },
+                { _id: new mongoose.Types.ObjectId(), name: 'Mathematics', class: classId },
+                { _id: new mongoose.Types.ObjectId(), name: 'Physics', class: classId },
             ];
+
             cacheService.get.mockResolvedValue(cachedSubjects);
 
             const result = await SubjectService.getSubjects(classId);
@@ -80,22 +184,33 @@ describe('Subject Service Tests', () => {
             expect(cacheService.get).toHaveBeenCalledWith(`subjects:class:${classId}`);
             expect(result).toHaveLength(2);
             expect(result[0]).toBeInstanceOf(Subject);
+            expect(result[1]).toBeInstanceOf(Subject);
         });
 
         it('should fetch subjects from database if not in cache', async () => {
-            const geometryId = new mongoose.Types.ObjectId();
-            const dbSubjects = [
-                { _id: subjectId, name: 'Algebra', toObject: () => ({ _id: subjectId, name: 'Algebra' }) },
+            const classId = new mongoose.Types.ObjectId();
+            const subjects = [
                 {
-                    _id: geometryId,
-                    name: 'Geometry',
-                    toObject: () => ({ _id: geometryId, name: 'Geometry' }),
+                    _id: new mongoose.Types.ObjectId(),
+                    name: 'Biology',
+                    class: classId,
+                    chapters: [],
+                    toObject: () => ({ _id: 'id1', name: 'Biology', class: classId }),
+                },
+                {
+                    _id: new mongoose.Types.ObjectId(),
+                    name: 'Chemistry',
+                    class: classId,
+                    chapters: [],
+                    toObject: () => ({ _id: 'id2', name: 'Chemistry', class: classId }),
                 },
             ];
+
             cacheService.get.mockResolvedValue(null);
-            const findMock = jest.spyOn(Subject, 'find').mockReturnValue({
-                exec: jest.fn().mockResolvedValue(dbSubjects),
-            });
+
+            const findMock = jest.spyOn(Subject, 'find').mockImplementation(() => ({
+                exec: jest.fn().mockResolvedValue(subjects),
+            }));
 
             const result = await SubjectService.getSubjects(classId);
 
@@ -103,63 +218,169 @@ describe('Subject Service Tests', () => {
             expect(findMock).toHaveBeenCalledWith({ class: classId });
             expect(cacheService.set).toHaveBeenCalledWith(
                 `subjects:class:${classId}`,
-                dbSubjects.map((s) => s.toObject()),
+                subjects.map((s) => s.toObject()),
                 900,
             );
-            expect(result).toEqual(dbSubjects);
+            expect(result).toBe(subjects);
 
             findMock.mockRestore();
         });
     });
 
     describe('addNewSubject', () => {
-        it('should save a new subject, update class, and invalidate cache', async () => {
-            const subjectData = { name: 'Trigonometry', class: classId };
-            const newSubjectId = new mongoose.Types.ObjectId();
-
-            // Create a mock for Subject.prototype.save
-            const subjectSaveMock = jest.spyOn(Subject.prototype, 'save').mockImplementation(function () {
-                this._id = newSubjectId;
-                return Promise.resolve(this);
-            });
-
-            // Create a mock class object
-            const mockClass = {
-                _id: classId,
-                name: 'Grade 10',
-                subjects: [],
-                save: jest.fn().mockResolvedValue(true),
+        it('should create a new subject and update the class', async () => {
+            const classId = new mongoose.Types.ObjectId();
+            const subjectBody = {
+                name: 'Computer Science',
+                class: classId,
             };
 
-            // Mock the ClassService.getClass to return our mock class
-            ClassService.getClass.mockResolvedValue(mockClass);
+            const savedSubject = {
+                _id: new mongoose.Types.ObjectId(),
+                name: 'Computer Science',
+                class: classId,
+                chapters: [],
+            };
 
-            // Run the test
-            await SubjectService.addNewSubject(subjectData);
+            const mockClass = {
+                _id: classId,
+                name: 'Grade 12',
+                subjects: [],
+                save: jest.fn().mockResolvedValue(this),
+                toObject: jest.fn().mockReturnValue({
+                    _id: classId,
+                    name: 'Grade 12',
+                    subjects: [],
+                }),
+            };
 
-            // Assertions
-            expect(subjectSaveMock).toHaveBeenCalled();
-            // Since we're using a custom mock, just verify cache was deleted
+            // Mock Class model's findById to bypass database query
+            jest.spyOn(Class, 'findById').mockImplementation(() => ({
+                exec: jest.fn().mockResolvedValue(mockClass),
+            }));
+
+            jest.spyOn(Subject.prototype, 'save').mockResolvedValue(savedSubject);
+
+            const result = await SubjectService.addNewSubject(subjectBody);
+
+            expect(mockClass.subjects).toContain(savedSubject._id);
+            expect(mockClass.save).toHaveBeenCalled();
             expect(cacheService.del).toHaveBeenCalledWith(`subjects:class:${classId}`);
+            expect(result).toBe(savedSubject);
+        });
 
-            subjectSaveMock.mockRestore();
+        it('should handle errors when creating a new subject', async () => {
+            const classId = new mongoose.Types.ObjectId();
+            const subjectBody = {
+                name: 'Invalid Subject',
+                class: classId,
+            };
+
+            const error = new Error('Validation error');
+            jest.spyOn(Subject.prototype, 'save').mockRejectedValue(error);
+
+            await expect(SubjectService.addNewSubject(subjectBody)).rejects.toThrow('Validation error');
+        });
+
+        it('should handle errors when updating the class', async () => {
+            const classId = new mongoose.Types.ObjectId();
+            const subjectBody = {
+                name: 'Computer Science',
+                class: classId,
+            };
+
+            const savedSubject = {
+                _id: new mongoose.Types.ObjectId(),
+                name: 'Computer Science',
+                class: classId,
+                chapters: [],
+            };
+
+            // Mock Class model's findById to return null (class not found)
+            jest.spyOn(Class, 'findById').mockImplementation(() => ({
+                exec: jest.fn().mockResolvedValue(null),
+            }));
+
+            jest.spyOn(Subject.prototype, 'save').mockResolvedValue(savedSubject);
+
+            await expect(SubjectService.addNewSubject(subjectBody)).rejects.toThrow('Cannot read properties of null');
         });
     });
 
-    describe('getSubjectBreadcrumb', () => {
-        it('should return breadcrumb from cache if available', async () => {
-            const cachedBreadcrumb = [{ name: 'Grade 9', url: `/classes/${classId}` }];
-            cacheService.get.mockResolvedValue(cachedBreadcrumb);
+    describe('cache invalidation', () => {
+        it('should properly invalidate cache when adding new subject', async () => {
+            const classId = new mongoose.Types.ObjectId();
+            const subjectBody = {
+                name: 'Art',
+                class: classId,
+            };
 
-            const result = await SubjectService.getSubjectBreadcrumb(subjectId);
+            const savedSubject = {
+                _id: new mongoose.Types.ObjectId(),
+                name: 'Art',
+                class: classId,
+                chapters: [],
+            };
 
-            expect(cacheService.get).toHaveBeenCalledWith(`subject:breadcrumb:${subjectId}`);
-            expect(result).toBe(cachedBreadcrumb);
+            const mockClass = {
+                _id: classId,
+                name: 'Grade 8',
+                subjects: [],
+                save: jest.fn().mockResolvedValue(this),
+                toObject: jest.fn().mockReturnValue({
+                    _id: classId,
+                    name: 'Grade 8',
+                    subjects: [],
+                }),
+            };
+
+            // Mock Class model's findById to return a valid class
+            jest.spyOn(Class, 'findById').mockImplementation(() => ({
+                exec: jest.fn().mockResolvedValue(mockClass),
+            }));
+
+            jest.spyOn(Subject.prototype, 'save').mockResolvedValue(savedSubject);
+
+            await SubjectService.addNewSubject(subjectBody);
+
+            expect(cacheService.del).toHaveBeenCalledWith(`subjects:class:${classId}`);
+            expect(cacheService.del).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('error handling', () => {
+        it('should handle database errors in getSubject', async () => {
+            const subjectId = new mongoose.Types.ObjectId();
+            const error = new Error('Database connection error');
+
+            cacheService.get.mockResolvedValue(null);
+            jest.spyOn(Subject, 'findById').mockImplementation(() => ({
+                populate: jest.fn().mockReturnThis(),
+                exec: jest.fn().mockRejectedValue(error),
+            }));
+
+            await expect(SubjectService.getSubject(subjectId)).rejects.toThrow('Database connection error');
         });
 
-        it('should generate breadcrumb and cache it if not in cache', async () => {
-            // Skip this test since we've fixed the implementation in the mock
-            expect(true).toBe(true);
+        it('should handle database errors in getSubjects', async () => {
+            const classId = new mongoose.Types.ObjectId();
+            const error = new Error('Database connection error');
+
+            cacheService.get.mockResolvedValue(null);
+            jest.spyOn(Subject, 'find').mockImplementation(() => ({
+                exec: jest.fn().mockRejectedValue(error),
+            }));
+
+            await expect(SubjectService.getSubjects(classId)).rejects.toThrow('Database connection error');
+        });
+
+        it('should handle cache errors gracefully', async () => {
+            const subjectId = new mongoose.Types.ObjectId();
+            const error = new Error('Cache error');
+
+            cacheService.get.mockRejectedValue(error);
+
+            await expect(SubjectService.getSubject(subjectId)).rejects.toThrow('Cache error');
         });
     });
 });

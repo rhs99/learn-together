@@ -20,8 +20,8 @@ const getClasses = async (req, res) => {
 
 const addNewClass = async (req, res) => {
     try {
-        await ClassService.addNewClass(req.body);
-        res.status(201).json();
+        const newClass = await ClassService.addNewClass(req.body);
+        res.status(201).json(newClass);
     } catch (e) {
         res.status(400).json({ message: e.message });
     }
