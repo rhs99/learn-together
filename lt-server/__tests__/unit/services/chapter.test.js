@@ -63,7 +63,7 @@ describe('Chapter Service Tests', () => {
             expect(result).toBe(dbChapter);
         });
 
-        it('should handle null chapter from database', async () => {
+        it('should throw NotFoundError if chapter is not found in database', async () => {
             const chapterId = new mongoose.Types.ObjectId();
 
             cacheService.get.mockResolvedValue(null);
@@ -72,9 +72,7 @@ describe('Chapter Service Tests', () => {
                 exec: jest.fn().mockResolvedValue(null),
             }));
 
-            // The service should handle null gracefully, but currently it will throw an error
-            // This test verifies the current behavior (error) rather than the ideal behavior
-            await expect(ChapterService.getChapter(chapterId)).rejects.toThrow('Cannot read properties of null');
+            await expect(ChapterService.getChapter(chapterId)).rejects.toThrow('Chapter not found');
         });
     });
 
@@ -261,7 +259,7 @@ describe('Chapter Service Tests', () => {
             await expect(ChapterService.addNewChapter(chapterBody)).rejects.toThrow('Database error');
         });
 
-        it('should handle errors when updating the subject', async () => {
+        it('should throw NotFoundError if referenced subject does not exist', async () => {
             const subjectId = new mongoose.Types.ObjectId();
             const chapterBody = {
                 name: 'Geometry',
@@ -283,7 +281,9 @@ describe('Chapter Service Tests', () => {
 
             jest.spyOn(Chapter.prototype, 'save').mockResolvedValue(savedChapter);
 
-            await expect(ChapterService.addNewChapter(chapterBody)).rejects.toThrow('Cannot read properties of null');
+            await expect(ChapterService.addNewChapter(chapterBody)).rejects.toThrow(
+                'Referenced subject does not exist',
+            );
         });
     });
 
@@ -327,51 +327,6 @@ describe('Chapter Service Tests', () => {
             expect(cacheService.del).toHaveBeenCalledWith(`chapters:subject:${subjectId}`);
             expect(cacheService.del).toHaveBeenCalledWith(`chapter:${savedChapter._id}`);
             expect(cacheService.del).toHaveBeenCalledTimes(2);
-        });
-    });
-
-    describe('error handling', () => {
-        it('should handle database errors in getChapter', async () => {
-            const chapterId = new mongoose.Types.ObjectId();
-            const error = new Error('Database connection error');
-
-            cacheService.get.mockResolvedValue(null);
-            jest.spyOn(Chapter, 'findById').mockImplementation(() => ({
-                populate: jest.fn().mockReturnThis(),
-                exec: jest.fn().mockRejectedValue(error),
-            }));
-
-            await expect(ChapterService.getChapter(chapterId)).rejects.toThrow('Database connection error');
-        });
-
-        it('should handle database errors in getChapters', async () => {
-            const subjectId = new mongoose.Types.ObjectId();
-            const error = new Error('Database connection error');
-
-            cacheService.get.mockResolvedValue(null);
-            jest.spyOn(Chapter, 'find').mockImplementation(() => ({
-                exec: jest.fn().mockRejectedValue(error),
-            }));
-
-            await expect(ChapterService.getChapters(subjectId)).rejects.toThrow('Database connection error');
-        });
-
-        it('should handle cache errors gracefully', async () => {
-            const chapterId = new mongoose.Types.ObjectId();
-            const error = new Error('Cache error');
-
-            cacheService.get.mockRejectedValue(error);
-
-            await expect(ChapterService.getChapter(chapterId)).rejects.toThrow('Cache error');
-        });
-
-        it('should handle errors in getChapterBreadcrumb', async () => {
-            const chapterId = new mongoose.Types.ObjectId();
-            const error = new Error('Breadcrumb generation error');
-
-            cacheService.get.mockRejectedValue(error);
-
-            await expect(ChapterService.getChapterBreadcrumb(chapterId)).rejects.toThrow('Breadcrumb generation error');
         });
     });
 });

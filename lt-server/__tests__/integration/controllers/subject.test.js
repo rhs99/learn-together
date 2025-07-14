@@ -46,8 +46,9 @@ describe('Subject Controller Integration Tests', () => {
 
         it('should return 400 when service throws error', async () => {
             const classId = new mongoose.Types.ObjectId().toString();
-
-            jest.spyOn(SubjectService, 'getSubjects').mockRejectedValue(new Error('Failed to get subjects'));
+            const error = new Error('Failed to get subjects');
+            error.statusCode = 400;
+            jest.spyOn(SubjectService, 'getSubjects').mockRejectedValue(error);
 
             const response = await global.testRequest.get('/subjects').query({ classId });
 
@@ -82,8 +83,9 @@ describe('Subject Controller Integration Tests', () => {
 
         it('should return 400 when service throws error', async () => {
             const subjectId = new mongoose.Types.ObjectId().toString();
-
-            jest.spyOn(SubjectService, 'getSubjectBreadcrumb').mockRejectedValue(new Error('Failed to get breadcrumb'));
+            const error = new Error('Failed to get breadcrumb');
+            error.statusCode = 400;
+            jest.spyOn(SubjectService, 'getSubjectBreadcrumb').mockRejectedValue(error);
 
             const response = await global.testRequest.get(`/subjects/${subjectId}/breadcrumb`);
 
@@ -149,8 +151,9 @@ describe('Subject Controller Integration Tests', () => {
                 name: 'New Subject',
                 class: classId,
             };
-
-            jest.spyOn(SubjectService, 'addNewSubject').mockRejectedValue(new Error('Failed to add subject'));
+            const error = new Error('Failed to add subject');
+            error.statusCode = 400;
+            jest.spyOn(SubjectService, 'addNewSubject').mockRejectedValue(error);
 
             const response = await global.testRequest.post('/subjects').send(subjectData);
 
