@@ -47,12 +47,12 @@ describe('Class Controller Integration Tests', () => {
             expect(response.body.message).toBe('Validation failed');
         });
 
-        it('should return 400 for non-existent id', async () => {
+        it('should return 404 for non-existent id', async () => {
             const nonExistentId = new mongoose.Types.ObjectId();
 
             const response = await global.testRequest.get(`/classes/${nonExistentId}`);
 
-            expect(response.status).toBe(400);
+            expect(response.status).toBe(404);
             expect(response.body.message).toBeDefined();
         });
     });

@@ -38,15 +38,15 @@ describe('Chapter Controller Integration Tests', () => {
             expect(response.body.message).toBe('Validation failed');
         });
 
-        it('should return 400 when service throws error', async () => {
+        it('should return 500 when service throws error', async () => {
             const subjectId = new mongoose.Types.ObjectId().toString();
 
             jest.spyOn(ChapterService, 'getChapters').mockRejectedValue(new Error('Failed to get chapters'));
 
             const response = await global.testRequest.get('/chapters').query({ subjectId });
 
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe('Failed to get chapters');
+            expect(response.status).toBe(500);
+            expect(response.body.message).toBe('An error occurred while fetching chapters');
         });
     });
 
@@ -75,15 +75,15 @@ describe('Chapter Controller Integration Tests', () => {
             expect(response.body.message).toBe('Validation failed');
         });
 
-        it('should return 400 when service throws error', async () => {
+        it('should return 500 when service throws error', async () => {
             const chapterId = new mongoose.Types.ObjectId().toString();
 
             jest.spyOn(ChapterService, 'getChapterBreadcrumb').mockRejectedValue(new Error('Failed to get breadcrumb'));
 
             const response = await global.testRequest.get(`/chapters/${chapterId}/breadcrumb`);
 
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe('Failed to get breadcrumb');
+            expect(response.status).toBe(500);
+            expect(response.body.message).toBe('An error occurred while fetching chapter breadcrumb');
         });
     });
 
@@ -138,7 +138,7 @@ describe('Chapter Controller Integration Tests', () => {
             expect(response.body.message).toBe('Validation failed');
         });
 
-        it('should return 400 when service throws error', async () => {
+        it('should return 500 when service throws error', async () => {
             const subjectId = new mongoose.Types.ObjectId().toString();
             const chapterData = {
                 name: 'New Chapter',
@@ -149,8 +149,8 @@ describe('Chapter Controller Integration Tests', () => {
 
             const response = await global.testRequest.post('/chapters').send(chapterData);
 
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe('Failed to add chapter');
+            expect(response.status).toBe(500);
+            expect(response.body.message).toBe('An error occurred while creating the chapter');
         });
     });
 });

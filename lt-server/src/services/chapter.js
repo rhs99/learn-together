@@ -2,6 +2,7 @@ const Chapter = require('../models/chapter');
 const { getClass } = require('./class');
 const { getSubject } = require('./subject');
 const { cacheService } = require('./cache');
+const { NotFoundError, BadRequestError } = require('../common/error');
 
 const CACHE_KEYS = {
     CHAPTER: 'chapter',
@@ -19,11 +20,18 @@ const getChapter = async (id) => {
             return new Chapter(cachedChapter);
         }
         const chapter = await Chapter.findById(id).populate('subject').exec();
+
+        if (!chapter) {
+            throw new NotFoundError('Chapter not found');
+        }
+
         await cacheService.set(cacheKey, chapter.toObject(), 1800);
 
         return chapter;
     } catch (error) {
-        console.error('Error fetching chapter:', error);
+        if (error.name === 'CastError') {
+            throw new BadRequestError('Invalid chapter ID format');
+        }
         throw error;
     }
 };
@@ -60,7 +68,6 @@ const getChapterBreadcrumb = async (id) => {
 
         return breadcrumb;
     } catch (error) {
-        console.error('Error generating chapter breadcrumb:', error);
         throw error;
     }
 };
@@ -86,7 +93,9 @@ const getChapters = async (subjectId) => {
 
         return resp;
     } catch (error) {
-        console.error('Error fetching chapters:', error);
+        if (error.name === 'CastError') {
+            throw new BadRequestError('Invalid subject ID format');
+        }
         throw error;
     }
 };
@@ -106,7 +115,9 @@ const addNewChapter = async (body) => {
 
         return chapter;
     } catch (error) {
-        console.error('Error creating new chapter:', error);
+        if (error.message === 'Subject not found') {
+            throw new NotFoundError('Referenced subject does not exist');
+        }
         throw error;
     }
 };

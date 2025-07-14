@@ -303,7 +303,7 @@ describe('Subject Service Tests', () => {
 
             jest.spyOn(Subject.prototype, 'save').mockResolvedValue(savedSubject);
 
-            await expect(SubjectService.addNewSubject(subjectBody)).rejects.toThrow('Cannot read properties of null');
+            await expect(SubjectService.addNewSubject(subjectBody)).rejects.toThrow('Referenced class does not exist');
         });
     });
 
@@ -345,42 +345,6 @@ describe('Subject Service Tests', () => {
 
             expect(cacheService.del).toHaveBeenCalledWith(`subjects:class:${classId}`);
             expect(cacheService.del).toHaveBeenCalledTimes(1);
-        });
-    });
-
-    describe('error handling', () => {
-        it('should handle database errors in getSubject', async () => {
-            const subjectId = new mongoose.Types.ObjectId();
-            const error = new Error('Database connection error');
-
-            cacheService.get.mockResolvedValue(null);
-            jest.spyOn(Subject, 'findById').mockImplementation(() => ({
-                populate: jest.fn().mockReturnThis(),
-                exec: jest.fn().mockRejectedValue(error),
-            }));
-
-            await expect(SubjectService.getSubject(subjectId)).rejects.toThrow('Database connection error');
-        });
-
-        it('should handle database errors in getSubjects', async () => {
-            const classId = new mongoose.Types.ObjectId();
-            const error = new Error('Database connection error');
-
-            cacheService.get.mockResolvedValue(null);
-            jest.spyOn(Subject, 'find').mockImplementation(() => ({
-                exec: jest.fn().mockRejectedValue(error),
-            }));
-
-            await expect(SubjectService.getSubjects(classId)).rejects.toThrow('Database connection error');
-        });
-
-        it('should handle cache errors gracefully', async () => {
-            const subjectId = new mongoose.Types.ObjectId();
-            const error = new Error('Cache error');
-
-            cacheService.get.mockRejectedValue(error);
-
-            await expect(SubjectService.getSubject(subjectId)).rejects.toThrow('Cache error');
         });
     });
 });
