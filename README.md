@@ -1,92 +1,222 @@
+<div align="center">
+
 # Learn Together
 
-## Overview
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![GitHub Stars](https://img.shields.io/github/stars/rhs99/learn-together?style=flat-square)](https://github.com/rhs99/learn-together/stargazers)
+[![GitHub Issues](https://img.shields.io/github/issues/rhs99/learn-together?style=flat-square)](https://github.com/rhs99/learn-together/issues)
 
-Learn Together is a collaborative knowledge-sharing platform where users can ask questions and provide answers on various topics. The platform supports rich content including images and mathematical expressions, making it suitable for educational purposes.
+### A collaborative knowledge-sharing platform for asking and answering questions on diverse topics
 
-## Technology Stack
+[Features](#-key-features) • [Tech Stack](#-technology-stack) • [Getting Started](#-getting-started) • [Documentation](#-documentation) • [Contributing](#-contributing)
+
+</div>
+
+---
+
+## 📋 Table of Contents
+
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [Technology Stack](#-technology-stack)
+- [Architecture](#-architecture)
+- [Getting Started](#-getting-started)
+- [Development](#-development)
+- [API Documentation](#-api-documentation)
+- [Contributing](#-contributing)
+- [Roadmap](#-roadmap)
+- [License](#-license)
+
+## 🎯 Overview
+
+Learn Together is a modern Q&A platform designed to facilitate knowledge sharing and collaborative learning. Built with performance and user experience in mind, it enables users to ask questions, provide comprehensive answers, and engage with educational content through rich media support including images and mathematical expressions.
+
+### Why Learn Together?
+
+- **Rich Content Support**: Seamlessly integrate images, LaTeX mathematical expressions, and formatted text
+- **Real-time Collaboration**: Instant notifications and updates keep the conversation flowing
+- **Community-Driven**: Voting system ensures quality content rises to the top
+
+## 🚀 Key Features
+
+### Core Functionality
+- ✅ **Question & Answer System** - Post questions and provide detailed answers
+- ✅ **Rich Media Support** - Embed images and render complex mathematical equations
+- ✅ **Voting Mechanism** - Community-driven quality control through upvotes/downvotes
+- ✅ **Bookmarking** - Mark questions as favourite for future reference
+- ✅ **Real-time Updates** - WebSocket-powered notifications for instant engagement
+
+### Advanced Features
+- 🔍 **Smart Filtering** - Filter by tags, favorites, or authored content
+- 📊 **Multiple Sort Options** - Sort by time, vote count, or net votes
+- 🔐 **Secure Authentication** - JWT-based authentication system
+- 📱 **Responsive Design** - Optimized for all device sizes
+
+## 🛠 Technology Stack
 
 ### Frontend
-- **Framework:** React.js 
-- **Language:** TypeScript
-- **State Management:** React Context API
-- **UI Components:** Custom design library, optiaxiom, react-icons
-- **Styling:** SCSS
-- **Build Tool:** Vite
+| Technology | Purpose |
+|------------|---------|
+| **React.js** | UI Framework |
+| **TypeScript** | Type Safety |
+| **React Context API** | State Management |
+| **SCSS** | Styling |
+| **Vite** | Build Tool |
+| **Optiaxiom** | UI Components |
 
 ### Backend
-- **Runtime:** Node.js
-- **API Framework:** Express.js
-- **Authentication:** JWT (JSON Web Tokens)
-- **Real-time Communication:** WebSockets
-- **Validation:** Zod
+| Technology | Purpose |
+|------------|---------|
+| **Node.js** | Runtime Environment |
+| **Express.js** | Web Framework |
+| **JWT** | Authentication |
+| **WebSockets** | Real-time Communication |
+| **Zod** | Schema Validation |
 
-### Database
-- **Primary Database:** MongoDB
-- **Object Modeling:** Mongoose
-- **Caching:** In-memory cache service (Redis)
+### Infrastructure
+| Technology | Purpose |
+|------------|---------|
+| **MongoDB** | Primary Database |
+| **Redis** | Caching Layer |
+| **Docker** | Containerization |
+| **Minio** | Object Storage |
+| **Docker Compose** | Orchestration |
 
-### DevOps & Infrastructure
-- **Containerization:** Docker
-- **Container Orchestration:** Docker Compose
-- **File Storage:** Minio
+## 🏗 Architecture
 
-## Features
+### System Overview
 
-- **Q&A Functionality**
-  - Users can ask questions and provide answers
-  - Support for rich content including images and complex mathematical equations/expressions
-  - Upvoting and downvoting capabilities for questions and answers
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│                 │     │                 │     │                 │
+│  React Client   │────▶│  Express API    │────▶│    MongoDB      │
+│                 │     │                 │     │                 │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+                                 │                        
+                                 │                        
+                     ┬───────────┘                       
+                     │                                    
+              ┌──────▼──────┐                            
+              │             │                            
+              │   Redis     │                            
+              │   Cache     │                            
+              │             │                            
+              └─────────────┘                            
+```
 
-- **User Experience**
-  - Favorite questions for later reference
-  - Real-time notifications when questions receive answers
-  - Advanced filtering options (by tags, favorites, authorship)
-  - Multiple sorting methods (time, vote count, net votes)
+### Database Schema
 
-## Project Structure
+<div align="center">
+  <img src="./db-schema.png" alt="Database Schema" width="90%" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+  
+  <p><em>Entity Relationship Diagram showing MongoDB collections and their relationships</em></p>
+</div>
 
-- `lt-client/`: Frontend React application
-- `lt-server/`: Backend Node.js application
-
-## Database Schema
-
-<p align="center">
-  <img src="./db-schema.png" alt="Database Schema" width="800">
-</p>
-
-The image above represents the database schema showing the relationships between different collections in our MongoDB database.
-
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- Docker and Docker Compose
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+- [Git](https://git-scm.com/downloads)
 
-### Installation
+### Quick Start
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/rhs99/learn-together.git
-   cd learn-together
-   ```
+```bash
+# Clone the repository
+git clone https://github.com/rhs99/learn-together.git
+cd learn-together
 
-2. Start the application using Docker Compose:
-   ```
-   docker-compose up
-   ```
-3. Access the application:
-    ```
-    The application will be available at http://localhost:3000
-    ```
+# Start all services
+docker-compose up -d
 
-## Roadmap
+# View logs
+docker-compose logs -f
 
-- [ ] Improve error handling
-- [ ] Optimize database queries
-- [ ] Implement comprehensive logging system
-- [ ] Migrate from Minio to AWS S3 for file storage
-- [ ] Configure Nginx/Apache as reverse proxy
-- [ ] Deploy to production
-- [ ] Establish CI/CD pipeline
+# Stop services
+docker-compose down
+```
 
+The application will be available at:
+- **Frontend**: http://localhost:3000
+- **API**: http://localhost:5000
+- **Minio Console**: http://localhost:9001
+
+### Environment Configuration
+
+Create a `.env` file in the `lt-server` directory:
+
+```env
+# Backend Configuration
+PORT=5000
+SECRET_KEY=your-secret-key
+
+# Database Configuration
+MONGODB_URI=mongodb://lt-database:27017/lt-db
+
+# Minio Configuration
+MINIO_ENDPOINT=lt-minio
+MINIO_PORT=9000
+MINIO_ACCESS_KEY=minioadmin
+MINIO_SECRET_KEY=minioadmin
+```
+
+## 💻 Development
+
+### Code Style
+
+We use ESLint and Prettier for code formatting. Run linting with:
+
+```bash
+npm run lint
+npm run format
+```
+
+## 🤝 Contributing
+
+We welcome contributions!
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Development Guidelines
+
+- Write meaningful commit messages
+- Add tests for new features
+- Follow the existing code style
+
+## 🗺 Roadmap
+
+### Phase 1: Foundation (Current)
+- [x] Core Q&A functionality
+- [x] User authentication
+- [x] Real-time notifications
+- [x] Docker containerization
+
+### Phase 2: Enhancement
+- [ ] Comprehensive logging system (ELK Stack)
+- [ ] Advanced search capabilities
+- [ ] User profiles and reputation system
+- [ ] Email notifications
+
+### Phase 3: Scale
+- [ ] Migrate to AWS S3 for file storage
+- [ ] Implement Nginx reverse proxy
+- [ ] Kubernetes deployment
+- [ ] CI/CD pipeline (GitHub Actions)
+
+### Phase 4: Advanced Features
+- [ ] AI-powered answer suggestions
+- [ ] Mobile applications
+- [ ] Analytics dashboard
+
+---
+
+<div align="center">
+
+**[Website](https://learn-together.com)** • **[Documentation](https://docs.learn-together.com)** • **[Report Bug](https://github.com/rhs99/learn-together/issues)** • **[Request Feature](https://github.com/rhs99/learn-together/issues)**
+
+</div>
