@@ -3,8 +3,8 @@ const { extractAndVerifyToken } = require('../common/middlewares');
 
 const router = express.Router();
 
-const QAVoteController = require('../controllers/qavote');
+const VoteController = require('../controllers/vote');
 
-router.post('/update', extractAndVerifyToken, QAVoteController.updateVote);
+router.post('/update', extractAndVerifyToken, VoteController.updateVote);
 
 module.exports = router;
