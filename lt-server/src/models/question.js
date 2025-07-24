@@ -14,10 +14,6 @@ const questionSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
-        vote: {
-            type: Number,
-            default: 0,
-        },
         userName: {
             type: String,
             required: true,
@@ -49,5 +45,12 @@ const questionSchema = new mongoose.Schema(
 );
 
 const Question = mongoose.model('Question', questionSchema);
+
+questionSchema.virtual('vote').get(function () {
+    return (this.upVote || 0) - (this.downVote || 0);
+});
+
+questionSchema.set('toObject', { virtuals: true });
+questionSchema.set('toJSON', { virtuals: true });
 
 module.exports = Question;

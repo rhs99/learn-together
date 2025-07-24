@@ -13,10 +13,6 @@ const answerSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
-        vote: {
-            type: Number,
-            default: 0,
-        },
         userName: {
             type: String,
             required: true,
@@ -34,6 +30,12 @@ const answerSchema = new mongoose.Schema(
     },
     { timestamps: true },
 );
+
+answerSchema.virtual('vote').get(function () {
+    return (this.upVote || 0) - (this.downVote || 0);
+});
+answerSchema.set('toObject', { virtuals: true });
+answerSchema.set('toJSON', { virtuals: true });
 
 const Answer = mongoose.model('Answer', answerSchema);
 
