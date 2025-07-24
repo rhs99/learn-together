@@ -2,8 +2,11 @@
 
 # Learn Together
 <p align="center">
-  <a href="http://makeapullrequest.com">
-    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" />
+  <a href="https://github.com/rhs99/learn-together/actions">
+    <img src="https://img.shields.io/github/actions/workflow/status/rhs99/learn-together/lt-client-ci.yml?branch=main&label=Client%20CI&style=flat-square" alt="Client CI" />
+  </a>
+  <a href="https://github.com/rhs99/learn-together/actions">
+    <img src="https://img.shields.io/github/actions/workflow/status/rhs99/learn-together/lt-server-ci.yml?branch=main&label=Server%20CI&style=flat-square" alt="Server CI" />
   </a>
   <a href="https://github.com/rhs99/learn-together/stargazers">
     <img src="https://img.shields.io/github/stars/rhs99/learn-together?style=flat-square" alt="GitHub Stars" />
@@ -220,6 +223,6 @@ We welcome contributions!
 
 <div align="center">
 
-**[Website](https://learn-together.com)** • **[Documentation](https://docs.learn-together.com)** • **[Report Bug](https://github.com/rhs99/learn-together/issues)** • **[Request Feature](https://github.com/rhs99/learn-together/issues)**
+**[Website](https://learn-together.com)** • **[Report Bug](https://github.com/rhs99/learn-together/issues)** • **[Request Feature](https://github.com/rhs99/learn-together/issues)**
 
 </div>
