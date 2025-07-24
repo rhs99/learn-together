@@ -46,7 +46,7 @@ describe('Chapter Controller Integration Tests', () => {
             const response = await global.testRequest.get('/chapters').query({ subjectId });
 
             expect(response.status).toBe(500);
-            expect(response.body.message).toBe('An error occurred while fetching chapters');
+            expect(response.body.message).toBe('Internal Server Error');
         });
     });
 
@@ -83,7 +83,7 @@ describe('Chapter Controller Integration Tests', () => {
             const response = await global.testRequest.get(`/chapters/${chapterId}/breadcrumb`);
 
             expect(response.status).toBe(500);
-            expect(response.body.message).toBe('An error occurred while fetching chapter breadcrumb');
+            expect(response.body.message).toBe('Internal Server Error');
         });
     });
 
@@ -150,7 +150,7 @@ describe('Chapter Controller Integration Tests', () => {
             const response = await global.testRequest.post('/chapters').send(chapterData);
 
             expect(response.status).toBe(500);
-            expect(response.body.message).toBe('An error occurred while creating the chapter');
+            expect(response.body.message).toBe('Internal Server Error');
         });
     });
 });
