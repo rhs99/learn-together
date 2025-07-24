@@ -1,4 +1,6 @@
 const Config = {
+    LT_HOST: 'http://localhost:3000',
+
     MINIO_HOST: 'play.min.io',
     MINIO_PORT: 9000,
     MINIO_BUCKET: 'lt-bucket',

@@ -4,6 +4,7 @@ const Answer = require('../models/answer');
 const Chapter = require('../models/chapter');
 const User = require('../models/user');
 const Utils = require('../common/utils');
+const { UnauthorizedError, NotFoundError } = require('../common/error');
 
 const DEFAULT_PAGE_NUMBER = 1;
 const DEFAULT_PAGE_SIZE = 10;
@@ -46,13 +47,11 @@ const buildMatchStage = (chapterQuestions, filterBy, user, tagIds) => {
 
     switch (filterBy) {
         case FILTER_TYPES.favourite:
-            if (!user) throw new Error('User required for favourite filter');
             return {
                 $and: [baseMatch, { _id: { $in: user.favourites } }],
             };
 
         case FILTER_TYPES.mine:
-            if (!user) throw new Error('User required for mine filter');
             return { ...baseMatch, userName: user.userName };
 
         default:
@@ -74,7 +73,7 @@ const enrichQuestionWithFavouriteStatus = (question, user, filterBy) => {
 
 const addNewQuestion = async (body) => {
     const user = await User.findById(body.user).exec();
-    if (!user) throw new Error('User not found');
+    if (!user) throw new NotFoundError('User not found');
 
     body.imageLocations = body.imageLocations || [];
     body.tags = body.tags || [];
@@ -88,10 +87,10 @@ const addNewQuestion = async (body) => {
 
 const updateExistingQuestion = async (body, user) => {
     const question = await Question.findById(body._id).exec();
-    if (!question) throw new Error('Question not found');
+    if (!question) throw new NotFoundError('Question not found');
 
     if (question.userName !== user.userName) {
-        throw new Error('Unauthorized: You can only edit your own questions');
+        throw new UnauthorizedError('You can only edit your own questions');
     }
 
     if (question.imageLocations.length > 0 && body.imageLocations.length > 0) {
@@ -199,7 +198,7 @@ const buildAggregationPipeline = ({
 
 const getQuestion = async (questionId) => {
     const question = await Question.findById(questionId).exec();
-    if (!question) throw new Error('Question not found');
+    if (!question) throw new NotFoundError('Question not found');
 
     return {
         ...question.toObject(),
@@ -210,12 +209,16 @@ const getQuestion = async (questionId) => {
 const deleteQuestion = async (questionId, userId) => {
     const [user, question] = await Promise.all([User.findById(userId).exec(), Question.findById(questionId).exec()]);
 
-    if (!user || !question) {
-        throw new Error('User or question not found');
+    if (!user) {
+        throw new NotFoundError('User not found');
+    }
+
+    if (!question) {
+        throw new NotFoundError('Question not found');
     }
 
     if (question.userName !== user.userName) {
-        throw new Error('Unauthorized: You can only delete your own questions');
+        throw new UnauthorizedError('You can only delete your own questions');
     }
 
     const filesToDelete = [...question.imageLocations];
@@ -247,12 +250,8 @@ const deleteQuestion = async (questionId, userId) => {
 const addToFavourite = async (body) => {
     const { user: userId, questionId } = body;
 
-    if (!userId || !questionId) {
-        throw new Error('User ID and Question ID are required');
-    }
-
     const user = await User.findById(userId).exec();
-    if (!user) throw new Error('User not found');
+    if (!user) throw new NotFoundError('User not found');
 
     const isFavourite = user.favourites.some((favId) => compareObjectIds(favId, questionId));
 

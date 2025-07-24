@@ -1,12 +1,16 @@
 const Vote = require('../models/vote');
 const Question = require('../models/question');
 const Answer = require('../models/answer');
+const { NotFoundError } = require('../common/error');
 
 const updateVote = async (body) => {
     let vote = await Vote.findOne({ qa: body.qaId, user: body.user, isQuestion: body.q }).exec();
 
     const model = body.q ? Question : Answer;
     let qa = await model.findOne({ _id: body.qaId }).exec();
+    if (!qa) {
+        throw new NotFoundError(`${body.q ? 'Question' : 'Answer'} not found for id: ${body.qaId}`);
+    }
 
     if (!vote) {
         vote = new Vote({ qa: body.qaId, user: body.user, isQuestion: body.q });
