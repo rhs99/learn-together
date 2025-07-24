@@ -1,14 +1,19 @@
 <div align="center">
 
 # Learn Together
-
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-[![GitHub Stars](https://img.shields.io/github/stars/rhs99/learn-together?style=flat-square)](https://github.com/rhs99/learn-together/stargazers)
-[![GitHub Issues](https://img.shields.io/github/issues/rhs99/learn-together?style=flat-square)](https://github.com/rhs99/learn-together/issues)
+<p align="center">
+  <a href="http://makeapullrequest.com">
+    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" />
+  </a>
+  <a href="https://github.com/rhs99/learn-together/stargazers">
+    <img src="https://img.shields.io/github/stars/rhs99/learn-together?style=flat-square" alt="GitHub Stars" />
+  </a>
+  <a href="https://github.com/rhs99/learn-together/issues">
+    <img src="https://img.shields.io/github/issues/rhs99/learn-together?style=flat-square" alt="GitHub Issues" />
+  </a>
+</p>
 
 ### A collaborative knowledge-sharing platform for asking and answering questions on diverse topics
-
-[Features](#-key-features) • [Tech Stack](#-technology-stack) • [Getting Started](#-getting-started) • [Documentation](#-documentation) • [Contributing](#-contributing)
 
 </div>
 
@@ -22,10 +27,8 @@
 - [Architecture](#-architecture)
 - [Getting Started](#-getting-started)
 - [Development](#-development)
-- [API Documentation](#-api-documentation)
 - [Contributing](#-contributing)
 - [Roadmap](#-roadmap)
-- [License](#-license)
 
 ## 🎯 Overview
 
