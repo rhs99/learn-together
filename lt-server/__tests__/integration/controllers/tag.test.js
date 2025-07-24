@@ -69,7 +69,7 @@ describe('Tag Controller Integration Tests', () => {
             const response = await global.testRequest.get('/tags').query({ chapterId });
 
             expect(response.status).toBe(500);
-            expect(response.body).toHaveProperty('message', 'An error occurred while fetching tags');
+            expect(response.body).toHaveProperty('message', 'Internal Server Error');
         });
     });
 
