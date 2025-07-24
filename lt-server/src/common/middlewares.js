@@ -1,66 +1,49 @@
 const Util = require('./utils');
 const User = require('../models/user');
+const { UnauthorizedError, ForbiddenError } = require('./error');
 
 const extractAndVerifyTokenIfPresent = (req, res, next) => {
     const authHeader = req.headers.authorization;
-    let user = null;
-
     if (authHeader && authHeader.startsWith('Bearer ')) {
         const token = authHeader.slice(7);
         try {
             const data = Util.verityToken(token);
-            user = data._id;
+            req.user = data._id;
         } catch (error) {
-            console.log(error.message);
+            console.error('Invalid or expired token:', error.message);
         }
-    }
-    if (user) {
-        req.user = user;
     }
     next();
 };
 
 const extractAndVerifyToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
-    let user = null;
-
     if (authHeader && authHeader.startsWith('Bearer ')) {
         const token = authHeader.slice(7);
         try {
             const data = Util.verityToken(token);
-            user = data._id;
-        } catch (error) {
-            console.log(error.message);
+            req.user = data._id;
+            return next();
+        } catch {
+            return next(new UnauthorizedError('Invalid or expired token.'));
         }
     }
-    if (user) {
-        req.user = user;
-        next();
-    } else {
-        res.status(401).json();
-    }
+    return next(new UnauthorizedError('Authorization token required.'));
 };
 
 const hasAdminPrivilege = async (req, res, next) => {
     const userId = req.user;
-    let isAdmin = false;
-
-    if (userId) {
-        const user = await User.findById(userId).populate('privileges').exec();
-        if (user) {
-            user.privileges.forEach((privilege) => {
-                if (privilege.name === 'admin') {
-                    isAdmin = true;
-                }
-            });
-        }
+    if (!userId) {
+        return next(new UnauthorizedError('User not authenticated.'));
     }
-
-    if (isAdmin) {
-        next();
-    } else {
-        res.status(401).json();
+    const user = await User.findById(userId).populate('privileges').exec();
+    if (!user) {
+        return next(new UnauthorizedError('User not found.'));
     }
+    if (user && Array.isArray(user.privileges) && user.privileges.some((p) => p.name === 'admin')) {
+        return next();
+    }
+    return next(new ForbiddenError('Admin privilege required.'));
 };
 
 module.exports = { extractAndVerifyToken, hasAdminPrivilege, extractAndVerifyTokenIfPresent };

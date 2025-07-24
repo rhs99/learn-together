@@ -3,7 +3,7 @@ const Question = require('../models/question');
 const User = require('../models/user');
 const Notification = require('../models/notification');
 const Utils = require('../common/utils');
-const { UnauthorizedError } = require('../common/error');
+const { UnauthorizedError, NotFoundError } = require('../common/error');
 const connectedUsers = require('../common/connected-users');
 
 const NOTIFICATION_TYPES = {
@@ -25,10 +25,6 @@ const validateUserOwnership = (resourceUserName, currentUserName, errorMessage) 
 };
 
 const addNewAnswer = async (body) => {
-    if (!body.user || !body.question) {
-        throw new Error('User ID and Question ID are required');
-    }
-
     body.imageLocations = body.imageLocations || [];
 
     const [user, question] = await Promise.all([
@@ -36,8 +32,8 @@ const addNewAnswer = async (body) => {
         Question.findById(body.question).exec(),
     ]);
 
-    if (!user) throw new Error('User not found');
-    if (!question) throw new Error('Question not found');
+    if (!user) throw new NotFoundError(`User not found for id: ${body.user}`);
+    if (!question) throw new NotFoundError(`Question not found for id: ${body.question}`);
 
     const answer =
         body._id && body._id !== ''
@@ -51,12 +47,15 @@ const addNewAnswer = async (body) => {
 
 const updateExistingAnswer = async (body, user) => {
     const answer = await Answer.findById(body._id).exec();
-
     if (!answer) {
-        throw new Error('Answer not found');
+        throw new NotFoundError(`Answer not found for id: ${body._id}`);
     }
 
-    validateUserOwnership(answer.userName, user.userName, 'You can only edit your own answers');
+    try {
+        validateUserOwnership(answer.userName, user.userName, 'You can only edit your own answers');
+    } catch {
+        throw new UnauthorizedError('Unauthorized: You can only edit your own answers');
+    }
 
     if (answer.imageLocations.length > 0 && body.imageLocations.length > 0) {
         Utils.deleteFile(answer.imageLocations);
@@ -77,13 +76,22 @@ const createNewAnswer = async (body, user, question) => {
         user: undefined,
     };
 
-    const answer = new Answer(answerData);
-    const savedAnswer = await answer.save();
+    let savedAnswer;
+    try {
+        const answer = new Answer(answerData);
+        savedAnswer = await answer.save();
+    } catch (err) {
+        throw new Error('Failed to create new answer: ' + err.message);
+    }
 
-    await Promise.all([
-        User.findByIdAndUpdate(user._id, { $push: { answers: savedAnswer._id } }),
-        Question.findByIdAndUpdate(question._id, { $push: { answers: savedAnswer._id } }),
-    ]);
+    try {
+        await Promise.all([
+            User.findByIdAndUpdate(user._id, { $push: { answers: savedAnswer._id } }),
+            Question.findByIdAndUpdate(question._id, { $push: { answers: savedAnswer._id } }),
+        ]);
+    } catch (err) {
+        throw new Error('Failed to update user/question with new answer: ' + err.message);
+    }
 
     return savedAnswer;
 };
@@ -96,36 +104,36 @@ const notifyQuestionOwner = async (question, answerAuthor) => {
     const questionOwner = await User.findOne({ userName: question.userName }).exec();
 
     if (!questionOwner) {
-        console.error(`Question owner not found: ${question.userName}`);
-        return;
+        throw new NotFoundError(`Question owner not found for userName: ${question.userName}`);
     }
 
-    const notification = new Notification({
-        userId: questionOwner._id,
-        type: NOTIFICATION_TYPES.NEW_ANSWER,
-        details: question._id,
-        read: false,
-    });
-
-    await notification.save();
+    try {
+        const notification = new Notification({
+            userId: questionOwner._id,
+            type: NOTIFICATION_TYPES.NEW_ANSWER,
+            details: question._id,
+            read: false,
+        });
+        await notification.save();
+    } catch (err) {
+        throw new Error('Failed to create notification: ' + err.message);
+    }
 
     const socket = connectedUsers.get(questionOwner.userName);
     if (socket) {
-        socket.send(SOCKET_EVENTS.NEW_ANSWER);
+        try {
+            socket.send(SOCKET_EVENTS.NEW_ANSWER);
+        } catch (err) {
+            console.error('Failed to send socket notification:', err.message);
+        }
     }
 };
 
 const getAnswer = async (answerId) => {
-    if (!answerId) {
-        throw new Error('Answer ID is required');
-    }
-
     const answer = await Answer.findById(answerId).exec();
-
     if (!answer) {
-        throw new Error('Answer not found');
+        throw new NotFoundError(`Answer not found for id: ${answerId}`);
     }
-
     return {
         ...answer.toObject(),
         imageLocations: normalizeImageLocations(answer.imageLocations),
@@ -133,12 +141,12 @@ const getAnswer = async (answerId) => {
 };
 
 const getAllAnswers = async (questionId) => {
-    if (!questionId) {
-        throw new Error('Question ID is required');
+    let answers;
+    try {
+        answers = await Answer.find({ question: questionId }).sort({ createdAt: -1 }).exec();
+    } catch (err) {
+        throw new Error('Failed to fetch answers for question: ' + err.message);
     }
-
-    const answers = await Answer.find({ question: questionId }).sort({ createdAt: -1 }).exec();
-
     return answers.map((answer) => ({
         ...answer.toObject(),
         imageLocations: normalizeImageLocations(answer.imageLocations),
@@ -146,13 +154,9 @@ const getAllAnswers = async (questionId) => {
 };
 
 const deleteAnswer = async (answerId, userId) => {
-    if (!answerId || !userId) {
-        throw new Error('Answer ID and User ID are required');
-    }
-
     const answer = await Answer.findById(answerId).exec();
     if (!answer) {
-        throw new Error('Answer not found');
+        throw new NotFoundError(`Answer not found for id: ${answerId}`);
     }
 
     const [question, user] = await Promise.all([
@@ -160,25 +164,37 @@ const deleteAnswer = async (answerId, userId) => {
         User.findById(userId).exec(),
     ]);
 
-    if (!question) throw new Error('Question not found');
-    if (!user) throw new Error('User not found');
+    if (!question) throw new NotFoundError(`Question not found for id: ${answer.question}`);
+    if (!user) throw new NotFoundError(`User not found for id: ${userId}`);
 
     const isAnswerOwner = answer.userName === user.userName;
     const isQuestionOwner = question.userName === user.userName;
 
     if (!isAnswerOwner && !isQuestionOwner) {
-        throw new UnauthorizedError('You can only delete your own answers or answers to your questions');
+        throw new UnauthorizedError('Unauthorized: You can only delete your own answers or answers to your questions');
     }
 
-    await Promise.all([
-        Question.findByIdAndUpdate(question._id, { $pull: { answers: answerId } }),
-        isAnswerOwner ? User.findByIdAndUpdate(userId, { $pull: { answers: answerId } }) : Promise.resolve(),
-    ]);
+    try {
+        await Promise.all([
+            Question.findByIdAndUpdate(question._id, { $pull: { answers: answerId } }),
+            isAnswerOwner ? User.findByIdAndUpdate(userId, { $pull: { answers: answerId } }) : Promise.resolve(),
+        ]);
+    } catch (err) {
+        throw new Error('Failed to update user/question when deleting answer: ' + err.message);
+    }
 
-    await Answer.deleteOne({ _id: answerId }).exec();
+    try {
+        await Answer.deleteOne({ _id: answerId }).exec();
+    } catch (err) {
+        throw new Error('Failed to delete answer: ' + err.message);
+    }
 
     if (answer.imageLocations && answer.imageLocations.length > 0) {
-        Utils.deleteFile(answer.imageLocations);
+        try {
+            Utils.deleteFile(answer.imageLocations);
+        } catch (err) {
+            console.error('Failed to delete answer images:', err.message);
+        }
     }
 };
 

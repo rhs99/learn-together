@@ -36,10 +36,6 @@ const addNewTag = async (body) => {
 
 const getAllTags = async (chapterId) => {
     try {
-        if (!chapterId) {
-            throw new BadRequestError('Chapter ID is required');
-        }
-
         const cacheKey = `${CACHE_KEYS.TAGS_BY_CHAPTER}${chapterId}`;
         const cachedTags = await cacheService.get(cacheKey);
 

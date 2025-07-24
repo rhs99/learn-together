@@ -32,26 +32,26 @@ const verityToken = (token) => {
 const sendEmail = async (email, subject, text) => {
     try {
         const transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465,
-            service: 'gmail',
+            host: process.env.ADMIN_EMAIL_HOST,
+            port: process.env.ADMIN_EMAIL_PORT,
+            service: process.env.ADMIN_EMAIL_SERVICE,
             secure: true,
             auth: {
-                user: 'learntogether3009@gmail.com',
-                pass: 'owavaxkroqemknvc',
+                user: process.env.ADMIN_EMAIL,
+                pass: process.env.ADMIN_EMAIL_PASS,
             },
         });
 
         await transporter.sendMail({
-            from: 'learntogether3009@gmail.com',
+            from: process.env.ADMIN_EMAIL,
             to: email,
             subject: subject,
             text: text,
         });
 
-        console.log('email sent sucessfully');
+        console.log('Email sent sucessfully');
     } catch (error) {
-        console.log(error, 'email not sent');
+        console.log(error, 'Error sending email');
     }
 };
 

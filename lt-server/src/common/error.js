@@ -6,6 +6,14 @@ class UnauthorizedError extends Error {
     }
 }
 
+class ForbiddenError extends Error {
+    constructor(message = 'Forbidden') {
+        super(message);
+        this.name = 'ForbiddenError';
+        this.statusCode = 403;
+    }
+}
+
 class NotFoundError extends Error {
     constructor(message = 'Resource not found') {
         super(message);
@@ -48,6 +56,7 @@ class InternalServerError extends Error {
 
 module.exports = {
     UnauthorizedError,
+    ForbiddenError,
     NotFoundError,
     ValidationError,
     ConflictError,
