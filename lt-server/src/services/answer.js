@@ -140,6 +140,16 @@ const getAnswer = async (answerId) => {
     };
 };
 
+const getAnswersByQuestion = async (questionId) => {
+    try {
+        const answers = await Answer.find({ question: questionId }).exec();
+        return answers || [];
+    } catch (error) {
+        console.error(`Error fetching answers for question ${questionId}:`, error);
+        return [];
+    }
+};
+
 const getAllAnswers = async (questionId) => {
     let answers;
     try {
@@ -202,5 +212,6 @@ module.exports = {
     addNewAnswer,
     getAllAnswers,
     getAnswer,
+    getAnswersByQuestion,
     deleteAnswer,
 };
