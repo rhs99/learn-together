@@ -40,7 +40,6 @@ describe('Subject Model Tests', () => {
     });
 
     it('should enforce unique compound index on name and class', async () => {
-        // Ensure index is created before testing unique constraint
         await Subject.createIndexes();
 
         const subjectData = { name: 'Mathematics', class: classId };

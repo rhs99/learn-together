@@ -1,21 +1,13 @@
 const mongoose = require('mongoose');
 const Class = require('../../../src/models/class');
 
-// Mock middleware for authentication
-jest.mock('../../../src/common/middlewares', () => ({
-    extractAndVerifyToken: jest.fn((req, res, next) => next()),
-    hasAdminPrivilege: jest.fn((req, res, next) => next()),
-}));
-
 describe('Class Controller Integration Tests', () => {
     beforeEach(async () => {
         await Class.deleteMany({});
-        jest.clearAllMocks();
     });
 
     describe('GET /classes', () => {
         it('should return all classes', async () => {
-            // Create test classes
             await Class.create([{ name: 'Grade 10' }, { name: 'Grade 11' }, { name: 'Grade 12' }]);
 
             const response = await global.testRequest.get('/classes');
@@ -65,7 +57,6 @@ describe('Class Controller Integration Tests', () => {
 
             expect(response.status).toBe(201);
 
-            // Verify class was created in database
             const createdClass = await Class.findOne({ name: 'Grade 10' }).exec();
             expect(createdClass).toBeTruthy();
             expect(createdClass.name).toBe('Grade 10');
@@ -102,7 +93,6 @@ describe('Class Controller Integration Tests', () => {
 
             expect(response.status).toBe(201);
 
-            // Verify class was created with subject
             const createdClass = await Class.findOne({ name: 'Grade 10' }).exec();
             expect(createdClass).toBeTruthy();
             expect(createdClass.subjects.length).toBe(1);

@@ -1,5 +1,6 @@
 const { createClient } = require('redis');
 const Config = require('../config');
+const logger = require('../config/logger');
 
 class CacheService {
     constructor() {
@@ -10,23 +11,30 @@ class CacheService {
 
     async init() {
         try {
+            logger.info('Initializing Redis client', { host: Config.REDIS_HOST, port: Config.REDIS_PORT });
+
             this.client = createClient({
                 url: `redis://${Config.REDIS_HOST}:${Config.REDIS_PORT}`,
             });
 
             this.client.on('error', (err) => {
-                console.error('Redis connection error:', err);
+                logger.error('Redis connection error', { error: err.message });
                 this.isConnected = false;
             });
 
             this.client.on('connect', () => {
-                console.log('Successfully connected to Redis');
+                logger.info('Successfully connected to Redis', { host: Config.REDIS_HOST, port: Config.REDIS_PORT });
                 this.isConnected = true;
+            });
+
+            this.client.on('disconnect', () => {
+                logger.warn('Redis client disconnected');
+                this.isConnected = false;
             });
 
             await this.client.connect();
         } catch (error) {
-            console.error('Failed to initialize Redis client:', error);
+            logger.error('Failed to initialize Redis client', { error: error.message, stack: error.stack });
             this.isConnected = false;
         }
     }
@@ -39,18 +47,23 @@ class CacheService {
      * @returns {Promise<boolean>} - Success status
      */
     async set(key, data, expireTime = null) {
-        if (!this.isConnected) return false;
+        if (!this.isConnected) {
+            logger.warn('Attempted to set cache while Redis is disconnected', { key });
+            return false;
+        }
 
         try {
             const serializedData = JSON.stringify(data);
             if (expireTime) {
                 await this.client.set(key, serializedData, { EX: expireTime });
+                logger.debug('Cache set with expiration', { key, expireTime, dataSize: serializedData.length });
             } else {
                 await this.client.set(key, serializedData);
+                logger.debug('Cache set', { key, dataSize: serializedData.length });
             }
             return true;
         } catch (error) {
-            console.error(`Error setting cache for key ${key}:`, error);
+            logger.error('Error setting cache', { key, error: error.message });
             return false;
         }
     }
@@ -63,14 +76,18 @@ class CacheService {
      * @returns {Promise<boolean>} - Success status
      */
     async hset(hashKey, field, data) {
-        if (!this.isConnected) return false;
+        if (!this.isConnected) {
+            logger.warn('Attempted to set hash cache while Redis is disconnected', { hashKey, field });
+            return false;
+        }
 
         try {
             const serializedData = JSON.stringify(data);
             await this.client.hSet(hashKey, field, serializedData);
+            logger.debug('Hash cache set', { hashKey, field, dataSize: serializedData.length });
             return true;
         } catch (error) {
-            console.error(`Error setting hash cache for key ${hashKey}:${field}:`, error);
+            logger.error('Error setting hash cache', { hashKey, field, error: error.message });
             return false;
         }
     }
@@ -81,14 +98,21 @@ class CacheService {
      * @returns {Promise<any>} - The cached data or null if not found
      */
     async get(key) {
-        if (!this.isConnected) return null;
+        if (!this.isConnected) {
+            logger.warn('Attempted to get cache while Redis is disconnected', { key });
+            return null;
+        }
 
         try {
             const data = await this.client.get(key);
-            if (!data) return null;
+            if (!data) {
+                logger.debug('Cache miss', { key });
+                return null;
+            }
+            logger.debug('Cache hit', { key, dataSize: data.length });
             return JSON.parse(data);
         } catch (error) {
-            console.error(`Error getting cache for key ${key}:`, error);
+            logger.error('Error getting cache', { key, error: error.message });
             return null;
         }
     }
@@ -100,14 +124,21 @@ class CacheService {
      * @returns {Promise<any>} - The cached data or null if not found
      */
     async hget(hashKey, field) {
-        if (!this.isConnected) return null;
+        if (!this.isConnected) {
+            logger.warn('Attempted to get hash cache while Redis is disconnected', { hashKey, field });
+            return null;
+        }
 
         try {
             const data = await this.client.hGet(hashKey, field);
-            if (!data) return null;
+            if (!data) {
+                logger.debug('Hash cache miss', { hashKey, field });
+                return null;
+            }
+            logger.debug('Hash cache hit', { hashKey, field, dataSize: data.length });
             return JSON.parse(data);
         } catch (error) {
-            console.error(`Error getting hash cache for key ${hashKey}:${field}:`, error);
+            logger.error('Error getting hash cache', { hashKey, field, error: error.message });
             return null;
         }
     }
@@ -118,13 +149,17 @@ class CacheService {
      * @returns {Promise<boolean>} - Success status
      */
     async del(key) {
-        if (!this.isConnected) return false;
+        if (!this.isConnected) {
+            logger.warn('Attempted to delete cache while Redis is disconnected', { key });
+            return false;
+        }
 
         try {
             await this.client.del(key);
+            logger.debug('Cache key deleted', { key });
             return true;
         } catch (error) {
-            console.error(`Error deleting cache for key ${key}:`, error);
+            logger.error('Error deleting cache', { key, error: error.message });
             return false;
         }
     }
@@ -135,13 +170,17 @@ class CacheService {
      * @returns {Promise<boolean>} - Success status
      */
     async delHash(hashKey) {
-        if (!this.isConnected) return false;
+        if (!this.isConnected) {
+            logger.warn('Attempted to delete hash cache while Redis is disconnected', { hashKey });
+            return false;
+        }
 
         try {
             await this.client.del(hashKey);
+            logger.debug('Hash cache key deleted', { hashKey });
             return true;
         } catch (error) {
-            console.error(`Error deleting hash cache for key ${hashKey}:`, error);
+            logger.error('Error deleting hash cache', { hashKey, error: error.message });
             return false;
         }
     }
@@ -151,13 +190,17 @@ class CacheService {
      * @returns {Promise<boolean>} - Success status
      */
     async flushAll() {
-        if (!this.isConnected) return false;
+        if (!this.isConnected) {
+            logger.warn('Attempted to flush all cache while Redis is disconnected');
+            return false;
+        }
 
         try {
             await this.client.flushAll();
+            logger.info('All cache flushed successfully');
             return true;
         } catch (error) {
-            console.error('Error flushing all cache:', error);
+            logger.error('Error flushing all cache', { error: error.message });
             return false;
         }
     }

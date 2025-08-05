@@ -5,6 +5,7 @@ const Notification = require('../models/notification');
 const Utils = require('../common/utils');
 const { UnauthorizedError, NotFoundError } = require('../common/error');
 const connectedUsers = require('../common/connected-users');
+const logger = require('../config/logger');
 
 const NOTIFICATION_TYPES = {
     NEW_ANSWER: 'new_answer',
@@ -27,13 +28,26 @@ const validateUserOwnership = (resourceUserName, currentUserName, errorMessage) 
 const addNewAnswer = async (body) => {
     body.imageLocations = body.imageLocations || [];
 
+    logger.info('Processing answer request', {
+        userId: body.user,
+        questionId: body.question,
+        isUpdate: !!(body._id && body._id !== ''),
+        hasImages: body.imageLocations.length > 0,
+    });
+
     const [user, question] = await Promise.all([
         User.findById(body.user).exec(),
         Question.findById(body.question).exec(),
     ]);
 
-    if (!user) throw new NotFoundError(`User not found for id: ${body.user}`);
-    if (!question) throw new NotFoundError(`Question not found for id: ${body.question}`);
+    if (!user) {
+        logger.warn('User not found for answer creation', { userId: body.user });
+        throw new NotFoundError(`User not found for id: ${body.user}`);
+    }
+    if (!question) {
+        logger.warn('Question not found for answer creation', { questionId: body.question });
+        throw new NotFoundError(`Question not found for id: ${body.question}`);
+    }
 
     const answer =
         body._id && body._id !== ''
@@ -41,6 +55,12 @@ const addNewAnswer = async (body) => {
             : await createNewAnswer(body, user, question);
 
     await notifyQuestionOwner(question, user);
+
+    logger.info('Answer processed successfully', {
+        answerId: answer._id,
+        userName: user.userName,
+        questionId: question._id,
+    });
 
     return answer;
 };
@@ -123,9 +143,19 @@ const notifyQuestionOwner = async (question, answerAuthor) => {
     if (socket) {
         try {
             socket.send(SOCKET_EVENTS.NEW_ANSWER);
+            logger.debug('Socket notification sent successfully', {
+                recipient: questionOwner.userName,
+                event: SOCKET_EVENTS.NEW_ANSWER,
+            });
         } catch (err) {
-            console.error('Failed to send socket notification:', err.message);
+            logger.error('Failed to send socket notification', {
+                recipient: questionOwner.userName,
+                event: SOCKET_EVENTS.NEW_ANSWER,
+                error: err.message,
+            });
         }
+    } else {
+        logger.debug('User not connected via socket', { userName: questionOwner.userName });
     }
 };
 
@@ -138,6 +168,18 @@ const getAnswer = async (answerId) => {
         ...answer.toObject(),
         imageLocations: normalizeImageLocations(answer.imageLocations),
     };
+};
+
+const getAnswersByQuestion = async (questionId) => {
+    try {
+        logger.debug('Fetching answers for question', { questionId });
+        const answers = await Answer.find({ question: questionId }).exec();
+        logger.debug('Answers fetched successfully', { questionId, answerCount: answers?.length || 0 });
+        return answers || [];
+    } catch (error) {
+        logger.error('Error fetching answers for question', { questionId, error: error.message });
+        return [];
+    }
 };
 
 const getAllAnswers = async (questionId) => {
@@ -192,8 +234,16 @@ const deleteAnswer = async (answerId, userId) => {
     if (answer.imageLocations && answer.imageLocations.length > 0) {
         try {
             Utils.deleteFile(answer.imageLocations);
+            logger.debug('Answer images deleted successfully', {
+                answerId,
+                imageCount: answer.imageLocations.length,
+            });
         } catch (err) {
-            console.error('Failed to delete answer images:', err.message);
+            logger.error('Failed to delete answer images', {
+                answerId,
+                imageLocations: answer.imageLocations,
+                error: err.message,
+            });
         }
     }
 };
@@ -202,5 +252,6 @@ module.exports = {
     addNewAnswer,
     getAllAnswers,
     getAnswer,
+    getAnswersByQuestion,
     deleteAnswer,
 };

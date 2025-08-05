@@ -5,10 +5,6 @@ const { cacheService } = require('../../../src/services/cache');
 const SubjectService = require('../../../src/services/subject');
 
 describe('Subject Service Tests', () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
-
     describe('getSubject', () => {
         it('should return a subject from cache if available', async () => {
             const subjectId = new mongoose.Types.ObjectId().toString();

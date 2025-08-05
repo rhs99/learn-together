@@ -9,6 +9,7 @@
 
 // Set the environment to test mode before importing any modules
 process.env.NODE_ENV = 'test';
+// This shouldn't output any logs from the logger itself
 
 /**
  * Get a fresh instance of the Express app configured for testing

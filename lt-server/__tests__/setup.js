@@ -21,6 +21,18 @@ jest.mock('../src/services/cache', () => {
     };
 });
 
+// Mock Utils module to prevent real external service calls
+jest.mock('../src/common/utils', () => {
+    const originalModule = jest.requireActual('../src/common/utils');
+    return {
+        ...originalModule,
+        deleteFile: jest.fn(), // Mock MinIO operations
+        sendEmail: jest.fn(), // Mock email operations
+        createToken: jest.fn(),
+        createTokenForPassword: jest.fn(),
+    };
+});
+
 // Get the app from the main app module
 const app = getTestApp();
 // Create supertest agent for making HTTP requests

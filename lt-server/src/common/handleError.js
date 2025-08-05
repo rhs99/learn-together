@@ -1,4 +1,5 @@
 // lt-server/src/common/handleError.js
+const logger = require('../config/logger');
 
 /**
  * Reusable error handler for Express controllers
@@ -8,10 +9,26 @@
  * @param {number} [defaultStatus=500] - Fallback status code
  */
 function handleError(res, error, defaultMessage, defaultStatus = 500) {
-    if (error.statusCode) {
-        return res.status(error.statusCode).json({ message: error.message });
+    const statusCode = error.statusCode || defaultStatus;
+    const message = error.message || defaultMessage;
+
+    // Log the error with appropriate level
+    if (statusCode >= 500) {
+        logger.error('Server Error', {
+            error: message,
+            statusCode,
+            stack: error.stack,
+            originalError: error,
+        });
+    } else if (statusCode >= 400) {
+        logger.warn('Client Error', {
+            error: message,
+            statusCode,
+            originalError: error,
+        });
     }
-    res.status(defaultStatus).json({ message: defaultMessage });
+
+    return res.status(statusCode).json({ message });
 }
 
 module.exports = handleError;

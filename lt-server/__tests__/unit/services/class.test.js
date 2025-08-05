@@ -4,10 +4,6 @@ const ClassService = require('../../../src/services/class');
 const { cacheService } = require('../../../src/services/cache');
 
 describe('Class Service Tests', () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
-
     describe('getClass', () => {
         it('should return a class from cache if available', async () => {
             const classId = new mongoose.Types.ObjectId().toString();
