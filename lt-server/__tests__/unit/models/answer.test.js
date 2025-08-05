@@ -185,7 +185,7 @@ describe('Answer Model Tests', () => {
             const originalUpdatedAt = answer.updatedAt;
 
             // Wait a moment to ensure timestamp difference
-            await new Promise(resolve => setTimeout(resolve, 10));
+            await new Promise((resolve) => setTimeout(resolve, 10));
 
             answer.upVote = 5;
             await answer.save();
@@ -197,7 +197,7 @@ describe('Answer Model Tests', () => {
     describe('Reference Validation', () => {
         it('should accept valid ObjectId for question reference', async () => {
             const validQuestionId = new mongoose.Types.ObjectId();
-            
+
             const answer = await new Answer({
                 userName: 'testuser',
                 question: validQuestionId,

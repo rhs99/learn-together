@@ -37,7 +37,7 @@ describe('Chapter Controller Integration Tests', () => {
         it('should return 500 when service throws error', async () => {
             const subjectId = new mongoose.Types.ObjectId().toString();
 
-            jest.spyOn(ChapterService, 'getChapters').mockRejectedValue(new Error('Failed to get chapters'));
+            jest.spyOn(ChapterService, 'getChapters').mockRejectedValue(new Error());
 
             const response = await global.testRequest.get('/chapters').query({ subjectId });
 
@@ -80,7 +80,7 @@ describe('Chapter Controller Integration Tests', () => {
                 subject: subjectId,
             };
 
-            jest.spyOn(ChapterService, 'addNewChapter').mockResolvedValue();
+            jest.spyOn(ChapterService, 'addNewChapter').mockResolvedValue({ _id: 'new-chapter-id', ...chapterData });
 
             const response = await global.testRequest.post('/chapters').send(chapterData);
 

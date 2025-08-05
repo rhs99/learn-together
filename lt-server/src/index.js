@@ -10,6 +10,9 @@ if (process.env.NODE_ENV !== 'test') {
     require('dotenv').config();
 }
 
+const logger = require('./config/logger');
+const { requestLogger, errorLogger } = require('./middleware/logging');
+
 const connectedUsers = require('./common/connected-users');
 const classRouter = require('./routes/class');
 const privilegeRouter = require('./routes/privilege');
@@ -31,6 +34,11 @@ if (process.env.NODE_ENV !== 'test') {
 
 const app = express();
 
+// Request logging middleware (should be early in middleware stack)
+if (process.env.NODE_ENV !== 'test') {
+    app.use(requestLogger);
+}
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -49,6 +57,9 @@ app.use('/paymentMethods', paymentMethod);
 
 app.use('/donations', donation);
 
+// Error logging middleware (before error handler)
+app.use(errorLogger);
+
 app.use((err, req, res, next) => {
     handleError(res, err, 'Internal Server Error', 500);
 });
@@ -63,11 +74,18 @@ if (process.env.NODE_ENV !== 'test') {
         const queryParams = new URLSearchParams(req.url.split('?')[1]);
         const userName = queryParams.get('userName');
 
+        logger.info('WebSocket connection established', { userName, ip: req.socket.remoteAddress });
+
         if (userName) {
             connectedUsers.set(userName, socket);
+            logger.debug('User added to connected users', { userName, totalConnections: connectedUsers.size });
+
             socket.on('close', () => {
                 connectedUsers.delete(userName);
+                logger.debug('User disconnected', { userName, totalConnections: connectedUsers.size });
             });
+        } else {
+            logger.warn('WebSocket connection without userName', { ip: req.socket.remoteAddress });
         }
     });
 }
@@ -75,10 +93,12 @@ if (process.env.NODE_ENV !== 'test') {
 const connectDB = async (url, dbName = 'lt-db') => {
     const connectionURL = url || process.env.MONGODB_URI;
     try {
+        logger.info('Attempting to connect to MongoDB', { url: connectionURL, dbName });
         await mongoose.connect(connectionURL, { dbName });
+        logger.info('Successfully connected to MongoDB', { dbName });
         return mongoose.connection;
     } catch (error) {
-        console.error(`MongoDB connection error: ${error.message}`);
+        logger.error('MongoDB connection error', { error: error.message, url: connectionURL, dbName });
         throw error;
     }
 };
@@ -88,11 +108,11 @@ const startServer = (port) => {
     return new Promise((resolve, reject) => {
         try {
             server.listen(PORT, () => {
-                console.log(`Server started successfully on port ${PORT}`);
+                logger.info('Server started successfully', { port: PORT, environment: process.env.NODE_ENV });
                 resolve(server);
             });
         } catch (error) {
-            console.error(`Server startup error: ${error.message}`);
+            logger.error('Server startup error', { error: error.message, port: PORT });
             reject(error);
         }
     });
@@ -104,7 +124,7 @@ if (require.main === module && process.env.NODE_ENV !== 'test') {
             startServer();
         })
         .catch((err) => {
-            console.error('Failed to start application:', err);
+            logger.error('Failed to start application', { error: err.message, stack: err.stack });
             process.exit(1);
         });
 }

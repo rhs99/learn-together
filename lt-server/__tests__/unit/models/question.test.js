@@ -111,7 +111,7 @@ describe('Question Model Tests', () => {
             }).save();
 
             expect(question.answers.length).toBe(2);
-            expect(question.answers.map(id => id.toString())).toEqual(answerIds.map(id => id.toString()));
+            expect(question.answers.map((id) => id.toString())).toEqual(answerIds.map((id) => id.toString()));
         });
     });
 
@@ -190,7 +190,7 @@ describe('Question Model Tests', () => {
             const originalUpdatedAt = question.updatedAt;
 
             // Wait a moment to ensure timestamp difference
-            await new Promise(resolve => setTimeout(resolve, 10));
+            await new Promise((resolve) => setTimeout(resolve, 10));
 
             question.upVote = 1;
             await question.save();

@@ -7,7 +7,7 @@ const Utils = require('../../../src/common/utils');
 const { UnauthorizedError, NotFoundError } = require('../../../src/common/error');
 
 jest.mock('../../../src/common/utils', () => ({
-    getFileUrl: jest.fn().mockImplementation(fileName => `https://test-cdn.com/${fileName}`)
+    getFileUrl: jest.fn().mockImplementation((fileName) => `https://test-cdn.com/${fileName}`),
 }));
 
 describe('Question Service Tests', () => {
@@ -15,37 +15,39 @@ describe('Question Service Tests', () => {
         it('should return a question with normalized image locations', async () => {
             const userId = new mongoose.Types.ObjectId();
             const questionId = new mongoose.Types.ObjectId();
-            
+
             const questionData = {
                 _id: questionId,
                 title: 'Test Question',
                 content: 'Test content',
                 user: {
                     _id: userId,
-                    userName: 'testuser'
+                    userName: 'testuser',
                 },
                 imageLocations: ['image1.jpg', 'image2.png'],
                 upVote: 5,
                 downVote: 2,
-                toObject: jest.fn().mockReturnThis()
+                toObject: jest.fn().mockReturnThis(),
             };
 
             const findByIdMock = jest.spyOn(Question, 'findById').mockImplementation(() => ({
                 populate: jest.fn().mockReturnThis(),
                 lean: jest.fn().mockReturnThis(),
-                exec: jest.fn().mockResolvedValue(questionData)
+                exec: jest.fn().mockResolvedValue(questionData),
             }));
 
             const result = await QuestionService.getQuestion(questionId);
 
             expect(findByIdMock).toHaveBeenCalledWith(questionId);
-            // The service should normalize image locations, 
+            // The service should normalize image locations,
             // but we don't need to check exactly how it's called
-            expect(result).toEqual(expect.objectContaining({
-                title: 'Test Question',
-                content: 'Test content',
-                imageLocations: expect.any(Array)
-            }));
+            expect(result).toEqual(
+                expect.objectContaining({
+                    title: 'Test Question',
+                    content: 'Test content',
+                    imageLocations: expect.any(Array),
+                }),
+            );
 
             findByIdMock.mockRestore();
         });
@@ -56,16 +58,12 @@ describe('Question Service Tests', () => {
             const findByIdMock = jest.spyOn(Question, 'findById').mockImplementation(() => ({
                 populate: jest.fn().mockReturnThis(),
                 lean: jest.fn().mockReturnThis(),
-                exec: jest.fn().mockResolvedValue(null)
+                exec: jest.fn().mockResolvedValue(null),
             }));
 
-            await expect(QuestionService.getQuestion(questionId)).rejects.toThrow(
-                NotFoundError
-            );
+            await expect(QuestionService.getQuestion(questionId)).rejects.toThrow(NotFoundError);
             // We should check for the exact error message since it's stable
-            await expect(QuestionService.getQuestion(questionId)).rejects.toThrow(
-                'Question not found'
-            );
+            await expect(QuestionService.getQuestion(questionId)).rejects.toThrow('Question not found');
 
             findByIdMock.mockRestore();
         });
@@ -75,13 +73,10 @@ describe('Question Service Tests', () => {
         it('should return paginated questions with default parameters', async () => {
             const chapterId = new mongoose.Types.ObjectId();
             const userId = new mongoose.Types.ObjectId();
-            
+
             const chapterData = {
                 _id: chapterId,
-                questions: [
-                    new mongoose.Types.ObjectId(), 
-                    new mongoose.Types.ObjectId()
-                ]
+                questions: [new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId()],
             };
 
             const questionsData = [
@@ -93,7 +88,7 @@ describe('Question Service Tests', () => {
                     upVote: 5,
                     downVote: 2,
                     createdAt: new Date(),
-                    voteDifference: 3
+                    voteDifference: 3,
                 },
                 {
                     _id: chapterData.questions[1],
@@ -103,36 +98,38 @@ describe('Question Service Tests', () => {
                     upVote: 3,
                     downVote: 1,
                     createdAt: new Date(),
-                    voteDifference: 2
-                }
+                    voteDifference: 2,
+                },
             ];
 
             const findByIdChapterMock = jest.spyOn(Chapter, 'findById').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(chapterData)
+                exec: jest.fn().mockResolvedValue(chapterData),
             }));
 
             // Add imageLocations to each question
-            const questionsWithImages = questionsData.map(q => ({
+            const questionsWithImages = questionsData.map((q) => ({
                 ...q,
-                imageLocations: []
+                imageLocations: [],
             }));
-            
-            const aggregateExecMock = jest.fn().mockResolvedValue([{
-                data: questionsWithImages,
-                metadata: [{ totalCount: questionsWithImages.length }]
-            }]);
-            
+
+            const aggregateExecMock = jest.fn().mockResolvedValue([
+                {
+                    data: questionsWithImages,
+                    metadata: [{ totalCount: questionsWithImages.length }],
+                },
+            ]);
+
             const aggregateMock = jest.spyOn(Question, 'aggregate').mockReturnValue({
-                exec: aggregateExecMock
+                exec: aggregateExecMock,
             });
 
             const result = await QuestionService.getAllQuestions({ chapterId }, {});
 
             expect(findByIdChapterMock).toHaveBeenCalledWith(chapterId);
             expect(aggregateMock).toHaveBeenCalled();
-            
+
             // Use containsEqual to match the objects while ignoring extra fields
-            questionsData.forEach(expectedQuestion => {
+            questionsData.forEach((expectedQuestion) => {
                 expect(result.paginatedResults).toEqual(
                     expect.arrayContaining([
                         expect.objectContaining({
@@ -141,12 +138,12 @@ describe('Question Service Tests', () => {
                             content: expectedQuestion.content,
                             upVote: expectedQuestion.upVote,
                             downVote: expectedQuestion.downVote,
-                            voteDifference: expectedQuestion.voteDifference
-                        })
-                    ])
+                            voteDifference: expectedQuestion.voteDifference,
+                        }),
+                    ]),
                 );
             });
-            
+
             expect(result.totalCount).toBe(questionsData.length);
 
             findByIdChapterMock.mockRestore();
@@ -157,12 +154,10 @@ describe('Question Service Tests', () => {
             const chapterId = new mongoose.Types.ObjectId();
             const tagId = new mongoose.Types.ObjectId();
             const userId = new mongoose.Types.ObjectId();
-            
+
             const chapterData = {
                 _id: chapterId,
-                questions: [
-                    new mongoose.Types.ObjectId()
-                ]
+                questions: [new mongoose.Types.ObjectId()],
             };
 
             const questionsData = [
@@ -175,51 +170,53 @@ describe('Question Service Tests', () => {
                     upVote: 5,
                     downVote: 2,
                     createdAt: new Date(),
-                    voteDifference: 3
-                }
+                    voteDifference: 3,
+                },
             ];
 
             const findByIdChapterMock = jest.spyOn(Chapter, 'findById').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(chapterData)
+                exec: jest.fn().mockResolvedValue(chapterData),
             }));
 
             // Add imageLocations to each question
-            const questionsWithImages = questionsData.map(q => ({
+            const questionsWithImages = questionsData.map((q) => ({
                 ...q,
-                imageLocations: []
+                imageLocations: [],
             }));
-            
-            const aggregateExecMock = jest.fn().mockResolvedValue([{
-                data: questionsWithImages,
-                metadata: [{ totalCount: questionsWithImages.length }]
-            }]);
-            
+
+            const aggregateExecMock = jest.fn().mockResolvedValue([
+                {
+                    data: questionsWithImages,
+                    metadata: [{ totalCount: questionsWithImages.length }],
+                },
+            ]);
+
             const aggregateMock = jest.spyOn(Question, 'aggregate').mockReturnValue({
-                exec: aggregateExecMock
+                exec: aggregateExecMock,
             });
 
             const result = await QuestionService.getAllQuestions(
-                { 
-                  chapterId, 
-                  tagIds: [tagId.toString()]
-                }, 
-                {}
+                {
+                    chapterId,
+                    tagIds: [tagId.toString()],
+                },
+                {},
             );
 
             expect(findByIdChapterMock).toHaveBeenCalledWith(chapterId);
             expect(aggregateMock).toHaveBeenCalled();
-            
+
             // Use objectContaining to match only the properties we care about
-            questionsData.forEach(expectedQuestion => {
+            questionsData.forEach((expectedQuestion) => {
                 expect(result.paginatedResults).toEqual(
                     expect.arrayContaining([
                         expect.objectContaining({
                             _id: expectedQuestion._id,
                             title: expectedQuestion.title,
                             content: expectedQuestion.content,
-                            tags: expectedQuestion.tags
-                        })
-                    ])
+                            tags: expectedQuestion.tags,
+                        }),
+                    ]),
                 );
             });
 
@@ -233,17 +230,17 @@ describe('Question Service Tests', () => {
             const userId = new mongoose.Types.ObjectId();
             const chapterId = new mongoose.Types.ObjectId();
             const questionId = new mongoose.Types.ObjectId();
-            
+
             const userData = {
                 _id: userId,
                 userName: 'testuser',
-                questions: []
+                questions: [],
             };
 
             const chapterData = {
                 _id: chapterId,
                 name: 'Test Chapter',
-                questions: []
+                questions: [],
             };
 
             const questionData = {
@@ -251,30 +248,30 @@ describe('Question Service Tests', () => {
                 content: 'Question content',
                 user: userId,
                 chapter: chapterId,
-                imageLocations: ['image1.jpg']
+                imageLocations: ['image1.jpg'],
             };
 
             const findByIdUserMock = jest.spyOn(User, 'findById').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(userData)
+                exec: jest.fn().mockResolvedValue(userData),
             }));
 
             const findByIdChapterMock = jest.spyOn(Chapter, 'findById').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(chapterData)
+                exec: jest.fn().mockResolvedValue(chapterData),
             }));
 
-            const saveSpy = jest.spyOn(Question.prototype, 'save').mockImplementation(function() {
+            const saveSpy = jest.spyOn(Question.prototype, 'save').mockImplementation(function () {
                 this._id = questionId;
                 return Promise.resolve(this);
             });
-            
+
             const findByIdAndUpdateUserMock = jest.spyOn(User, 'findByIdAndUpdate').mockResolvedValue({
                 _id: userId,
-                questions: [questionId]
+                questions: [questionId],
             });
-            
+
             const findByIdAndUpdateChapterMock = jest.spyOn(Chapter, 'findByIdAndUpdate').mockResolvedValue({
                 _id: chapterId,
-                questions: [questionId]
+                questions: [questionId],
             });
 
             const result = await QuestionService.addNewQuestion(questionData);
@@ -295,24 +292,20 @@ describe('Question Service Tests', () => {
         it('should throw NotFoundError when user is not found', async () => {
             const userId = new mongoose.Types.ObjectId();
             const chapterId = new mongoose.Types.ObjectId();
-            
+
             const questionData = {
                 title: 'New Question',
                 content: 'Question content',
                 user: userId,
-                chapter: chapterId
+                chapter: chapterId,
             };
 
             const findByIdUserMock = jest.spyOn(User, 'findById').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(null)
+                exec: jest.fn().mockResolvedValue(null),
             }));
 
-            await expect(QuestionService.addNewQuestion(questionData)).rejects.toThrow(
-                NotFoundError
-            );
-            await expect(QuestionService.addNewQuestion(questionData)).rejects.toThrow(
-                /User not found/
-            );
+            await expect(QuestionService.addNewQuestion(questionData)).rejects.toThrow(NotFoundError);
+            await expect(QuestionService.addNewQuestion(questionData)).rejects.toThrow(/User not found/);
 
             findByIdUserMock.mockRestore();
         });

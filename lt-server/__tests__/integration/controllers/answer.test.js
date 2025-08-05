@@ -21,9 +21,7 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'addNewAnswer').mockResolvedValue(mockAnswer);
 
-            const response = await global.testRequest
-                .post('/answers')
-                .send(answerData);
+            const response = await global.testRequest.post('/answers').send(answerData);
 
             expect(response.status).toBe(201);
             expect(AnswerService.addNewAnswer).toHaveBeenCalledWith({
@@ -50,9 +48,7 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'addNewAnswer').mockResolvedValue(mockUpdatedAnswer);
 
-            const response = await global.testRequest
-                .post('/answers')
-                .send(answerData);
+            const response = await global.testRequest.post('/answers').send(answerData);
 
             expect(response.status).toBe(201);
             expect(AnswerService.addNewAnswer).toHaveBeenCalledWith({
@@ -70,9 +66,7 @@ describe('Answer Controller Integration Tests', () => {
             ];
 
             for (const answerData of invalidAnswers) {
-                const response = await global.testRequest
-                    .post('/answers')
-                    .send(answerData);
+                const response = await global.testRequest.post('/answers').send(answerData);
 
                 expect(response.status).toBe(400);
                 expect(response.body.message).toBe('Validation failed');
@@ -89,9 +83,7 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'addNewAnswer').mockResolvedValue({});
 
-            const response = await global.testRequest
-                .post('/answers')
-                .send(answerData);
+            const response = await global.testRequest.post('/answers').send(answerData);
 
             expect(response.status).toBe(201);
             expect(AnswerService.addNewAnswer).toHaveBeenCalledWith({
@@ -110,9 +102,7 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'addNewAnswer').mockResolvedValue({});
 
-            const response = await global.testRequest
-                .post('/answers')
-                .send(answerData);
+            const response = await global.testRequest.post('/answers').send(answerData);
 
             expect(response.status).toBe(201);
         });
@@ -125,9 +115,7 @@ describe('Answer Controller Integration Tests', () => {
                 question: questionId,
             };
 
-            const response = await global.testRequest
-                .post('/answers')
-                .send(answerData);
+            const response = await global.testRequest.post('/answers').send(answerData);
 
             expect(response.status).toBe(400);
             expect(response.body.message).toBe('Validation failed');
@@ -145,7 +133,7 @@ describe('Answer Controller Integration Tests', () => {
             expect(response.status).toBe(200);
             expect(AnswerService.deleteAnswer).toHaveBeenCalledWith(
                 answerId,
-                expect.any(Object) // User from middleware
+                expect.any(Object), // User from middleware
             );
         });
 
@@ -258,12 +246,9 @@ describe('Answer Controller Integration Tests', () => {
                 question: questionId,
             };
 
-            jest.spyOn(AnswerService, 'addNewAnswer')
-                .mockRejectedValue(new Error('Service error'));
+            jest.spyOn(AnswerService, 'addNewAnswer').mockRejectedValue(new Error('Service error'));
 
-            const response = await global.testRequest
-                .post('/answers')
-                .send(answerData);
+            const response = await global.testRequest.post('/answers').send(answerData);
 
             expect(response.status).toBe(500);
         });
@@ -273,8 +258,7 @@ describe('Answer Controller Integration Tests', () => {
 
             const notFoundError = new Error('Answer not found');
             notFoundError.name = 'NotFoundError';
-            jest.spyOn(AnswerService, 'deleteAnswer')
-                .mockRejectedValue(notFoundError);
+            jest.spyOn(AnswerService, 'deleteAnswer').mockRejectedValue(notFoundError);
 
             const response = await global.testRequest.delete(`/answers/${answerId}`);
 
@@ -292,12 +276,9 @@ describe('Answer Controller Integration Tests', () => {
 
             const unauthorizedError = new Error('Unauthorized');
             unauthorizedError.name = 'UnauthorizedError';
-            jest.spyOn(AnswerService, 'addNewAnswer')
-                .mockRejectedValue(unauthorizedError);
+            jest.spyOn(AnswerService, 'addNewAnswer').mockRejectedValue(unauthorizedError);
 
-            const response = await global.testRequest
-                .post('/answers')
-                .send(answerData);
+            const response = await global.testRequest.post('/answers').send(answerData);
 
             expect(response.status).toBe(500);
         });
@@ -305,8 +286,7 @@ describe('Answer Controller Integration Tests', () => {
         it('should handle database connection errors', async () => {
             const questionId = new mongoose.Types.ObjectId().toString();
 
-            jest.spyOn(AnswerService, 'getAllAnswers')
-                .mockRejectedValue(new Error('Database connection error'));
+            jest.spyOn(AnswerService, 'getAllAnswers').mockRejectedValue(new Error('Database connection error'));
 
             const response = await global.testRequest.get(`/answers?questionId=${questionId}`);
 
@@ -323,16 +303,14 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'addNewAnswer').mockResolvedValue({});
 
-            const response = await global.testRequest
-                .post('/answers')
-                .send(answerData);
+            const response = await global.testRequest.post('/answers').send(answerData);
 
             expect(response.status).toBe(201);
             // Verify that user was added to the request by middleware
             expect(AnswerService.addNewAnswer).toHaveBeenCalledWith(
                 expect.objectContaining({
                     user: expect.any(Object),
-                })
+                }),
             );
         });
 
@@ -344,10 +322,7 @@ describe('Answer Controller Integration Tests', () => {
             const response = await global.testRequest.delete(`/answers/${answerId}`);
 
             expect(response.status).toBe(200);
-            expect(AnswerService.deleteAnswer).toHaveBeenCalledWith(
-                answerId,
-                expect.any(Object)
-            );
+            expect(AnswerService.deleteAnswer).toHaveBeenCalledWith(answerId, expect.any(Object));
         });
     });
 
@@ -362,9 +337,7 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'addNewAnswer').mockResolvedValue({});
 
-            const response = await global.testRequest
-                .post('/answers')
-                .send(answerData);
+            const response = await global.testRequest.post('/answers').send(answerData);
 
             expect(response.status).toBe(201);
         });
@@ -387,15 +360,13 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'addNewAnswer').mockResolvedValue({});
 
-            const response = await global.testRequest
-                .post('/answers')
-                .send(answerData);
+            const response = await global.testRequest.post('/answers').send(answerData);
 
             expect(response.status).toBe(201);
             expect(AnswerService.addNewAnswer).toHaveBeenCalledWith(
                 expect.objectContaining({
                     details: complexDetails,
-                })
+                }),
             );
         });
 
@@ -409,9 +380,7 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'addNewAnswer').mockResolvedValue({});
 
-            const response = await global.testRequest
-                .post('/answers')
-                .send(answerData);
+            const response = await global.testRequest.post('/answers').send(answerData);
 
             expect(response.status).toBe(201);
         });
@@ -427,9 +396,7 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'addNewAnswer').mockResolvedValue({});
 
-            const response = await global.testRequest
-                .post('/answers')
-                .send(answerData);
+            const response = await global.testRequest.post('/answers').send(answerData);
 
             expect(response.status).toBe(201);
         });

@@ -25,8 +25,24 @@ router.post('/', validate(addNewUserSchema), UserController.addNewUser);
 router.post('/login', validate(logInUserSchema), UserController.logInUser);
 router.post('/forgot-password', validate(forgotPasswordSchema), UserController.forgotPassword);
 router.post('/reset-password', validate(resetPasswordSchema), UserController.resetPassword);
-router.post('/update-class', extractAndVerifyToken, validate(updateClassInUserSchema), UserController.updateClassInUser);
-router.post('/update-password', extractAndVerifyToken, validate(updatePasswordInUserSchema), UserController.updatePasswordInUser);
-router.post('/update-privilege', extractAndVerifyToken, hasAdminPrivilege, validate(updatePrivilegeSchema), UserController.updatePrivilege);
+router.post(
+    '/update-class',
+    extractAndVerifyToken,
+    validate(updateClassInUserSchema),
+    UserController.updateClassInUser,
+);
+router.post(
+    '/update-password',
+    extractAndVerifyToken,
+    validate(updatePasswordInUserSchema),
+    UserController.updatePasswordInUser,
+);
+router.post(
+    '/update-privilege',
+    extractAndVerifyToken,
+    hasAdminPrivilege,
+    validate(updatePrivilegeSchema),
+    UserController.updatePrivilege,
+);
 
 module.exports = router;

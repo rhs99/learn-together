@@ -10,7 +10,7 @@ describe('Vote Service Tests', () => {
         it('should add upvote to a question when vote does not exist', async () => {
             const userId = new mongoose.Types.ObjectId();
             const questionId = new mongoose.Types.ObjectId();
-            
+
             const questionData = {
                 _id: questionId,
                 title: 'Test Question',
@@ -20,36 +20,36 @@ describe('Vote Service Tests', () => {
                 save: jest.fn().mockResolvedValue({
                     _id: questionId,
                     upVote: 6,
-                    downVote: 2
-                })
+                    downVote: 2,
+                }),
             };
 
             const voteData = {
                 qaId: questionId,
                 user: userId,
                 q: true,
-                up: true
+                up: true,
             };
 
             // No existing vote
             const findOneVoteMock = jest.spyOn(Vote, 'findOne').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(null)
+                exec: jest.fn().mockResolvedValue(null),
             }));
 
             const findOneQuestionMock = jest.spyOn(Question, 'findOne').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(questionData)
+                exec: jest.fn().mockResolvedValue(questionData),
             }));
 
-            const voteSaveSpy = jest.spyOn(Vote.prototype, 'save').mockImplementation(function() {
+            const voteSaveSpy = jest.spyOn(Vote.prototype, 'save').mockImplementation(function () {
                 return Promise.resolve(this);
             });
 
             const result = await VoteService.updateVote(voteData);
 
-            expect(findOneVoteMock).toHaveBeenCalledWith({ 
-                qa: questionId, 
-                user: userId, 
-                isQuestion: true 
+            expect(findOneVoteMock).toHaveBeenCalledWith({
+                qa: questionId,
+                user: userId,
+                isQuestion: true,
             });
             expect(findOneQuestionMock).toHaveBeenCalledWith({ _id: questionId });
             expect(voteSaveSpy).toHaveBeenCalled();
@@ -65,7 +65,7 @@ describe('Vote Service Tests', () => {
         it('should add downvote to an answer when vote does not exist', async () => {
             const userId = new mongoose.Types.ObjectId();
             const answerId = new mongoose.Types.ObjectId();
-            
+
             const answerData = {
                 _id: answerId,
                 content: 'Test Answer',
@@ -74,36 +74,36 @@ describe('Vote Service Tests', () => {
                 save: jest.fn().mockResolvedValue({
                     _id: answerId,
                     upVote: 3,
-                    downVote: 2
-                })
+                    downVote: 2,
+                }),
             };
 
             const voteData = {
                 qaId: answerId,
                 user: userId,
                 q: false,
-                up: false
+                up: false,
             };
 
             // No existing vote
             const findOneVoteMock = jest.spyOn(Vote, 'findOne').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(null)
+                exec: jest.fn().mockResolvedValue(null),
             }));
 
             const findOneAnswerMock = jest.spyOn(Answer, 'findOne').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(answerData)
+                exec: jest.fn().mockResolvedValue(answerData),
             }));
 
-            const voteSaveSpy = jest.spyOn(Vote.prototype, 'save').mockImplementation(function() {
+            const voteSaveSpy = jest.spyOn(Vote.prototype, 'save').mockImplementation(function () {
                 return Promise.resolve(this);
             });
 
             const result = await VoteService.updateVote(voteData);
 
-            expect(findOneVoteMock).toHaveBeenCalledWith({ 
-                qa: answerId, 
-                user: userId, 
-                isQuestion: false 
+            expect(findOneVoteMock).toHaveBeenCalledWith({
+                qa: answerId,
+                user: userId,
+                isQuestion: false,
             });
             expect(findOneAnswerMock).toHaveBeenCalledWith({ _id: answerId });
             expect(voteSaveSpy).toHaveBeenCalled();
@@ -119,7 +119,7 @@ describe('Vote Service Tests', () => {
         it('should change vote from downvote to upvote', async () => {
             const userId = new mongoose.Types.ObjectId();
             const questionId = new mongoose.Types.ObjectId();
-            
+
             const questionData = {
                 _id: questionId,
                 title: 'Test Question',
@@ -129,8 +129,8 @@ describe('Vote Service Tests', () => {
                 save: jest.fn().mockResolvedValue({
                     _id: questionId,
                     upVote: 6,
-                    downVote: 1
-                })
+                    downVote: 1,
+                }),
             };
 
             const existingVote = {
@@ -138,33 +138,33 @@ describe('Vote Service Tests', () => {
                 user: userId,
                 isQuestion: true,
                 count: -1,
-                save: jest.fn().mockImplementation(function() {
+                save: jest.fn().mockImplementation(function () {
                     this.count = 1;
                     return Promise.resolve(this);
-                })
+                }),
             };
 
             const voteData = {
                 qaId: questionId,
                 user: userId,
                 q: true,
-                up: true
+                up: true,
             };
 
             const findOneVoteMock = jest.spyOn(Vote, 'findOne').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(existingVote)
+                exec: jest.fn().mockResolvedValue(existingVote),
             }));
 
             const findOneQuestionMock = jest.spyOn(Question, 'findOne').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(questionData)
+                exec: jest.fn().mockResolvedValue(questionData),
             }));
 
             const result = await VoteService.updateVote(voteData);
 
-            expect(findOneVoteMock).toHaveBeenCalledWith({ 
-                qa: questionId, 
-                user: userId, 
-                isQuestion: true 
+            expect(findOneVoteMock).toHaveBeenCalledWith({
+                qa: questionId,
+                user: userId,
+                isQuestion: true,
             });
             expect(findOneQuestionMock).toHaveBeenCalledWith({ _id: questionId });
             expect(existingVote.save).toHaveBeenCalled();
@@ -181,24 +181,24 @@ describe('Vote Service Tests', () => {
         it('should throw NotFoundError when question/answer is not found', async () => {
             const userId = new mongoose.Types.ObjectId();
             const questionId = new mongoose.Types.ObjectId();
-            
+
             const voteData = {
                 qaId: questionId,
                 user: userId,
                 q: true,
-                up: true
+                up: true,
             };
 
             const findOneVoteMock = jest.spyOn(Vote, 'findOne').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(null)
+                exec: jest.fn().mockResolvedValue(null),
             }));
 
             const findOneQuestionMock = jest.spyOn(Question, 'findOne').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(null)
+                exec: jest.fn().mockResolvedValue(null),
             }));
 
             await expect(VoteService.updateVote(voteData)).rejects.toThrow(
-                new NotFoundError(`Question not found for id: ${questionId}`)
+                new NotFoundError(`Question not found for id: ${questionId}`),
             );
 
             findOneVoteMock.mockRestore();
@@ -208,7 +208,7 @@ describe('Vote Service Tests', () => {
         it('should not change vote count when voting the same way', async () => {
             const userId = new mongoose.Types.ObjectId();
             const answerId = new mongoose.Types.ObjectId();
-            
+
             const answerData = {
                 _id: answerId,
                 content: 'Test Answer',
@@ -217,8 +217,8 @@ describe('Vote Service Tests', () => {
                 save: jest.fn().mockResolvedValue({
                     _id: answerId,
                     upVote: 3,
-                    downVote: 1
-                })
+                    downVote: 1,
+                }),
             };
 
             const existingVote = {
@@ -230,36 +230,36 @@ describe('Vote Service Tests', () => {
                     qa: answerId,
                     user: userId,
                     isQuestion: false,
-                    count: 1
-                })
+                    count: 1,
+                }),
             };
 
             const voteData = {
                 qaId: answerId,
                 user: userId,
                 q: false,
-                up: true // Upvote again
+                up: true, // Upvote again
             };
 
             const findOneVoteMock = jest.spyOn(Vote, 'findOne').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(existingVote)
+                exec: jest.fn().mockResolvedValue(existingVote),
             }));
 
             const findOneAnswerMock = jest.spyOn(Answer, 'findOne').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(answerData)
+                exec: jest.fn().mockResolvedValue(answerData),
             }));
 
             const result = await VoteService.updateVote(voteData);
 
-            expect(findOneVoteMock).toHaveBeenCalledWith({ 
-                qa: answerId, 
-                user: userId, 
-                isQuestion: false 
+            expect(findOneVoteMock).toHaveBeenCalledWith({
+                qa: answerId,
+                user: userId,
+                isQuestion: false,
             });
             expect(findOneAnswerMock).toHaveBeenCalledWith({ _id: answerId });
             expect(existingVote.save).toHaveBeenCalled();
             expect(answerData.save).toHaveBeenCalled();
-            
+
             // Vote counts shouldn't change
             expect(answerData.upVote).toBe(3);
             expect(answerData.downVote).toBe(1);

@@ -10,16 +10,12 @@ const updateVoteSchema = {
                 .refine((id) => mongoose.Types.ObjectId.isValid(id), {
                     message: 'Invalid Question/Answer ObjectId format',
                 }),
-            q: z
-                .boolean({ required_error: 'Question flag is required' })
-                .refine((val) => typeof val === 'boolean', {
-                    message: 'Question flag must be a boolean (true for question, false for answer)',
-                }),
-            up: z
-                .boolean({ required_error: 'Vote direction is required' })
-                .refine((val) => typeof val === 'boolean', {
-                    message: 'Vote direction must be a boolean (true for upvote, false for downvote)',
-                }),
+            q: z.boolean({ required_error: 'Question flag is required' }).refine((val) => typeof val === 'boolean', {
+                message: 'Question flag must be a boolean (true for question, false for answer)',
+            }),
+            up: z.boolean({ required_error: 'Vote direction is required' }).refine((val) => typeof val === 'boolean', {
+                message: 'Vote direction must be a boolean (true for upvote, false for downvote)',
+            }),
         })
         .strict(),
 };

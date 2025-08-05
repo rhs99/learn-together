@@ -14,30 +14,30 @@ describe('User Service Tests', () => {
             const defaultPrivilegeId = new mongoose.Types.ObjectId();
             const defaultPrivilege = {
                 _id: defaultPrivilegeId,
-                name: 'default'
+                name: 'default',
             };
 
             const findOnePrivilegeMock = jest.spyOn(Privilege, 'findOne').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(defaultPrivilege)
+                exec: jest.fn().mockResolvedValue(defaultPrivilege),
             }));
 
             const saveSpy = jest.spyOn(User.prototype, 'save').mockResolvedValue({
                 userName: 'testuser',
                 email: 'test@example.com',
-                privileges: [defaultPrivilegeId]
+                privileges: [defaultPrivilegeId],
             });
 
             const userData = {
                 userName: 'testuser',
                 email: 'test@example.com',
-                password: 'password123'
+                password: 'password123',
             };
 
             await UserService.addNewUser(userData);
 
             expect(findOnePrivilegeMock).toHaveBeenCalledWith({ name: 'default' });
             expect(saveSpy).toHaveBeenCalled();
-            
+
             // No need to check User constructor, just verify the new user has the correct data
             expect(User.prototype.save).toHaveBeenCalled();
 
@@ -50,33 +50,33 @@ describe('User Service Tests', () => {
             const classId = new mongoose.Types.ObjectId();
             const defaultPrivilege = {
                 _id: defaultPrivilegeId,
-                name: 'default'
+                name: 'default',
             };
             const classData = {
                 _id: classId,
-                name: 'Grade 10'
+                name: 'Grade 10',
             };
 
             const findOnePrivilegeMock = jest.spyOn(Privilege, 'findOne').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(defaultPrivilege)
+                exec: jest.fn().mockResolvedValue(defaultPrivilege),
             }));
 
             const findByIdClassMock = jest.spyOn(Class, 'findById').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(classData)
+                exec: jest.fn().mockResolvedValue(classData),
             }));
 
             const saveSpy = jest.spyOn(User.prototype, 'save').mockResolvedValue({
                 userName: 'testuser',
                 email: 'test@example.com',
                 privileges: [defaultPrivilegeId],
-                class: classId
+                class: classId,
             });
 
             const userData = {
                 userName: 'testuser',
                 email: 'test@example.com',
                 password: 'password123',
-                class: classId.toString()
+                class: classId.toString(),
             };
 
             await UserService.addNewUser(userData);
@@ -84,7 +84,7 @@ describe('User Service Tests', () => {
             expect(findOnePrivilegeMock).toHaveBeenCalledWith({ name: 'default' });
             expect(findByIdClassMock).toHaveBeenCalledWith(classId.toString());
             expect(saveSpy).toHaveBeenCalled();
-            
+
             // Verify the save method was called
             expect(User.prototype.save).toHaveBeenCalled();
 
@@ -95,17 +95,17 @@ describe('User Service Tests', () => {
 
         it('should throw NotFoundError when default privilege is not found', async () => {
             const findOnePrivilegeMock = jest.spyOn(Privilege, 'findOne').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(null)
+                exec: jest.fn().mockResolvedValue(null),
             }));
 
             const userData = {
                 userName: 'testuser',
                 email: 'test@example.com',
-                password: 'password123'
+                password: 'password123',
             };
 
             await expect(UserService.addNewUser(userData)).rejects.toThrow(
-                new NotFoundError('Default privilege not found. Cannot create user.')
+                new NotFoundError('Default privilege not found. Cannot create user.'),
             );
 
             findOnePrivilegeMock.mockRestore();
@@ -116,26 +116,26 @@ describe('User Service Tests', () => {
             const invalidClassId = new mongoose.Types.ObjectId().toString();
             const defaultPrivilege = {
                 _id: defaultPrivilegeId,
-                name: 'default'
+                name: 'default',
             };
 
             const findOnePrivilegeMock = jest.spyOn(Privilege, 'findOne').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(defaultPrivilege)
+                exec: jest.fn().mockResolvedValue(defaultPrivilege),
             }));
 
             const findByIdClassMock = jest.spyOn(Class, 'findById').mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValue(null)
+                exec: jest.fn().mockResolvedValue(null),
             }));
 
             const userData = {
                 userName: 'testuser',
                 email: 'test@example.com',
                 password: 'password123',
-                class: invalidClassId
+                class: invalidClassId,
             };
 
             await expect(UserService.addNewUser(userData)).rejects.toThrow(
-                new NotFoundError(`Class not found: ${invalidClassId}`)
+                new NotFoundError(`Class not found: ${invalidClassId}`),
             );
 
             findOnePrivilegeMock.mockRestore();
@@ -150,7 +150,7 @@ describe('User Service Tests', () => {
             const questionId2 = new mongoose.Types.ObjectId();
             const answerId1 = new mongoose.Types.ObjectId();
             const answerId2 = new mongoose.Types.ObjectId();
-            
+
             const userData = {
                 _id: userId,
                 userName: 'testuser',
@@ -159,44 +159,46 @@ describe('User Service Tests', () => {
                 questions: [questionId1, questionId2],
                 answers: [answerId1, answerId2],
                 upVotes: 15,
-                downVotes: 5
+                downVotes: 5,
             };
 
             const question1 = {
                 _id: questionId1,
                 title: 'Question 1',
-                user: { userName: 'testuser' }
+                user: { userName: 'testuser' },
             };
 
             const question2 = {
                 _id: questionId2,
                 title: 'Question 2',
-                user: { userName: 'testuser' }
+                user: { userName: 'testuser' },
             };
 
             const answer1 = {
                 _id: answerId1,
                 content: 'Answer 1',
-                user: { userName: 'testuser' }
+                user: { userName: 'testuser' },
             };
 
             const answer2 = {
                 _id: answerId2,
                 content: 'Answer 2',
-                user: { userName: 'testuser' }
+                user: { userName: 'testuser' },
             };
 
             const findOneUserMock = jest.spyOn(User, 'findOne').mockImplementation(() => ({
                 populate: jest.fn().mockReturnThis(),
                 select: jest.fn().mockReturnThis(),
-                exec: jest.fn().mockResolvedValue(userData)
+                exec: jest.fn().mockResolvedValue(userData),
             }));
 
-            const findByIdQuestionMock = jest.spyOn(Question, 'findById')
+            const findByIdQuestionMock = jest
+                .spyOn(Question, 'findById')
                 .mockImplementationOnce(() => ({ exec: jest.fn().mockResolvedValue(question1) }))
                 .mockImplementationOnce(() => ({ exec: jest.fn().mockResolvedValue(question2) }));
 
-            const findByIdAnswerMock = jest.spyOn(Answer, 'findById')
+            const findByIdAnswerMock = jest
+                .spyOn(Answer, 'findById')
                 .mockImplementationOnce(() => ({ exec: jest.fn().mockResolvedValue(answer1) }))
                 .mockImplementationOnce(() => ({ exec: jest.fn().mockResolvedValue(answer2) }));
 
@@ -220,11 +222,11 @@ describe('User Service Tests', () => {
             const findOneUserMock = jest.spyOn(User, 'findOne').mockImplementation(() => ({
                 populate: jest.fn().mockReturnThis(),
                 select: jest.fn().mockReturnThis(),
-                exec: jest.fn().mockResolvedValue(null)
+                exec: jest.fn().mockResolvedValue(null),
             }));
 
             await expect(UserService.getUser('nonexistentuser')).rejects.toThrow(
-                new NotFoundError('No user found for userName: nonexistentuser')
+                new NotFoundError('No user found for userName: nonexistentuser'),
             );
 
             findOneUserMock.mockRestore();

@@ -48,7 +48,7 @@ describe('Tag Controller Integration Tests', () => {
 
         it('should handle errors properly', async () => {
             jest.spyOn(TagService, 'getAllTags').mockImplementation(() => {
-                throw new Error('Test error');
+                throw new Error();
             });
 
             const response = await global.testRequest.get('/tags').query({ chapterId });

@@ -151,11 +151,7 @@ describe('Vote Model Tests', () => {
         });
 
         it('should handle extreme vote count values', async () => {
-            const extremeValues = [
-                Number.MAX_SAFE_INTEGER,
-                Number.MIN_SAFE_INTEGER,
-                -Number.MAX_SAFE_INTEGER,
-            ];
+            const extremeValues = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER];
 
             for (let i = 0; i < extremeValues.length; i++) {
                 const vote = await new Vote({
@@ -405,8 +401,8 @@ describe('Vote Model Tests', () => {
             }
 
             expect(votes).toHaveLength(5);
-            expect(votes.filter(v => v.count === 1)).toHaveLength(3); // 0, 2, 4 indices
-            expect(votes.filter(v => v.count === -1)).toHaveLength(2); // 1, 3 indices
+            expect(votes.filter((v) => v.count === 1)).toHaveLength(3); // 0, 2, 4 indices
+            expect(votes.filter((v) => v.count === -1)).toHaveLength(2); // 1, 3 indices
         });
 
         it('should handle votes for both questions and answers by same user', async () => {

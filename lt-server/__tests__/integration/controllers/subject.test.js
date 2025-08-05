@@ -68,7 +68,7 @@ describe('Subject Controller Integration Tests', () => {
                 class: classId,
             };
 
-            jest.spyOn(SubjectService, 'addNewSubject').mockResolvedValue();
+            jest.spyOn(SubjectService, 'addNewSubject').mockResolvedValue({ ...subjectData, _id: 'new-subject-id' });
 
             const response = await global.testRequest.post('/subjects').send(subjectData);
 

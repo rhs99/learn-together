@@ -89,9 +89,7 @@ const logInUserSchema = {
 const forgotPasswordSchema = {
     body: z
         .object({
-            email: z
-                .string({ required_error: 'Email is required' })
-                .email({ message: 'Invalid email format' }),
+            email: z.string({ required_error: 'Email is required' }).email({ message: 'Invalid email format' }),
         })
         .strict(),
 };

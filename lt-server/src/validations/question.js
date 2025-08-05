@@ -76,13 +76,11 @@ const addNewQuestionSchema = {
             tags: z
                 .array(
                     z.object({
-                        _id: z
-                            .string()
-                            .refine((id) => mongoose.Types.ObjectId.isValid(id), {
-                                message: 'Invalid Tag ObjectId format',
-                            }),
+                        _id: z.string().refine((id) => mongoose.Types.ObjectId.isValid(id), {
+                            message: 'Invalid Tag ObjectId format',
+                        }),
                         name: z.string().min(1, { message: 'Tag name is required' }),
-                    })
+                    }),
                 )
                 .optional(),
             imageLocations: z.array(z.string()).optional(),

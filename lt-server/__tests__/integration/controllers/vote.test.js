@@ -18,9 +18,7 @@ describe('Vote Controller Integration Tests', () => {
 
             jest.spyOn(VoteService, 'updateVote').mockResolvedValue(mockResponse);
 
-            const response = await global.testRequest
-                .post('/votes/update')
-                .send(voteData);
+            const response = await global.testRequest.post('/votes/update').send(voteData);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
@@ -45,9 +43,7 @@ describe('Vote Controller Integration Tests', () => {
 
             jest.spyOn(VoteService, 'updateVote').mockResolvedValue(mockResponse);
 
-            const response = await global.testRequest
-                .post('/votes/update')
-                .send(voteData);
+            const response = await global.testRequest.post('/votes/update').send(voteData);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
@@ -72,9 +68,7 @@ describe('Vote Controller Integration Tests', () => {
 
             jest.spyOn(VoteService, 'updateVote').mockResolvedValue(mockResponse);
 
-            const response = await global.testRequest
-                .post('/votes/update')
-                .send(voteData);
+            const response = await global.testRequest.post('/votes/update').send(voteData);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
@@ -99,9 +93,7 @@ describe('Vote Controller Integration Tests', () => {
 
             jest.spyOn(VoteService, 'updateVote').mockResolvedValue(mockResponse);
 
-            const response = await global.testRequest
-                .post('/votes/update')
-                .send(voteData);
+            const response = await global.testRequest.post('/votes/update').send(voteData);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
@@ -124,9 +116,7 @@ describe('Vote Controller Integration Tests', () => {
             ];
 
             for (const voteData of invalidVotes) {
-                const response = await global.testRequest
-                    .post('/votes/update')
-                    .send(voteData);
+                const response = await global.testRequest.post('/votes/update').send(voteData);
 
                 expect(response.status).toBe(400);
                 expect(response.body.message).toBe('Validation failed');
@@ -140,9 +130,7 @@ describe('Vote Controller Integration Tests', () => {
                 up: true,
             };
 
-            const response = await global.testRequest
-                .post('/votes/update')
-                .send(voteData);
+            const response = await global.testRequest.post('/votes/update').send(voteData);
 
             expect(response.status).toBe(400);
             expect(response.body.message).toBe('Validation failed');
@@ -162,9 +150,7 @@ describe('Vote Controller Integration Tests', () => {
             ];
 
             for (const voteData of invalidBooleanVotes) {
-                const response = await global.testRequest
-                    .post('/votes/update')
-                    .send(voteData);
+                const response = await global.testRequest.post('/votes/update').send(voteData);
 
                 expect(response.status).toBe(400);
                 expect(response.body.message).toBe('Validation failed');
@@ -186,9 +172,7 @@ describe('Vote Controller Integration Tests', () => {
 
             jest.spyOn(VoteService, 'updateVote').mockResolvedValue(mockResponse);
 
-            const response = await global.testRequest
-                .post('/votes/update')
-                .send(voteData);
+            const response = await global.testRequest.post('/votes/update').send(voteData);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
@@ -209,9 +193,7 @@ describe('Vote Controller Integration Tests', () => {
 
             jest.spyOn(VoteService, 'updateVote').mockResolvedValue(mockResponse);
 
-            const response = await global.testRequest
-                .post('/votes/update')
-                .send(voteData);
+            const response = await global.testRequest.post('/votes/update').send(voteData);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
@@ -231,16 +213,14 @@ describe('Vote Controller Integration Tests', () => {
                 downVote: 0,
             });
 
-            const response = await global.testRequest
-                .post('/votes/update')
-                .send(voteData);
+            const response = await global.testRequest.post('/votes/update').send(voteData);
 
             expect(response.status).toBe(200);
             // Verify that user was added to the request by middleware
             expect(VoteService.updateVote).toHaveBeenCalledWith(
                 expect.objectContaining({
                     user: expect.any(Object),
-                })
+                }),
             );
         });
     });
@@ -253,12 +233,9 @@ describe('Vote Controller Integration Tests', () => {
                 up: true,
             };
 
-            jest.spyOn(VoteService, 'updateVote')
-                .mockRejectedValue(new Error('Service error'));
+            jest.spyOn(VoteService, 'updateVote').mockRejectedValue(new Error('Service error'));
 
-            const response = await global.testRequest
-                .post('/votes/update')
-                .send(voteData);
+            const response = await global.testRequest.post('/votes/update').send(voteData);
 
             expect(response.status).toBe(500);
         });
@@ -272,12 +249,9 @@ describe('Vote Controller Integration Tests', () => {
 
             const notFoundError = new Error('Question not found');
             notFoundError.name = 'NotFoundError';
-            jest.spyOn(VoteService, 'updateVote')
-                .mockRejectedValue(notFoundError);
+            jest.spyOn(VoteService, 'updateVote').mockRejectedValue(notFoundError);
 
-            const response = await global.testRequest
-                .post('/votes/update')
-                .send(voteData);
+            const response = await global.testRequest.post('/votes/update').send(voteData);
 
             expect(response.status).toBe(500);
         });
@@ -289,12 +263,9 @@ describe('Vote Controller Integration Tests', () => {
                 up: true,
             };
 
-            jest.spyOn(VoteService, 'updateVote')
-                .mockRejectedValue(new Error('Database connection error'));
+            jest.spyOn(VoteService, 'updateVote').mockRejectedValue(new Error('Database connection error'));
 
-            const response = await global.testRequest
-                .post('/votes/update')
-                .send(voteData);
+            const response = await global.testRequest.post('/votes/update').send(voteData);
 
             expect(response.status).toBe(500);
         });
@@ -303,7 +274,7 @@ describe('Vote Controller Integration Tests', () => {
     describe('Concurrent Voting Scenarios', () => {
         it('should handle rapid vote changes', async () => {
             const questionId = new mongoose.Types.ObjectId().toString();
-            
+
             // Simulate rapid clicking - upvote, then downvote, then upvote again
             const voteSequence = [
                 { qaId: questionId, q: true, up: true },
@@ -320,9 +291,7 @@ describe('Vote Controller Integration Tests', () => {
             for (let i = 0; i < voteSequence.length; i++) {
                 jest.spyOn(VoteService, 'updateVote').mockResolvedValueOnce(expectedResponses[i]);
 
-                const response = await global.testRequest
-                    .post('/votes/update')
-                    .send(voteSequence[i]);
+                const response = await global.testRequest.post('/votes/update').send(voteSequence[i]);
 
                 expect(response.status).toBe(200);
                 expect(response.body).toEqual(expectedResponses[i]);
@@ -346,9 +315,7 @@ describe('Vote Controller Integration Tests', () => {
             for (let i = 0; i < votes.length; i++) {
                 jest.spyOn(VoteService, 'updateVote').mockResolvedValueOnce(responses[i]);
 
-                const response = await global.testRequest
-                    .post('/votes/update')
-                    .send(votes[i]);
+                const response = await global.testRequest.post('/votes/update').send(votes[i]);
 
                 expect(response.status).toBe(200);
                 expect(response.body).toEqual(responses[i]);
@@ -376,9 +343,7 @@ describe('Vote Controller Integration Tests', () => {
             for (let i = 0; i < votes.length; i++) {
                 jest.spyOn(VoteService, 'updateVote').mockResolvedValueOnce(responses[i]);
 
-                const response = await global.testRequest
-                    .post('/votes/update')
-                    .send(votes[i]);
+                const response = await global.testRequest.post('/votes/update').send(votes[i]);
 
                 expect(response.status).toBe(200);
                 expect(response.body).toEqual(responses[i]);
@@ -402,9 +367,7 @@ describe('Vote Controller Integration Tests', () => {
 
             jest.spyOn(VoteService, 'updateVote').mockResolvedValue(mockResponse);
 
-            const response = await global.testRequest
-                .post('/votes/update')
-                .send(voteData);
+            const response = await global.testRequest.post('/votes/update').send(voteData);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
@@ -425,9 +388,7 @@ describe('Vote Controller Integration Tests', () => {
 
             jest.spyOn(VoteService, 'updateVote').mockResolvedValue(mockResponse);
 
-            const response = await global.testRequest
-                .post('/votes/update')
-                .send(voteData);
+            const response = await global.testRequest.post('/votes/update').send(voteData);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
@@ -448,9 +409,7 @@ describe('Vote Controller Integration Tests', () => {
 
             jest.spyOn(VoteService, 'updateVote').mockResolvedValue(mockResponse);
 
-            const response = await global.testRequest
-                .post('/votes/update')
-                .send(voteData);
+            const response = await global.testRequest.post('/votes/update').send(voteData);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
@@ -477,9 +436,7 @@ describe('Vote Controller Integration Tests', () => {
                     downVote: 0,
                 });
 
-                const response = await global.testRequest
-                    .post('/votes/update')
-                    .send(voteData);
+                const response = await global.testRequest.post('/votes/update').send(voteData);
 
                 expect(response.status).toBe(200);
             }
@@ -507,9 +464,7 @@ describe('Vote Controller Integration Tests', () => {
                     downVote: 0,
                 });
 
-                const response = await global.testRequest
-                    .post('/votes/update')
-                    .send(voteData);
+                const response = await global.testRequest.post('/votes/update').send(voteData);
 
                 expect(response.status).toBe(200);
             }

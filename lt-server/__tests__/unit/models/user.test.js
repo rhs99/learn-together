@@ -220,11 +220,10 @@ describe('User Model Tests', () => {
         });
     });
 
-
     describe('Edge Cases', () => {
         it('should handle very long usernames', async () => {
             const longUserName = 'a'.repeat(100); // Very long username
-            
+
             const user = await new User({
                 userName: longUserName,
                 email: 'long@example.com',
