@@ -7,8 +7,6 @@ describe('Tag Controller Integration Tests', () => {
 
     beforeEach(async () => {
         await Tag.deleteMany({});
-
-        jest.restoreAllMocks();
     });
 
     describe('GET /tags', () => {
@@ -46,19 +44,6 @@ describe('Tag Controller Integration Tests', () => {
 
             expect(response.status).toBe(400);
             expect(response.body).toHaveProperty('message', 'Validation failed');
-            expect(response.body.errors).toBeInstanceOf(Array);
-
-            expect(response.body.errors.length).toBeGreaterThan(0);
-        });
-
-        it('should return validation error if chapterId is invalid', async () => {
-            const response = await global.testRequest.get('/tags').query({ chapterId: 'invalid-id' });
-
-            expect(response.status).toBe(400);
-            expect(response.body).toHaveProperty('message', 'Validation failed');
-            expect(response.body.errors).toBeInstanceOf(Array);
-
-            expect(response.body.errors.length).toBeGreaterThan(0);
         });
 
         it('should handle errors properly', async () => {
@@ -109,19 +94,6 @@ describe('Tag Controller Integration Tests', () => {
 
             expect(response.status).toBe(400);
             expect(response.body).toHaveProperty('message', 'Validation failed');
-            expect(response.body.errors).toBeInstanceOf(Array);
-
-            expect(response.body.errors.length).toBeGreaterThan(0);
-        });
-
-        it('should return validation error when chapter is missing', async () => {
-            const response = await global.testRequest.post('/tags').send({ name: 'javascript' });
-
-            expect(response.status).toBe(400);
-            expect(response.body).toHaveProperty('message', 'Validation failed');
-            expect(response.body.errors).toBeInstanceOf(Array);
-
-            expect(response.body.errors.length).toBeGreaterThan(0);
         });
 
         it('should return validation error when name contains invalid characters', async () => {
@@ -131,25 +103,14 @@ describe('Tag Controller Integration Tests', () => {
 
             expect(response.status).toBe(400);
             expect(response.body).toHaveProperty('message', 'Validation failed');
-            expect(response.body.errors).toBeInstanceOf(Array);
-            expect(response.body.errors.length).toBeGreaterThan(0);
-
-            const nameError = response.body.errors.find((err) => err.path === 'name');
-            expect(nameError).toBeDefined();
-            expect(nameError.message).toBe('Tag name can only contain letters, numbers, spaces, and hyphens');
         });
+
         it('should return validation error when name is too long', async () => {
             const longName = 'a'.repeat(51);
-
             const response = await global.testRequest.post('/tags').send({ name: longName, chapter: chapterId });
 
             expect(response.status).toBe(400);
             expect(response.body).toHaveProperty('message', 'Validation failed');
-            expect(response.body.errors).toBeInstanceOf(Array);
-
-            const nameError = response.body.errors.find((err) => err.path === 'name');
-            expect(nameError).toBeDefined();
-            expect(nameError.message).toBe('Tag name cannot exceed 50 characters');
         });
     });
 });

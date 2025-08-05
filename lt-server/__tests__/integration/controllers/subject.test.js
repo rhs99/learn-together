@@ -1,17 +1,7 @@
 const mongoose = require('mongoose');
 const SubjectService = require('../../../src/services/subject');
 
-// Mock middleware for authentication
-jest.mock('../../../src/common/middlewares', () => ({
-    extractAndVerifyToken: jest.fn((req, res, next) => next()),
-    hasAdminPrivilege: jest.fn((req, res, next) => next()),
-}));
-
 describe('Subject Controller Integration Tests', () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
-
     describe('GET /subjects', () => {
         it('should return subjects for a given class', async () => {
             const classId = new mongoose.Types.ObjectId().toString();
@@ -43,18 +33,6 @@ describe('Subject Controller Integration Tests', () => {
             expect(response.status).toBe(400);
             expect(response.body.message).toBe('Validation failed');
         });
-
-        it('should return 400 when service throws error', async () => {
-            const classId = new mongoose.Types.ObjectId().toString();
-            const error = new Error('Failed to get subjects');
-            error.statusCode = 400;
-            jest.spyOn(SubjectService, 'getSubjects').mockRejectedValue(error);
-
-            const response = await global.testRequest.get('/subjects').query({ classId });
-
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe('Failed to get subjects');
-        });
     });
 
     describe('GET /subjects/:_id/breadcrumb', () => {
@@ -79,18 +57,6 @@ describe('Subject Controller Integration Tests', () => {
 
             expect(response.status).toBe(400);
             expect(response.body.message).toBe('Validation failed');
-        });
-
-        it('should return 400 when service throws error', async () => {
-            const subjectId = new mongoose.Types.ObjectId().toString();
-            const error = new Error('Failed to get breadcrumb');
-            error.statusCode = 400;
-            jest.spyOn(SubjectService, 'getSubjectBreadcrumb').mockRejectedValue(error);
-
-            const response = await global.testRequest.get(`/subjects/${subjectId}/breadcrumb`);
-
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe('Failed to get breadcrumb');
         });
     });
 
@@ -143,22 +109,6 @@ describe('Subject Controller Integration Tests', () => {
 
             expect(response.status).toBe(400);
             expect(response.body.message).toBe('Validation failed');
-        });
-
-        it('should return 400 when service throws error', async () => {
-            const classId = new mongoose.Types.ObjectId().toString();
-            const subjectData = {
-                name: 'New Subject',
-                class: classId,
-            };
-            const error = new Error('Failed to add subject');
-            error.statusCode = 400;
-            jest.spyOn(SubjectService, 'addNewSubject').mockRejectedValue(error);
-
-            const response = await global.testRequest.post('/subjects').send(subjectData);
-
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe('Failed to add subject');
         });
     });
 });

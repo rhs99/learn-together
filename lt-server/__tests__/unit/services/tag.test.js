@@ -6,10 +6,6 @@ const { cacheService } = require('../../../src/services/cache');
 describe('Tag Service Tests', () => {
     const chapterId = new mongoose.Types.ObjectId().toString();
 
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
-
     describe('addNewTag', () => {
         it('should add a new tag when it does not exist', async () => {
             const tagData = {

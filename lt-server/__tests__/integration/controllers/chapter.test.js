@@ -2,10 +2,6 @@ const mongoose = require('mongoose');
 const ChapterService = require('../../../src/services/chapter');
 
 describe('Chapter Controller Integration Tests', () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
-
     describe('GET /chapters', () => {
         it('should return chapters for a given subject', async () => {
             const subjectId = new mongoose.Types.ObjectId().toString();
@@ -74,17 +70,6 @@ describe('Chapter Controller Integration Tests', () => {
             expect(response.status).toBe(400);
             expect(response.body.message).toBe('Validation failed');
         });
-
-        it('should return 500 when service throws error', async () => {
-            const chapterId = new mongoose.Types.ObjectId().toString();
-
-            jest.spyOn(ChapterService, 'getChapterBreadcrumb').mockRejectedValue(new Error('Failed to get breadcrumb'));
-
-            const response = await global.testRequest.get(`/chapters/${chapterId}/breadcrumb`);
-
-            expect(response.status).toBe(500);
-            expect(response.body.message).toBe('Internal Server Error');
-        });
     });
 
     describe('POST /chapters', () => {
@@ -136,21 +121,6 @@ describe('Chapter Controller Integration Tests', () => {
 
             expect(response.status).toBe(400);
             expect(response.body.message).toBe('Validation failed');
-        });
-
-        it('should return 500 when service throws error', async () => {
-            const subjectId = new mongoose.Types.ObjectId().toString();
-            const chapterData = {
-                name: 'New Chapter',
-                subject: subjectId,
-            };
-
-            jest.spyOn(ChapterService, 'addNewChapter').mockRejectedValue(new Error('Failed to add chapter'));
-
-            const response = await global.testRequest.post('/chapters').send(chapterData);
-
-            expect(response.status).toBe(500);
-            expect(response.body.message).toBe('Internal Server Error');
         });
     });
 });

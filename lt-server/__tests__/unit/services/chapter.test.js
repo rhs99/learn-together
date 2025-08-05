@@ -6,10 +6,6 @@ const { cacheService } = require('../../../src/services/cache');
 const ChapterService = require('../../../src/services/chapter');
 
 describe('Chapter Service Tests', () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
-
     describe('getChapter', () => {
         it('should return a chapter from cache if available', async () => {
             const chapterId = new mongoose.Types.ObjectId().toString();
