@@ -11,7 +11,7 @@ const CACHE_KEYS = {
 const addNewTag = async (body) => {
     try {
         body.name = formatTagName(body.name);
-        logger.database('Checking for existing tag', 'tags', {
+        logger.debug('Checking for existing tag', 'tags', {
             tagName: body.name,
             chapterId: body.chapter,
         });
@@ -25,7 +25,7 @@ const addNewTag = async (body) => {
             return tag;
         }
 
-        logger.database('Creating new tag', 'tags', {
+        logger.debug('Creating new tag', 'tags', {
             tagName: body.name,
             chapterId: body.chapter,
         });
@@ -35,7 +35,7 @@ const addNewTag = async (body) => {
         logger.debug('Invalidating tag cache for chapter', { chapterId: body.chapter });
         await cacheService.del(`${CACHE_KEYS.TAGS_BY_CHAPTER}${body.chapter}`);
 
-        logger.database('Tag created successfully', 'tags', {
+        logger.debug('Tag created successfully', 'tags', {
             tagId: newTag._id,
             tagName: newTag.name,
         });
@@ -76,7 +76,7 @@ const getAllTags = async (chapterId) => {
             return cachedTags.map((tagData) => new Tag(tagData));
         }
 
-        logger.database('Querying tags by chapter', 'tags', { chapterId });
+        logger.debug('Querying tags by chapter', 'tags', { chapterId });
         const tags = await Tag.find({ chapter: chapterId }).exec();
 
         await cacheService.set(

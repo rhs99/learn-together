@@ -21,7 +21,7 @@ const getClass = async (id) => {
             return new Class(cachedClass);
         }
 
-        logger.database('Querying class by ID', 'classes', { classId: id });
+        logger.debug('Querying class by ID', 'classes', { classId: id });
         const _class = await Class.findById(id).exec();
 
         if (!_class) {
@@ -51,7 +51,7 @@ const getClasses = async () => {
         return cachedClasses.map((classData) => new Class(classData));
     }
 
-    logger.database('Querying all classes', 'classes');
+    logger.debug('Querying all classes', 'classes');
     const classes = await Class.find().exec();
 
     await cacheService.set(
@@ -66,7 +66,7 @@ const getClasses = async () => {
 
 const addNewClass = async (body) => {
     try {
-        logger.database('Creating new class', 'classes', { className: body.name });
+        logger.debug('Creating new class', 'classes', { className: body.name });
         let newClass = new Class(body);
         newClass = await newClass.save();
 
@@ -74,7 +74,7 @@ const addNewClass = async (body) => {
         await cacheService.del(CACHE_KEYS.CLASSES);
         await cacheService.del(`${CACHE_KEYS.CLASS_PREFIX}${newClass._id}`);
 
-        logger.database('Class created successfully', 'classes', {
+        logger.debug('Class created successfully', 'classes', {
             classId: newClass._id,
             className: newClass.name,
         });

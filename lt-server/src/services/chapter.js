@@ -24,7 +24,12 @@ const getChapter = async (id) => {
             return new Chapter(cachedChapter);
         }
 
-        logger.database('Querying chapter by ID', 'chapters', { chapterId: id });
+        logger.debug('Querying chapter by ID', {
+            operation: 'Database Operation',
+            collection: 'chapters',
+            data: JSON.stringify({ chapterId: id }),
+            timestamp: new Date().toISOString(),
+        });
         const chapter = await Chapter.findById(id).populate('subject').exec();
 
         if (!chapter) {
@@ -101,7 +106,12 @@ const getChapters = async (subjectId) => {
             return cachedChapters;
         }
 
-        logger.database('Querying chapters by subject', 'chapters', { subjectId });
+        logger.debug('Querying chapters by subject', {
+            operation: 'Database Operation',
+            collection: 'chapters',
+            data: JSON.stringify({ subjectId }),
+            timestamp: new Date().toISOString(),
+        });
         const chapters = await Chapter.find({ subject: subjectId }).exec();
 
         const resp = chapters.map((chapter) => ({
@@ -126,16 +136,20 @@ const getChapters = async (subjectId) => {
 
 const addNewChapter = async (body) => {
     try {
-        logger.database('Creating new chapter', 'chapters', {
-            chapterName: body.name,
-            subjectId: body.subject,
+        logger.debug('Creating new chapter', {
+            operation: 'Database Operation',
+            collection: 'chapters',
+            data: JSON.stringify({ chapterName: body.name, subjectId: body.subject }),
+            timestamp: new Date().toISOString(),
         });
         let chapter = new Chapter(body);
         chapter = await chapter.save();
 
-        logger.database('Adding chapter to subject', 'subjects', {
-            chapterId: chapter._id,
-            subjectId: body.subject,
+        logger.debug('Adding chapter to subject', {
+            operation: 'Database Operation',
+            collection: 'subjects',
+            data: JSON.stringify({ chapterId: chapter._id, subjectId: body.subject }),
+            timestamp: new Date().toISOString(),
         });
         const subject = await getSubject(body.subject);
 
@@ -146,9 +160,11 @@ const addNewChapter = async (body) => {
         await cacheService.del(`${CACHE_KEYS.CHAPTERS_BY_SUBJECT}${body.subject}`);
         await cacheService.del(`${CACHE_KEYS.CHAPTER_PREFIX}${chapter._id}`);
 
-        logger.database('Chapter created successfully', 'chapters', {
-            chapterId: chapter._id,
-            chapterName: chapter.name,
+        logger.debug('Chapter created successfully', {
+            operation: 'Database Operation',
+            collection: 'chapters',
+            data: JSON.stringify({ chapterId: chapter._id, chapterName: chapter.name }),
+            timestamp: new Date().toISOString(),
         });
         return chapter;
     } catch (error) {

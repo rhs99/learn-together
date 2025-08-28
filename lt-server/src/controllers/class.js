@@ -15,10 +15,12 @@ const getClasses = async (req, res) => {
 };
 
 const addNewClass = async (req, res) => {
-    logger.business('New class creation', { className: req.body.name });
-    const newClass = await ClassService.addNewClass(req.body);
-    logger.info('Class created successfully', { classId: newClass._id, className: newClass.name });
-    res.status(201).json(newClass);
+    logger.info('New class creation', {
+        className: req.body.name,
+        timestamp: new Date().toISOString(),
+    });
+    await ClassService.addNewClass(req.body);
+    res.status(201).json();
 };
 
 module.exports = { getClasses, addNewClass, getClass };

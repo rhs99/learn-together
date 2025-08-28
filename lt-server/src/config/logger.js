@@ -2,7 +2,6 @@ const winston = require('winston');
 const DailyRotateFile = require('winston-daily-rotate-file');
 const path = require('path');
 
-// Define log levels
 const logLevels = {
     error: 0,
     warn: 1,
@@ -11,7 +10,6 @@ const logLevels = {
     debug: 4,
 };
 
-// Define colors for each log level
 const logColors = {
     error: 'red',
     warn: 'yellow',
@@ -20,10 +18,8 @@ const logColors = {
     debug: 'blue',
 };
 
-// Add colors to winston
 winston.addColors(logColors);
 
-// Define log format
 const logFormat = winston.format.combine(
     winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
     winston.format.errors({ stack: true }),
@@ -40,7 +36,6 @@ const logFormat = winston.format.combine(
     }),
 );
 
-// Console format for development
 const consoleFormat = winston.format.combine(
     winston.format.colorize({ all: true }),
     winston.format.timestamp({ format: 'HH:mm:ss' }),
@@ -57,13 +52,10 @@ const consoleFormat = winston.format.combine(
     }),
 );
 
-// Create logs directory if it doesn't exist
 const logsDir = path.join(__dirname, '../../logs');
 
-// Define transports
 const transports = [];
 
-// Console transport for development (but not for tests)
 if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
     transports.push(
         new winston.transports.Console({
@@ -73,7 +65,6 @@ if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
     );
 }
 
-// Silent console transport for tests (prevents logs from being output during tests)
 if (process.env.NODE_ENV === 'test') {
     transports.push(
         new winston.transports.Console({
@@ -82,9 +73,7 @@ if (process.env.NODE_ENV === 'test') {
     );
 }
 
-// File transports for all environments except test
 if (process.env.NODE_ENV !== 'test') {
-    // Error logs - daily rotate
     transports.push(
         new DailyRotateFile({
             filename: path.join(logsDir, 'error-%DATE%.log'),
@@ -99,7 +88,6 @@ if (process.env.NODE_ENV !== 'test') {
         }),
     );
 
-    // Combined logs - daily rotate
     transports.push(
         new DailyRotateFile({
             filename: path.join(logsDir, 'combined-%DATE%.log'),
@@ -111,7 +99,6 @@ if (process.env.NODE_ENV !== 'test') {
         }),
     );
 
-    // HTTP request logs - daily rotate
     transports.push(
         new DailyRotateFile({
             filename: path.join(logsDir, 'http-%DATE%.log'),
@@ -125,78 +112,19 @@ if (process.env.NODE_ENV !== 'test') {
     );
 }
 
-// Create the logger
 const logger = winston.createLogger({
     level: process.env.LOG_LEVEL || (process.env.NODE_ENV === 'production' ? 'info' : 'debug'),
     levels: logLevels,
     format: logFormat,
     transports,
-    silent: process.env.NODE_ENV === 'test', // Silence all logs in test environment
+    silent: process.env.NODE_ENV === 'test',
     exitOnError: false,
 });
 
-// Create a stream object for Morgan HTTP logging
 logger.stream = {
     write: (message) => {
         logger.http(message.trim());
     },
-};
-
-// Add method to log database operations
-logger.database = (operation, collection, data = {}) => {
-    logger.debug('Database Operation', {
-        operation,
-        collection,
-        data: typeof data === 'object' ? JSON.stringify(data) : data,
-        timestamp: new Date().toISOString(),
-    });
-};
-
-// Add method to log API requests
-logger.request = (req, res, duration) => {
-    const logData = {
-        method: req.method,
-        url: req.originalUrl,
-        ip: req.ip || req.connection.remoteAddress,
-        userAgent: req.get('User-Agent'),
-        statusCode: res.statusCode,
-        responseTime: duration ? `${duration}ms` : undefined,
-        userId: req.user ? req.user.id : undefined,
-    };
-
-    if (res.statusCode >= 400) {
-        logger.warn('HTTP Request Error', logData);
-    } else {
-        logger.http('HTTP Request', logData);
-    }
-};
-
-// Add method to log authentication events
-logger.auth = (event, userId, details = {}) => {
-    logger.info('Authentication Event', {
-        event,
-        userId,
-        ...details,
-        timestamp: new Date().toISOString(),
-    });
-};
-
-// Add method to log business logic events
-logger.business = (event, details = {}) => {
-    logger.info('Business Event', {
-        event,
-        ...details,
-        timestamp: new Date().toISOString(),
-    });
-};
-
-// Add method to log security events
-logger.security = (event, details = {}) => {
-    logger.warn('Security Event', {
-        event,
-        ...details,
-        timestamp: new Date().toISOString(),
-    });
 };
 
 module.exports = logger;

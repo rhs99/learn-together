@@ -11,9 +11,10 @@ router.post('/presigned-url', extractAndVerifyToken, (req, res) => {
         userId: req.user,
     };
 
-    logger.business('Presigned URL request', {
+    logger.info('Presigned URL request', {
         fileName: req.body.fileName,
         userId: req.user,
+        timestamp: new Date().toISOString(),
     });
 
     const cb = (err, info) => {

@@ -5,11 +5,11 @@ const { NotFoundError } = require('../common/error');
 const logger = require('../config/logger');
 
 const updateVote = async (body) => {
-    logger.database('Querying vote', 'votes', { qaId: body.qaId, userId: body.user, isQuestion: body.q });
+    logger.debug('Querying vote', 'votes', { qaId: body.qaId, userId: body.user, isQuestion: body.q });
     let vote = await Vote.findOne({ qa: body.qaId, user: body.user, isQuestion: body.q }).exec();
 
     const model = body.q ? Question : Answer;
-    logger.database('Querying Q/A', body.q ? 'questions' : 'answers', { qaId: body.qaId });
+    logger.debug('Querying Q/A', body.q ? 'questions' : 'answers', { qaId: body.qaId });
     let qa = await model.findOne({ _id: body.qaId }).exec();
     if (!qa) {
         logger.warn('Vote update failed - Q/A not found', {
@@ -42,7 +42,7 @@ const updateVote = async (body) => {
         }
     }
 
-    logger.database('Updating Q/A vote counts', body.q ? 'questions' : 'answers', {
+    logger.debug('Updating Q/A vote counts', body.q ? 'questions' : 'answers', {
         qaId: body.qaId,
         oldUpVotes: qa.upVote - (vote.count > oldCount ? 1 : 0),
         newUpVotes: qa.upVote,

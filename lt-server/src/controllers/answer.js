@@ -16,17 +16,22 @@ const getAllAnswers = async (req, res) => {
 
 const addNewAnswer = async (req, res) => {
     req.body.user = req.user;
-    logger.business('New answer creation', {
+    logger.info('New answer creation', {
         questionId: req.body.questionId,
         userId: req.user,
         hasImages: req.body.imageLocations?.length > 0,
+        timestamp: new Date().toISOString(),
     });
     await AnswerService.addNewAnswer(req.body);
     res.status(201).json();
 };
 
 const deleteAnswer = async (req, res) => {
-    logger.business('Answer deletion', { answerId: req.params._id, userId: req.user });
+    logger.info('Answer deletion', {
+        answerId: req.params._id,
+        userId: req.user,
+        timestamp: new Date().toISOString(),
+    });
     await AnswerService.deleteAnswer(req.params._id, req.user);
     res.status(200).json();
 };
