@@ -12,9 +12,10 @@ const getAllTags = async (req, res) => {
 };
 
 const addNewTag = async (req, res) => {
-    logger.business('New tag creation', {
+    logger.info('New tag creation', {
         tagName: req.body.name,
         chapterId: req.body.chapterId,
+        timestamp: new Date().toISOString(),
     });
     const tag = await TagService.addNewTag(req.body);
     logger.info('Tag created successfully', { tagId: tag._id, tagName: tag.name });

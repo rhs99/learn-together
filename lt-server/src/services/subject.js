@@ -23,7 +23,7 @@ const getSubject = async (id) => {
             return new Subject(cachedSubject);
         }
 
-        logger.database('Querying subject by ID', 'subjects', { subjectId: id });
+        logger.debug('Querying subject by ID', 'subjects', { subjectId: id });
         const subject = await Subject.findById(id).populate('class').exec();
 
         if (!subject) {
@@ -103,7 +103,7 @@ const getSubjects = async (classId) => {
             return cachedSubjects.map((subjectData) => new Subject(subjectData));
         }
 
-        logger.database('Querying subjects by class', 'subjects', { classId });
+        logger.debug('Querying subjects by class', 'subjects', { classId });
         const subjects = await Subject.find({ class: classId }).exec();
 
         await cacheService.set(
@@ -126,14 +126,14 @@ const getSubjects = async (classId) => {
 
 const addNewSubject = async (body) => {
     try {
-        logger.database('Creating new subject', 'subjects', {
+        logger.debug('Creating new subject', 'subjects', {
             subjectName: body.name,
             classId: body.class,
         });
         let subject = new Subject(body);
         subject = await subject.save();
 
-        logger.database('Adding subject to class', 'classes', {
+        logger.debug('Adding subject to class', 'classes', {
             subjectId: subject._id,
             classId: body.class,
         });
@@ -144,7 +144,7 @@ const addNewSubject = async (body) => {
         logger.debug('Invalidating subject cache for class', { classId: body.class });
         await cacheService.del(`${CACHE_KEYS.SUBJECTS_BY_CLASS}${body.class}`);
 
-        logger.database('Subject created successfully', 'subjects', {
+        logger.debug('Subject created successfully', 'subjects', {
             subjectId: subject._id,
             subjectName: subject.name,
         });

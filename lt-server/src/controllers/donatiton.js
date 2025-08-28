@@ -2,10 +2,11 @@ const DonationService = require('../services/donation');
 const logger = require('../config/logger');
 
 const addNewDonation = async (req, res) => {
-    logger.business('New donation submission', {
+    logger.info('New donation submission', {
         amount: req.body.amount,
         method: req.body.method,
         donorInfo: req.body.name ? 'named' : 'anonymous',
+        timestamp: new Date().toISOString(),
     });
     await DonationService.addNewDonation(req.body);
     logger.info('Donation created successfully', { amount: req.body.amount });
@@ -27,7 +28,10 @@ const approveDonation = async (req, res) => {
         return res.status(400).json({ message: 'Donation ID is required' });
     }
 
-    logger.business('Donation approval', { donationId: req.params.id });
+    logger.info('Donation approval', {
+        donationId: req.params.id,
+        timestamp: new Date().toISOString(),
+    });
     const donation = await DonationService.approveDonation(req.params.id);
     logger.info('Donation approved successfully', {
         donationId: donation._id,

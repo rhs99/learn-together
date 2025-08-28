@@ -2,20 +2,39 @@ const Donation = require('../models/donation');
 const logger = require('../config/logger');
 
 const addNewDonation = async (body) => {
-    logger.database('Creating new donation', 'donations', {
-        amount: body.amount,
-        method: body.method,
-        hasPersonalInfo: !!body.name,
-    });
-    const newDonation = new Donation(body);
-    await newDonation.save();
-    logger.database('Donation created successfully', 'donations', { donationId: newDonation._id });
+    try {
+        logger.debug('Creating new donation', {
+            operation: 'Database Operation',
+            collection: 'donations',
+            data: typeof body === 'object' ? JSON.stringify(body) : body,
+            timestamp: new Date().toISOString(),
+        });
+        const newDonation = await Donation(body).save();
+        logger.debug('Donation created successfully', {
+            operation: 'Database Operation',
+            collection: 'donations',
+            data: { donationId: newDonation._id },
+            timestamp: new Date().toISOString(),
+        });
+        return newDonation;
+    } catch (error) {
+        throw error;
+    }
 };
 
 const getAllDonations = async () => {
-    logger.database('Querying pending donations', 'donations');
+    logger.debug('Querying pending donations', {
+        operation: 'Database Operation',
+        collection: 'donations',
+        timestamp: new Date().toISOString(),
+    });
     const donations = await Donation.find({ status: 'pending' }).populate('method').sort({ dateOfDonation: -1 });
-    logger.database('Donations retrieved', 'donations', { count: donations.length });
+    logger.debug('Donations retrieved', {
+        operation: 'Database Operation',
+        collection: 'donations',
+        data: { count: donations.length },
+        timestamp: new Date().toISOString(),
+    });
     return donations;
 };
 
@@ -26,7 +45,12 @@ const approveDonation = async (id) => {
             throw new Error('Donation ID is required');
         }
 
-        logger.database('Finding donation for approval', 'donations', { donationId: id });
+        logger.debug('Finding donation for approval', {
+            operation: 'Database Operation',
+            collection: 'donations',
+            data: { donationId: id },
+            timestamp: new Date().toISOString(),
+        });
         const donation = await Donation.findById(id);
 
         if (!donation) {
@@ -37,17 +61,27 @@ const approveDonation = async (id) => {
         const oldStatus = donation.status;
         donation.status = 'completed';
 
-        logger.database('Updating donation status', 'donations', {
-            donationId: id,
-            oldStatus,
-            newStatus: 'completed',
+        logger.debug('Updating donation status', {
+            operation: 'Database Operation',
+            collection: 'donations',
+            data: {
+                donationId: id,
+                oldStatus,
+                newStatus: 'completed',
+            },
+            timestamp: new Date().toISOString(),
         });
 
         await donation.save();
 
-        logger.database('Donation approved successfully', 'donations', {
-            donationId: id,
-            amount: donation.amount,
+        logger.debug('Donation approved successfully', {
+            operation: 'Database Operation',
+            collection: 'donations',
+            data: {
+                donationId: id,
+                amount: donation.amount,
+            },
+            timestamp: new Date().toISOString(),
         });
 
         return donation;

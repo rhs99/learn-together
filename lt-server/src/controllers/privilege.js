@@ -9,7 +9,10 @@ const getPrivileges = async (req, res) => {
 };
 
 const addNewPrivilege = async (req, res) => {
-    logger.business('New privilege creation', { privilegeName: req.body.name });
+    logger.info('New privilege creation', {
+        privilegeName: req.body.name,
+        timestamp: new Date().toISOString(),
+    });
     await PrivilegeService.addNewPrivilege(req.body);
     logger.info('Privilege created successfully', { privilegeName: req.body.name });
     res.status(201).json();

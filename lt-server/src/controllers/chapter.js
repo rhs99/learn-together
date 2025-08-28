@@ -18,9 +18,10 @@ const getChapters = async (req, res) => {
 };
 
 const addNewChapter = async (req, res) => {
-    logger.business('New chapter creation', {
+    logger.info('New chapter creation', {
         chapterName: req.body.name,
         subjectId: req.body.subjectId,
+        timestamp: new Date().toISOString(),
     });
     const chapter = await ChapterService.addNewChapter(req.body);
     logger.info('Chapter created successfully', {

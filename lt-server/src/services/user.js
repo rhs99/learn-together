@@ -141,10 +141,11 @@ const updateClassInUser = async (body, req_user) => {
         throw new NotFoundError(`No user found for userName: ${body.userName}`);
     }
     if (JSON.stringify(user._id) !== JSON.stringify(req_user)) {
-        logger.security('Unauthorized class update attempt', {
+        logger.warn('Unauthorized class update attempt', {
             userName: body.userName,
             requestingUserId: req_user,
             targetUserId: user._id,
+            timestamp: new Date().toISOString(),
         });
         throw new UnauthorizedError('You can only update your own class');
     }
@@ -178,10 +179,11 @@ const updatePasswordInUser = async (body, req_user) => {
         throw new NotFoundError(`No user found for userName: ${body.userName}`);
     }
     if (JSON.stringify(user._id) !== JSON.stringify(req_user)) {
-        logger.security('Unauthorized password update attempt', {
+        logger.warn('Unauthorized password update attempt', {
             userName: body.userName,
             requestingUserId: req_user,
             targetUserId: user._id,
+            timestamp: new Date().toISOString(),
         });
         throw new UnauthorizedError('You can only update your own password');
     }
@@ -268,11 +270,12 @@ const removeNotification = async (userName, notificationId) => {
         throw new NotFoundError(`Notification not found for id: ${notificationId}`);
     }
     if (JSON.stringify(notification.userId) !== JSON.stringify(user._id)) {
-        logger.security('Unauthorized notification removal attempt', {
+        logger.warn('Unauthorized notification removal attempt', {
             userName,
             notificationId,
             notificationUserId: notification.userId,
             requestingUserId: user._id,
+            timestamp: new Date().toISOString(),
         });
         throw new UnauthorizedError('You can only remove your own notifications');
     }

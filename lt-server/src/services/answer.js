@@ -145,12 +145,10 @@ const notifyQuestionOwner = async (question, answerAuthor) => {
             socket.send(SOCKET_EVENTS.NEW_ANSWER);
             logger.debug('Socket notification sent successfully', {
                 recipient: questionOwner.userName,
-                event: SOCKET_EVENTS.NEW_ANSWER,
             });
         } catch (err) {
             logger.error('Failed to send socket notification', {
                 recipient: questionOwner.userName,
-                event: SOCKET_EVENTS.NEW_ANSWER,
                 error: err.message,
             });
         }

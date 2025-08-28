@@ -17,12 +17,12 @@ const getPaymentMethods = async (req, res) => {
 };
 
 const addNewPaymentMethod = async (req, res) => {
-    logger.business('New payment method creation', {
-        methodName: req.body.name,
-        methodType: req.body.type,
+    logger.info('New payment method creation', {
+        methodName: req.body.method,
+        phoneNumber: req.body.phoneNumber,
+        timestamp: new Date().toISOString(),
     });
     await PaymentMethodService.addNewPaymentMethod(req.body);
-    logger.info('Payment method created successfully', { methodName: req.body.name });
     res.status(201).json();
 };
 

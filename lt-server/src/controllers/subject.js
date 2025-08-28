@@ -18,9 +18,10 @@ const getSubjects = async (req, res) => {
 };
 
 const addNewSubject = async (req, res) => {
-    logger.business('New subject creation', {
+    logger.info('New subject creation', {
         subjectName: req.body.name,
         classId: req.body.classId,
+        timestamp: new Date().toISOString(),
     });
     const newSubject = await SubjectService.addNewSubject(req.body);
     logger.info('Subject created successfully', {

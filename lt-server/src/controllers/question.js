@@ -21,24 +21,33 @@ const getQuestion = async (req, res) => {
 
 const addNewQuestion = async (req, res) => {
     req.body.user = req.user;
-    logger.business('New question creation', {
+    logger.info('New question creation', {
         userId: req.user,
         title: req.body.title?.substring(0, 50) + '...',
         hasImages: req.body.imageLocations?.length > 0,
+        timestamp: new Date().toISOString(),
     });
     await QuestionService.addNewQuestion(req.body);
     res.status(201).json();
 };
 
 const deleteQuestion = async (req, res) => {
-    logger.business('Question deletion', { questionId: req.params._id, userId: req.user });
+    logger.info('Question deletion', {
+        questionId: req.params._id,
+        userId: req.user,
+        timestamp: new Date().toISOString(),
+    });
     await QuestionService.deleteQuestion(req.params._id, req.user);
     res.status(200).json();
 };
 
 const addToFavourite = async (req, res) => {
     req.body.user = req.user;
-    logger.business('Question favorite toggle', { questionId: req.body.questionId, userId: req.user });
+    logger.info('Question favorite toggle', {
+        questionId: req.body.questionId,
+        userId: req.user,
+        timestamp: new Date().toISOString(),
+    });
     const status = await QuestionService.addToFavourite(req.body);
     res.status(200).json(status);
 };
