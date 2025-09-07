@@ -24,39 +24,123 @@
 
 ## 📋 Table of Contents
 
-- [Overview](#-overview)
-- [Key Features](#-key-features)
-- [Technology Stack](#-technology-stack)
-- [Architecture](#-architecture)
-- [Getting Started](#-getting-started)
-- [Development](#-development)
-- [Contributing](#-contributing)
-- [Roadmap](#-roadmap)
+- [🎯 Overview](#-overview)
+- [🚀 Key Features](#-key-features)
+  - [Core Platform Features](#core-platform-features)
+  - [Advanced Capabilities](#advanced-capabilities)
+- [🏗 Architecture](#-architecture)
+  - [System Overview](#system-overview)
+  - [📊 Data Flow Architecture](#-data-flow-architecture)
+  - [Database Schema](#database-schema)
+- [🛠 Technology Stack](#-technology-stack)
+  - [Frontend](#frontend)
+  - [Backend](#backend)
+  - [Infrastructure](#infrastructure)
+- [🚀 Getting Started](#-getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Quick Start](#quick-start)
+  - [Environment Configuration](#environment-configuration)
+- [🤝 Contributing](#-contributing)
+  - [Development Guidelines](#development-guidelines)
+- [🗺 Roadmap](#-roadmap)
+  - [Phase 1: Foundation ✅](#phase-1-foundation-)
+  - [Phase 2: Advanced Features (Upcoming)](#phase-2-advanced-features-upcoming)
 
 ## 🎯 Overview
 
-Learn Together is a modern Q&A platform designed to facilitate knowledge sharing and collaborative learning. Built with performance and user experience in mind, it enables users to ask questions, provide comprehensive answers, and engage with educational content through rich media support including images and mathematical expressions.
+Learn Together is a modern collaborative Q&A platform that facilitates knowledge sharing and learning through an intuitive, feature-rich interface. Built with performance and scalability in mind, it empowers users to ask questions, provide comprehensive answers, and engage with educational content seamlessly.
 
-### Why Learn Together?
+### Why Choose Learn Together?
 
-- **Rich Content Support**: Seamlessly integrate images, LaTeX mathematical expressions, and formatted text
-- **Real-time Collaboration**: Instant notifications and updates keep the conversation flowing
-- **Community-Driven**: Voting system ensures quality content rises to the top
+- **Rich Content Support** - Seamlessly integrate images, LaTeX mathematical expressions, and formatted text
+- **Real-time Collaboration** - Instant notifications and live updates for dynamic engagement
+- **Community-Driven Quality** - Voting system ensures the best content rises to the top
+- **Smart Organization** - Advanced filtering and sorting capabilities for efficient content discovery
 
 ## 🚀 Key Features
 
-### Core Functionality
-- ✅ **Question & Answer System** - Post questions and provide detailed answers
-- ✅ **Rich Media Support** - Embed images and render complex mathematical equations
-- ✅ **Voting Mechanism** - Community-driven quality control through upvotes/downvotes
-- ✅ **Bookmarking** - Mark questions as favourite for future reference
-- ✅ **Real-time Updates** - WebSocket-powered notifications for instant engagement
+### Core Platform Features
+- ✅ **Question & Answer System** - Post detailed questions and provide comprehensive answers
+- ✅ **Rich Media Integration** - Support for images, mathematical equations, and formatted content
+- ✅ **Community Voting** - Upvote/downvote system for quality-driven content curation
+- ✅ **Personal Bookmarks** - Save favorite questions for easy future reference
+- ✅ **Real-time Notifications** - WebSocket-powered instant updates and engagement alerts
 
-### Advanced Features
-- 🔍 **Smart Filtering** - Filter by tags, favorites, or authored content
-- 📊 **Multiple Sort Options** - Sort by time, vote count, or net votes
-- 🔐 **Secure Authentication** - JWT-based authentication system
-- 📱 **Responsive Design** - Optimized for all device sizes
+### Advanced Capabilities
+- 🔍 **Smart Content Filtering** - Filter by tags, favorites, authorship, and custom criteria
+- 📊 **Flexible Sorting Options** - Sort by creation date, vote count, or net popularity
+- 🔐 **Secure Authentication** - JWT-based user authentication and session management
+- 📱 **Responsive Design** - Fully optimized experience across all devices and screen sizes
+
+## 🏗 Architecture
+
+### System Overview
+
+```mermaid
+graph TB
+  subgraph "Client Layer"
+    RC[React Client<br/>TypeScript + SCSS]
+  end
+  
+  subgraph "API Layer"
+    EA[Express API Server<br/>Node.js + JWT Auth]
+    WS[WebSocket Server<br/>Socket.io]
+  end
+  
+  subgraph "Data Layer"
+    MDB[(MongoDB<br/>Primary Database)]
+    RDS[(Redis<br/>Cache Layer)]
+    MIN[Minio<br/>Object Storage]
+  end
+  
+  RC -->|HTTP| EA
+  RC -->|WebSocket| WS
+  EA --> MDB
+  EA --> RDS
+  EA --> MIN
+  WS --> EA
+  
+  style RC fill:#61dafb,stroke:#21759b,color:#000
+  style EA fill:#68a063,stroke:#4a7c59,color:#fff
+  style WS fill:#010101,stroke:#333,color:#fff
+  style MDB fill:#4db33d,stroke:#3d8b2a,color:#fff
+  style RDS fill:#dc382d,stroke:#a12622,color:#fff
+  style MIN fill:#c72e49,stroke:#a02139,color:#fff
+```
+
+### 📊 Data Flow Architecture
+
+```mermaid
+sequenceDiagram
+    participant U as User Browser
+    participant A as Express App
+    participant R as Redis Cache
+    participant M as MongoDB
+    participant S as Socket.io
+    
+    U->>A: HTTP Request
+    A->>R: Check Cache
+    alt Cache Hit
+        R-->>A: Return Cached Data
+    else Cache Miss
+        A->>M: Query Database
+        M-->>A: Return Data
+        A->>R: Store in Cache
+    end
+    A-->>U: JSON Response
+    
+    Note over A,S: Real-time Updates (Same Process)
+    A->>S: Emit Event
+    S-->>U: WebSocket Message
+```
+
+### Database Schema
+
+<div align="center">
+  <img src="./db-schema.png" alt="Database Schema" width="90%" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+  
+  <p><em>Entity Relationship Diagram showing MongoDB collections and their relationships</em></p>
+</div>
 
 ## 🛠 Technology Stack
 
@@ -88,35 +172,6 @@ Learn Together is a modern Q&A platform designed to facilitate knowledge sharing
 | **Minio** | Object Storage |
 | **Docker Compose** | Orchestration |
 
-## 🏗 Architecture
-
-### System Overview
-
-```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│                 │     │                 │     │                 │
-│  React Client   │────▶│  Express API    │────▶│    MongoDB      │
-│                 │     │                 │     │                 │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
-                                 │                        
-                                 │                        
-                     ┬───────────┘                       
-                     │                                    
-              ┌──────▼──────┐                            
-              │             │                            
-              │   Redis     │                            
-              │   Cache     │                            
-              │             │                            
-              └─────────────┘                            
-```
-
-### Database Schema
-
-<div align="center">
-  <img src="./db-schema.png" alt="Database Schema" width="90%" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-  
-  <p><em>Entity Relationship Diagram showing MongoDB collections and their relationships</em></p>
-</div>
 
 ## 🚀 Getting Started
 
@@ -146,7 +201,6 @@ docker-compose down
 The application will be available at:
 - **Frontend**: http://localhost:3000
 - **API**: http://localhost:5000
-- **Minio Console**: http://localhost:9001
 
 ### Environment Configuration
 
@@ -165,17 +219,6 @@ MINIO_ENDPOINT=lt-minio
 MINIO_PORT=9000
 MINIO_ACCESS_KEY=minioadmin
 MINIO_SECRET_KEY=minioadmin
-```
-
-## 💻 Development
-
-### Code Style
-
-We use ESLint and Prettier for code formatting. Run linting with:
-
-```bash
-npm run lint
-npm run format
 ```
 
 ## 🤝 Contributing
