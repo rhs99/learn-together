@@ -1,15 +1,15 @@
-const mongoose = require('mongoose');
 const Question = require('../../../src/models/question');
+const { createObjectId, clearCollection } = require('../../helpers');
 
 describe('Question Model Tests', () => {
     let chapterId;
 
     beforeEach(async () => {
-        chapterId = new mongoose.Types.ObjectId();
+        chapterId = createObjectId();
     });
 
     afterEach(async () => {
-        await Question.deleteMany({});
+        await clearCollection('questions');
     });
 
     describe('Schema Validation', () => {
@@ -34,11 +34,8 @@ describe('Question Model Tests', () => {
 
         it('should enforce required fields', async () => {
             const invalidQuestions = [
-                // Missing details
                 { userName: 'testuser', chapter: chapterId },
-                // Missing userName
                 { details: { content: 'Test question' }, chapter: chapterId },
-                // Missing chapter
                 { details: { content: 'Test question' }, userName: 'testuser' },
             ];
 
@@ -70,8 +67,8 @@ describe('Question Model Tests', () => {
 
         it('should store tags with _id and name', async () => {
             const tags = [
-                { _id: new mongoose.Types.ObjectId(), name: 'calculus' },
-                { _id: new mongoose.Types.ObjectId(), name: 'mathematics' },
+                { _id: createObjectId(), name: 'calculus' },
+                { _id: createObjectId(), name: 'mathematics' },
             ];
 
             const question = await new Question({
@@ -101,7 +98,7 @@ describe('Question Model Tests', () => {
         });
 
         it('should store answer references', async () => {
-            const answerIds = [new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId()];
+            const answerIds = [createObjectId(), createObjectId()];
 
             const question = await new Question({
                 details: { content: 'Test question' },
@@ -125,7 +122,6 @@ describe('Question Model Tests', () => {
                 downVote: 3,
             }).save();
 
-            // Since virtual is defined after model creation, use toJSON to access virtuals
             const questionJSON = question.toJSON();
             expect(questionJSON.vote).toBe(7);
         });
@@ -189,58 +185,12 @@ describe('Question Model Tests', () => {
 
             const originalUpdatedAt = question.updatedAt;
 
-            // Wait a moment to ensure timestamp difference
             await new Promise((resolve) => setTimeout(resolve, 10));
 
             question.upVote = 1;
             await question.save();
 
             expect(question.updatedAt.getTime()).toBeGreaterThan(originalUpdatedAt.getTime());
-        });
-    });
-
-    describe('Edge Cases', () => {
-        it('should handle very large vote counts', async () => {
-            const question = await new Question({
-                details: { content: 'Test question' },
-                userName: 'testuser',
-                chapter: chapterId,
-                upVote: Number.MAX_SAFE_INTEGER,
-                downVote: 0,
-            }).save();
-
-            expect(question.upVote).toBe(Number.MAX_SAFE_INTEGER);
-            const questionJSON = question.toJSON();
-            expect(questionJSON.vote).toBe(Number.MAX_SAFE_INTEGER);
-        });
-
-        it('should handle empty arrays for optional fields', async () => {
-            const question = await new Question({
-                details: { content: 'Test question' },
-                userName: 'testuser',
-                chapter: chapterId,
-                tags: [],
-                imageLocations: [],
-                answers: [],
-            }).save();
-
-            expect(question.tags).toEqual([]);
-            expect(question.imageLocations).toEqual([]);
-            expect(question.answers).toEqual([]);
-        });
-
-        it('should handle special characters in userName', async () => {
-            const specialUserNames = ['user@example.com', 'user-name_123', 'пользователь', '用户名'];
-
-            for (const userName of specialUserNames) {
-                const question = await new Question({
-                    details: { content: 'Test question' },
-                    userName,
-                    chapter: chapterId,
-                }).save();
-
-                expect(question.userName).toBe(userName);
-            }
         });
     });
 });

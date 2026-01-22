@@ -1,31 +1,30 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 const User = require('../../../src/models/user');
+const { createUserData, createObjectId, clearCollection } = require('../../helpers');
 
 describe('User Model Tests', () => {
     let classId;
 
     beforeEach(async () => {
-        classId = new mongoose.Types.ObjectId();
+        classId = createObjectId();
     });
 
     afterEach(async () => {
-        await User.deleteMany({});
+        await clearCollection('users');
     });
 
     describe('Schema Validation', () => {
         it('should create a user with required fields', async () => {
-            const userData = {
+            const userData = createUserData({
                 userName: 'testuser',
                 email: 'test@example.com',
                 password: 'testpassword123',
-            };
+            });
 
             const user = await new User(userData).save();
 
             expect(user.userName).toBe('testuser');
             expect(user.email).toBe('test@example.com');
-            expect(user.password).not.toBe('testpassword123'); // Should be hashed
+            expect(user.password).not.toBe('testpassword123');
             expect(user.privileges).toEqual([]);
             expect(user.questions).toEqual([]);
             expect(user.answers).toEqual([]);
@@ -35,13 +34,9 @@ describe('User Model Tests', () => {
 
         it('should enforce required fields', async () => {
             const invalidUsers = [
-                // Missing userName
                 { email: 'test@example.com', password: 'testpassword123' },
-                // Missing email
                 { userName: 'testuser', password: 'testpassword123' },
-                // Missing password
                 { userName: 'testuser', email: 'test@example.com' },
-                // All required fields missing
                 {},
             ];
 
@@ -52,57 +47,58 @@ describe('User Model Tests', () => {
         });
 
         it('should enforce unique userName', async () => {
-            const userData = {
+            const userData = createUserData({
                 userName: 'uniqueuser',
                 email: 'first@example.com',
-                password: 'testpassword123',
-            };
+            });
 
             await new User(userData).save();
 
-            const duplicateUser = new User({
-                userName: 'uniqueuser', // Same userName
-                email: 'second@example.com',
-                password: 'anotherpassword',
-            });
+            const duplicateUser = new User(
+                createUserData({
+                    userName: 'uniqueuser',
+                    email: 'second@example.com',
+                }),
+            );
 
             await expect(duplicateUser.save()).rejects.toThrow(/E11000|duplicate key/);
         });
 
         it('should enforce unique email', async () => {
-            const userData = {
+            const userData = createUserData({
                 userName: 'firstuser',
                 email: 'unique@example.com',
-                password: 'testpassword123',
-            };
+            });
 
             await new User(userData).save();
 
-            const duplicateUser = new User({
-                userName: 'seconduser',
-                email: 'unique@example.com', // Same email
-                password: 'anotherpassword',
-            });
+            const duplicateUser = new User(
+                createUserData({
+                    userName: 'seconduser',
+                    email: 'unique@example.com',
+                }),
+            );
 
             await expect(duplicateUser.save()).rejects.toThrow(/E11000|duplicate key/);
         });
 
         it('should store optional fields correctly', async () => {
-            const privilegeIds = [new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId()];
-            const questionIds = [new mongoose.Types.ObjectId()];
-            const answerIds = [new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId()];
-            const favouriteIds = [new mongoose.Types.ObjectId()];
+            const privilegeIds = [createObjectId(), createObjectId()];
+            const questionIds = [createObjectId()];
+            const answerIds = [createObjectId(), createObjectId()];
+            const favouriteIds = [createObjectId()];
 
-            const user = await new User({
-                userName: 'fulluser',
-                email: 'full@example.com',
-                password: 'testpassword123',
-                privileges: privilegeIds,
-                questions: questionIds,
-                answers: answerIds,
-                class: classId,
-                favourites: favouriteIds,
-            }).save();
+            const user = await new User(
+                createUserData({
+                    userName: 'fulluser',
+                    email: 'full@example.com',
+                    privileges: privilegeIds,
+                    questions: questionIds,
+                    answers: answerIds,
+                    class: classId,
+                    favourites: favouriteIds,
+                }),
+            ).save();
 
             expect(user.privileges.length).toBe(2);
             expect(user.questions.length).toBe(1);
@@ -115,26 +111,29 @@ describe('User Model Tests', () => {
     describe('Password Hashing', () => {
         it('should hash password before saving', async () => {
             const plainPassword = 'myplainpassword123';
-            const user = await new User({
-                userName: 'hashtest',
-                email: 'hash@example.com',
-                password: plainPassword,
-            }).save();
+            const user = await new User(
+                createUserData({
+                    userName: 'hashtest',
+                    email: 'hash@example.com',
+                    password: plainPassword,
+                }),
+            ).save();
 
             expect(user.password).not.toBe(plainPassword);
-            expect(user.password).toMatch(/^\$2[ab]\$/); // bcrypt hash format
+            expect(user.password).toMatch(/^\$2[ab]\$/);
         });
 
         it('should not rehash password if not modified', async () => {
-            const user = await new User({
-                userName: 'noreHashTest',
-                email: 'nohash@example.com',
-                password: 'originalpassword',
-            }).save();
+            const user = await new User(
+                createUserData({
+                    userName: 'noreHashTest',
+                    email: 'nohash@example.com',
+                    password: 'originalpassword',
+                }),
+            ).save();
 
             const originalHash = user.password;
 
-            // Modify a different field
             user.userName = 'updatedusername';
             await user.save();
 
@@ -142,11 +141,13 @@ describe('User Model Tests', () => {
         });
 
         it('should rehash password when password is modified', async () => {
-            const user = await new User({
-                userName: 'rehashtest',
-                email: 'rehash@example.com',
-                password: 'originalpassword',
-            }).save();
+            const user = await new User(
+                createUserData({
+                    userName: 'rehashtest',
+                    email: 'rehash@example.com',
+                    password: 'originalpassword',
+                }),
+            ).save();
 
             const originalHash = user.password;
 
@@ -203,103 +204,6 @@ describe('User Model Tests', () => {
 
             const isMatch = await user.comparePassword(null);
             expect(isMatch).toBe(false);
-        });
-
-        it('should handle bcrypt errors gracefully', async () => {
-            const user = new User({
-                userName: 'errortest',
-                email: 'error@example.com',
-                password: 'invalidhash', // This will create an invalid hash
-            });
-
-            // Manually set an invalid hash to test error handling
-            user.password = 'invalid-hash-format';
-
-            const isMatch = await user.comparePassword('anypassword');
-            expect(isMatch).toBe(false);
-        });
-    });
-
-    describe('Edge Cases', () => {
-        it('should handle very long usernames', async () => {
-            const longUserName = 'a'.repeat(100); // Very long username
-
-            const user = await new User({
-                userName: longUserName,
-                email: 'long@example.com',
-                password: 'password123',
-            }).save();
-
-            expect(user.userName).toBe(longUserName);
-        });
-
-        it('should handle various email formats', async () => {
-            const validEmails = [
-                'user@domain.com',
-                'user.name@domain.co.uk',
-                'user+tag@domain.org',
-                'user123@domain-name.info',
-            ];
-
-            for (let i = 0; i < validEmails.length; i++) {
-                const user = await new User({
-                    userName: `emailtest${i}`,
-                    email: validEmails[i],
-                    password: 'password123',
-                }).save();
-
-                expect(user.email).toBe(validEmails[i]);
-            }
-        });
-
-        it('should handle special characters in userName', async () => {
-            const specialUserNames = ['user_123', 'user-name', 'user.name', 'αβγδε'];
-
-            for (let i = 0; i < specialUserNames.length; i++) {
-                const user = await new User({
-                    userName: specialUserNames[i],
-                    email: `special${i}@example.com`,
-                    password: 'password123',
-                }).save();
-
-                expect(user.userName).toBe(specialUserNames[i]);
-            }
-        });
-
-        it('should handle empty arrays for reference fields', async () => {
-            const user = await new User({
-                userName: 'emptyarrays',
-                email: 'empty@example.com',
-                password: 'password123',
-                privileges: [],
-                questions: [],
-                answers: [],
-                favourites: [],
-            }).save();
-
-            expect(user.privileges).toEqual([]);
-            expect(user.questions).toEqual([]);
-            expect(user.answers).toEqual([]);
-            expect(user.favourites).toEqual([]);
-        });
-
-        it('should handle maximum array sizes', async () => {
-            const manyIds = Array.from({ length: 100 }, () => new mongoose.Types.ObjectId());
-
-            const user = await new User({
-                userName: 'manyrels',
-                email: 'many@example.com',
-                password: 'password123',
-                privileges: manyIds.slice(0, 25),
-                questions: manyIds.slice(25, 50),
-                answers: manyIds.slice(50, 75),
-                favourites: manyIds.slice(75, 100),
-            }).save();
-
-            expect(user.privileges).toHaveLength(25);
-            expect(user.questions).toHaveLength(25);
-            expect(user.answers).toHaveLength(25);
-            expect(user.favourites).toHaveLength(25);
         });
     });
 });

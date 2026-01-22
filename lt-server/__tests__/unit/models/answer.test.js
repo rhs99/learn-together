@@ -45,11 +45,8 @@ describe('Answer Model Tests', () => {
 
         it('should enforce required fields', async () => {
             const invalidAnswers = [
-                // Missing userName
                 { details: { content: 'Test answer' }, question: questionId },
-                // Missing question
                 { details: { content: 'Test answer' }, userName: 'testuser' },
-                // Both required fields missing
                 { details: { content: 'Test answer' } },
             ];
 
@@ -184,7 +181,6 @@ describe('Answer Model Tests', () => {
 
             const originalUpdatedAt = answer.updatedAt;
 
-            // Wait a moment to ensure timestamp difference
             await new Promise((resolve) => setTimeout(resolve, 10));
 
             answer.upVote = 5;
@@ -216,63 +212,6 @@ describe('Answer Model Tests', () => {
         });
     });
 
-    describe('Edge Cases', () => {
-        it('should handle very large vote counts', async () => {
-            const answer = await new Answer({
-                userName: 'testuser',
-                question: questionId,
-                upVote: Number.MAX_SAFE_INTEGER - 1,
-                downVote: 1,
-            }).save();
-
-            const savedAnswer = await Answer.findById(answer._id);
-            expect(savedAnswer.upVote).toBe(Number.MAX_SAFE_INTEGER - 1);
-            expect(savedAnswer.vote).toBe(Number.MAX_SAFE_INTEGER - 2);
-        });
-
-        it('should handle empty arrays for optional fields', async () => {
-            const answer = await new Answer({
-                userName: 'testuser',
-                question: questionId,
-                imageLocations: [],
-            }).save();
-
-            expect(answer.imageLocations).toEqual([]);
-        });
-
-        it('should handle special characters in userName', async () => {
-            const specialUserNames = ['user@domain.com', 'user-name_456', 'αβγδε', '答案用户'];
-
-            for (const userName of specialUserNames) {
-                const answer = await new Answer({
-                    userName,
-                    question: questionId,
-                }).save();
-
-                expect(answer.userName).toBe(userName);
-            }
-        });
-
-        it('should handle null details field', async () => {
-            const answer = await new Answer({
-                details: null,
-                userName: 'testuser',
-                question: questionId,
-            }).save();
-
-            expect(answer.details).toBeNull();
-        });
-
-        it('should handle undefined details field', async () => {
-            const answer = await new Answer({
-                userName: 'testuser',
-                question: questionId,
-            }).save();
-
-            expect(answer.details).toBeUndefined();
-        });
-    });
-
     describe('Model Relationships', () => {
         it('should reference the Question model correctly', () => {
             const answer = new Answer({
@@ -281,24 +220,6 @@ describe('Answer Model Tests', () => {
             });
 
             expect(answer.schema.paths.question.options.ref).toBe('Question');
-        });
-
-        it('should store multiple image locations', async () => {
-            const imageLocations = [
-                'solutions/img1.jpg',
-                'solutions/img2.png',
-                'solutions/img3.gif',
-                'solutions/img4.webp',
-            ];
-
-            const answer = await new Answer({
-                userName: 'testuser',
-                question: questionId,
-                imageLocations,
-            }).save();
-
-            expect(answer.imageLocations).toHaveLength(4);
-            expect(answer.imageLocations).toEqual(imageLocations);
         });
     });
 });

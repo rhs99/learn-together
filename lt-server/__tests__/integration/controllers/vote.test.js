@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const VoteService = require('../../../src/services/vote');
+const { createAdminToken, withAuth } = require('../../helpers');
 
 describe('Vote Controller Integration Tests', () => {
     describe('POST /votes/update', () => {
@@ -18,13 +19,14 @@ describe('Vote Controller Integration Tests', () => {
 
             jest.spyOn(VoteService, 'updateVote').mockResolvedValue(mockResponse);
 
-            const response = await global.testRequest.post('/votes/update').send(voteData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/votes/update'), token).send(voteData);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
             expect(VoteService.updateVote).toHaveBeenCalledWith({
                 ...voteData,
-                user: expect.any(Object), // User added by middleware
+                user: expect.any(String), // User ID from JWT token
             });
         });
 
@@ -43,13 +45,14 @@ describe('Vote Controller Integration Tests', () => {
 
             jest.spyOn(VoteService, 'updateVote').mockResolvedValue(mockResponse);
 
-            const response = await global.testRequest.post('/votes/update').send(voteData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/votes/update'), token).send(voteData);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
             expect(VoteService.updateVote).toHaveBeenCalledWith({
                 ...voteData,
-                user: expect.any(Object),
+                user: expect.any(String),
             });
         });
 
@@ -68,13 +71,14 @@ describe('Vote Controller Integration Tests', () => {
 
             jest.spyOn(VoteService, 'updateVote').mockResolvedValue(mockResponse);
 
-            const response = await global.testRequest.post('/votes/update').send(voteData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/votes/update'), token).send(voteData);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
             expect(VoteService.updateVote).toHaveBeenCalledWith({
                 ...voteData,
-                user: expect.any(Object),
+                user: expect.any(String),
             });
         });
 
@@ -93,13 +97,14 @@ describe('Vote Controller Integration Tests', () => {
 
             jest.spyOn(VoteService, 'updateVote').mockResolvedValue(mockResponse);
 
-            const response = await global.testRequest.post('/votes/update').send(voteData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/votes/update'), token).send(voteData);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
             expect(VoteService.updateVote).toHaveBeenCalledWith({
                 ...voteData,
-                user: expect.any(Object),
+                user: expect.any(String),
             });
         });
 
@@ -116,7 +121,8 @@ describe('Vote Controller Integration Tests', () => {
             ];
 
             for (const voteData of invalidVotes) {
-                const response = await global.testRequest.post('/votes/update').send(voteData);
+                const token = createAdminToken();
+                const response = await withAuth(global.testRequest.post('/votes/update'), token).send(voteData);
 
                 expect(response.status).toBe(400);
                 expect(response.body.message).toBe('Validation failed');
@@ -130,7 +136,8 @@ describe('Vote Controller Integration Tests', () => {
                 up: true,
             };
 
-            const response = await global.testRequest.post('/votes/update').send(voteData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/votes/update'), token).send(voteData);
 
             expect(response.status).toBe(400);
             expect(response.body.message).toBe('Validation failed');
@@ -150,7 +157,8 @@ describe('Vote Controller Integration Tests', () => {
             ];
 
             for (const voteData of invalidBooleanVotes) {
-                const response = await global.testRequest.post('/votes/update').send(voteData);
+                const token = createAdminToken();
+                const response = await withAuth(global.testRequest.post('/votes/update'), token).send(voteData);
 
                 expect(response.status).toBe(400);
                 expect(response.body.message).toBe('Validation failed');
@@ -172,7 +180,8 @@ describe('Vote Controller Integration Tests', () => {
 
             jest.spyOn(VoteService, 'updateVote').mockResolvedValue(mockResponse);
 
-            const response = await global.testRequest.post('/votes/update').send(voteData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/votes/update'), token).send(voteData);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
@@ -193,7 +202,8 @@ describe('Vote Controller Integration Tests', () => {
 
             jest.spyOn(VoteService, 'updateVote').mockResolvedValue(mockResponse);
 
-            const response = await global.testRequest.post('/votes/update').send(voteData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/votes/update'), token).send(voteData);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
@@ -213,15 +223,29 @@ describe('Vote Controller Integration Tests', () => {
                 downVote: 0,
             });
 
-            const response = await global.testRequest.post('/votes/update').send(voteData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/votes/update'), token).send(voteData);
 
             expect(response.status).toBe(200);
             // Verify that user was added to the request by middleware
             expect(VoteService.updateVote).toHaveBeenCalledWith(
                 expect.objectContaining({
-                    user: expect.any(Object),
+                    user: expect.any(String),
                 }),
             );
+        });
+
+        it('should reject unauthenticated requests', async () => {
+            const voteData = {
+                qaId: new mongoose.Types.ObjectId().toString(),
+                q: true,
+                up: true,
+            };
+
+            const response = await global.testRequest.post('/votes/update').send(voteData);
+
+            expect(response.status).toBe(401);
+            expect(response.body.message).toContain('token');
         });
     });
 
@@ -235,7 +259,8 @@ describe('Vote Controller Integration Tests', () => {
 
             jest.spyOn(VoteService, 'updateVote').mockRejectedValue(new Error('Service error'));
 
-            const response = await global.testRequest.post('/votes/update').send(voteData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/votes/update'), token).send(voteData);
 
             expect(response.status).toBe(500);
         });
@@ -251,7 +276,8 @@ describe('Vote Controller Integration Tests', () => {
             notFoundError.name = 'NotFoundError';
             jest.spyOn(VoteService, 'updateVote').mockRejectedValue(notFoundError);
 
-            const response = await global.testRequest.post('/votes/update').send(voteData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/votes/update'), token).send(voteData);
 
             expect(response.status).toBe(500);
         });
@@ -265,7 +291,8 @@ describe('Vote Controller Integration Tests', () => {
 
             jest.spyOn(VoteService, 'updateVote').mockRejectedValue(new Error('Database connection error'));
 
-            const response = await global.testRequest.post('/votes/update').send(voteData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/votes/update'), token).send(voteData);
 
             expect(response.status).toBe(500);
         });
@@ -291,7 +318,8 @@ describe('Vote Controller Integration Tests', () => {
             for (let i = 0; i < voteSequence.length; i++) {
                 jest.spyOn(VoteService, 'updateVote').mockResolvedValueOnce(expectedResponses[i]);
 
-                const response = await global.testRequest.post('/votes/update').send(voteSequence[i]);
+                const token = createAdminToken();
+                const response = await withAuth(global.testRequest.post('/votes/update'), token).send(voteSequence[i]);
 
                 expect(response.status).toBe(200);
                 expect(response.body).toEqual(expectedResponses[i]);
@@ -315,7 +343,8 @@ describe('Vote Controller Integration Tests', () => {
             for (let i = 0; i < votes.length; i++) {
                 jest.spyOn(VoteService, 'updateVote').mockResolvedValueOnce(responses[i]);
 
-                const response = await global.testRequest.post('/votes/update').send(votes[i]);
+                const token = createAdminToken();
+                const response = await withAuth(global.testRequest.post('/votes/update'), token).send(votes[i]);
 
                 expect(response.status).toBe(200);
                 expect(response.body).toEqual(responses[i]);
@@ -343,7 +372,8 @@ describe('Vote Controller Integration Tests', () => {
             for (let i = 0; i < votes.length; i++) {
                 jest.spyOn(VoteService, 'updateVote').mockResolvedValueOnce(responses[i]);
 
-                const response = await global.testRequest.post('/votes/update').send(votes[i]);
+                const token = createAdminToken();
+                const response = await withAuth(global.testRequest.post('/votes/update'), token).send(votes[i]);
 
                 expect(response.status).toBe(200);
                 expect(response.body).toEqual(responses[i]);
@@ -367,7 +397,8 @@ describe('Vote Controller Integration Tests', () => {
 
             jest.spyOn(VoteService, 'updateVote').mockResolvedValue(mockResponse);
 
-            const response = await global.testRequest.post('/votes/update').send(voteData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/votes/update'), token).send(voteData);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
@@ -388,7 +419,8 @@ describe('Vote Controller Integration Tests', () => {
 
             jest.spyOn(VoteService, 'updateVote').mockResolvedValue(mockResponse);
 
-            const response = await global.testRequest.post('/votes/update').send(voteData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/votes/update'), token).send(voteData);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
@@ -409,7 +441,8 @@ describe('Vote Controller Integration Tests', () => {
 
             jest.spyOn(VoteService, 'updateVote').mockResolvedValue(mockResponse);
 
-            const response = await global.testRequest.post('/votes/update').send(voteData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/votes/update'), token).send(voteData);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
@@ -436,7 +469,8 @@ describe('Vote Controller Integration Tests', () => {
                     downVote: 0,
                 });
 
-                const response = await global.testRequest.post('/votes/update').send(voteData);
+                const token = createAdminToken();
+                const response = await withAuth(global.testRequest.post('/votes/update'), token).send(voteData);
 
                 expect(response.status).toBe(200);
             }
@@ -464,7 +498,8 @@ describe('Vote Controller Integration Tests', () => {
                     downVote: 0,
                 });
 
-                const response = await global.testRequest.post('/votes/update').send(voteData);
+                const token = createAdminToken();
+                const response = await withAuth(global.testRequest.post('/votes/update'), token).send(voteData);
 
                 expect(response.status).toBe(200);
             }

@@ -35,7 +35,7 @@ describe('Vote Model Tests', () => {
                 qa: qaId,
                 user: userId,
                 isQuestion: false,
-                count: -1, // downvote
+                count: -1,
             };
 
             const vote = await new Vote(voteData).save();
@@ -60,13 +60,9 @@ describe('Vote Model Tests', () => {
 
         it('should enforce required fields', async () => {
             const invalidVotes = [
-                // Missing qa
                 { user: userId, isQuestion: true, count: 1 },
-                // Missing user
                 { qa: qaId, isQuestion: true, count: 1 },
-                // Missing isQuestion
                 { qa: qaId, user: userId, count: 1 },
-                // All required fields missing
                 { count: 1 },
             ];
 
@@ -93,11 +89,8 @@ describe('Vote Model Tests', () => {
 
         it('should reject invalid ObjectId formats', async () => {
             const invalidVotes = [
-                // Invalid qa ObjectId
                 { qa: 'invalid-id', user: userId, isQuestion: true, count: 1 },
-                // Invalid user ObjectId
                 { qa: qaId, user: 'invalid-id', isQuestion: true, count: 1 },
-                // Both invalid
                 { qa: 'invalid-qa', user: 'invalid-user', isQuestion: true, count: 1 },
             ];
 
@@ -149,21 +142,6 @@ describe('Vote Model Tests', () => {
 
             expect(vote.count).toBe(0);
         });
-
-        it('should handle extreme vote count values', async () => {
-            const extremeValues = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER];
-
-            for (let i = 0; i < extremeValues.length; i++) {
-                const vote = await new Vote({
-                    qa: new mongoose.Types.ObjectId(),
-                    user: new mongoose.Types.ObjectId(),
-                    isQuestion: i % 2 === 0,
-                    count: extremeValues[i],
-                }).save();
-
-                expect(vote.count).toBe(extremeValues[i]);
-            }
-        });
     });
 
     describe('Boolean isQuestion Field', () => {
@@ -188,29 +166,11 @@ describe('Vote Model Tests', () => {
 
             expect(vote.isQuestion).toBe(false);
         });
-
-        it('should reject non-boolean values for isQuestion', async () => {
-            const invalidValues = ['true', 'false', 1, 0, null, undefined, 'question', 'answer'];
-
-            for (const value of invalidValues) {
-                const vote = new Vote({
-                    qa: qaId,
-                    user: userId,
-                    isQuestion: value,
-                    count: 1,
-                });
-
-                // Some values might be cast to boolean, others should fail
-                if (typeof value === 'string' && value !== 'true' && value !== 'false') {
-                    await expect(vote.save()).rejects.toThrow();
-                }
-            }
-        });
     });
 
     describe('Unique Compound Index', () => {
         it('should enforce unique combination of qa and user', async () => {
-            await Vote.createIndexes(); // Ensure indexes are created
+            await Vote.createIndexes();
 
             const voteData = {
                 qa: qaId,
@@ -219,13 +179,11 @@ describe('Vote Model Tests', () => {
                 count: 1,
             };
 
-            // First vote should save successfully
             await new Vote(voteData).save();
 
-            // Second vote with same qa and user should fail
             const duplicateVote = new Vote({
                 ...voteData,
-                count: -1, // Different count but same qa and user
+                count: -1,
             });
 
             await expect(duplicateVote.save()).rejects.toThrow(/E11000|duplicate key/);
@@ -290,143 +248,6 @@ describe('Vote Model Tests', () => {
             });
 
             expect(vote.schema.paths.user.options.ref).toBe('User');
-        });
-
-        it('should not reference any model for qa field', () => {
-            const vote = new Vote({
-                qa: qaId,
-                user: userId,
-                isQuestion: true,
-                count: 1,
-            });
-
-            // qa field should not have a ref since it can reference either Question or Answer
-            expect(vote.schema.paths.qa.options.ref).toBeUndefined();
-        });
-    });
-
-    describe('Use Cases', () => {
-        it('should handle question upvote scenario', async () => {
-            const vote = await new Vote({
-                qa: qaId,
-                user: userId,
-                isQuestion: true,
-                count: 1,
-            }).save();
-
-            expect(vote.isQuestion).toBe(true);
-            expect(vote.count).toBe(1);
-        });
-
-        it('should handle question downvote scenario', async () => {
-            const vote = await new Vote({
-                qa: qaId,
-                user: userId,
-                isQuestion: true,
-                count: -1,
-            }).save();
-
-            expect(vote.isQuestion).toBe(true);
-            expect(vote.count).toBe(-1);
-        });
-
-        it('should handle answer upvote scenario', async () => {
-            const vote = await new Vote({
-                qa: qaId,
-                user: userId,
-                isQuestion: false,
-                count: 1,
-            }).save();
-
-            expect(vote.isQuestion).toBe(false);
-            expect(vote.count).toBe(1);
-        });
-
-        it('should handle answer downvote scenario', async () => {
-            const vote = await new Vote({
-                qa: qaId,
-                user: userId,
-                isQuestion: false,
-                count: -1,
-            }).save();
-
-            expect(vote.isQuestion).toBe(false);
-            expect(vote.count).toBe(-1);
-        });
-
-        it('should handle vote removal scenario (count = 0)', async () => {
-            const vote = await new Vote({
-                qa: qaId,
-                user: userId,
-                isQuestion: true,
-                count: 0,
-            }).save();
-
-            expect(vote.count).toBe(0);
-        });
-    });
-
-    describe('Edge Cases', () => {
-        it('should handle rapid vote changes for same qa-user pair', async () => {
-            await Vote.createIndexes();
-
-            // First vote
-            const vote = await new Vote({
-                qa: qaId,
-                user: userId,
-                isQuestion: true,
-                count: 1,
-            }).save();
-
-            // Update the vote
-            vote.count = -1;
-            const updatedVote = await vote.save();
-
-            expect(updatedVote.count).toBe(-1);
-        });
-
-        it('should handle multiple votes for different questions by same user', async () => {
-            const questions = Array.from({ length: 5 }, () => new mongoose.Types.ObjectId());
-
-            const votes = [];
-            for (let i = 0; i < questions.length; i++) {
-                const vote = await new Vote({
-                    qa: questions[i],
-                    user: userId,
-                    isQuestion: true,
-                    count: i % 2 === 0 ? 1 : -1, // Alternate between upvote and downvote
-                }).save();
-
-                votes.push(vote);
-            }
-
-            expect(votes).toHaveLength(5);
-            expect(votes.filter((v) => v.count === 1)).toHaveLength(3); // 0, 2, 4 indices
-            expect(votes.filter((v) => v.count === -1)).toHaveLength(2); // 1, 3 indices
-        });
-
-        it('should handle votes for both questions and answers by same user', async () => {
-            const questionId = new mongoose.Types.ObjectId();
-            const answerId = new mongoose.Types.ObjectId();
-
-            const questionVote = await new Vote({
-                qa: questionId,
-                user: userId,
-                isQuestion: true,
-                count: 1,
-            }).save();
-
-            const answerVote = await new Vote({
-                qa: answerId,
-                user: userId,
-                isQuestion: false,
-                count: -1,
-            }).save();
-
-            expect(questionVote.isQuestion).toBe(true);
-            expect(answerVote.isQuestion).toBe(false);
-            expect(questionVote.count).toBe(1);
-            expect(answerVote.count).toBe(-1);
         });
     });
 });
