@@ -19,15 +19,15 @@ const ChangePassword = () => {
       return;
     }
 
-    const url = `${Util.CONSTANTS.SERVER_URL}/users/update-password`;
+    const userName = authCtx.getStoredValue().userName;
+    const url = `${Util.CONSTANTS.SERVER_URL}/users/${userName}`;
     const payload = {
-      userName: authCtx.getStoredValue().userName,
       prevPassword: prevPassword,
       password: password,
     };
 
     try {
-      await axios.post(url, payload, {
+      await axios.patch(url, payload, {
         headers: {
           Authorization: `Bearer ${authCtx.getStoredValue().token}`,
           'Content-Type': 'application/json',

@@ -49,7 +49,7 @@ describe('Subject Model Tests', () => {
 
         try {
             await duplicate.save();
-            fail('Expected duplicate subject to throw error');
+            throw new Error('Expected duplicate subject to throw error');
         } catch (error) {
             expect(error.name).toBe('MongoServerError');
             expect(error.code).toBe(11000);

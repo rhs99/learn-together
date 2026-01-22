@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const SubjectService = require('../../../src/services/subject');
+const { createAdminToken, withAuth } = require('../../helpers');
 
 describe('Subject Controller Integration Tests', () => {
     describe('GET /subjects', () => {
@@ -70,7 +71,8 @@ describe('Subject Controller Integration Tests', () => {
 
             jest.spyOn(SubjectService, 'addNewSubject').mockResolvedValue({ ...subjectData, _id: 'new-subject-id' });
 
-            const response = await global.testRequest.post('/subjects').send(subjectData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/subjects'), token).send(subjectData);
 
             expect(response.status).toBe(201);
             expect(SubjectService.addNewSubject).toHaveBeenCalledWith(subjectData);
@@ -82,7 +84,8 @@ describe('Subject Controller Integration Tests', () => {
                 class: classId,
             };
 
-            const response = await global.testRequest.post('/subjects').send(subjectData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/subjects'), token).send(subjectData);
 
             expect(response.status).toBe(400);
             expect(response.body.message).toBe('Validation failed');
@@ -93,7 +96,8 @@ describe('Subject Controller Integration Tests', () => {
                 name: 'New Subject',
             };
 
-            const response = await global.testRequest.post('/subjects').send(subjectData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/subjects'), token).send(subjectData);
 
             expect(response.status).toBe(400);
             expect(response.body.message).toBe('Validation failed');
@@ -105,10 +109,24 @@ describe('Subject Controller Integration Tests', () => {
                 class: 'invalid-id',
             };
 
-            const response = await global.testRequest.post('/subjects').send(subjectData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/subjects'), token).send(subjectData);
 
             expect(response.status).toBe(400);
             expect(response.body.message).toBe('Validation failed');
+        });
+
+        it('should reject unauthenticated requests', async () => {
+            const classId = new mongoose.Types.ObjectId().toString();
+            const subjectData = {
+                name: 'New Subject',
+                class: classId,
+            };
+
+            const response = await global.testRequest.post('/subjects').send(subjectData);
+
+            expect(response.status).toBe(401);
+            expect(response.body.message).toContain('token');
         });
     });
 });

@@ -213,14 +213,17 @@ describe('Chapter Service Tests', () => {
                 questions: [],
             };
 
+            const classId = new mongoose.Types.ObjectId();
             const mockSubject = {
                 _id: subjectId,
                 name: 'Statistics',
+                class: classId,
                 chapters: [],
                 save: jest.fn().mockResolvedValue(true),
                 toObject: jest.fn().mockReturnValue({
                     _id: subjectId,
                     name: 'Statistics',
+                    class: classId,
                     chapters: [],
                 }),
             };
@@ -239,7 +242,9 @@ describe('Chapter Service Tests', () => {
             expect(mockSubject.chapters).toContain(savedChapter._id);
             expect(mockSubject.save).toHaveBeenCalled();
             expect(cacheService.del).toHaveBeenCalledWith(`chapters:subject:${subjectId}`);
-            expect(cacheService.del).toHaveBeenCalledWith(`chapter:${savedChapter._id}`);
+            expect(cacheService.del).toHaveBeenCalledWith(`subject:${subjectId}`);
+            expect(cacheService.del).toHaveBeenCalledWith(`subjects:class:${classId}`);
+            expect(cacheService.del).toHaveBeenCalledWith(`subject:breadcrumb:${subjectId}`);
         });
 
         it('should handle errors when creating a new chapter', async () => {
@@ -298,14 +303,17 @@ describe('Chapter Service Tests', () => {
                 questions: [],
             };
 
+            const classId = new mongoose.Types.ObjectId();
             const mockSubject = {
                 _id: subjectId,
                 name: 'Mathematics',
+                class: classId,
                 chapters: [],
                 save: jest.fn().mockResolvedValue(this),
                 toObject: jest.fn().mockReturnValue({
                     _id: subjectId,
                     name: 'Mathematics',
+                    class: classId,
                     chapters: [],
                 }),
             };
@@ -321,8 +329,10 @@ describe('Chapter Service Tests', () => {
             await ChapterService.addNewChapter(chapterBody);
 
             expect(cacheService.del).toHaveBeenCalledWith(`chapters:subject:${subjectId}`);
-            expect(cacheService.del).toHaveBeenCalledWith(`chapter:${savedChapter._id}`);
-            expect(cacheService.del).toHaveBeenCalledTimes(2);
+            expect(cacheService.del).toHaveBeenCalledWith(`subject:${subjectId}`);
+            expect(cacheService.del).toHaveBeenCalledWith(`subjects:class:${classId}`);
+            expect(cacheService.del).toHaveBeenCalledWith(`subject:breadcrumb:${subjectId}`);
+            expect(cacheService.del).toHaveBeenCalledTimes(4);
         });
     });
 });

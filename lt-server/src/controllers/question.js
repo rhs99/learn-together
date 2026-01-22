@@ -2,13 +2,24 @@ const QuestionService = require('../services/question');
 const logger = require('../config/logger');
 
 const getAllQuestions = async (req, res) => {
-    req.body.user = req.user || null;
+    const filters = {
+        chapterId: req.query.chapterId,
+        tagIds: req.query.tagIds ? req.query.tagIds.split(',') : undefined,
+        user: req.user || null,
+    };
+    const queryParams = {
+        pageNumber: req.query.pageNumber,
+        pageSize: req.query.pageSize,
+        sortBy: req.query.sortBy,
+        sortOrder: req.query.sortOrder,
+        filterBy: req.query.filterBy,
+    };
     logger.debug('Fetching all questions', {
         userId: req.user,
-        filters: req.body,
-        queryParams: req.query,
+        filters,
+        queryParams,
     });
-    const questions = await QuestionService.getAllQuestions(req.body, req.query);
+    const questions = await QuestionService.getAllQuestions(filters, queryParams);
     logger.debug('Questions fetched successfully', { questionCount: questions.length });
     res.status(200).json(questions);
 };
@@ -42,13 +53,16 @@ const deleteQuestion = async (req, res) => {
 };
 
 const addToFavourite = async (req, res) => {
-    req.body.user = req.user;
+    const data = {
+        questionId: req.params._id,
+        user: req.user,
+    };
     logger.info('Question favorite toggle', {
-        questionId: req.body.questionId,
+        questionId: data.questionId,
         userId: req.user,
         timestamp: new Date().toISOString(),
     });
-    const status = await QuestionService.addToFavourite(req.body);
+    const status = await QuestionService.addToFavourite(data);
     res.status(200).json(status);
 };
 

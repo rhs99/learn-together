@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Class = require('../../../src/models/class');
+const { createAdminToken, withAuth } = require('../../helpers');
 
 describe('Class Controller Integration Tests', () => {
     beforeEach(async () => {
@@ -53,7 +54,8 @@ describe('Class Controller Integration Tests', () => {
         it('should create a new class', async () => {
             const classData = { name: 'Grade 10' };
 
-            const response = await global.testRequest.post('/classes').send(classData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/classes'), token).send(classData);
 
             expect(response.status).toBe(201);
 
@@ -63,7 +65,8 @@ describe('Class Controller Integration Tests', () => {
         });
 
         it('should return 400 for missing name', async () => {
-            const response = await global.testRequest.post('/classes').send({});
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/classes'), token).send({});
 
             expect(response.status).toBe(400);
             expect(response.body.message).toBe('Validation failed');
@@ -76,7 +79,8 @@ describe('Class Controller Integration Tests', () => {
                 subjects: [invalidSubjectId],
             };
 
-            const response = await global.testRequest.post('/classes').send(classData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/classes'), token).send(classData);
 
             expect(response.status).toBe(400);
             expect(response.body.message).toBe('Validation failed');
@@ -89,7 +93,8 @@ describe('Class Controller Integration Tests', () => {
                 subjects: [validSubjectId],
             };
 
-            const response = await global.testRequest.post('/classes').send(classData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/classes'), token).send(classData);
 
             expect(response.status).toBe(201);
 
@@ -97,6 +102,14 @@ describe('Class Controller Integration Tests', () => {
             expect(createdClass).toBeTruthy();
             expect(createdClass.subjects.length).toBe(1);
             expect(createdClass.subjects[0].toString()).toBe(validSubjectId);
+        });
+
+        it('should reject unauthenticated requests', async () => {
+            const classData = { name: 'Grade 10' };
+            const response = await global.testRequest.post('/classes').send(classData);
+
+            expect(response.status).toBe(401);
+            expect(response.body.message).toContain('token');
         });
     });
 });

@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const User = require('../../../src/models/user');
 const Question = require('../../../src/models/question');
 const Answer = require('../../../src/models/answer');
@@ -7,11 +6,12 @@ const Privilege = require('../../../src/models/privilege');
 const Notification = require('../../../src/models/notification');
 const UserService = require('../../../src/services/user');
 const { NotFoundError, UnauthorizedError, BadRequestError } = require('../../../src/common/error');
+const { createUserData, createObjectId, createPrivilegeData, createClassData } = require('../../helpers');
 
 describe('User Service Tests', () => {
     describe('addNewUser', () => {
         it('should create a new user with default privilege', async () => {
-            const defaultPrivilegeId = new mongoose.Types.ObjectId();
+            const defaultPrivilegeId = createObjectId();
             const defaultPrivilege = {
                 _id: defaultPrivilegeId,
                 name: 'default',
@@ -27,11 +27,10 @@ describe('User Service Tests', () => {
                 privileges: [defaultPrivilegeId],
             });
 
-            const userData = {
+            const userData = createUserData({
                 userName: 'testuser',
                 email: 'test@example.com',
-                password: 'password123',
-            };
+            });
 
             await UserService.addNewUser(userData);
 
@@ -46,8 +45,8 @@ describe('User Service Tests', () => {
         });
 
         it('should create a new user with class when class is provided', async () => {
-            const defaultPrivilegeId = new mongoose.Types.ObjectId();
-            const classId = new mongoose.Types.ObjectId();
+            const defaultPrivilegeId = createObjectId();
+            const classId = createObjectId();
             const defaultPrivilege = {
                 _id: defaultPrivilegeId,
                 name: 'default',
@@ -72,12 +71,11 @@ describe('User Service Tests', () => {
                 class: classId,
             });
 
-            const userData = {
+            const userData = createUserData({
                 userName: 'testuser',
                 email: 'test@example.com',
-                password: 'password123',
                 class: classId.toString(),
-            };
+            });
 
             await UserService.addNewUser(userData);
 
@@ -98,11 +96,7 @@ describe('User Service Tests', () => {
                 exec: jest.fn().mockResolvedValue(null),
             }));
 
-            const userData = {
-                userName: 'testuser',
-                email: 'test@example.com',
-                password: 'password123',
-            };
+            const userData = createUserData();
 
             await expect(UserService.addNewUser(userData)).rejects.toThrow(
                 new NotFoundError('Default privilege not found. Cannot create user.'),
@@ -112,8 +106,8 @@ describe('User Service Tests', () => {
         });
 
         it('should throw NotFoundError when class is not found', async () => {
-            const defaultPrivilegeId = new mongoose.Types.ObjectId();
-            const invalidClassId = new mongoose.Types.ObjectId().toString();
+            const defaultPrivilegeId = createObjectId();
+            const invalidClassId = createObjectId().toString();
             const defaultPrivilege = {
                 _id: defaultPrivilegeId,
                 name: 'default',
@@ -127,12 +121,9 @@ describe('User Service Tests', () => {
                 exec: jest.fn().mockResolvedValue(null),
             }));
 
-            const userData = {
-                userName: 'testuser',
-                email: 'test@example.com',
-                password: 'password123',
+            const userData = createUserData({
                 class: invalidClassId,
-            };
+            });
 
             await expect(UserService.addNewUser(userData)).rejects.toThrow(
                 new NotFoundError(`Class not found: ${invalidClassId}`),
@@ -145,11 +136,11 @@ describe('User Service Tests', () => {
 
     describe('getUser', () => {
         it('should return user data with questions and answers', async () => {
-            const userId = new mongoose.Types.ObjectId();
-            const questionId1 = new mongoose.Types.ObjectId();
-            const questionId2 = new mongoose.Types.ObjectId();
-            const answerId1 = new mongoose.Types.ObjectId();
-            const answerId2 = new mongoose.Types.ObjectId();
+            const userId = createObjectId();
+            const questionId1 = createObjectId();
+            const questionId2 = createObjectId();
+            const answerId1 = createObjectId();
+            const answerId2 = createObjectId();
 
             const userData = {
                 _id: userId,

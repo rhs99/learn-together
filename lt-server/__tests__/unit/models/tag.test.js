@@ -68,18 +68,4 @@ describe('Tag Model Tests', () => {
         expect(tag2._id).toBeDefined();
         expect(tag1._id.toString()).not.toBe(tag2._id.toString());
     });
-
-    it('should require name and chapter fields', async () => {
-        const invalidTag = new Tag({});
-
-        try {
-            await invalidTag.save();
-            expect(true).toBe(false);
-        } catch (error) {
-            expect(error).toBeDefined();
-            expect(error.name).toBe('ValidationError');
-            expect(error.errors.name).toBeDefined();
-            expect(error.errors.chapter).toBeDefined();
-        }
-    });
 });

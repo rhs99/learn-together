@@ -65,14 +65,14 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
   };
 
   const handleUpVote = async () => {
-    const url = `${Util.CONSTANTS.SERVER_URL}/votes/update`;
+    const url = `${Util.CONSTANTS.SERVER_URL}/votes`;
     const payload = {
       qaId: item._id,
       up: true,
       q: isQuestion,
     };
 
-    const { data } = await axios.post(url, payload, {
+    const { data } = await axios.patch(url, payload, {
       headers: {
         Authorization: `Bearer ${authCtx.getStoredValue().token}`,
         'Content-Type': 'application/json',
@@ -82,14 +82,14 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
   };
 
   const handleDownVote = async () => {
-    const url = `${Util.CONSTANTS.SERVER_URL}/votes/update`;
+    const url = `${Util.CONSTANTS.SERVER_URL}/votes`;
     const payload = {
       qaId: item._id,
       up: false,
       q: isQuestion,
     };
 
-    const { data } = await axios.post(url, payload, {
+    const { data } = await axios.patch(url, payload, {
       headers: {
         Authorization: `Bearer ${authCtx.getStoredValue().token}`,
         'Content-Type': 'application/json',
@@ -110,17 +110,18 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
     if (!isQuestion) {
       return;
     }
-    const url = `${Util.CONSTANTS.SERVER_URL}/questions/favourite`;
-    const payload = {
-      questionId: item._id,
-    };
+    const url = `${Util.CONSTANTS.SERVER_URL}/questions/${item._id}/favourite`;
 
-    const { data } = await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${authCtx.getStoredValue().token}`,
-        'Content-Type': 'application/json',
-      },
-    });
+    const { data } = await axios.put(
+      url,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${authCtx.getStoredValue().token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
     setIsFavourite(data.favourite);
   };

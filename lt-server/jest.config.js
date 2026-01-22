@@ -1,17 +1,27 @@
+const isDocker = process.env.DOCKER_ENV === 'true';
+
 module.exports = {
   testEnvironment: 'node',
   coveragePathIgnorePatterns: ['/node_modules/'],
   testMatch: ['**/__tests__/**/*.test.js', '**/?(*.)+(spec|test).js'],
-  setupFilesAfterEnv: ['./__tests__/setup.js'],
-  testPathIgnorePatterns: ['./__tests__/setup.js'],
-  // Add timeout settings for Docker
-  testTimeout: 30000,
-  // Force exit after tests complete
-  forceExit: true,
-  // Limit concurrent tests in Docker for stability
-  maxConcurrency: 1,
-  // Help identify any hanging processes
-  detectOpenHandles: true,
-  // Don't cache test results between runs
-  cache: false
+  setupFilesAfterEnv: ['<rootDir>/__tests__/setup.js'],
+  testPathIgnorePatterns: ['/node_modules/', '/__tests__/setup.js', '/__tests__/helpers/'],
+  testTimeout: isDocker ? 30000 : 10000,
+  maxWorkers: 1,
+  detectOpenHandles: !isDocker,
+  cache: !isDocker,
+  clearMocks: true,
+  collectCoverageFrom: [
+    'src/**/*.js',
+    '!src/scripts/**',
+    '!src/index.js',
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 70,
+      functions: 70,
+      lines: 70,
+      statements: 70,
+    },
+  },
 };

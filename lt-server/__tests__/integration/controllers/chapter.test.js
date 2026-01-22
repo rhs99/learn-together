@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const ChapterService = require('../../../src/services/chapter');
+const { createAdminToken, withAuth } = require('../../helpers');
 
 describe('Chapter Controller Integration Tests', () => {
     describe('GET /chapters', () => {
@@ -82,7 +83,8 @@ describe('Chapter Controller Integration Tests', () => {
 
             jest.spyOn(ChapterService, 'addNewChapter').mockResolvedValue({ _id: 'new-chapter-id', ...chapterData });
 
-            const response = await global.testRequest.post('/chapters').send(chapterData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/chapters'), token).send(chapterData);
 
             expect(response.status).toBe(201);
             expect(ChapterService.addNewChapter).toHaveBeenCalledWith(chapterData);
@@ -94,7 +96,8 @@ describe('Chapter Controller Integration Tests', () => {
                 subject: subjectId,
             };
 
-            const response = await global.testRequest.post('/chapters').send(chapterData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/chapters'), token).send(chapterData);
 
             expect(response.status).toBe(400);
             expect(response.body.message).toBe('Validation failed');
@@ -105,7 +108,8 @@ describe('Chapter Controller Integration Tests', () => {
                 name: 'New Chapter',
             };
 
-            const response = await global.testRequest.post('/chapters').send(chapterData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/chapters'), token).send(chapterData);
 
             expect(response.status).toBe(400);
             expect(response.body.message).toBe('Validation failed');
@@ -117,10 +121,24 @@ describe('Chapter Controller Integration Tests', () => {
                 subject: 'invalid-id',
             };
 
-            const response = await global.testRequest.post('/chapters').send(chapterData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/chapters'), token).send(chapterData);
 
             expect(response.status).toBe(400);
             expect(response.body.message).toBe('Validation failed');
+        });
+
+        it('should reject unauthenticated requests', async () => {
+            const subjectId = new mongoose.Types.ObjectId().toString();
+            const chapterData = {
+                name: 'New Chapter',
+                subject: subjectId,
+            };
+
+            const response = await global.testRequest.post('/chapters').send(chapterData);
+
+            expect(response.status).toBe(401);
+            expect(response.body.message).toContain('token');
         });
     });
 });

@@ -14,9 +14,9 @@ const getQuestionSchema = {
         .strict(),
 };
 
-// Schema for POST /search (request body) - getAllQuestions
+// Schema for GET / (query parameters) - getAllQuestions
 const getAllQuestionsSchema = {
-    body: z
+    query: z
         .object({
             chapterId: z
                 .string({ required_error: 'Chapter ID is required' })
@@ -24,16 +24,18 @@ const getAllQuestionsSchema = {
                     message: 'Invalid Chapter ObjectId format',
                 }),
             tagIds: z
-                .array(
-                    z.string().refine((id) => mongoose.Types.ObjectId.isValid(id), {
-                        message: 'Invalid Tag ObjectId format',
-                    }),
-                )
-                .optional(),
-        })
-        .strict(),
-    query: z
-        .object({
+                .string()
+                .optional()
+                .refine(
+                    (val) => {
+                        if (!val) return true;
+                        const ids = val.split(',');
+                        return ids.every((id) => mongoose.Types.ObjectId.isValid(id.trim()));
+                    },
+                    {
+                        message: 'Invalid Tag ObjectId format in tagIds',
+                    },
+                ),
             pageNumber: z
                 .string()
                 .optional()
@@ -101,11 +103,11 @@ const deleteQuestionSchema = {
         .strict(),
 };
 
-// Schema for POST /favourite (request body) - addToFavourite
+// Schema for PUT /:_id/favourite (path parameters) - addToFavourite
 const addToFavouriteSchema = {
-    body: z
+    params: z
         .object({
-            questionId: z
+            _id: z
                 .string({ required_error: 'Question ID is required' })
                 .refine((id) => mongoose.Types.ObjectId.isValid(id), {
                     message: 'Invalid Question ObjectId format',

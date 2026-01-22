@@ -10,6 +10,9 @@ const CACHE_KEYS = {
     CHAPTER_PREFIX: 'chapter:',
     CHAPTERS_BY_SUBJECT: 'chapters:subject:',
     CHAPTER_BREADCRUMB: 'chapter:breadcrumb:',
+    SUBJECT_PREFIX: 'subject:',
+    SUBJECTS_BY_CLASS: 'subjects:class:',
+    SUBJECT_BREADCRUMB: 'subject:breadcrumb:',
 };
 
 const getChapter = async (id) => {
@@ -156,9 +159,16 @@ const addNewChapter = async (body) => {
         subject.chapters.push(chapter._id);
         await subject.save();
 
-        logger.debug('Invalidating chapter caches', { subjectId: body.subject });
-        await cacheService.del(`${CACHE_KEYS.CHAPTERS_BY_SUBJECT}${body.subject}`);
-        await cacheService.del(`${CACHE_KEYS.CHAPTER_PREFIX}${chapter._id}`);
+        logger.debug('Invalidating chapter, subject, and related caches', {
+            subjectId: body.subject,
+            classId: subject.class,
+        });
+        await Promise.all([
+            cacheService.del(`${CACHE_KEYS.CHAPTERS_BY_SUBJECT}${body.subject}`),
+            cacheService.del(`${CACHE_KEYS.SUBJECT_PREFIX}${body.subject}`),
+            cacheService.del(`${CACHE_KEYS.SUBJECTS_BY_CLASS}${subject.class}`),
+            cacheService.del(`${CACHE_KEYS.SUBJECT_BREADCRUMB}${body.subject}`),
+        ]);
 
         logger.debug('Chapter created successfully', {
             operation: 'Database Operation',

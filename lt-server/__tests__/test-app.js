@@ -9,18 +9,8 @@
 
 // Set the environment to test mode before importing any modules
 process.env.NODE_ENV = 'test';
-// This shouldn't output any logs from the logger itself
 
-/**
- * Get a fresh instance of the Express app configured for testing
- *
- * @returns {object} Express app instance
- */
 const getTestApp = () => {
-    // Clear any cached version of the app
-    jest.resetModules();
-
-    // Import the main app - it won't auto-connect or start server in test mode
     const { app } = require('../src/index.js');
 
     return app;

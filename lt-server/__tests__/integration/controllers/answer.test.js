@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const AnswerService = require('../../../src/services/answer');
+const { createAdminToken, withAuth } = require('../../helpers');
 
 describe('Answer Controller Integration Tests', () => {
     describe('POST /answers', () => {
@@ -21,12 +22,13 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'addNewAnswer').mockResolvedValue(mockAnswer);
 
-            const response = await global.testRequest.post('/answers').send(answerData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/answers'), token).send(answerData);
 
             expect(response.status).toBe(201);
             expect(AnswerService.addNewAnswer).toHaveBeenCalledWith({
                 ...answerData,
-                user: expect.any(Object), // User added by middleware
+                user: expect.any(String), // User ID from JWT token
             });
         });
 
@@ -48,12 +50,13 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'addNewAnswer').mockResolvedValue(mockUpdatedAnswer);
 
-            const response = await global.testRequest.post('/answers').send(answerData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/answers'), token).send(answerData);
 
             expect(response.status).toBe(201);
             expect(AnswerService.addNewAnswer).toHaveBeenCalledWith({
                 ...answerData,
-                user: expect.any(Object),
+                user: expect.any(String),
             });
         });
 
@@ -65,8 +68,9 @@ describe('Answer Controller Integration Tests', () => {
                 { details: { content: 'Answer' }, question: 'invalid-id' },
             ];
 
+            const token = createAdminToken();
             for (const answerData of invalidAnswers) {
-                const response = await global.testRequest.post('/answers').send(answerData);
+                const response = await withAuth(global.testRequest.post('/answers'), token).send(answerData);
 
                 expect(response.status).toBe(400);
                 expect(response.body.message).toBe('Validation failed');
@@ -83,12 +87,13 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'addNewAnswer').mockResolvedValue({});
 
-            const response = await global.testRequest.post('/answers').send(answerData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/answers'), token).send(answerData);
 
             expect(response.status).toBe(201);
             expect(AnswerService.addNewAnswer).toHaveBeenCalledWith({
                 ...answerData,
-                user: expect.any(Object),
+                user: expect.any(String),
             });
         });
 
@@ -102,7 +107,8 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'addNewAnswer').mockResolvedValue({});
 
-            const response = await global.testRequest.post('/answers').send(answerData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/answers'), token).send(answerData);
 
             expect(response.status).toBe(201);
         });
@@ -115,7 +121,8 @@ describe('Answer Controller Integration Tests', () => {
                 question: questionId,
             };
 
-            const response = await global.testRequest.post('/answers').send(answerData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/answers'), token).send(answerData);
 
             expect(response.status).toBe(400);
             expect(response.body.message).toBe('Validation failed');
@@ -128,20 +135,30 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'deleteAnswer').mockResolvedValue();
 
-            const response = await global.testRequest.delete(`/answers/${answerId}`);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.delete(`/answers/${answerId}`), token);
 
             expect(response.status).toBe(200);
             expect(AnswerService.deleteAnswer).toHaveBeenCalledWith(
                 answerId,
-                expect.any(Object), // User from middleware
+                expect.any(String), // User ID from JWT token
             );
         });
 
         it('should return 400 for invalid answer ID format', async () => {
-            const response = await global.testRequest.delete('/answers/invalid-id');
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.delete('/answers/invalid-id'), token);
 
             expect(response.status).toBe(400);
             expect(response.body.message).toBe('Validation failed');
+        });
+
+        it('should reject unauthenticated requests', async () => {
+            const answerId = new mongoose.Types.ObjectId().toString();
+            const response = await global.testRequest.delete(`/answers/${answerId}`);
+
+            expect(response.status).toBe(401);
+            expect(response.body.message).toContain('token');
         });
     });
 
@@ -248,7 +265,8 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'addNewAnswer').mockRejectedValue(new Error('Service error'));
 
-            const response = await global.testRequest.post('/answers').send(answerData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/answers'), token).send(answerData);
 
             expect(response.status).toBe(500);
         });
@@ -260,7 +278,8 @@ describe('Answer Controller Integration Tests', () => {
             notFoundError.name = 'NotFoundError';
             jest.spyOn(AnswerService, 'deleteAnswer').mockRejectedValue(notFoundError);
 
-            const response = await global.testRequest.delete(`/answers/${answerId}`);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.delete(`/answers/${answerId}`), token);
 
             expect(response.status).toBe(500);
         });
@@ -278,7 +297,8 @@ describe('Answer Controller Integration Tests', () => {
             unauthorizedError.name = 'UnauthorizedError';
             jest.spyOn(AnswerService, 'addNewAnswer').mockRejectedValue(unauthorizedError);
 
-            const response = await global.testRequest.post('/answers').send(answerData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/answers'), token).send(answerData);
 
             expect(response.status).toBe(500);
         });
@@ -303,15 +323,28 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'addNewAnswer').mockResolvedValue({});
 
-            const response = await global.testRequest.post('/answers').send(answerData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/answers'), token).send(answerData);
 
             expect(response.status).toBe(201);
             // Verify that user was added to the request by middleware
             expect(AnswerService.addNewAnswer).toHaveBeenCalledWith(
                 expect.objectContaining({
-                    user: expect.any(Object),
+                    user: expect.any(String),
                 }),
             );
+        });
+
+        it('should reject unauthenticated requests for POST /answers', async () => {
+            const answerData = {
+                details: { content: 'Test answer' },
+                question: new mongoose.Types.ObjectId().toString(),
+            };
+
+            const response = await global.testRequest.post('/answers').send(answerData);
+
+            expect(response.status).toBe(401);
+            expect(response.body.message).toContain('token');
         });
 
         it('should require authentication for DELETE /answers/:_id', async () => {
@@ -319,10 +352,11 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'deleteAnswer').mockResolvedValue();
 
-            const response = await global.testRequest.delete(`/answers/${answerId}`);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.delete(`/answers/${answerId}`), token);
 
             expect(response.status).toBe(200);
-            expect(AnswerService.deleteAnswer).toHaveBeenCalledWith(answerId, expect.any(Object));
+            expect(AnswerService.deleteAnswer).toHaveBeenCalledWith(answerId, expect.any(String));
         });
     });
 
@@ -337,7 +371,8 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'addNewAnswer').mockResolvedValue({});
 
-            const response = await global.testRequest.post('/answers').send(answerData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/answers'), token).send(answerData);
 
             expect(response.status).toBe(201);
         });
@@ -360,7 +395,8 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'addNewAnswer').mockResolvedValue({});
 
-            const response = await global.testRequest.post('/answers').send(answerData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/answers'), token).send(answerData);
 
             expect(response.status).toBe(201);
             expect(AnswerService.addNewAnswer).toHaveBeenCalledWith(
@@ -380,7 +416,8 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'addNewAnswer').mockResolvedValue({});
 
-            const response = await global.testRequest.post('/answers').send(answerData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/answers'), token).send(answerData);
 
             expect(response.status).toBe(201);
         });
@@ -396,7 +433,8 @@ describe('Answer Controller Integration Tests', () => {
 
             jest.spyOn(AnswerService, 'addNewAnswer').mockResolvedValue({});
 
-            const response = await global.testRequest.post('/answers').send(answerData);
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.post('/answers'), token).send(answerData);
 
             expect(response.status).toBe(201);
         });
