@@ -327,31 +327,29 @@ describe('User Controller Integration Tests', () => {
         });
     });
 
-    describe('POST /users/update-class (Protected Route)', () => {
+    describe('PATCH /users/:userName (Class Update)', () => {
         it('should update user class successfully', async () => {
             const classId = createObjectId();
 
             jest.spyOn(UserService, 'updateClassInUser').mockResolvedValue();
 
             const updateData = {
-                userName: 'testuser',
                 _class: classId.toString(),
             };
 
             const token = createAdminToken();
-            const response = await withAuth(global.testRequest.post('/users/update-class'), token).send(updateData);
+            const response = await withAuth(global.testRequest.patch('/users/testuser'), token).send(updateData);
 
             expect(response.status).toBe(200);
             expect(UserService.updateClassInUser).toHaveBeenCalledWith(
-                updateData,
+                { userName: 'testuser', ...updateData },
                 expect.any(String), // User ID from JWT token
             );
         });
 
         it('should return 400 for invalid class ID format', async () => {
             const token = createAdminToken();
-            const response = await withAuth(global.testRequest.post('/users/update-class'), token).send({
-                userName: 'testuser',
+            const response = await withAuth(global.testRequest.patch('/users/testuser'), token).send({
                 _class: 'invalid-class-id',
             });
 
@@ -360,8 +358,7 @@ describe('User Controller Integration Tests', () => {
 
         it('should return 400 for missing required fields', async () => {
             const token = createAdminToken();
-            const response = await withAuth(global.testRequest.post('/users/update-class'), token).send({
-                userName: 'testuser',
+            const response = await withAuth(global.testRequest.patch('/users/testuser'), token).send({
                 // Missing _class
             });
 
@@ -370,8 +367,7 @@ describe('User Controller Integration Tests', () => {
 
         it('should reject unauthenticated requests', async () => {
             const classId = createObjectId();
-            const response = await global.testRequest.post('/users/update-class').send({
-                userName: 'testuser',
+            const response = await global.testRequest.patch('/users/testuser').send({
                 _class: classId.toString(),
             });
 
@@ -380,32 +376,30 @@ describe('User Controller Integration Tests', () => {
         });
     });
 
-    describe('POST /users/update-password (Protected Route)', () => {
+    describe('PATCH /users/:userName (Password Update)', () => {
         it('should update user password successfully', async () => {
             jest.spyOn(UserService, 'updatePasswordInUser').mockResolvedValue();
 
             const updateData = {
-                userName: 'testuser',
                 prevPassword: 'oldpassword',
-                newPassword: 'newpassword123',
+                password: 'newpassword123',
             };
 
             const token = createAdminToken();
-            const response = await withAuth(global.testRequest.post('/users/update-password'), token).send(updateData);
+            const response = await withAuth(global.testRequest.patch('/users/testuser'), token).send(updateData);
 
             expect(response.status).toBe(200);
             expect(UserService.updatePasswordInUser).toHaveBeenCalledWith(
-                updateData,
+                { userName: 'testuser', ...updateData },
                 expect.any(String), // User ID from JWT token
             );
         });
 
         it('should return 400 for short new password', async () => {
             const token = createAdminToken();
-            const response = await withAuth(global.testRequest.post('/users/update-password'), token).send({
-                userName: 'testuser',
+            const response = await withAuth(global.testRequest.patch('/users/testuser'), token).send({
                 prevPassword: 'oldpassword',
-                newPassword: '123', // Too short
+                password: '123', // Too short
             });
 
             expect(response.status).toBe(400);
@@ -413,9 +407,8 @@ describe('User Controller Integration Tests', () => {
 
         it('should return 400 for missing previous password', async () => {
             const token = createAdminToken();
-            const response = await withAuth(global.testRequest.post('/users/update-password'), token).send({
-                userName: 'testuser',
-                newPassword: 'newpassword123',
+            const response = await withAuth(global.testRequest.patch('/users/testuser'), token).send({
+                password: 'newpassword123',
                 // Missing prevPassword
             });
 
@@ -423,10 +416,9 @@ describe('User Controller Integration Tests', () => {
         });
 
         it('should reject unauthenticated requests', async () => {
-            const response = await global.testRequest.post('/users/update-password').send({
-                userName: 'testuser',
+            const response = await global.testRequest.patch('/users/testuser').send({
                 prevPassword: 'oldpassword',
-                newPassword: 'newpassword123',
+                password: 'newpassword123',
             });
 
             expect(response.status).toBe(401);
@@ -434,28 +426,26 @@ describe('User Controller Integration Tests', () => {
         });
     });
 
-    describe('POST /users/update-privilege (Admin Protected Route)', () => {
+    describe('PATCH /users/:userName (Privilege Update)', () => {
         it('should update user privileges successfully', async () => {
             const privilegeId = createObjectId();
 
             jest.spyOn(UserService, 'updatePrivilege').mockResolvedValue();
 
             const updateData = {
-                userName: 'testuser',
                 privilege: privilegeId.toString(),
             };
 
             const token = createAdminToken();
-            const response = await withAuth(global.testRequest.post('/users/update-privilege'), token).send(updateData);
+            const response = await withAuth(global.testRequest.patch('/users/testuser'), token).send(updateData);
 
             expect(response.status).toBe(200);
-            expect(UserService.updatePrivilege).toHaveBeenCalledWith(updateData);
+            expect(UserService.updatePrivilege).toHaveBeenCalledWith({ userName: 'testuser', ...updateData });
         });
 
         it('should return 400 for invalid privilege ID format', async () => {
             const token = createAdminToken();
-            const response = await withAuth(global.testRequest.post('/users/update-privilege'), token).send({
-                userName: 'testuser',
+            const response = await withAuth(global.testRequest.patch('/users/testuser'), token).send({
                 privilege: 'invalid-privilege-id',
             });
 
@@ -464,8 +454,7 @@ describe('User Controller Integration Tests', () => {
 
         it('should return 400 for missing required fields', async () => {
             const token = createAdminToken();
-            const response = await withAuth(global.testRequest.post('/users/update-privilege'), token).send({
-                userName: 'testuser',
+            const response = await withAuth(global.testRequest.patch('/users/testuser'), token).send({
                 // Missing privilege
             });
 
@@ -474,8 +463,7 @@ describe('User Controller Integration Tests', () => {
 
         it('should reject unauthenticated requests', async () => {
             const privilegeId = createObjectId();
-            const response = await global.testRequest.post('/users/update-privilege').send({
-                userName: 'testuser',
+            const response = await global.testRequest.patch('/users/testuser').send({
                 privilege: privilegeId.toString(),
             });
 
@@ -527,8 +515,7 @@ describe('User Controller Integration Tests', () => {
             const classId = createObjectId();
             const token = createAdminToken();
 
-            const response = await withAuth(global.testRequest.post('/users/update-class'), token).send({
-                userName: 'testuser',
+            const response = await withAuth(global.testRequest.patch('/users/testuser'), token).send({
                 _class: classId.toString(),
             });
 

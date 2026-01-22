@@ -16,14 +16,14 @@ const ChangeClass = ({ classes }: ChangeClassProps) => {
 
   const handleChangeClass = async (event: FormEvent) => {
     event.preventDefault();
-    const url = `${Util.CONSTANTS.SERVER_URL}/users/update-class`;
+    const userName = authCtx.getStoredValue().userName;
+    const url = `${Util.CONSTANTS.SERVER_URL}/users/${userName}`;
     const payload = {
-      userName: authCtx.getStoredValue().userName,
       _class: _class,
     };
 
     try {
-      await axios.post(url, payload, {
+      await axios.patch(url, payload, {
         headers: {
           Authorization: `Bearer ${authCtx.getStoredValue().token}`,
           'Content-Type': 'application/json',

@@ -2,7 +2,7 @@ const QuestionService = require('../../../src/services/question');
 const { createObjectId, createAdminToken, withAuth } = require('../../helpers');
 
 describe('Question Controller Integration Tests', () => {
-    describe('POST /questions/search', () => {
+    describe('GET /questions', () => {
         it('should return questions for a given chapter', async () => {
             const chapterId = createObjectId().toString();
             const mockQuestions = [
@@ -34,7 +34,7 @@ describe('Question Controller Integration Tests', () => {
 
             jest.spyOn(QuestionService, 'getAllQuestions').mockResolvedValue(mockQuestions);
 
-            const response = await global.testRequest.post('/questions/search').send({ chapterId });
+            const response = await global.testRequest.get('/questions').query({ chapterId });
 
             expect(response.status).toBe(200);
             expect(response.body).toBeInstanceOf(Array);
@@ -43,7 +43,7 @@ describe('Question Controller Integration Tests', () => {
         });
 
         it('should return 400 for missing chapter ID', async () => {
-            const response = await global.testRequest.post('/questions/search').send({});
+            const response = await global.testRequest.get('/questions').query({});
 
             expect(response.status).toBe(400);
             expect(response.body).toHaveProperty('message', 'Validation failed');
@@ -53,7 +53,7 @@ describe('Question Controller Integration Tests', () => {
         });
 
         it('should return 400 for invalid chapter ID format', async () => {
-            const response = await global.testRequest.post('/questions/search').send({ chapterId: 'invalid-id' });
+            const response = await global.testRequest.get('/questions').query({ chapterId: 'invalid-id' });
 
             expect(response.status).toBe(400);
             expect(response.body).toHaveProperty('message', 'Validation failed');
@@ -76,7 +76,7 @@ describe('Question Controller Integration Tests', () => {
             jest.spyOn(QuestionService, 'getAllQuestions').mockResolvedValue(mockQuestions);
 
             const response = await global.testRequest
-                .post('/questions/search')
+                .get('/questions')
                 .query({
                     pageNumber: '2',
                     pageSize: '5',
@@ -84,7 +84,7 @@ describe('Question Controller Integration Tests', () => {
                     sortOrder: 'desc',
                     filterBy: 'all',
                 })
-                .send({ chapterId });
+                .query({ chapterId });
 
             expect(response.status).toBe(200);
             expect(QuestionService.getAllQuestions).toHaveBeenCalledWith(
@@ -105,7 +105,7 @@ describe('Question Controller Integration Tests', () => {
 
             jest.spyOn(QuestionService, 'getAllQuestions').mockResolvedValue([]);
 
-            const response = await global.testRequest.post('/questions/search').send({ chapterId, tagIds });
+            const response = await global.testRequest.get('/questions').query({ chapterId, tagIds: tagIds.join(',') });
 
             expect(response.status).toBe(200);
             expect(QuestionService.getAllQuestions).toHaveBeenCalledWith(
@@ -119,8 +119,8 @@ describe('Question Controller Integration Tests', () => {
             const invalidTagIds = ['invalid-tag-id'];
 
             const response = await global.testRequest
-                .post('/questions/search')
-                .send({ chapterId, tagIds: invalidTagIds });
+                .get('/questions')
+                .query({ chapterId, tagIds: invalidTagIds.join(',') });
 
             expect(response.status).toBe(400);
             expect(response.body).toHaveProperty('message', 'Validation failed');
@@ -143,7 +143,7 @@ describe('Question Controller Integration Tests', () => {
             ];
 
             for (const query of invalidQueries) {
-                const response = await global.testRequest.post('/questions/search').query(query).send({ chapterId });
+                const response = await global.testRequest.get('/questions').query(query).query({ chapterId });
 
                 expect(response.status).toBe(400);
                 expect(response.body).toHaveProperty('message', 'Validation failed');
@@ -333,7 +333,7 @@ describe('Question Controller Integration Tests', () => {
         });
     });
 
-    describe('POST /questions/favourite', () => {
+    describe('PUT /questions/:questionId/favourite', () => {
         it('should add question to favourites', async () => {
             const questionId = createObjectId().toString();
             const favouriteData = { questionId };
@@ -342,7 +342,7 @@ describe('Question Controller Integration Tests', () => {
             jest.spyOn(QuestionService, 'addToFavourite').mockResolvedValue(mockResponse);
 
             const token = createAdminToken();
-            const response = await withAuth(global.testRequest.post('/questions/favourite'), token).send(favouriteData);
+            const response = await withAuth(global.testRequest.put(`/questions/${questionId}/favourite`), token).send(favouriteData);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
@@ -352,19 +352,24 @@ describe('Question Controller Integration Tests', () => {
             });
         });
 
-        it('should return 400 for missing question ID', async () => {
-            const token = createAdminToken();
-            const response = await withAuth(global.testRequest.post('/questions/favourite'), token).send({});
+        it('should handle valid question ID in URL path', async () => {
+            const questionId = createObjectId().toString();
+            const favouriteData = { questionId };
 
-            expect(response.status).toBe(400);
-            expect(response.body).toHaveProperty('message', 'Validation failed');
-            expect(response.body).toHaveProperty('errors');
-            expect(Array.isArray(response.body.errors)).toBe(true);
+            const mockResponse = { isFavourite: true };
+            jest.spyOn(QuestionService, 'addToFavourite').mockResolvedValue(mockResponse);
+
+            const token = createAdminToken();
+            const response = await withAuth(global.testRequest.put(`/questions/${questionId}/favourite`), token).send(favouriteData);
+
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual(mockResponse);
         });
 
         it('should return 400 for invalid question ID format', async () => {
+            const questionId = 'invalid-id';
             const token = createAdminToken();
-            const response = await withAuth(global.testRequest.post('/questions/favourite'), token).send({
+            const response = await withAuth(global.testRequest.put(`/questions/${questionId}/favourite`), token).send({
                 questionId: 'invalid-id',
             });
 
@@ -386,7 +391,7 @@ describe('Question Controller Integration Tests', () => {
 
             jest.spyOn(QuestionService, 'getAllQuestions').mockRejectedValue(serviceError);
 
-            const response = await global.testRequest.post('/questions/search').send({ chapterId });
+            const response = await global.testRequest.get('/questions').query({ chapterId });
 
             expect(response.status).toBe(500);
             expect(response.body).toHaveProperty('message');
@@ -478,13 +483,14 @@ describe('Question Controller Integration Tests', () => {
             expect(response.body.message).toContain('token');
         });
 
-        it('should require authentication for POST /questions/favourite', async () => {
-            const favouriteData = { questionId: createObjectId().toString() };
+        it('should require authentication for PUT /questions/:questionId/favourite', async () => {
+            const questionId = createObjectId().toString();
+            const favouriteData = { questionId };
 
             jest.spyOn(QuestionService, 'addToFavourite').mockResolvedValue({ isFavourite: true });
 
             const token = createAdminToken();
-            const response = await withAuth(global.testRequest.post('/questions/favourite'), token).send(favouriteData);
+            const response = await withAuth(global.testRequest.put(`/questions/${questionId}/favourite`), token).send(favouriteData);
 
             expect(response.status).toBe(200);
             expect(QuestionService.addToFavourite).toHaveBeenCalledWith(
@@ -494,10 +500,11 @@ describe('Question Controller Integration Tests', () => {
             );
         });
 
-        it('should reject unauthenticated requests for POST /questions/favourite', async () => {
-            const favouriteData = { questionId: createObjectId().toString() };
+        it('should reject unauthenticated requests for PUT /questions/:questionId/favourite', async () => {
+            const questionId = createObjectId().toString();
+            const favouriteData = { questionId };
 
-            const response = await global.testRequest.post('/questions/favourite').send(favouriteData);
+            const response = await global.testRequest.put(`/questions/${questionId}/favourite`).send(favouriteData);
 
             expect(response.status).toBe(401);
             expect(response.body.message).toContain('token');

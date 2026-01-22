@@ -164,6 +164,67 @@ const updatePrivilegeSchema = {
         .strict(),
 };
 
+// Schema for PATCH /:userName (consolidated update endpoint)
+const updateUserSchema = {
+    params: z
+        .object({
+            userName: z
+                .string({ required_error: 'Username is required' })
+                .min(1, { message: 'Username cannot be empty' })
+                .max(50, { message: 'Username cannot exceed 50 characters' }),
+        })
+        .strict(),
+    body: z
+        .object({
+            _class: z
+                .string()
+                .optional()
+                .refine((id) => !id || mongoose.Types.ObjectId.isValid(id), {
+                    message: 'Invalid Class ObjectId format',
+                }),
+            prevPassword: z.string().optional(),
+            password: z
+                .string()
+                .optional()
+                .refine((val) => !val || (val.length >= 6 && val.length <= 100), {
+                    message: 'Password must be between 6 and 100 characters long',
+                }),
+            privilege: z
+                .string()
+                .optional()
+                .refine((id) => !id || mongoose.Types.ObjectId.isValid(id), {
+                    message: 'Invalid Privilege ObjectId format',
+                }),
+        })
+        .strict()
+        .refine(
+            (data) => {
+                const hasClass = data._class !== undefined;
+                const hasPassword = data.prevPassword !== undefined || data.password !== undefined;
+                const hasPrivilege = data.privilege !== undefined;
+
+                // Must have exactly one update type
+                const updateCount = [hasClass, hasPassword, hasPrivilege].filter(Boolean).length;
+                return updateCount === 1;
+            },
+            {
+                message: 'Must provide exactly one of: _class, (prevPassword and password), or privilege',
+            },
+        )
+        .refine(
+            (data) => {
+                // If updating password, both prevPassword and password must be provided
+                if (data.prevPassword !== undefined || data.password !== undefined) {
+                    return data.prevPassword !== undefined && data.password !== undefined;
+                }
+                return true;
+            },
+            {
+                message: 'Both prevPassword and password are required when updating password',
+            },
+        ),
+};
+
 module.exports = {
     getUserSchema,
     getNotificationsSchema,
@@ -172,6 +233,7 @@ module.exports = {
     logInUserSchema,
     forgotPasswordSchema,
     resetPasswordSchema,
+    updateUserSchema,
     updateClassInUserSchema,
     updatePasswordInUserSchema,
     updatePrivilegeSchema,

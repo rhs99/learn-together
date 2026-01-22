@@ -7,6 +7,6 @@ const router = express.Router();
 
 const VoteController = require('../controllers/vote');
 
-router.post('/update', extractAndVerifyToken, validate(updateVoteSchema), VoteController.updateVote);
+router.patch('/', extractAndVerifyToken, validate(updateVoteSchema), VoteController.updateVote);
 
 module.exports = router;

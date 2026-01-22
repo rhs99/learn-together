@@ -64,9 +64,9 @@ const ManageDonations = () => {
         throw new Error('Authentication token is missing');
       }
 
-      const response = await axios.put(
-        `${Util.CONSTANTS.SERVER_URL}/donations/${id}/approve`,
-        {}, // Empty body as we're just changing status
+      const response = await axios.patch(
+        `${Util.CONSTANTS.SERVER_URL}/donations/${id}`,
+        { status: 'completed' },
         {
           headers: {
             Authorization: `Bearer ${token}`,

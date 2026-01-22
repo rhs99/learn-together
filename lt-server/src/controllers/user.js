@@ -118,10 +118,53 @@ const resetPassword = async (req, res) => {
     res.status(200).json();
 };
 
+const updateUser = async (req, res) => {
+    const userName = req.params.userName;
+
+    // Determine which update to perform based on request body
+    if (req.body._class !== undefined) {
+        logger.info('User class update', {
+            userId: req.user,
+            userName,
+            newClassId: req.body._class,
+            timestamp: new Date().toISOString(),
+        });
+        await UserService.updateClassInUser({ userName, _class: req.body._class }, req.user);
+        logger.info('User class updated successfully', { userId: req.user });
+    } else if (req.body.prevPassword !== undefined && req.body.password !== undefined) {
+        logger.info('User password update attempt', {
+            userId: req.user,
+            userName,
+            timestamp: new Date().toISOString(),
+        });
+        await UserService.updatePasswordInUser(
+            { userName, prevPassword: req.body.prevPassword, password: req.body.password },
+            req.user,
+        );
+        logger.info('User password updated successfully', {
+            userId: req.user,
+            timestamp: new Date().toISOString(),
+        });
+    } else if (req.body.privilege !== undefined) {
+        logger.info('User privilege update', {
+            targetUserName: userName,
+            newPrivilegeId: req.body.privilege,
+            timestamp: new Date().toISOString(),
+        });
+        await UserService.updatePrivilege({ userName, privilege: req.body.privilege });
+        logger.info('User privilege updated successfully', {
+            targetUserName: userName,
+        });
+    }
+
+    res.status(200).json();
+};
+
 module.exports = {
     getUser,
     addNewUser,
     logInUser,
+    updateUser,
     updateClassInUser,
     updatePasswordInUser,
     updatePrivilege,

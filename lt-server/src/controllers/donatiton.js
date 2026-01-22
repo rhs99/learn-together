@@ -22,24 +22,26 @@ const getAllDonations = async (req, res) => {
     res.status(200).json(donations);
 };
 
-const approveDonation = async (req, res) => {
+const updateDonation = async (req, res) => {
     if (!req.params.id) {
-        logger.warn('Donation approval attempted without ID');
+        logger.warn('Donation update attempted without ID');
         return res.status(400).json({ message: 'Donation ID is required' });
     }
 
-    logger.info('Donation approval', {
+    logger.info('Donation update', {
         donationId: req.params.id,
+        status: req.body.status,
         timestamp: new Date().toISOString(),
     });
     const donation = await DonationService.approveDonation(req.params.id);
-    logger.info('Donation approved successfully', {
+    logger.info('Donation updated successfully', {
         donationId: donation._id,
         amount: donation.amount,
+        status: donation.status,
     });
 
     res.status(200).json({
-        message: 'Donation approved successfully',
+        message: 'Donation updated successfully',
         donation: {
             id: donation._id,
             status: donation.status,
@@ -47,4 +49,6 @@ const approveDonation = async (req, res) => {
     });
 };
 
-module.exports = { addNewDonation, getAllDonations, approveDonation };
+const approveDonation = updateDonation;
+
+module.exports = { addNewDonation, getAllDonations, approveDonation, updateDonation };

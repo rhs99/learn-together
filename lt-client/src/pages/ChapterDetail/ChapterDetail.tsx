@@ -38,31 +38,35 @@ const ChapterDetail = () => {
 
   const fetchQuestion = useCallback(() => {
     setIsLoading(true);
-    let queryString = '';
-    queryString += `sortBy=${sortBy}`;
-    queryString += `&sortOrder=${sortOrder}`;
-    queryString += `&filterBy=${filterBy}`;
-    queryString += `&pageNumber=${paginationInfo.currPage}`;
-    queryString += `&pageSize=${PAGE_SIZE}`;
-
-    const URL = `${Util.CONSTANTS.SERVER_URL}/questions/search?${queryString}`;
     const selectedTagIds = selectedTags.filter((tag) => tag._id.length > 0).map((tag) => tag._id);
-    const payload = {
+
+    const params: any = {
       chapterId,
-      tagIds: selectedTagIds,
+      sortBy,
+      sortOrder,
+      filterBy,
+      pageNumber: paginationInfo.currPage,
+      pageSize: PAGE_SIZE,
     };
 
-    const header = isLoggedIn
-      ? {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        }
-      : {};
+    if (selectedTagIds.length > 0) {
+      params.tagIds = selectedTagIds.join(',');
+    }
+
+    const URL = `${Util.CONSTANTS.SERVER_URL}/questions`;
+
+    const config: any = {
+      params,
+    };
+
+    if (isLoggedIn) {
+      config.headers = {
+        Authorization: `Bearer ${token}`,
+      };
+    }
 
     axios
-      .post(URL, payload, {
-        headers: header,
-      })
+      .get(URL, config)
       .then(({ data }) => {
         setQuestions(data.paginatedResults);
         setPaginationInfo((prev) => {
