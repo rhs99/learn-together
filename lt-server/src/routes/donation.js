@@ -9,6 +9,12 @@ const DonationController = require('../controllers/donatiton');
 
 router.post('/', DonationController.addNewDonation);
 router.get('/', extractAndVerifyToken, hasAdminPrivilege, DonationController.getAllDonations);
-router.patch('/:id', extractAndVerifyToken, hasAdminPrivilege, validate(patchDonationSchema), DonationController.updateDonation);
+router.patch(
+    '/:id',
+    extractAndVerifyToken,
+    hasAdminPrivilege,
+    validate(patchDonationSchema),
+    DonationController.updateDonation,
+);
 
 module.exports = router;

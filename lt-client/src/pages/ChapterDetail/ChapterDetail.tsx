@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import Util from '../../utils';
 import { Question, Breadcrumb } from '../../types';
 import AuthContext from '../../store/auth';
@@ -40,7 +40,7 @@ const ChapterDetail = () => {
     setIsLoading(true);
     const selectedTagIds = selectedTags.filter((tag) => tag._id.length > 0).map((tag) => tag._id);
 
-    const params: any = {
+    const params: Record<string, string | number | undefined> = {
       chapterId,
       sortBy,
       sortOrder,
@@ -55,7 +55,7 @@ const ChapterDetail = () => {
 
     const URL = `${Util.CONSTANTS.SERVER_URL}/questions`;
 
-    const config: any = {
+    const config: AxiosRequestConfig = {
       params,
     };
 

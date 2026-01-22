@@ -120,7 +120,7 @@ describe('Class Service Tests', () => {
 
             expect(saveSpy).toHaveBeenCalled();
             expect(cacheService.del).toHaveBeenCalledWith('classes');
-            expect(cacheService.del).toHaveBeenCalledWith(`class:${newClassId}`);
+            expect(cacheService.del).toHaveBeenCalledTimes(1);
 
             saveSpy.mockRestore();
         });

@@ -340,7 +340,9 @@ describe('Subject Service Tests', () => {
             await SubjectService.addNewSubject(subjectBody);
 
             expect(cacheService.del).toHaveBeenCalledWith(`subjects:class:${classId}`);
-            expect(cacheService.del).toHaveBeenCalledTimes(1);
+            expect(cacheService.del).toHaveBeenCalledWith(`class:${classId}`);
+            expect(cacheService.del).toHaveBeenCalledWith('classes');
+            expect(cacheService.del).toHaveBeenCalledTimes(3);
         });
     });
 });

@@ -342,7 +342,9 @@ describe('Question Controller Integration Tests', () => {
             jest.spyOn(QuestionService, 'addToFavourite').mockResolvedValue(mockResponse);
 
             const token = createAdminToken();
-            const response = await withAuth(global.testRequest.put(`/questions/${questionId}/favourite`), token).send(favouriteData);
+            const response = await withAuth(global.testRequest.put(`/questions/${questionId}/favourite`), token).send(
+                favouriteData,
+            );
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
@@ -360,7 +362,9 @@ describe('Question Controller Integration Tests', () => {
             jest.spyOn(QuestionService, 'addToFavourite').mockResolvedValue(mockResponse);
 
             const token = createAdminToken();
-            const response = await withAuth(global.testRequest.put(`/questions/${questionId}/favourite`), token).send(favouriteData);
+            const response = await withAuth(global.testRequest.put(`/questions/${questionId}/favourite`), token).send(
+                favouriteData,
+            );
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(mockResponse);
@@ -490,7 +494,9 @@ describe('Question Controller Integration Tests', () => {
             jest.spyOn(QuestionService, 'addToFavourite').mockResolvedValue({ isFavourite: true });
 
             const token = createAdminToken();
-            const response = await withAuth(global.testRequest.put(`/questions/${questionId}/favourite`), token).send(favouriteData);
+            const response = await withAuth(global.testRequest.put(`/questions/${questionId}/favourite`), token).send(
+                favouriteData,
+            );
 
             expect(response.status).toBe(200);
             expect(QuestionService.addToFavourite).toHaveBeenCalledWith(

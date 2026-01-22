@@ -72,7 +72,6 @@ const addNewClass = async (body) => {
 
         logger.debug('Invalidating class caches');
         await cacheService.del(CACHE_KEYS.CLASSES);
-        await cacheService.del(`${CACHE_KEYS.CLASS_PREFIX}${newClass._id}`);
 
         logger.debug('Class created successfully', 'classes', {
             classId: newClass._id,

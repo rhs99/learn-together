@@ -9,6 +9,8 @@ const CACHE_KEYS = {
     SUBJECT_PREFIX: 'subject:',
     SUBJECTS_BY_CLASS: 'subjects:class:',
     SUBJECT_BREADCRUMB: 'subject:breadcrumb:',
+    CLASS_PREFIX: 'class:',
+    CLASSES: 'classes',
 };
 
 const getSubject = async (id) => {
@@ -141,8 +143,12 @@ const addNewSubject = async (body) => {
         _class.subjects.push(subject._id);
         await _class.save();
 
-        logger.debug('Invalidating subject cache for class', { classId: body.class });
-        await cacheService.del(`${CACHE_KEYS.SUBJECTS_BY_CLASS}${body.class}`);
+        logger.debug('Invalidating subject and class caches', { classId: body.class });
+        await Promise.all([
+            cacheService.del(`${CACHE_KEYS.SUBJECTS_BY_CLASS}${body.class}`),
+            cacheService.del(`${CACHE_KEYS.CLASS_PREFIX}${body.class}`),
+            cacheService.del(CACHE_KEYS.CLASSES),
+        ]);
 
         logger.debug('Subject created successfully', 'subjects', {
             subjectId: subject._id,

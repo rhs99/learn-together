@@ -120,7 +120,7 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
           Authorization: `Bearer ${authCtx.getStoredValue().token}`,
           'Content-Type': 'application/json',
         },
-      },
+      }
     );
 
     setIsFavourite(data.favourite);
