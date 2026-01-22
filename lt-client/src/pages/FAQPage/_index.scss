@@ -11,7 +11,7 @@
       font-size: 2.5rem;
       margin-bottom: 1rem;
       color: var(--primary);
-      font-weight: 700;
+      font-weight: var(--fw-bold);
     }
 
     p {
@@ -28,14 +28,16 @@
 
   .faq-item {
     border: 1px solid var(--gray-light);
-    border-radius: 8px;
+    border-radius: var(--radius-lg);
     overflow: hidden;
-    transition: all 0.3s ease;
-    background-color: var(--card-bg);
+    transition: var(--transition-slow);
+    background: var(--card-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
     margin-bottom: 0.5rem;
 
     &.active {
-      box-shadow: 0 4px 12px rgba(5, 68, 94, 0.2);
+      box-shadow: var(--shadow-xl);
       border-color: var(--primary-light);
     }
   }
@@ -47,7 +49,7 @@
     padding: 1.2rem 1.5rem;
     cursor: pointer;
     background-color: var(--primary-light);
-    transition: all 0.3s ease;
+    transition: var(--transition-slow);
     position: relative;
     outline: none;
 
@@ -58,13 +60,13 @@
     &:focus {
       outline: 2px solid var(--primary);
       outline-offset: 2px;
-      box-shadow: 0 0 0 2px rgba(5, 68, 94, 0.4);
+      box-shadow: var(--shadow-focus);
     }
 
     h3 {
       margin: 0;
       font-size: 1.1rem;
-      font-weight: 600;
+      font-weight: var(--fw-semibold);
       color: var(--white);
       flex: 1;
     }

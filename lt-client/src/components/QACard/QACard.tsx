@@ -160,66 +160,115 @@ const QACard = ({ item, isQuestion, clickableDetails, handleItemDelete }: QACard
 
   return (
     <Box className="lt-QACard">
-      <Flex flexDirection="row" gap="16" className="lt-QACard-body">
-        <Flex flexDirection="column" gap="16">
-          <Flex flexDirection="column" gap="2" alignItems="center">
-            <Button aria-label="upvote" icon={<GoArrowUp onClick={handleUpVote} size={20} />} />
-            <Text>{udCnt.upVote - udCnt.downVote}</Text>
-            <Button aria-label="downvote" icon={<GoArrowDown onClick={handleDownVote} size={20} />} />
-          </Flex>
-          {isQuestion && <Text>Ans: {(item as Question).answers.length}</Text>}
+      <Flex flexDirection="row" gap="24" className="lt-QACard-body">
+        <Flex flexDirection="column" gap="8" alignItems="center" className="lt-QACard-voting">
+          <Button
+            aria-label="upvote"
+            onClick={handleUpVote}
+            className="lt-QACard-voting-btn"
+            disabled={!authCtx.isLoggedIn}
+            icon={<GoArrowUp size={24} />}
+          />
+          <Text fontSize="xl" fontWeight="600" className="lt-QACard-voting-count">
+            {udCnt.upVote - udCnt.downVote}
+          </Text>
+          <Button
+            aria-label="downvote"
+            onClick={handleDownVote}
+            className="lt-QACard-voting-btn"
+            disabled={!authCtx.isLoggedIn}
+            icon={<GoArrowDown size={24} />}
+          />
+          {isQuestion && (
+            <Flex flexDirection="column" alignItems="center" className="lt-QACard-answer-count" mt="16">
+              <Text fontSize="2xl" fontWeight="700">
+                {(item as Question).answers.length}
+              </Text>
+              <Text fontSize="sm">{(item as Question).answers.length === 1 ? 'Answer' : 'Answers'}</Text>
+            </Flex>
+          )}
         </Flex>
 
-        <Flex flexDirection="row" gap="24" className="lt-QACard-right-pane">
+        <Flex flexDirection="column" flex="1" gap="16" className="lt-QACard-content">
           <Box className={detailsClassName} onClick={detailsOnClick}>
             <QuillTextEditor onEditorReady={onEditorReady} readOnly={true} showToolbar={false} />
           </Box>
+
           {item.imageLocations.length > 0 && (
-            <Flex flexDirection="row" gap="8">
+            <Flex flexDirection="row" gap="12" flexWrap="wrap" className="lt-QACard-images">
               {item.imageLocations.map((file, index) => (
-                <img
-                  key={index}
-                  src={file}
-                  className="lt-QACard-right-pane-image"
-                  onClick={() => handleImageModalOpen(file)}
-                />
+                <Box key={index} className="lt-QACard-image-wrapper">
+                  <img
+                    src={file}
+                    alt={`Attachment ${index + 1}`}
+                    className="lt-QACard-image"
+                    onClick={() => handleImageModalOpen(file)}
+                  />
+                </Box>
+              ))}
+            </Flex>
+          )}
+
+          {isQuestion && (item as Question).tags.length > 0 && (
+            <Flex flexDirection="row" gap="8" flexWrap="wrap" className="lt-QACard-tags">
+              {(item as Question).tags.map((tag) => (
+                <Badge key={tag._id} className="lt-QACard-tag">
+                  {tag.name}
+                </Badge>
               ))}
             </Flex>
           )}
         </Flex>
       </Flex>
-      <Box className="lt-QACard-bottom-pane">
-        {isQuestion && (
-          <Flex flexDirection="row" gap="2">
-            {(item as Question).tags.map((tag) => (
-              <Badge key={tag._id} className="lt-QACard-bottom-pane-tag">
-                {tag.name}{' '}
-              </Badge>
-            ))}
-          </Flex>
-        )}
-        <Flex flexDirection="row" justifyContent="space-between">
-          <Text>{item.userName}</Text>
-          <Flex flexDirection="row" gap="2">
-            <Tooltip content="Add to favourites">
+
+      <Flex flexDirection="row" justifyContent="space-between" alignItems="center" className="lt-QACard-footer">
+        <Flex flexDirection="row" alignItems="center" gap="8">
+          <Text fontWeight="600" className="lt-QACard-author">
+            {item.userName}
+          </Text>
+        </Flex>
+
+        <Flex flexDirection="row" gap="4" className="lt-QACard-actions">
+          {isQuestion && (
+            <Tooltip content={isFavourite ? 'Remove from favourites' : 'Add to favourites'}>
               <Button
                 aria-label="favourite"
+                appearance="subtle"
                 disabled={!authCtx.isLoggedIn}
-                icon={<BiHeart color={isFavourite ? 'red' : 'currentColor'} onClick={handleToggleFavourite} />}
+                onClick={handleToggleFavourite}
+                icon={<BiHeart size={20} color={isFavourite ? 'red' : 'currentColor'} />}
               />
             </Tooltip>
-            <Tooltip content="Share">
-              <Button aria-label="share" disabled={!authCtx.isLoggedIn} icon={<BiShare onClick={handleShareClick} />} />
-            </Tooltip>
-            <Tooltip content="Edit">
-              <Button aria-label="edit" disabled={!isOwner} icon={<BiEdit onClick={handleEdit} />} />
-            </Tooltip>
-            <Tooltip content="Delete">
-              <Button aria-label="delete" disabled={!isOwner && !isQOwner} icon={<BiTrash onClick={handleDelete} />} />
-            </Tooltip>
-          </Flex>
+          )}
+          <Tooltip content="Share">
+            <Button
+              aria-label="share"
+              appearance="subtle"
+              disabled={!authCtx.isLoggedIn}
+              onClick={handleShareClick}
+              icon={<BiShare size={20} />}
+            />
+          </Tooltip>
+          <Tooltip content="Edit">
+            <Button
+              aria-label="edit"
+              appearance="subtle"
+              disabled={!isOwner}
+              onClick={handleEdit}
+              icon={<BiEdit size={20} />}
+            />
+          </Tooltip>
+          <Tooltip content="Delete">
+            <Button
+              aria-label="delete"
+              appearance="subtle"
+              disabled={!isOwner && !isQOwner}
+              onClick={handleDelete}
+              icon={<BiTrash size={20} />}
+            />
+          </Tooltip>
         </Flex>
-      </Box>
+      </Flex>
 
       {imageToShow.length > 0 && (
         <Dialog open={imageToShow.length > 0} onOpenChange={handleImageModalClose}>

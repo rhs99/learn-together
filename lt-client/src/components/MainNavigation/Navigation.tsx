@@ -3,22 +3,24 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import React, { useContext, useState, useEffect } from 'react';
 import AuthContext from '../../store/auth';
 import Util from '../../utils';
+import { useTheme } from '../../hooks/use-theme';
 
 import { IoIosNotificationsOutline } from 'react-icons/io';
 import { CgProfile } from 'react-icons/cg';
 import { ImProfile } from 'react-icons/im';
 import { IoSettingsOutline } from 'react-icons/io5';
 import { CiLogout } from 'react-icons/ci';
+import { MdDarkMode, MdLightMode } from 'react-icons/md';
 
 import {
   Box,
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  Flex,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -41,6 +43,7 @@ const Navigation = () => {
   const authCtx = useContext(AuthContext);
   const { isLoggedIn, getStoredValue } = authCtx;
   const currUserName = authCtx.getStoredValue().userName;
+  const { theme, toggleTheme } = useTheme();
 
   const navigate = useNavigate();
 
@@ -127,8 +130,18 @@ const Navigation = () => {
   };
 
   return (
-    <Box className="lt-Navigation">
-      <Box className="left">
+    <Box
+      className="lt-Navigation"
+      display="flex"
+      justifyContent="space-between"
+      h="64"
+      w="full"
+      bg="bg.default"
+      borderB="2"
+      shadow="sm"
+      px="24"
+    >
+      <Box display="flex" flexDirection="row" alignItems="center" gap="8">
         <NavLink
           to="/"
           className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
@@ -136,24 +149,27 @@ const Navigation = () => {
         >
           Home
         </NavLink>
-        <Box className="gap">
-          <NavLink
-            to="/about"
-            className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
-          >
-            About
-          </NavLink>
-        </Box>
-        <Box className="gap">
-          <NavLink
-            to="/donate"
-            className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
-          >
-            Donate
-          </NavLink>
-        </Box>
+        <NavLink
+          to="/about"
+          className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
+        >
+          About
+        </NavLink>
+        <NavLink
+          to="/donate"
+          className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
+        >
+          Donate
+        </NavLink>
       </Box>
-      <Box className={isLoggedIn ? 'right-loggedIn' : 'right'}>
+      <Box display="flex" flexDirection="row" alignItems="center" gap={isLoggedIn ? '12' : '8'}>
+        <Button
+          appearance="subtle"
+          aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+          icon={theme === 'light' ? <MdDarkMode /> : <MdLightMode />}
+          onClick={toggleTheme}
+          size="md"
+        />
         {!isLoggedIn && (
           <NavLink
             to="/users/login"
@@ -163,21 +179,23 @@ const Navigation = () => {
           </NavLink>
         )}
         {!isLoggedIn && (
-          <Box className="gap">
-            <NavLink
-              className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
-              to="/users/signup"
-            >
-              Signup
-            </NavLink>
-          </Box>
+          <NavLink
+            className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
+            to="/users/signup"
+          >
+            Signup
+          </NavLink>
         )}
         {isLoggedIn && (
-          <Flex flexDirection="row" gap="8">
+          <Box display="flex" flexDirection="row" gap="8">
             <Popover>
               <PopoverTrigger
                 aria-label="Notifications"
-                icon={<IoIosNotificationsOutline color={hasNewNotification ? 'red' : 'black'} />}
+                icon={
+                  <IoIosNotificationsOutline
+                    color={hasNewNotification ? '#EF4444' : theme === 'dark' ? '#F1F5F9' : '#2E3442'}
+                  />
+                }
                 onClick={handleNotificationFetch}
               />
               <PopoverContent>
@@ -206,7 +224,7 @@ const Navigation = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </Flex>
+          </Box>
         )}
       </Box>
     </Box>

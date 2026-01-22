@@ -1,5 +1,6 @@
 import { useMemo, useContext } from 'react';
 import { useLoaderData, useNavigate, NavLink } from 'react-router-dom';
+import { Box, Button, Heading, Text, Link } from '@optiaxiom/react';
 import Table from '../../design-library/Table/Table';
 import { Class } from '../../types';
 import AuthContext from '../../store/auth';
@@ -16,7 +17,6 @@ import {
   FaQuestion,
   FaEnvelope,
 } from 'react-icons/fa';
-
 import './_index.scss';
 
 const CLASS_ORDER = [
@@ -61,106 +61,140 @@ const HomePage = () => {
   }, [classes]);
 
   return (
-    <div className="lt-Homepage">
-      <div className="welcome-banner">
-        <h1>Learn Together</h1>
-        <p className="platform-description">Collaborative learning platform for students and educators</p>
-        <div className="registration-buttons">
+    <Box className="lt-Homepage" w="full">
+      {/* Hero Section */}
+      <Box className="hero-section" p="24" mb="32" bg="bg.default" rounded="lg" shadow="md">
+        <Heading className="hero-title" level="1" fontSize="3xl" fontWeight="700" mb="8">
+          Learn Together
+        </Heading>
+        <Text fontSize="lg" color="fg.secondary" mb="20" mx="auto" maxW="md">
+          Collaborative learning platform for students and educators
+        </Text>
+        <Box display="flex" justifyContent="center" gap="12" flexWrap="wrap">
           {!authCtx.isLoggedIn && (
-            <NavLink to="/users/signup" className="lt-button lt-button-primary">
-              Join Now
+            <NavLink to="/users/signup" className="navlink-unstyled">
+              <Button>Join Now</Button>
             </NavLink>
           )}
-          <NavLink to="/about" className="lt-button lt-button-light">
-            Learn More
+          <NavLink to="/about" className="navlink-unstyled">
+            <Button>Learn More</Button>
           </NavLink>
-        </div>
-      </div>
+        </Box>
+      </Box>
 
-      <div className="classes-container">
-        <div className="classes-introduction">
-          <h2>Available Classes</h2>
-          <p>Select a class to explore subjects and learning materials</p>
-        </div>
+      {/* Classes Section */}
+      <Box bg="bg.default" p="24" rounded="lg" shadow="md" mb="32">
+        <Box mb="20">
+          <Heading level="2" fontSize="xl" fontWeight="700" mb="4">
+            Available Classes
+          </Heading>
+          <Text fontSize="sm" color="fg.secondary">
+            Select a class to explore subjects and learning materials
+          </Text>
+        </Box>
         <Table rowData={rowData} onRowSelection={handleClassChange} />
-      </div>
+      </Box>
 
-      <footer className="homepage-footer">
-        <div className="footer-content">
-          <div className="footer-section">
-            <h3>
-              <FaGraduationCap className="footer-icon" /> Learn Together
-            </h3>
-            <p>Empowering students and educators through collaborative learning since 2023.</p>
-          </div>
-          <div className="footer-section">
-            <h3>
-              <FaBook className="footer-icon" /> Quick Links
-            </h3>
-            <ul>
-              <li>
-                <NavLink to="/about" className={({ isActive }) => (isActive ? 'footer-link active' : 'footer-link')}>
-                  <FaInfoCircle /> About Us
+      {/* Footer */}
+      <Box className="footer-section" p="32" bg="bg.default" rounded="lg" shadow="md" asChild>
+        <footer>
+          <Box display="flex" flexDirection="row" flexWrap="wrap" gap="24" mb="24">
+            {/* About Column */}
+            <Box className="footer-column">
+              <Box display="flex" alignItems="center" gap="8" mb="12">
+                <FaGraduationCap size={18} />
+                <Heading level="3" fontSize="md" fontWeight="700">
+                  Learn Together
+                </Heading>
+              </Box>
+              <Text fontSize="sm" color="fg.secondary">
+                Empowering students and educators through collaborative learning since 2023.
+              </Text>
+            </Box>
+
+            {/* Quick Links Column */}
+            <Box className="footer-column">
+              <Box display="flex" alignItems="center" gap="8" mb="12">
+                <FaBook size={18} />
+                <Heading level="3" fontSize="md" fontWeight="700">
+                  Quick Links
+                </Heading>
+              </Box>
+              <Box display="flex" flexDirection="column" gap="8">
+                <NavLink to="/about" className="footer-link">
+                  <FaInfoCircle size={14} />
+                  <Text fontSize="sm">About Us</Text>
                 </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/users/signup"
-                  className={({ isActive }) => (isActive ? 'footer-link active' : 'footer-link')}
-                >
-                  <FaUserPlus /> Sign Up
+                <NavLink to="/users/signup" className="footer-link">
+                  <FaUserPlus size={14} />
+                  <Text fontSize="sm">Sign Up</Text>
                 </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/users/login"
-                  className={({ isActive }) => (isActive ? 'footer-link active' : 'footer-link')}
-                >
-                  <FaSignInAlt /> Login
+                <NavLink to="/users/login" className="footer-link">
+                  <FaSignInAlt size={14} />
+                  <Text fontSize="sm">Login</Text>
                 </NavLink>
-              </li>
-            </ul>
-          </div>
-          <div className="footer-section">
-            <h3>
-              <FaEnvelope className="footer-icon" /> Support
-            </h3>
-            <ul>
-              <li>
-                <NavLink to="/faq" className={({ isActive }) => (isActive ? 'footer-link active' : 'footer-link')}>
-                  <FaQuestion /> FAQs
+              </Box>
+            </Box>
+
+            {/* Support Column */}
+            <Box className="footer-column">
+              <Box display="flex" alignItems="center" gap="8" mb="12">
+                <FaEnvelope size={18} />
+                <Heading level="3" fontSize="md" fontWeight="700">
+                  Support
+                </Heading>
+              </Box>
+              <Box display="flex" flexDirection="column" gap="8">
+                <NavLink to="/faq" className="footer-link">
+                  <FaQuestion size={14} />
+                  <Text fontSize="sm">FAQs</Text>
                 </NavLink>
-              </li>
-              <li>
                 <a href="mailto:learntogether3009@gmail.com" className="footer-link">
-                  <FaEnvelope /> Contact Us
+                  <FaEnvelope size={14} />
+                  <Text fontSize="sm">Contact Us</Text>
                 </a>
-              </li>
-            </ul>
-          </div>
-          <div className="footer-section">
-            <h3>Connect With Us</h3>
-            <div className="social-links">
-              <a href="#" className="social-icon" title="Facebook">
-                <FaFacebookF />
-              </a>
-              <a href="#" className="social-icon" title="Twitter">
-                <FaTwitter />
-              </a>
-              <a href="#" className="social-icon" title="Instagram">
-                <FaInstagram />
-              </a>
-              <a href="#" className="social-icon" title="LinkedIn">
-                <FaLinkedinIn />
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} Learn Together. All rights reserved.</p>
-        </div>
-      </footer>
-    </div>
+              </Box>
+            </Box>
+
+            {/* Social Column */}
+            <Box className="footer-column">
+              <Heading level="3" fontSize="md" fontWeight="700" mb="12">
+                Connect With Us
+              </Heading>
+              <Box display="flex" gap="10">
+                <Link href="#" aria-label="Facebook">
+                  <Box className="social-icon">
+                    <FaFacebookF size={16} />
+                  </Box>
+                </Link>
+                <Link href="#" aria-label="Twitter">
+                  <Box className="social-icon">
+                    <FaTwitter size={16} />
+                  </Box>
+                </Link>
+                <Link href="#" aria-label="Instagram">
+                  <Box className="social-icon">
+                    <FaInstagram size={16} />
+                  </Box>
+                </Link>
+                <Link href="#" aria-label="LinkedIn">
+                  <Box className="social-icon">
+                    <FaLinkedinIn size={16} />
+                  </Box>
+                </Link>
+              </Box>
+            </Box>
+          </Box>
+
+          {/* Copyright */}
+          <Box pt="20" borderT="1" borderColor="border.default" textAlign="center">
+            <Text fontSize="sm" color="fg.secondary">
+              &copy; {new Date().getFullYear()} Learn Together. All rights reserved.
+            </Text>
+          </Box>
+        </footer>
+      </Box>
+    </Box>
   );
 };
 

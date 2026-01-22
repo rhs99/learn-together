@@ -3,6 +3,7 @@ import { FormEvent, useState, useContext } from 'react';
 import { Class, HttpError } from '../../types';
 import Util from '../../utils';
 import AuthContext from '../../store/auth';
+import { Box, Heading, Field, Button, Select, SelectContent, SelectTrigger } from '@optiaxiom/react';
 
 type ChangeClassProps = {
   classes: Class[];
@@ -38,24 +39,35 @@ const ChangeClass = ({ classes }: ChangeClassProps) => {
   };
 
   return (
-    <div className="settings-form-container">
-      <h2 className="header">Change Class</h2>
-      <form onSubmit={handleChangeClass}>
-        <label htmlFor="class">Class</label>
-        <select value={_class} onChange={(event) => setClass(event.target.value)} name="class" required>
-          <option value="">Select class</option>
-          {(classes as Class[]).map((_class) => (
-            <option value={_class._id} key={_class._id}>
-              {_class.name}
-            </option>
-          ))}
-        </select>
-        {err && <span className="err">{err}</span>}
-        <button type="submit" className="settings-button">
-          Change
-        </button>
-      </form>
-    </div>
+    <Box className="settings-form-container">
+      <Heading level="2" fontSize="xl" mb="24">
+        Change Class
+      </Heading>
+      <Box asChild>
+        <form onSubmit={handleChangeClass}>
+          <Field label="Class" required error={err || undefined}>
+            <Select
+              value={_class}
+              onValueChange={setClass}
+              options={[
+                { label: 'Select class', value: '' },
+                ...(classes as Class[]).map((_class) => ({
+                  label: _class.name,
+                  value: _class._id,
+                })),
+              ]}
+            >
+              <SelectTrigger placeholder="Select class" />
+              <SelectContent />
+            </Select>
+          </Field>
+
+          <Button type="submit" w="full" justifyContent="center">
+            Change
+          </Button>
+        </form>
+      </Box>
+    </Box>
   );
 };
 

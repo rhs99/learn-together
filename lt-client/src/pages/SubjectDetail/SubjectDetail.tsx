@@ -1,12 +1,11 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { Box, Button, Heading, Text } from '@optiaxiom/react';
 import Util from '../../utils';
 import { Chapter, Breadcrumb } from '../../types';
 import Table from '../../design-library/Table/Table';
 import Breadcrumbs from '../../components/Breadcrumbs/Breadcrumbs';
-
-import './_index.scss';
 
 const SubjectDetail = () => {
   const [chapters, setChapters] = useState<Chapter[]>([]);
@@ -42,38 +41,54 @@ const SubjectDetail = () => {
   }, [chapters]);
 
   return (
-    <div className="lt-SubjectDetail">
-      <div className="subject-header">
-        <div className="header-content">
+    <Box w="full" mx="auto" px="24" pb="24" style={{ maxWidth: '1200px' }}>
+      <Box
+        display="flex"
+        flexDirection={{ base: 'column', md: 'row' }}
+        justifyContent="space-between"
+        alignItems={{ base: 'start', md: 'center' }}
+        gap="16"
+        mb="32"
+        p="24"
+        bg="bg.default"
+        rounded="xl"
+        shadow="md"
+      >
+        <Box>
           {breadcrumbs.length > 0 && (
-            <Breadcrumbs
-              items={breadcrumbs.slice(0, -1).map((breadcrumb, index) => ({
-                name: breadcrumb.name,
-                url: index < breadcrumbs.length - 1 ? breadcrumb.url : null,
-              }))}
-            />
+            <Box mb="12">
+              <Breadcrumbs
+                items={breadcrumbs.slice(0, -1).map((breadcrumb, index) => ({
+                  name: breadcrumb.name,
+                  url: index < breadcrumbs.length - 1 ? breadcrumb.url : null,
+                }))}
+              />
+            </Box>
           )}
-          <h1>{breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1].name : 'Subject Detail'}</h1>
-          <p className="description">Explore chapters and learning materials for this subject</p>
-        </div>
-        <button
-          className="lt-button lt-button-secondary"
-          onClick={() => navigate(`/classes/${breadcrumbs[0]?.url.split('/').pop()}`)}
-        >
-          Back to Subjects
-        </button>
-      </div>
+          <Heading level="1" fontSize="3xl" fontWeight="700" mb="8">
+            {breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1].name : 'Subject Detail'}
+          </Heading>
+          <Text fontSize="lg" color="fg.secondary">
+            Explore chapters and learning materials for this subject
+          </Text>
+        </Box>
+        <Button onClick={() => navigate(`/classes/${breadcrumbs[0]?.url.split('/').pop()}`)}>Back to Subjects</Button>
+      </Box>
 
-      <div className="content-wrapper">
-        <div className="section-header">
-          <h2>Available Chapters</h2>
-          <p>Select a chapter to view questions and learning materials</p>
-        </div>
-        <div className="table-container">
+      <Box bg="bg.default" p="24" rounded="xl" shadow="md">
+        <Box mb="24">
+          <Heading level="2" fontSize="2xl" mb="8">
+            Available Chapters
+          </Heading>
+          <Text fontSize="lg" color="fg.secondary">
+            Select a chapter to view questions and learning materials
+          </Text>
+        </Box>
+        <Box rounded="lg" style={{ overflow: 'hidden' }}>
           <Table rowData={rowData} onRowSelection={handleChapterOpen} />
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

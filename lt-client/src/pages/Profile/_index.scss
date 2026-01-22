@@ -4,9 +4,10 @@
   max-width: 800px;
 
   &__container {
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    background: var(--background-card);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-default);
     overflow: hidden;
   }
 
@@ -15,16 +16,16 @@
     text-align: center;
     padding: 40px;
     font-size: 18px;
-    color: var(--text-dark);
+    color: var(--text-primary);
   }
 
   &__error {
-    color: #d9534f; /* Keeping error color as is since there's no matching variable */
+    color: var(--error);
   }
 
   &__header {
-    background: linear-gradient(135deg, var(--blue-grotto), var(--navy-blue));
-    color: var(--white);
+    background: var(--gradient-primary);
+    color: #ffffff;
     padding: 40px 30px;
     text-align: center;
     position: relative;
@@ -33,22 +34,23 @@
   &__avatar {
     width: 100px;
     height: 100px;
-    background-color: var(--white);
-    color: var(--navy-blue);
+    background-color: #ffffff;
+    color: var(--primary);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 42px;
-    font-weight: bold;
+    font-weight: var(--fw-bold);
     margin: 0 auto 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-xl);
   }
 
   &__username {
     font-size: 28px;
-    font-weight: 700;
+    font-weight: var(--fw-bold);
     margin: 0 0 10px;
+    color: #ffffff;
   }
 
   &__class {
@@ -57,8 +59,9 @@
     padding: 5px 15px;
     border-radius: 20px;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: var(--fw-medium);
     margin-top: 5px;
+    color: #ffffff;
   }
 
   &__stats {
@@ -66,41 +69,43 @@
     flex-wrap: wrap;
     justify-content: space-around;
     padding: 30px;
-    background-color: var(--gray-light);
+    background-color: var(--background-alt);
+    gap: 10px;
   }
 
   &__stat-card {
-    background-color: var(--card-bg);
-    border-radius: 10px;
+    background: var(--background-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-xl);
     padding: 20px;
     min-width: 120px;
     text-align: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-sm);
     margin: 10px;
     flex: 1;
     transition:
-      transform 0.2s ease-in-out,
-      box-shadow 0.2s ease-in-out;
+      transform var(--transition-all),
+      box-shadow var(--transition-all);
 
     &:hover {
       transform: translateY(-5px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow-md);
     }
   }
 
   &__stat-value {
     display: block;
     font-size: 32px;
-    font-weight: 700;
-    color: var(--blue-grotto);
+    font-weight: var(--fw-bold);
+    color: var(--primary);
     margin-bottom: 8px;
   }
 
   &__stat-label {
     display: block;
-    color: var(--navy-blue);
+    color: var(--text-secondary);
     font-size: 14px;
-    font-weight: 500;
+    font-weight: var(--fw-medium);
   }
 
   @media only screen and (max-width: 780px) {
@@ -115,5 +120,22 @@
       margin: 8px 0;
       min-width: auto;
     }
+  }
+}
+
+// Dark mode specific adjustments
+[data-theme='dark'] .lt-Profile {
+  &__container {
+    background: var(--slate-100);
+    border-color: var(--border-default);
+  }
+
+  &__stats {
+    background-color: var(--slate-50);
+  }
+
+  &__stat-card {
+    background: rgba(71, 85, 105, 0.5);
+    border-color: var(--border-default);
   }
 }

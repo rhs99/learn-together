@@ -1,127 +1,214 @@
 .lt-TagInput {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
   position: relative;
   width: 100%;
 
   &-container {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    width: 100%;
-    padding: 6px;
-    border: 1px solid var(--primary);
-    border-radius: 4px;
-    margin-bottom: 8px;
-    background-color: var(--white);
-    position: relative;
-    box-shadow: 0 2px 6px rgba(5, 68, 94, 0.1);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    background: var(--bg-default);
+    transition: all 150ms ease;
+    min-height: 44px;
 
-    &:focus-within {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(5, 68, 94, 0.2);
+    &:focus-within:not(.lt-TagInput-container--disabled) {
+      border-color: var(--border-focus);
       outline: none;
     }
+
+    &:hover:not(.lt-TagInput-container--disabled) {
+      border-color: var(--border-control-hovered);
+    }
+  }
+
+  &-container--disabled {
+    background: var(--bg-default);
+    border-color: var(--border-disabled);
+    cursor: not-allowed;
+    opacity: 0.6;
   }
 
   &-tag {
-    background-color: var(--primary);
-    color: var(--white);
-    padding: 5px 10px;
-    margin: 3px;
-    border-radius: 4px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    font-size: 0.875rem;
+    border-radius: var(--radius-sm);
     font-weight: 500;
-    box-shadow: 0 1px 3px rgba(5, 68, 94, 0.2);
+    transition: all 150ms ease;
   }
 
   &-tag-close {
-    color: var(--white);
-    margin-left: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 14px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.2s ease;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1;
+    transition: all 150ms ease;
+    opacity: 0.7;
+    color: var(--fg-secondary);
 
     &:hover {
-      transform: scale(1.2);
+      opacity: 1;
+      color: var(--fg-default);
+      background: var(--bg-secondary-hovered);
+      transform: scale(1.1);
+    }
+
+    &:focus {
+      outline: 2px solid var(--border-focus);
+      outline-offset: 2px;
+      opacity: 1;
+    }
+
+    &:active {
+      transform: scale(0.95);
     }
   }
 
-  &-inputBox {
+  &-input {
+    flex: 1;
+    min-width: 120px;
     border: none;
-    padding: 6px 8px;
-    margin: 4px;
-    flex-grow: 1;
-    color: var(--text-dark);
-    font-size: 1rem;
+    box-shadow: none;
+    background: transparent;
+    padding: 4px;
 
     &:focus {
       outline: none;
+      box-shadow: none;
     }
 
-    &::placeholder {
-      color: rgba(5, 68, 94, 0.6);
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
     }
   }
 
   &-suggestions {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    background-color: var(--white);
-    border: 1px solid var(--primary);
-    border-radius: 4px;
-    box-shadow: 0 4px 12px rgba(5, 68, 94, 0.2);
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    overflow-y: auto;
-    max-height: 200px;
-    z-index: 100;
     position: absolute;
+    top: calc(100% + 4px);
     left: 0;
     right: 0;
-    top: 100%;
+    z-index: 10;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: var(--bg-default);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    box-shadow:
+      0 10px 15px -3px rgb(0 0 0 / 0.1),
+      0 4px 6px -4px rgb(0 0 0 / 0.1);
+    max-height: 240px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-sm);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+
+      &:hover {
+        background: var(--bg-tertiary-hovered);
+      }
+    }
   }
 
   &-suggestions-item {
-    padding: 10px 14px;
+    padding: 8px 12px;
     cursor: pointer;
-    border-bottom: 1px solid var(--gray-light);
-    transition: all 0.2s ease;
-    color: var(--text-dark);
+    font-size: 0.875rem;
+    color: var(--fg-default);
+    transition: all 150ms ease;
+    border-bottom: 1px solid var(--border-secondary);
+    user-select: none;
 
     &:last-child {
       border-bottom: none;
     }
 
     &:hover {
-      background-color: var(--secondary);
-      color: var(--primary);
+      background: var(--bg-secondary-hovered);
+      color: var(--fg-default);
     }
-  }
 
-  &-suggestions-item-highlighted {
-    background-color: var(--primary);
-    color: var(--white);
-    outline: none;
-
-    &:focus,
     &:active {
-      background-color: var(--primary);
-      color: var(--white);
+      background: var(--bg-secondary);
+    }
+
+    &--highlighted {
+      background: var(--bg-accent-light);
+      color: var(--fg-accent-strong);
       outline: none;
+      font-weight: 600;
+      position: relative;
+      padding-left: 15px;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--bg-accent);
+        border-radius: 0 2px 2px 0;
+      }
+
+      &:hover {
+        background: var(--bg-accent-light);
+        color: var(--fg-accent-strong);
+      }
     }
   }
 
-  // Ensure proper focus handling
-  &:focus-within &-suggestions {
-    outline: none;
+  &-maxTags-warning {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: var(--bg-warning-light);
+    border: 1px solid var(--border-warning);
+    border-radius: var(--radius-sm);
+    text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    &-tag {
+      font-size: 0.75rem;
+      padding: 4px 8px;
+    }
+
+    &-tag-close {
+      width: 14px;
+      height: 14px;
+      font-size: 14px;
+    }
+
+    &-input {
+      font-size: 0.875rem;
+    }
+
+    &-suggestions-item {
+      padding: 8px;
+      font-size: 0.875rem;
+    }
   }
 }

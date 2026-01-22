@@ -3,6 +3,7 @@ import { FormEvent, useState, useContext } from 'react';
 import Util from '../../utils';
 import { HttpError } from '../../types';
 import AuthContext from '../../store/auth';
+import { Box, Heading, Field, Input, Button } from '@optiaxiom/react';
 
 const AddPaymentMethod = () => {
   const [newPaymentMethod, setNewPaymentMethod] = useState('');
@@ -33,23 +34,22 @@ const AddPaymentMethod = () => {
   };
 
   return (
-    <div className="settings-form-container">
-      <h2 className="header">Add Payment Method</h2>
-      <form onSubmit={handleAddPaymentMethod}>
-        <label htmlFor="add-payment-method">Payment Method Name</label>
-        <input
-          type="text"
-          name="addPaymentMethod"
-          value={newPaymentMethod}
-          onChange={(event) => setNewPaymentMethod(event.target.value)}
-          required
-        />
-        {err && <span className="err">{err}</span>}
-        <button type="submit" className="settings-button">
-          Add
-        </button>
-      </form>
-    </div>
+    <Box className="settings-form-container">
+      <Heading level="2" fontSize="xl" mb="24">
+        Add Payment Method
+      </Heading>
+      <Box asChild>
+        <form onSubmit={handleAddPaymentMethod}>
+          <Field label="Payment Method Name" required error={err || undefined}>
+            <Input value={newPaymentMethod} onValueChange={setNewPaymentMethod} required />
+          </Field>
+
+          <Button type="submit" w="full" justifyContent="center">
+            Add
+          </Button>
+        </form>
+      </Box>
+    </Box>
   );
 };
 

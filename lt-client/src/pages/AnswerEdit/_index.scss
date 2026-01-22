@@ -14,7 +14,7 @@
 
     h2 {
       font-family: var(--font-heading);
-      color: var(--navy-blue);
+      color: var(--text-primary);
       margin-bottom: 1.5rem;
     }
   }
@@ -25,18 +25,21 @@
     .back-button {
       font-size: var(--fs-sm);
       padding: 0.5rem 1rem;
-      background-color: var(--white);
-      color: var(--navy-blue);
-      border: 1px solid var(--blue-grotto);
-      border-radius: 4px;
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: var(--text-primary);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
       margin-bottom: 1rem;
       display: inline-flex;
       align-items: center;
-      transition: all 0.2s ease;
+      transition: var(--transition-all);
 
       &:hover {
-        background-color: var(--baby-blue);
-        box-shadow: 0 2px 5px rgba(5, 68, 94, 0.1);
+        background: var(--card-bg-hover);
+        box-shadow: var(--glass-shadow);
+        transform: translateY(-2px);
       }
     }
 
@@ -44,15 +47,18 @@
       font-family: var(--font-heading);
       font-size: var(--fs-3xl);
       font-weight: var(--fw-bold);
-      color: var(--navy-blue);
+      color: var(--text-primary);
     }
   }
 
   .content-wrapper {
-    background-color: white;
+    background: var(--card-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
     padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(5, 68, 94, 0.1);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--glass-shadow);
   }
 
   @media only screen and (max-width: 780px) {

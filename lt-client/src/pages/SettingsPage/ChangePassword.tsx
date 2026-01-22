@@ -3,6 +3,7 @@ import { FormEvent, useState, useContext } from 'react';
 import Util from '../../utils';
 import { HttpError } from '../../types';
 import AuthContext from '../../store/auth';
+import { Box, Heading, Field, Input, Button } from '@optiaxiom/react';
 
 const ChangePassword = () => {
   const [prevPassword, setPrevPassword] = useState('');
@@ -44,39 +45,30 @@ const ChangePassword = () => {
   };
 
   return (
-    <div className="settings-form-container">
-      <h2 className="header">Change Password</h2>
-      <form onSubmit={handleChangePassword}>
-        <label htmlFor="prevPassword">Previous Password</label>
-        <input
-          type="password"
-          name="prevPassword"
-          value={prevPassword}
-          onChange={(event) => setPrevPassword(event.target.value)}
-          required
-        />
-        <label htmlFor="password">New Password</label>
-        <input
-          type="password"
-          name="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          required
-        />
-        <label htmlFor="confirmPassword">Confirm New Password</label>
-        <input
-          type="password"
-          name="confirmPassword"
-          value={confirmPassword}
-          onChange={(event) => setConfirmPassword(event.target.value)}
-          required
-        />
-        {err && <span className="err">{err}</span>}
-        <button type="submit" className="settings-button">
-          Update Password
-        </button>
-      </form>
-    </div>
+    <Box className="settings-form-container">
+      <Heading level="2" fontSize="xl" mb="24">
+        Change Password
+      </Heading>
+      <Box asChild>
+        <form onSubmit={handleChangePassword}>
+          <Field label="Previous Password" required>
+            <Input type="password" value={prevPassword} onValueChange={setPrevPassword} required />
+          </Field>
+
+          <Field label="New Password" required>
+            <Input type="password" value={password} onValueChange={setPassword} required />
+          </Field>
+
+          <Field label="Confirm New Password" required error={err || undefined}>
+            <Input type="password" value={confirmPassword} onValueChange={setConfirmPassword} required />
+          </Field>
+
+          <Button type="submit" w="full" justifyContent="center">
+            Update Password
+          </Button>
+        </form>
+      </Box>
+    </Box>
   );
 };
 

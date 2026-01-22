@@ -1,8 +1,9 @@
-import { useState, ChangeEvent, FormEvent } from 'react';
+import { useState, FormEvent } from 'react';
 import axios from 'axios';
 import Util from '../../utils';
 import useAlert from '../../hooks/use-alert';
 import { NavLink } from 'react-router-dom';
+import { Box, Heading, Field, Input, Button, Text } from '@optiaxiom/react';
 
 import './_index.scss';
 
@@ -13,14 +14,6 @@ function ForgotPasswordPage() {
   const [emailSent, setEmailSent] = useState(false);
 
   const onAlert = useAlert();
-
-  const handleUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setUsername(event.target.value);
-  };
-
-  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -43,43 +36,57 @@ function ForgotPasswordPage() {
   };
 
   return (
-    <div className="cl-ForgotPassword">
-      <div className="forgot-password-container">
-        <h1 className="header">Reset Password</h1>
-        <form method="POST" className="form-container" onSubmit={handleSubmit}>
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            name="username"
-            id="username"
-            disabled={emailSent}
-            value={username}
-            onChange={handleUsernameChange}
-            required
-          />
+    <Box display="flex" justifyContent="center" alignItems="center" mt="40">
+      <Box
+        data-form-container
+        w="1/4"
+        p="32"
+        bg="bg.default"
+        rounded="lg"
+        shadow="lg"
+        border="1"
+        borderColor="border.default"
+        style={{ position: 'relative', overflow: 'hidden' }}
+      >
+        <Box
+          style={{
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '4px',
+            background: 'var(--gradient-primary)',
+          }}
+        />
+        <Heading level="1" fontSize="2xl" textAlign="center" mb="24">
+          Reset Password
+        </Heading>
+        <Box asChild>
+          <form onSubmit={handleSubmit}>
+            <Field label="Username" required error={err ? 'Invalid username or email' : undefined}>
+              <Input value={username} onValueChange={setUsername} disabled={emailSent} required />
+            </Field>
 
-          {err && <span className="err">Invalid username or email</span>}
+            <Field label="Email" required>
+              <Input type="email" value={email} onValueChange={setEmail} disabled={emailSent} required />
+            </Field>
 
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            disabled={emailSent}
-            value={email}
-            onChange={handleEmailChange}
-            required
-          />
-
-          <button type="submit" disabled={emailSent}>
-            {emailSent ? 'Email Sent' : 'Send Reset Link'}
-          </button>
-        </form>
-        <div className="login-link">
-          Remember your password? <NavLink to="/users/login">Log In</NavLink>
-        </div>
-      </div>
-    </div>
+            <Button type="submit" w="full" justifyContent="center" disabled={emailSent}>
+              {emailSent ? 'Email Sent' : 'Send Reset Link'}
+            </Button>
+          </form>
+        </Box>
+        <Box textAlign="center" mt="16">
+          <Text fontSize="sm" color="fg.secondary">
+            Remember your password?{' '}
+            <NavLink to="/users/login" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>
+              Log In
+            </NavLink>
+          </Text>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 

@@ -3,6 +3,7 @@ import { FormEvent, useState, useContext } from 'react';
 import Util from '../../utils';
 import { HttpError } from '../../types';
 import AuthContext from '../../store/auth';
+import { Box, Heading, Field, Input, Button } from '@optiaxiom/react';
 
 const AddClass = () => {
   const [newClass, setNewClass] = useState('');
@@ -33,23 +34,22 @@ const AddClass = () => {
   };
 
   return (
-    <div className="settings-form-container">
-      <h2 className="header">Add Class</h2>
-      <form onSubmit={handleAddClass}>
-        <label htmlFor="add-class">Class Name</label>
-        <input
-          type="text"
-          name="addClass"
-          value={newClass}
-          onChange={(event) => setNewClass(event.target.value)}
-          required
-        />
-        {err && <span className="err">{err}</span>}
-        <button type="submit" className="settings-button">
-          Add
-        </button>
-      </form>
-    </div>
+    <Box className="settings-form-container">
+      <Heading level="2" fontSize="xl" mb="24">
+        Add Class
+      </Heading>
+      <Box asChild>
+        <form onSubmit={handleAddClass}>
+          <Field label="Class Name" required error={err || undefined}>
+            <Input value={newClass} onValueChange={setNewClass} required />
+          </Field>
+
+          <Button type="submit" w="full" justifyContent="center">
+            Add
+          </Button>
+        </form>
+      </Box>
+    </Box>
   );
 };
 

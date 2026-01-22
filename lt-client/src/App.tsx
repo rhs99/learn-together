@@ -18,6 +18,7 @@ import AboutPage from './pages/AboutPage/AboutPage';
 import FAQPage from './pages/FAQPage/FAQPage';
 import DonationPage from './pages/Donation/Donation';
 import { AuthContextProvider } from './store/auth';
+import { ThemeProvider } from './hooks/use-theme';
 import Profile from './pages/Profile/Profile';
 import Settings from './pages/SettingsPage/Settings';
 import ForgotPasswordPage from './pages/ForgotPassword/ForgotPasswordPage';
@@ -97,9 +98,11 @@ const router = createBrowserRouter([
 const App = () => {
   return (
     <AxiomProvider>
-      <AuthContextProvider>
-        <RouterProvider router={router} />
-      </AuthContextProvider>
+      <ThemeProvider>
+        <AuthContextProvider>
+          <RouterProvider router={router} />
+        </AuthContextProvider>
+      </ThemeProvider>
     </AxiomProvider>
   );
 };

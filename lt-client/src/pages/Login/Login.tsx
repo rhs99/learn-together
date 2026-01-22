@@ -1,9 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, ChangeEvent, useContext, FormEvent } from 'react';
+import { useState, useContext, FormEvent } from 'react';
 import axios from 'axios';
 import Util from '../../utils';
 import AuthContext from '../../store/auth';
 import { NavLink } from 'react-router-dom';
+import { Box, Heading, Field, Input, Button, Text, Link } from '@optiaxiom/react';
 
 import './_index.scss';
 
@@ -13,14 +14,6 @@ function LoginPage() {
   const [err, setErr] = useState(false);
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
-
-  const handleUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setUsername(event.target.value);
-  };
-
-  const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
-  };
 
   const handleForgotPassword = () => {
     navigate('/users/forgot-password');
@@ -50,37 +43,70 @@ function LoginPage() {
   };
 
   return (
-    <div className="cl-Login" onSubmit={handleSubmit}>
-      <div className="login-form-container">
-        <h1 className="header">Login</h1>
-        <form method="POST" className="login-form">
-          <label htmlFor="username">Username</label>
-          <input type="text" name="username" id="username" value={username} onChange={handleUsernameChange} required />
+    <Box display="flex" justifyContent="center" alignItems="center" mt="40">
+      <Box
+        data-form-container
+        w="1/4"
+        p="32"
+        bg="bg.default"
+        rounded="lg"
+        shadow="lg"
+        border="1"
+        borderColor="border.default"
+        style={{ position: 'relative', overflow: 'hidden' }}
+      >
+        <Box
+          style={{
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '4px',
+            background: 'var(--gradient-primary)',
+          }}
+        />
+        <Heading level="1" fontSize="2xl" textAlign="center" mb="24">
+          Login
+        </Heading>
+        <Box asChild>
+          <form onSubmit={handleSubmit}>
+            <Field label="Username" required>
+              <Input value={username} onValueChange={setUsername} required />
+            </Field>
 
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            value={password}
-            onChange={handlePasswordChange}
-            required
-          />
-          {err && (
-            <>
-              <p className="err">Invalid Credentials</p>
-              <a href="#" className="forgot-password" onClick={handleForgotPassword}>
+            <Field label="Password" required error={err ? 'Invalid Credentials' : undefined}>
+              <Input type="password" value={password} onValueChange={setPassword} required />
+            </Field>
+
+            {err && (
+              <Link
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleForgotPassword();
+                }}
+                fontSize="sm"
+              >
                 Forgot password?
-              </a>
-            </>
-          )}
-          <button type="submit">Login</button>
-        </form>
-        <div className="signup-link">
-          Don't have an account? <NavLink to="/users/signup">Sign Up</NavLink>
-        </div>
-      </div>
-    </div>
+              </Link>
+            )}
+
+            <Button type="submit" w="full" justifyContent="center">
+              Login
+            </Button>
+          </form>
+        </Box>
+        <Box textAlign="center" mt="16">
+          <Text fontSize="sm" color="fg.secondary">
+            Don't have an account?{' '}
+            <NavLink to="/users/signup" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>
+              Sign Up
+            </NavLink>
+          </Text>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 
