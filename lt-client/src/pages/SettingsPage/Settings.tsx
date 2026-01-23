@@ -12,7 +12,15 @@ import AddSubject from './AddSubject';
 import AddChapter from './AddChapter';
 import ManageDonations from './ManageDonations';
 
-import { Text, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Flex } from '@optiaxiom/react';
+import {
+  Text,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  Group,
+  Box,
+} from '@optiaxiom/react';
 
 import AddPaymentMethod from './AddPaymentMethod';
 
@@ -84,24 +92,28 @@ const Settings = () => {
     }
   };
 
-  return (
-    <Flex flexDirection="column" gap="12" style={{ width: '50%', margin: '0 auto' }}>
-      <Flex flexDirection="row" justifyContent="space-between">
-        <Text>{settingsOptions.find((option) => option.value === currOption)?.label}</Text>
+  const isWideLayout = currOption === 'manage-donations';
 
-        <DropdownMenu>
-          <DropdownMenuTrigger>Settings</DropdownMenuTrigger>
-          <DropdownMenuContent>
-            {settingsOptions.map((option) => (
-              <DropdownMenuItem key={option.value} onClick={() => handleSettingsOptionSelect(option.value)}>
-                {option.label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </Flex>
-      {getComponent()}
-    </Flex>
+  return (
+    <Box w="full" maxW={isWideLayout ? 'full' : 'lg'} mx="auto" px={isWideLayout ? '24' : '0'}>
+      <Group flexDirection="column" gap="12">
+        <Group flexDirection="row" justifyContent="space-between">
+          <Text>{settingsOptions.find((option) => option.value === currOption)?.label}</Text>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger>Settings</DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {settingsOptions.map((option) => (
+                <DropdownMenuItem key={option.value} onClick={() => handleSettingsOptionSelect(option.value)}>
+                  {option.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </Group>
+        {getComponent()}
+      </Group>
+    </Box>
   );
 };
 

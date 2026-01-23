@@ -3,7 +3,20 @@ import axios from 'axios';
 import Util from '../../utils';
 import AuthContext from '../../store/auth';
 import { HttpError } from '../../types';
-import { Flex, Text, Button, Table, TableHeader, TableRow, TableCell, TableBody } from '@optiaxiom/react';
+import {
+  Box,
+  Group,
+  Heading,
+  Text,
+  Button,
+  Badge,
+  Alert,
+  Table,
+  TableHeader,
+  TableRow,
+  TableCell,
+  TableBody,
+} from '@optiaxiom/react';
 
 type Donation = {
   _id: string;
@@ -106,16 +119,22 @@ const ManageDonations = () => {
   };
 
   return (
-    <div className="manage-donations">
-      <Flex flexDirection="column" gap="16">
-        <Flex justifyContent="space-between" alignItems="center">
-          <h3>Manage Donations</h3>
-          <Button onClick={fetchDonations} disabled={isLoading}>
-            {isLoading ? 'Loading...' : 'Refresh'}
-          </Button>
-        </Flex>
+    <Box w="full" maxW="full">
+      <Group justifyContent="space-between" alignItems="center" mb="24">
+        <Heading level="2" fontSize="xl">
+          Manage Donations
+        </Heading>
+        <Button onClick={fetchDonations} disabled={isLoading}>
+          {isLoading ? 'Loading...' : 'Refresh'}
+        </Button>
+      </Group>
 
-        {message.text && <div className={`message ${message.type}`}>{message.text}</div>}
+      <Group flexDirection="column" gap="16">
+        {message.text && (
+          <Alert intent={message.type === 'error' ? 'danger' : message.type === 'success' ? 'success' : 'information'}>
+            {message.text}
+          </Alert>
+        )}
 
         {donations.length > 0 ? (
           <Table>
@@ -137,11 +156,9 @@ const ManageDonations = () => {
                   <TableCell>{donation.method?.name || 'N/A'}</TableCell>
                   <TableCell>{donation.transactionID}</TableCell>
                   <TableCell>
-                    <span
-                      className={`status-badge ${donation.status === 'pending' ? 'status-pending' : 'status-completed'}`}
-                    >
+                    <Badge intent={donation.status === 'pending' ? 'warning' : 'success'} textTransform="capitalize">
                       {donation.status}
-                    </span>
+                    </Badge>
                   </TableCell>
                   <TableCell>
                     {donation.status === 'pending' && (
@@ -155,10 +172,10 @@ const ManageDonations = () => {
             </TableBody>
           </Table>
         ) : (
-          <Text className="no-donations-text">{isLoading ? 'Loading donations...' : 'No donations found'}</Text>
+          <Text>{isLoading ? 'Loading donations...' : 'No donations found'}</Text>
         )}
-      </Flex>
-    </div>
+      </Group>
+    </Box>
   );
 };
 

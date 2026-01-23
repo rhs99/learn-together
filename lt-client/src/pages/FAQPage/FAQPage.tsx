@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { Box, Disclosure, DisclosureContent, DisclosureTrigger, Group, Heading, Text } from '@optiaxiom/react';
 import './_index.scss';
 
 interface FAQItem {
@@ -8,14 +7,6 @@ interface FAQItem {
 }
 
 const FAQPage = () => {
-  const [openItems, setOpenItems] = useState<number[]>([]);
-
-  const toggleItem = (index: number) => {
-    setOpenItems((prevOpenItems) =>
-      prevOpenItems.includes(index) ? prevOpenItems.filter((item) => item !== index) : [...prevOpenItems, index]
-    );
-  };
-
   const faqItems: FAQItem[] = [
     {
       question: 'What is Learn Together?',
@@ -55,48 +46,41 @@ const FAQPage = () => {
   ];
 
   return (
-    <div className="lt-FAQPage">
-      <div className="faq-header">
-        <h1>Frequently Asked Questions</h1>
-        <p>Find answers to common questions about Learn Together</p>
-      </div>
+    <Box className="lt-FAQPage" p="32">
+      <Group flexDirection="column" gap="48" alignItems="center">
+        <Group flexDirection="column" gap="16" alignItems="center" className="faq-header">
+          <Heading level="1" fontSize="4xl" fontWeight="700" color="fg.default">
+            Frequently Asked Questions
+          </Heading>
+          <Text fontSize="lg" color="fg.secondary">
+            Find answers to common questions about Learn Together
+          </Text>
+        </Group>
 
-      <div className="faq-content" role="list">
-        {faqItems.map((item, index) => (
-          <div key={index} className={`faq-item ${openItems.includes(index) ? 'active' : ''}`} role="listitem">
-            <div
-              className="faq-question"
-              onClick={() => toggleItem(index)}
-              role="button"
-              aria-expanded={openItems.includes(index)}
-              aria-controls={`faq-answer-${index}`}
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  toggleItem(index);
-                }
-              }}
+        <Group flexDirection="column" gap="16" w="full" maxW="lg">
+          {faqItems.map((item, index) => (
+            <Box
+              key={index}
+              w="full"
+              rounded="md"
+              border="1"
+              borderColor="border.default"
+              bg="bg.default"
+              className="faq-item"
             >
-              <h3>{item.question}</h3>
-              <span className="icon-container" aria-hidden="true">
-                {openItems.includes(index) ? <FaChevronUp className="icon" /> : <FaChevronDown className="icon" />}
-              </span>
-            </div>
-            {openItems.includes(index) && (
-              <div
-                className="faq-answer"
-                id={`faq-answer-${index}`}
-                role="region"
-                aria-labelledby={`faq-question-${index}`}
-              >
-                <p>{item.answer}</p>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
+              <Disclosure w="full">
+                <DisclosureTrigger className="faq-trigger">{item.question}</DisclosureTrigger>
+                <DisclosureContent p="20" bg="bg.secondary">
+                  <Text fontSize="md" color="fg.default">
+                    {item.answer}
+                  </Text>
+                </DisclosureContent>
+              </Disclosure>
+            </Box>
+          ))}
+        </Group>
+      </Group>
+    </Box>
   );
 };
 
