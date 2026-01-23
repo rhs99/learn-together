@@ -91,10 +91,27 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 const connectDB = async (url, dbName = 'lt-db') => {
-    const connectionURL = url || process.env.MONGODB_URI;
+    // Determine which MongoDB URI to use:
+    // 1. If url is provided explicitly, use it
+    // 2. If USE_DOCKER_DB is true, use Docker MongoDB (for testing)
+    // 3. Otherwise, use Production MongoDB (default)
+    let connectionURL = url;
+    if (!connectionURL) {
+        const useDockerDB = process.env.USE_DOCKER_DB === 'true';
+        connectionURL = useDockerDB ? process.env.MONGODB_URI : process.env.PROD_MONGODB_URI;
+        logger.info('Database selection', { useDockerDB, dbType: useDockerDB ? 'Docker' : 'Production' });
+    }
+
     try {
         logger.info('Attempting to connect to MongoDB', { url: connectionURL, dbName });
-        await mongoose.connect(connectionURL, { dbName });
+
+        const options = {
+            dbName,
+            serverSelectionTimeoutMS: 5000,
+            socketTimeoutMS: 45000,
+        };
+
+        await mongoose.connect(connectionURL, options);
         logger.info('Successfully connected to MongoDB', { dbName });
         return mongoose.connection;
     } catch (error) {
