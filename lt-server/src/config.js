@@ -5,6 +5,7 @@ const Config = {
     SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     SUPABASE_STORAGE_BUCKET: process.env.SUPABASE_STORAGE_BUCKET || 'lt-bucket',
+    CACHE_ENABLED: process.env.CACHE_ENABLED === 'true',
     REDIS_HOST: 'lt-cache',
     REDIS_PORT: 6379,
 };

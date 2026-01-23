@@ -90,20 +90,24 @@ if (process.env.NODE_ENV !== 'test') {
     });
 }
 
-const connectDB = async (url, dbName = 'lt-db') => {
-    // Determine which MongoDB URI to use:
-    // 1. If url is provided explicitly, use it
-    // 2. If USE_DOCKER_DB is true, use Docker MongoDB (for testing)
-    // 3. Otherwise, use Production MongoDB (default)
-    let connectionURL = url;
-    if (!connectionURL) {
-        const useDockerDB = process.env.USE_DOCKER_DB === 'true';
-        connectionURL = useDockerDB ? process.env.MONGODB_URI : process.env.PROD_MONGODB_URI;
-        logger.info('Database selection', { useDockerDB, dbType: useDockerDB ? 'Docker' : 'Production' });
+const connectDB = async (url, dbName) => {
+    const isTest = process.env.NODE_ENV === 'test';
+
+    if (isTest) {
+        if (!dbName.includes('test')) {
+            throw new Error(
+                'TEST SAFETY: Database name must include "test" when running in test mode to prevent production DB access.',
+            );
+        }
+    }
+
+    if (!isTest) {
+        const dbType = process.env.USE_REMOTE_DB === 'true' ? 'Remote' : 'Docker';
+        logger.info('Database selection', { dbType, dbName });
     }
 
     try {
-        logger.info('Attempting to connect to MongoDB', { url: connectionURL, dbName });
+        logger.info('Attempting to connect to MongoDB', { dbName });
 
         const options = {
             dbName,
@@ -111,11 +115,11 @@ const connectDB = async (url, dbName = 'lt-db') => {
             socketTimeoutMS: 45000,
         };
 
-        await mongoose.connect(connectionURL, options);
+        await mongoose.connect(url, options);
         logger.info('Successfully connected to MongoDB', { dbName });
         return mongoose.connection;
     } catch (error) {
-        logger.error('MongoDB connection error', { error: error.message, url: connectionURL, dbName });
+        logger.error('MongoDB connection error', { error: error.message, dbName });
         throw error;
     }
 };
@@ -136,7 +140,10 @@ const startServer = (port) => {
 };
 
 if (require.main === module && process.env.NODE_ENV !== 'test') {
-    connectDB()
+    const dbUrl = process.env.USE_REMOTE_DB === 'true' ? process.env.REMOTE_MONGODB_URI : process.env.MONGODB_URI;
+    const dbName = 'lt-db';
+
+    connectDB(dbUrl, dbName)
         .then(() => {
             startServer();
         })

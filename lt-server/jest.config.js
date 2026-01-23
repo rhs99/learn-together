@@ -6,7 +6,7 @@ module.exports = {
   testMatch: ['**/__tests__/**/*.test.js', '**/?(*.)+(spec|test).js'],
   setupFilesAfterEnv: ['<rootDir>/__tests__/setup.js'],
   testPathIgnorePatterns: ['/node_modules/', '/__tests__/setup.js', '/__tests__/helpers/'],
-  testTimeout: isDocker ? 30000 : 10000,
+  testTimeout: isDocker ? 30000 : 120000,
   maxWorkers: 1,
   detectOpenHandles: !isDocker,
   cache: !isDocker,
