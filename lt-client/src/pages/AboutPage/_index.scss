@@ -1,69 +1,4 @@
 .lt-AboutPage {
-  width: 85%;
-  max-width: 1200px;
-  margin: 3rem auto 5rem;
-  padding: 0 1rem;
-
-  @media only screen and (max-width: 1024px) {
-    width: 90%;
-  }
-
-  @media only screen and (max-width: 780px) {
-    width: 95%;
-  }
-
-  // Typography styles
-  h1,
-  h2,
-  h3 {
-    margin-bottom: 1rem;
-    color: var(--text-primary);
-  }
-
-  h1 {
-    font-size: var(--fs-4xl, 2.25rem);
-    text-align: center;
-    margin-bottom: 0.5rem;
-  }
-
-  h2 {
-    font-size: var(--fs-2xl, 1.5rem);
-    position: relative;
-    padding-bottom: 0.75rem;
-    margin-bottom: 1.5rem;
-
-    &:after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 60px;
-      height: 3px;
-      background: var(--gradient-primary);
-      border-radius: 2px;
-    }
-  }
-
-  p {
-    margin-bottom: 1.25rem;
-    font-size: var(--fs-base, 1rem);
-    line-height: var(--lh-relaxed, 1.625);
-    color: var(--text-secondary);
-  }
-
-  // Header section
-  .about-header {
-    text-align: center;
-    margin-bottom: 3.5rem;
-
-    .about-subheading {
-      font-size: var(--fs-lg, 1.125rem);
-      color: var(--text-secondary);
-      margin-bottom: 2rem;
-    }
-  }
-
-  // Section styling
   .about-section {
     margin-bottom: 5rem;
     padding: 2rem;
@@ -81,7 +16,6 @@
     }
   }
 
-  // Features grid
   .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -97,19 +31,9 @@
       &:hover {
         transform: translateY(-5px);
       }
-
-      h3 {
-        color: var(--primary);
-        margin-bottom: 0.75rem;
-      }
-
-      p {
-        color: var(--text-secondary);
-      }
     }
   }
 
-  // Team section
   .team-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -117,8 +41,6 @@
     justify-content: center;
 
     .team-member {
-      text-align: center;
-
       .member-photo {
         width: 180px;
         height: 180px;
@@ -144,28 +66,13 @@
           content: attr(data-initials);
           font-size: 3.5rem;
           font-weight: var(--fw-bold);
-          color: #ffffff;
+          color: var(--white);
           letter-spacing: 1px;
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+          text-shadow: 0 2px 4px var(--black-opacity-30);
         }
       }
 
-      h3 {
-        margin-bottom: 0.25rem;
-        color: var(--text-primary);
-      }
-
-      .member-role {
-        color: var(--primary);
-        font-size: var(--fs-sm, 0.875rem);
-        margin-bottom: 1rem;
-      }
-
       .member-links {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-
         a {
           display: flex;
           align-items: center;
@@ -179,7 +86,7 @@
 
           &:hover {
             background-color: var(--primary);
-            color: #ffffff;
+            color: var(--white);
             transform: translateY(-3px);
           }
         }
@@ -187,59 +94,22 @@
     }
   }
 
-  // Contact section
-  .contact-section {
-    text-align: center;
+  .cta-buttons {
+    @media (max-width: 580px) {
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem !important;
+    }
 
-    .cta-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      margin-top: 2rem;
-
-      @media (max-width: 580px) {
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-      }
-
-      a {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.75rem 1.5rem;
-        border-radius: var(--radius-md);
-        font-weight: var(--fw-medium);
-        text-decoration: none;
-        transition: var(--transition-slow);
-
-        &.primary-button {
-          background-color: var(--primary);
-          color: #ffffff;
-
-          &:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-          }
-        }
-
-        &.secondary-button {
-          border: 2px solid var(--primary);
-          color: var(--primary);
-          background-color: transparent;
-
-          &:hover {
-            background-color: var(--primary-blue-opacity-10);
-            transform: translateY(-2px);
-          }
-        }
-      }
+    a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
     }
   }
 }
 
-// Dark mode specific adjustments
 [data-theme='dark'] .lt-AboutPage {
   .about-section {
     background-color: var(--slate-100);
@@ -247,7 +117,7 @@
   }
 
   .features-grid .feature-card {
-    background-color: rgba(71, 85, 105, 0.5);
+    background-color: var(--slate-200-opacity-50);
   }
 
   .team-grid .team-member .member-photo {

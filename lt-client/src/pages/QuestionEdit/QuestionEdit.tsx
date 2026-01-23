@@ -6,6 +6,7 @@ import { Question } from '../../types';
 import QuestionInput from '../../components/QuestionInput/QuestionInput';
 
 import './_index.scss';
+import { Box } from '@optiaxiom/react';
 
 const QuestionEdit = () => {
   const [question, setQuestion] = useState<Question>();
@@ -23,9 +24,9 @@ const QuestionEdit = () => {
   }
 
   return (
-    <div className="lt-QuestionEdit">
+    <Box className="lt-QuestionEdit">
       <QuestionInput chapterId={question.chapter} question={question} />
-    </div>
+    </Box>
   );
 };
 export default QuestionEdit;

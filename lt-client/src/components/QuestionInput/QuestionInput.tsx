@@ -12,7 +12,7 @@ import FileUploader from '../FileUploader/FileUploader';
 import useFileUploader from '../../hooks/file-uploader';
 import useAlert from '../../hooks/use-alert';
 
-import { Box, Button, Flex, Spinner, Text } from '@optiaxiom/react';
+import { Box, Button, Flex, Spinner, Text, Heading } from '@optiaxiom/react';
 
 import './_index.scss';
 
@@ -118,31 +118,48 @@ const QuestionInput = (props: QuestionInputProps) => {
 
   return (
     <Box className="cl-QuestionInput">
-      {isLoading && <Spinner />}
+      {isLoading && (
+        <Box className="spinner-overlay">
+          <Spinner />
+        </Box>
+      )}
 
-      <Text fontSize="xl" fontWeight="600" mb="8">
-        Write Question Description
-      </Text>
-      <QuillTextEditor onEditorReady={onEditorReady} />
-
-      <Flex flexDirection="column" gap="8" mt="16" mb="16">
-        <Text fontWeight="500" fontSize="md">
-          Add Relevant Tags
+      <Box mb="24">
+        <Heading level="3" fontSize="xl" mb="8">
+          Write Question Description
+        </Heading>
+        <Text fontSize="md" color="fg.secondary">
+          Describe your question in detail to get better answers
         </Text>
+      </Box>
+
+      <Box className="editor-container" mb="24">
+        <QuillTextEditor onEditorReady={onEditorReady} />
+      </Box>
+
+      <Box mb="24">
+        <Heading level="4" fontSize="lg" mb="16">
+          Add Relevant Tags
+        </Heading>
         <TagInput
           suggestions={existingTags.map((tag) => ({ _id: tag._id, name: tag.name }))}
           onTagsChange={onTagsChange}
           initialTags={tags}
         />
-      </Flex>
-      <FileUploader handleFileChange={handleFileChange} className="file-upload" />
-      <Flex className="btn-container" flexDirection="row" justifyContent="flex-end" gap="8" mt="16">
-        <Button onClick={handleClose} appearance="danger">
-          Close
+      </Box>
+
+      <Box mb="24">
+        <Heading level="4" fontSize="lg" mb="16">
+          Add Supporting Images
+        </Heading>
+        <FileUploader handleFileChange={handleFileChange} className="file-upload" />
+      </Box>
+
+      <Flex className="btn-container" flexDirection="row" justifyContent="flex-end" gap="16" mt="24">
+        <Button onClick={handleClose} appearance="subtle">
+          Cancel
         </Button>
-        <Button onClick={handleSave} appearance="primary">
-          Save
-        </Button>
+        <Button onClick={handleSave}>Save Question</Button>
       </Flex>
     </Box>
   );

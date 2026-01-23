@@ -7,10 +7,14 @@
   main {
     flex: 1;
     width: 100%;
-    padding-top: 88px; // 64px for fixed nav + 24px spacing
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 88px;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 
 [data-theme='dark'] .lt-RootLayout {
-  background: #1e293b;
+  background: var(--slate-50);
 }

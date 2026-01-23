@@ -10,7 +10,7 @@ import FileUploader from '../FileUploader/FileUploader';
 import useFileUploader from '../../hooks/file-uploader';
 import useAlert from '../../hooks/use-alert';
 
-import { Button, Spinner } from '@optiaxiom/react';
+import { Button, Spinner, Box, Text, Heading, Flex } from '@optiaxiom/react';
 
 import './_index.scss';
 
@@ -79,32 +79,36 @@ const AnswerInput = (props: AnswerInputProps) => {
   );
 
   return (
-    <div className="lt-AnswerInput">
+    <Box className="lt-AnswerInput">
       {isLoading && (
-        <div className="spinner-overlay">
+        <Box className="spinner-overlay">
           <Spinner />
-        </div>
+        </Box>
       )}
-      <div className="lt-AnswerInput-header">
-        <h3>Your Answer</h3>
-        <p className="subtitle">Share your knowledge and help others learn</p>
-      </div>
-      <div className="editor-container">
+      <Box className="lt-AnswerInput-header" mb="24">
+        <Heading level="3" fontSize="xl" mb="8">
+          Your Answer
+        </Heading>
+        <Text fontSize="md" color="fg.secondary">
+          Share your knowledge and help others learn
+        </Text>
+      </Box>
+      <Box className="editor-container">
         <QuillTextEditor onEditorReady={onEditorReady} />
-      </div>
-      <div className="file-section">
-        <h4>Add Supporting Images</h4>
+      </Box>
+      <Box className="file-section" my="24">
+        <Heading level="4" fontSize="lg" mb="16">
+          Add Supporting Images
+        </Heading>
         <FileUploader handleFileChange={handleFileChange} multiple={true} className="lt-AnswerInput-file-upload" />
-      </div>
-      <div className="button-container">
-        <Button onClick={() => navigate(-1)} className="cancel-button">
+      </Box>
+      <Flex className="button-container" flexDirection="row" justifyContent="flex-end" gap="16" mt="24">
+        <Button onClick={() => navigate(-1)} appearance="subtle">
           Cancel
         </Button>
-        <Button onClick={handlePostAnswer} className="save-button">
-          Submit Answer
-        </Button>
-      </div>
-    </div>
+        <Button onClick={handlePostAnswer}>Submit Answer</Button>
+      </Flex>
+    </Box>
   );
 };
 

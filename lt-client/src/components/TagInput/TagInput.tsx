@@ -99,8 +99,6 @@ const TagInput = ({
       setInputValue(value);
       setHighlightedIndex(null);
 
-      // Dropdown stays open if there are suggestions
-      // (empty input shows all available suggestions)
       const availableSuggestions = suggestions.filter(
         (suggestion) => !tags.some((tag) => tag.name === suggestion.name)
       );
@@ -111,7 +109,6 @@ const TagInput = ({
         );
         setIsDropdownOpen(filtered.length > 0);
       } else {
-        // Keep dropdown closed when input is cleared by typing
         setIsDropdownOpen(false);
       }
     },

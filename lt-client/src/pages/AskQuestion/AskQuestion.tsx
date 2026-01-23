@@ -20,7 +20,7 @@ const AskQuestion = () => {
   }, [chapterId]);
 
   return (
-    <Box w="full" mx="auto" my="32" px="16" style={{ maxWidth: '1200px' }}>
+    <Box w="full" my="32">
       <Box mb="32" p="24" bg="bg.default" rounded="xl" shadow="md">
         <Button appearance="subtle" onClick={() => navigate(`/chapters/${chapterId}`)} mb="12">
           ← Back to Chapter

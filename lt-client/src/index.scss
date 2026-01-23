@@ -39,7 +39,7 @@ button[class*='Button'] {
 
   &[data-appearance='primary'] {
     background-color: var(--primary) !important;
-    color: #ffffff !important;
+    color: var(--text-white) !important;
     font-weight: 600 !important;
     box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2) !important;
 

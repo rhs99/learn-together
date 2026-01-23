@@ -27,7 +27,7 @@ const AnswerPage = () => {
   }
 
   return (
-    <Box w="full" mx="auto" my="32" px="16" style={{ maxWidth: '1200px' }}>
+    <Box w="full" my="32">
       <QACard item={answer} handleItemDelete={handleAnswerDelete} isQuestion={false} clickableDetails={false} />
     </Box>
   );
