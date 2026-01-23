@@ -1,9 +1,11 @@
 const Config = {
     LT_HOST: 'http://localhost:3000',
 
-    MINIO_HOST: 'play.min.io',
-    MINIO_PORT: 9000,
-    MINIO_BUCKET: 'lt-bucket',
+    SUPABASE_URL: process.env.SUPABASE_URL,
+    SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    SUPABASE_STORAGE_BUCKET: process.env.SUPABASE_STORAGE_BUCKET || 'lt-bucket',
+    CACHE_ENABLED: process.env.CACHE_ENABLED === 'true',
     REDIS_HOST: 'lt-cache',
     REDIS_PORT: 6379,
 };

@@ -83,22 +83,22 @@ graph TB
   subgraph "Data Layer"
     MDB[(MongoDB<br/>Primary Database)]
     RDS[(Redis<br/>Cache Layer)]
-    MIN[Minio<br/>Object Storage]
+    SUP[Supabase<br/>Object Storage]
   end
-  
+
   RC -->|HTTP| EA
   RC -->|WebSocket| WS
   EA --> MDB
   EA --> RDS
-  EA --> MIN
+  EA --> SUP
   WS --> EA
-  
+
   style RC fill:#61dafb,stroke:#21759b,color:#000
   style EA fill:#68a063,stroke:#4a7c59,color:#fff
   style WS fill:#010101,stroke:#333,color:#fff
   style MDB fill:#4db33d,stroke:#3d8b2a,color:#fff
   style RDS fill:#dc382d,stroke:#a12622,color:#fff
-  style MIN fill:#c72e49,stroke:#a02139,color:#fff
+  style SUP fill:#3ecf8e,stroke:#2da56e,color:#fff
 ```
 
 ### 📊 Data Flow Architecture
@@ -141,7 +141,7 @@ sequenceDiagram
 |----------|------------|
 | **Frontend** | React.js, TypeScript, SCSS, Vite, Optiaxiom, React Context API |
 | **Backend** | Node.js, Express.js, JWT, WebSockets, Zod |
-| **Infrastructure** | MongoDB, Redis, Docker, Minio |
+| **Infrastructure** | MongoDB, Redis, Docker, Supabase |
 
 
 ## 🚀 Getting Started
@@ -183,13 +183,28 @@ PORT=5000
 SECRET_KEY=your-secret-key
 
 # Database Configuration
+USE_REMOTE_DB=false
 MONGODB_URI=mongodb://lt-database:27017/lt-db
+REMOTE_MONGODB_URI=your-remote-mongodb-uri
 
-# Minio Configuration
-MINIO_ENDPOINT=lt-minio
-MINIO_PORT=9000
-MINIO_ACCESS_KEY=minioadmin
-MINIO_SECRET_KEY=minioadmin
+# Admin Configuration
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=your-admin-password
+ADMIN_EMAIL=your-admin-email
+ADMIN_EMAIL_PASS=your-email-pass
+ADMIN_EMAIL_SERVICE=gmail
+ADMIN_EMAIL_HOST=smtp.gmail.com
+ADMIN_EMAIL_PORT=465
+
+# Supabase Storage Configuration
+SUPABASE_URL=your-supabase-project-url
+SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+SUPABASE_STORAGE_BUCKET=your-bucket-name
+
+# Application Configuration
+LOG_LEVEL=debug
+CACHE_ENABLED=true
 ```
 
 ## 🤝 Contributing

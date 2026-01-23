@@ -10,6 +10,11 @@ class CacheService {
     }
 
     async init() {
+        if (!Config.CACHE_ENABLED) {
+            logger.info('Cache is disabled via CACHE_ENABLED environment variable');
+            return;
+        }
+
         try {
             logger.info('Initializing Redis client', { host: Config.REDIS_HOST, port: Config.REDIS_PORT });
 
@@ -40,6 +45,10 @@ class CacheService {
     }
 
     async set(key, data, expireTime = null) {
+        if (!Config.CACHE_ENABLED) {
+            return false;
+        }
+
         if (!this.isConnected) {
             logger.warn('Attempted to set cache while Redis is disconnected', { key });
             return false;
@@ -62,6 +71,10 @@ class CacheService {
     }
 
     async get(key) {
+        if (!Config.CACHE_ENABLED) {
+            return null;
+        }
+
         if (!this.isConnected) {
             logger.warn('Attempted to get cache while Redis is disconnected', { key });
             return null;
@@ -82,6 +95,10 @@ class CacheService {
     }
 
     async del(key) {
+        if (!Config.CACHE_ENABLED) {
+            return false;
+        }
+
         if (!this.isConnected) {
             logger.warn('Attempted to delete cache while Redis is disconnected', { key });
             return false;

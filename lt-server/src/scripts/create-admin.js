@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const Privilege = require('../models/privilege');
 const User = require('../models/user');
 
-// Use Production MongoDB by default, Docker MongoDB if USE_DOCKER_DB is true
-const useDockerDB = process.env.USE_DOCKER_DB === 'true';
-const DB_URL = useDockerDB ? process.env.MONGODB_URI : process.env.PROD_MONGODB_URI;
+// Use Remote MongoDB if USE_REMOTE_DB is true, Docker MongoDB otherwise
+const useRemoteDB = process.env.USE_REMOTE_DB === 'true';
+const DB_URL = useRemoteDB ? process.env.REMOTE_MONGODB_URI : process.env.MONGODB_URI;
 
 const createAdminPrivilege = async () => {
     try {
@@ -98,8 +98,8 @@ const setup = async () => {
 const checkEnvVariables = () => {
     const requiredVars = ['ADMIN_USERNAME', 'ADMIN_EMAIL', 'ADMIN_PASSWORD'];
     // Check for at least one database URI
-    if (!process.env.MONGODB_URI && !process.env.PROD_MONGODB_URI) {
-        requiredVars.push('MONGODB_URI or PROD_MONGODB_URI');
+    if (!process.env.MONGODB_URI && !process.env.REMOTE_MONGODB_URI) {
+        requiredVars.push('MONGODB_URI or REMOTE_MONGODB_URI');
     }
     const missingVars = requiredVars.filter((varName) => !process.env[varName]);
 

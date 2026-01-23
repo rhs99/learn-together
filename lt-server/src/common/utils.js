@@ -1,18 +1,13 @@
-const Minio = require('minio');
+const { createClient } = require('@supabase/supabase-js');
 const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const Config = require('../config');
+const logger = require('../config/logger');
 
 const privateKey = process.env.SECRET_KEY;
 
-const minioClient = new Minio.Client({
-    endPoint: 'play.min.io',
-    port: 9000,
-    useSSL: true,
-    accessKey: 'Q3AM3UQ867SPQQA43P2F',
-    secretKey: 'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG',
-});
+const supabase = createClient(Config.SUPABASE_URL, Config.SUPABASE_SERVICE_ROLE_KEY);
 
 const createToken = (data) => {
     const token = jwt.sign(data, privateKey);
@@ -49,36 +44,49 @@ const sendEmail = async (email, subject, text) => {
             text: text,
         });
 
-        console.log('Email sent sucessfully');
+        logger.info('Email sent sucessfully');
     } catch (error) {
-        console.log(error, 'Error sending email');
+        logger.error('Error sending email', { error });
     }
 };
 
 const getFileUrl = (fileName) => {
-    return `https://${Config.MINIO_HOST}:${Config.MINIO_PORT}/${Config.MINIO_BUCKET}/${fileName}`;
+    const { data } = supabase.storage.from(Config.SUPABASE_STORAGE_BUCKET).getPublicUrl(fileName);
+    return data.publicUrl;
 };
 
-const getPresignedUrl = (data, cb) => {
+const getPresignedUrl = async (data, cb) => {
     const key = data.userId + '/' + uuid() + data.fileName;
-    minioClient.presignedPutObject(Config.MINIO_BUCKET, key, (err, uploadUrl) => {
-        if (err) {
-            return cb(err);
+
+    try {
+        const { data: uploadData, error } = await supabase.storage
+            .from(Config.SUPABASE_STORAGE_BUCKET)
+            .createSignedUploadUrl(key);
+
+        if (error) {
+            return cb(error);
         }
-        cb(null, { uploadUrl, key });
-    });
+
+        cb(null, { uploadUrl: uploadData.signedUrl, key });
+    } catch (err) {
+        cb(err);
+    }
 };
 
-const deleteFile = (fileNames) => {
+const deleteFile = async (fileNames) => {
     if (fileNames.length === 0) {
         return;
     }
 
-    minioClient.removeObjects(Config.MINIO_BUCKET, fileNames, (err) => {
-        if (err) {
-            console.log(err);
+    try {
+        const { error } = await supabase.storage.from(Config.SUPABASE_STORAGE_BUCKET).remove(fileNames);
+
+        if (error) {
+            logger.error('Error deleting file from storage', { error });
         }
-    });
+    } catch (err) {
+        logger.error('Error deleting file from storage', { error: err });
+    }
 };
 
 const uuid = () => {
