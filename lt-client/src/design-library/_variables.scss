@@ -30,6 +30,20 @@
 
   // Error
   --error: #ef4444;
+  --error-bg: #f8d7da;
+  --error-text: #721c24;
+  --error-border: #f5c6cb;
+
+  // Success
+  --success: #22c55e;
+  --success-bg: #d4edda;
+  --success-text: #155724;
+  --success-border: #c3e6cb;
+
+  // Warning
+  --warning: #f59e0b;
+  --warning-bg: #fff3cd;
+  --warning-text: #856404;
 
   // THEME COLORS (Semantic Usage)
   --primary: var(--primary-blue);
@@ -71,12 +85,23 @@
   // Primary Blue Opacity
   --primary-blue-opacity-05: rgba(37, 99, 235, 0.05);
   --primary-blue-opacity-10: rgba(37, 99, 235, 0.1);
+  --primary-blue-opacity-30: rgba(37, 99, 235, 0.3);
 
   // Secondary Teal Opacity
   --secondary-teal-opacity-10: rgba(13, 148, 136, 0.1);
+  --secondary-teal-opacity-20: rgba(13, 148, 136, 0.2);
+  --secondary-teal-opacity-30: rgba(13, 148, 136, 0.3);
 
   // Black Opacity
   --black-opacity-15: rgba(0, 0, 0, 0.15);
+  --black-opacity-30: rgba(0, 0, 0, 0.3);
+
+  // White Opacity
+  --white-opacity-20: rgba(255, 255, 255, 0.2);
+  --white-opacity-50: rgba(255, 255, 255, 0.5);
+
+  // Slate Opacity
+  --slate-200-opacity-50: rgba(226, 232, 240, 0.5);
 
   // SPACING (Using 8pt Grid System)
   --spacing-xs: 4px;
@@ -141,6 +166,20 @@
 
   // Error (Dark Mode)
   --error: #f87171;
+  --error-bg: #7f1d1d;
+  --error-text: #fecaca;
+  --error-border: #991b1b;
+
+  // Success (Dark Mode)
+  --success: #4ade80;
+  --success-bg: #14532d;
+  --success-text: #bbf7d0;
+  --success-border: #166534;
+
+  // Warning (Dark Mode)
+  --warning: #fbbf24;
+  --warning-bg: #713f12;
+  --warning-text: #fde68a;
 
   // BACKGROUND COLORS (Dark Mode)
   --background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
@@ -171,6 +210,13 @@
   // OPACITY VARIATIONS (Dark Mode)
   --primary-blue-opacity-05: rgba(96, 165, 250, 0.05);
   --primary-blue-opacity-10: rgba(96, 165, 250, 0.1);
+  --primary-blue-opacity-30: rgba(96, 165, 250, 0.3);
   --secondary-teal-opacity-10: rgba(20, 184, 166, 0.1);
+  --secondary-teal-opacity-20: rgba(20, 184, 166, 0.2);
+  --secondary-teal-opacity-30: rgba(20, 184, 166, 0.3);
   --black-opacity-15: rgba(255, 255, 255, 0.15);
+  --black-opacity-30: rgba(255, 255, 255, 0.3);
+  --white-opacity-20: rgba(255, 255, 255, 0.2);
+  --white-opacity-50: rgba(255, 255, 255, 0.5);
+  --slate-200-opacity-50: rgba(71, 85, 105, 0.5);
 }

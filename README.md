@@ -50,13 +50,6 @@
 
 Learn Together is a modern collaborative Q&A platform that facilitates knowledge sharing and learning through an intuitive, feature-rich interface. Built with performance and scalability in mind, it empowers users to ask questions, provide comprehensive answers, and engage with educational content seamlessly.
 
-### Why Choose Learn Together?
-
-- **Rich Content Support** - Seamlessly integrate images, LaTeX mathematical expressions, and formatted text
-- **Real-time Collaboration** - Instant notifications and live updates for dynamic engagement
-- **Community-Driven Quality** - Voting system ensures the best content rises to the top
-- **Smart Organization** - Advanced filtering and sorting capabilities for efficient content discovery
-
 ## 🚀 Key Features
 
 ### Core Platform Features
@@ -144,33 +137,11 @@ sequenceDiagram
 
 ## 🛠 Technology Stack
 
-### Frontend
-| Technology | Purpose |
-|------------|---------|
-| **React.js** | UI Framework |
-| **TypeScript** | Type Safety |
-| **React Context API** | State Management |
-| **SCSS** | Styling |
-| **Vite** | Build Tool |
-| **Optiaxiom** | UI Components |
-
-### Backend
-| Technology | Purpose |
-|------------|---------|
-| **Node.js** | Runtime Environment |
-| **Express.js** | Web Framework |
-| **JWT** | Authentication |
-| **WebSockets** | Real-time Communication |
-| **Zod** | Schema Validation |
-
-### Infrastructure
-| Technology | Purpose |
-|------------|---------|
-| **MongoDB** | Primary Database |
-| **Redis** | Caching Layer |
-| **Docker** | Containerization |
-| **Minio** | Object Storage |
-| **Docker Compose** | Orchestration |
+| Category | Technology |
+|----------|------------|
+| **Frontend** | React.js, TypeScript, SCSS, Vite, Optiaxiom, React Context API |
+| **Backend** | Node.js, Express.js, JWT, WebSockets, Zod |
+| **Infrastructure** | MongoDB, Redis, Docker, Minio |
 
 
 ## 🚀 Getting Started

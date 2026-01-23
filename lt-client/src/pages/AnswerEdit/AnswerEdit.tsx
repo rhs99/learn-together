@@ -4,7 +4,7 @@ import Util from '../../utils';
 import axios from 'axios';
 import { Answer } from '../../types';
 import AnswerInput from '../../components/AnswerInput/AnswerInput';
-import { Button, Spinner } from '@optiaxiom/react';
+import { Box, Button, Spinner, Text } from '@optiaxiom/react';
 
 import './_index.scss';
 
@@ -28,33 +28,35 @@ const AnswerEdit = () => {
 
   if (loading) {
     return (
-      <div className="cl-AnswerEdit loading-container">
+      <Box className="cl-AnswerEdit loading-container">
         <Spinner />
-      </div>
+      </Box>
     );
   }
 
   if (!answer) {
     return (
-      <div className="cl-AnswerEdit error-container">
-        <h2>Answer not found</h2>
+      <Box className="cl-AnswerEdit error-container">
+        <Text>Answer not found</Text>
         <Button onClick={() => navigate(-1)}>Go Back</Button>
-      </div>
+      </Box>
     );
   }
 
   return (
-    <div className="cl-AnswerEdit">
-      <div className="edit-header">
+    <Box className="cl-AnswerEdit">
+      <Box className="edit-header">
         <Button className="back-button" onClick={() => navigate(-1)}>
           ← Back
         </Button>
-        <h1>Edit Your Answer</h1>
-      </div>
-      <div className="content-wrapper">
+        <Text fontSize="2xl" fontWeight="600">
+          Edit Your Answer
+        </Text>
+      </Box>
+      <Box className="content-wrapper">
         <AnswerInput answer={answer} />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 export default AnswerEdit;

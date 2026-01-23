@@ -1,7 +1,5 @@
 .lt-Profile {
-  margin: 5vh auto;
-  width: 80%;
-  max-width: 800px;
+  margin-top: 5vh;
 
   &__container {
     background: var(--background-card);
@@ -25,7 +23,7 @@
 
   &__header {
     background: var(--gradient-primary);
-    color: #ffffff;
+    color: var(--text-white);
     padding: 40px 30px;
     text-align: center;
     position: relative;
@@ -34,7 +32,7 @@
   &__avatar {
     width: 100px;
     height: 100px;
-    background-color: #ffffff;
+    background-color: var(--white);
     color: var(--primary);
     border-radius: 50%;
     display: flex;
@@ -50,18 +48,18 @@
     font-size: 28px;
     font-weight: var(--fw-bold);
     margin: 0 0 10px;
-    color: #ffffff;
+    color: var(--text-white);
   }
 
   &__class {
     display: inline-block;
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: var(--white-opacity-20);
     padding: 5px 15px;
     border-radius: 20px;
     font-size: 14px;
     font-weight: var(--fw-medium);
     margin-top: 5px;
-    color: #ffffff;
+    color: var(--text-white);
   }
 
   &__stats {
@@ -109,8 +107,6 @@
   }
 
   @media only screen and (max-width: 780px) {
-    width: 95%;
-
     &__stats {
       flex-direction: column;
       padding: 20px;
@@ -135,7 +131,7 @@
   }
 
   &__stat-card {
-    background: rgba(71, 85, 105, 0.5);
+    background: var(--slate-200-opacity-50);
     border-color: var(--border-default);
   }
 }

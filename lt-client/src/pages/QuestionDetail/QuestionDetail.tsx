@@ -51,7 +51,7 @@ const QuestionDetail = () => {
   }
 
   return (
-    <Box w="full" mx="auto" my="32" px="16" style={{ maxWidth: '1200px' }}>
+    <Box w="full" my="32">
       <Flex flexDirection="column" gap="24">
         <QACard item={question} clickableDetails={false} isQuestion={true} handleItemDelete={handleQuestionDelete} />
         {isLoggedIn && !isOwner && (

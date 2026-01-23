@@ -41,7 +41,7 @@ const SubjectDetail = () => {
   }, [chapters]);
 
   return (
-    <Box w="full" mx="auto" px="24" pb="24" style={{ maxWidth: '1200px' }}>
+    <Box w="full" pb="24">
       <Box
         display="flex"
         flexDirection={{ base: 'column', md: 'row' }}
