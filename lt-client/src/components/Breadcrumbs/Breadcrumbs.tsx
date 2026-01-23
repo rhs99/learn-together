@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Breadcrumb } from '@optiaxiom/react/unstable';
+import { Breadcrumb } from '@optiaxiom/react';
 
 type BreadcrumbsProps = {
   items: { name: string; url?: string | null }[];
