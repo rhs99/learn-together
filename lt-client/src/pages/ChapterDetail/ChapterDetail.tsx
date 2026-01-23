@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios, { AxiosRequestConfig } from 'axios';
+import { Button, Box, Pagination, Text, Heading, Flex } from '@optiaxiom/react';
 import Util from '../../utils';
 import { Question, Breadcrumb } from '../../types';
 import AuthContext from '../../store/auth';
@@ -9,10 +10,6 @@ import { Tag } from '../../types';
 import QACard from '../../components/QACard/QACard';
 import TagInput from '../../components/TagInput/TagInput';
 import useAlert from '../../hooks/use-alert';
-
-import { Button, Box, Pagination } from '@optiaxiom/react';
-
-import './_index.scss';
 import FilterOptions from '../../components/FilterOptions/FilterOptions';
 
 const PAGE_SIZE = 10;
@@ -90,15 +87,25 @@ const ChapterDetail = () => {
 
   useEffect(() => {
     const URL = `${Util.CONSTANTS.SERVER_URL}/tags?chapterId=${chapterId}`;
-    axios.get(URL).then((data) => setExistingTags(data.data));
-  }, [chapterId]);
+    axios
+      .get(URL)
+      .then(({ data }) => setExistingTags(data))
+      .catch(() => {
+        onAlert('Failed to load tags', 'danger');
+      });
+  }, [chapterId, onAlert]);
 
   useEffect(() => {
     const URL = `${Util.CONSTANTS.SERVER_URL}/chapters/${chapterId}/breadcrumb`;
-    axios.get(URL).then(({ data }) => {
-      setBreadcrumbs(data);
-    });
-  }, [chapterId]);
+    axios
+      .get(URL)
+      .then(({ data }) => {
+        setBreadcrumbs(data);
+      })
+      .catch(() => {
+        onAlert('Failed to load breadcrumbs', 'danger');
+      });
+  }, [chapterId, onAlert]);
 
   const handleAskQuestion = () => {
     navigate(`/chapters/${chapterId}/ask`);
@@ -130,25 +137,40 @@ const ChapterDetail = () => {
   const isEmpty = questions.length === 0;
 
   return (
-    <Box className="cl-ChapterDetail">
-      <div className="chapter-header">
-        <div className="header-content">
+    <Box w="full" mx="auto" px="24" pb="24" style={{ maxWidth: '1200px' }}>
+      <Box
+        display="flex"
+        flexDirection={{ base: 'column', md: 'row' }}
+        justifyContent="space-between"
+        alignItems={{ base: 'start', md: 'center' }}
+        gap="16"
+        mb="32"
+        p="24"
+        bg="bg.default"
+        rounded="lg"
+        shadow="md"
+      >
+        <Box>
           {breadcrumbs.length > 1 && (
-            <Button className="back-button" onClick={() => navigate(breadcrumbs[breadcrumbs.length - 2].url)}>
+            <Button onClick={() => navigate(breadcrumbs[breadcrumbs.length - 2].url)} mb="12">
               Back to Chapters
             </Button>
           )}
-          <h1>{breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1].name : 'Chapter Detail'}</h1>
-          <p className="description">Explore questions and answers from this chapter</p>
-        </div>
-        <Button className="ask-button" disabled={!isLoggedIn} onClick={handleAskQuestion}>
+          <Heading level="1" fontSize="2xl" fontWeight="700" mb="4">
+            {breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1].name : 'Chapter Detail'}
+          </Heading>
+          <Text fontSize="sm" color="fg.secondary">
+            Explore questions and answers from this chapter
+          </Text>
+        </Box>
+        <Button disabled={!isLoggedIn} onClick={handleAskQuestion}>
           Ask Question
         </Button>
-      </div>
+      </Box>
 
-      <div className="content-wrapper">
-        <div className="filters-section">
-          <Box className="filter">
+      <Box bg="bg.default" p="24" rounded="xl" shadow="md">
+        <Flex flexDirection={{ base: 'column', md: 'row' }} justifyContent="space-between" gap="16" mb="24">
+          <Box flex="1">
             <TagInput
               suggestions={existingTags.map((tag) => ({ _id: tag._id, name: tag.name }))}
               onTagsChange={onTagsChange}
@@ -156,7 +178,7 @@ const ChapterDetail = () => {
             />
           </Box>
 
-          <Box className="sort-options">
+          <Flex flexDirection="row" gap="12">
             <FilterOptions
               filterBy={filterBy}
               handleFilterOptionsChange={handleFilterOptionsChange}
@@ -169,20 +191,25 @@ const ChapterDetail = () => {
               handleSortOptionsChange={handleSortOptionsChange}
               fetchSortedData={fetchQuestion}
             />
-          </Box>
-        </div>
+          </Flex>
+        </Flex>
 
         {!isLoading && isEmpty && (
-          <Box className="empty">
-            <h2>No Questions Found</h2>
-            <p>Be the first to ask a question in this chapter!</p>
+          <Box textAlign="center" py="48" bg="bg.default.hovered" rounded="md">
+            <Heading level="3" fontSize="lg" mb="8">
+              No Questions Found
+            </Heading>
+            <Text color="fg.secondary">Be the first to ask a question in this chapter!</Text>
           </Box>
         )}
 
-        {isLoading && <div className="loading">Loading questions...</div>}
-
+        {isLoading && (
+          <Box textAlign="center" py="48">
+            <Text>Loading questions...</Text>
+          </Box>
+        )}
         {!isLoading && (
-          <Box className="qContainer">
+          <Flex flexDirection="column" gap="16">
             {questions.map((question) => (
               <QACard
                 key={question._id}
@@ -192,13 +219,12 @@ const ChapterDetail = () => {
                 handleItemDelete={handleQuestionDelete}
               />
             ))}
-          </Box>
+          </Flex>
         )}
 
         {!isLoading && paginationInfo.totalPage > 1 && (
-          <div className="pagination-container">
+          <Flex flexDirection="row" justifyContent="center" mt="24">
             <Pagination
-              style={{ display: 'flex', justifyContent: 'center' }}
               total={paginationInfo.totalPage}
               page={paginationInfo.currPage}
               onPageChange={(page) => {
@@ -210,9 +236,9 @@ const ChapterDetail = () => {
                 });
               }}
             />
-          </div>
+          </Flex>
         )}
-      </div>
+      </Box>
     </Box>
   );
 };

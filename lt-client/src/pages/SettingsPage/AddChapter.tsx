@@ -3,6 +3,7 @@ import { FormEvent, useState, useContext } from 'react';
 import Util from '../../utils';
 import { Class, Subject, HttpError } from '../../types';
 import AuthContext from '../../store/auth';
+import { Box, Heading, Field, Input, Button, Select, SelectContent, SelectTrigger } from '@optiaxiom/react';
 
 type AddChapterProps = {
   classes: Class[];
@@ -54,55 +55,62 @@ const AddChapter = ({ classes }: AddChapterProps) => {
     }
   };
 
+  const handleClassChange = async (value: string) => {
+    setClassForSubject(value);
+    await fetchSubjects(value);
+  };
+
   return (
-    <div className="settings-form-container">
-      <h2 className="header">Add Chapter</h2>
-      <form onSubmit={handleAddChapter}>
-        <label htmlFor="check-class">Class Name</label>
-        <select
-          value={classForSubject}
-          onChange={async (event) => {
-            setClassForSubject(event.target.value);
-            await fetchSubjects(event.target.value);
-          }}
-          name="class"
-          required
-        >
-          <option value="">Select class</option>
-          {(classes as Class[]).map((_class) => (
-            <option value={_class._id} key={_class._id}>
-              {_class.name}
-            </option>
-          ))}
-        </select>
-        <label htmlFor="check-subject">Select subject</label>
-        <select
-          value={subjectForChapter}
-          onChange={(event) => setSubjectForChapter(event.target.value)}
-          name="subject"
-          required
-        >
-          <option value="">Select subject</option>
-          {subjects.map((subject) => (
-            <option value={subject._id} key={subject._id}>
-              {subject.name}
-            </option>
-          ))}
-        </select>
-        <label htmlFor="add-chapter">Chapter Name</label>
-        <input
-          type="text"
-          name="addChapter"
-          value={newChapter}
-          onChange={(event) => setNewChapter(event.target.value)}
-          required
-        />
-        {err && <span className="err">{err}</span>}
-        <button type="submit" className="settings-button">
-          Add
-        </button>
-      </form>
-    </div>
+    <Box className="settings-form-container">
+      <Heading level="2" fontSize="xl" mb="24">
+        Add Chapter
+      </Heading>
+      <Box asChild>
+        <form onSubmit={handleAddChapter}>
+          <Field label="Class Name" required>
+            <Select
+              value={classForSubject}
+              onValueChange={handleClassChange}
+              options={[
+                { label: 'Select class', value: '' },
+                ...(classes as Class[]).map((_class) => ({
+                  label: _class.name,
+                  value: _class._id,
+                })),
+              ]}
+            >
+              <SelectTrigger placeholder="Select class" />
+              <SelectContent />
+            </Select>
+          </Field>
+
+          <Field label="Select subject" required>
+            <Select
+              value={subjectForChapter}
+              onValueChange={setSubjectForChapter}
+              options={[
+                { label: 'Select subject', value: '' },
+                ...subjects.map((subject) => ({
+                  label: subject.name,
+                  value: subject._id,
+                })),
+              ]}
+            >
+              <SelectTrigger placeholder="Select subject" />
+              <SelectContent />
+            </Select>
+          </Field>
+
+          <Field label="Chapter Name" required error={err || undefined}>
+            <Input value={newChapter} onValueChange={setNewChapter} required />
+          </Field>
+
+          <Button type="submit" w="full" justifyContent="center">
+            Add
+          </Button>
+        </form>
+      </Box>
+    </Box>
   );
 };
 

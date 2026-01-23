@@ -1,0 +1,16 @@
+.lt-RootLayout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--background-alt);
+
+  main {
+    flex: 1;
+    width: 100%;
+    padding-top: 88px; // 64px for fixed nav + 24px spacing
+  }
+}
+
+[data-theme='dark'] .lt-RootLayout {
+  background: #1e293b;
+}

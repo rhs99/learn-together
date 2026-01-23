@@ -1,0 +1,176 @@
+:root {
+  // Primary Brand Colors (Professional Blue Palette)
+  --primary-blue: #2563eb;
+  --primary-blue-dark: #1d4ed8;
+  --primary-blue-light: #3b82f6;
+  --primary-blue-lighter: #60a5fa;
+  --primary-blue-lightest: #dbeafe;
+
+  // Secondary Colors (Teal Accent)
+  --secondary-teal: #0d9488;
+  --secondary-teal-dark: #0f766e;
+  --secondary-teal-light: #14b8a6;
+
+  // Accent Colors (Amber for highlights)
+  --accent-amber: #f59e0b;
+  --accent-amber-dark: #d97706;
+  --accent-amber-light: #fbbf24;
+
+  // Neutral Education Colors
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-700: #334155;
+  --slate-900: #0f172a;
+
+  // GRAYSCALE
+  --white: #ffffff;
+
+  // Error
+  --error: #ef4444;
+
+  // THEME COLORS (Semantic Usage)
+  --primary: var(--primary-blue);
+  --primary-hover: var(--primary-blue-dark);
+  --primary-light: var(--primary-blue-light);
+
+  --secondary: var(--secondary-teal);
+
+  --accent: var(--accent-amber);
+  --accent-hover: var(--accent-amber-dark);
+
+  // BACKGROUND COLORS (Professional & Clean)
+  --background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+  --background-alt: var(--white);
+  --background-card: var(--white);
+  --background-card-hover: var(--slate-50);
+  --gradient-primary: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-teal) 100%);
+
+  // TEXT COLORS
+  --text-primary: var(--slate-900);
+  --text-secondary: var(--slate-700);
+  --text-white: var(--white);
+
+  // BORDER COLORS
+  --border-default: var(--slate-200);
+  --border-light: var(--slate-100);
+  --border-medium: var(--slate-300);
+  --border-dark: var(--slate-400);
+
+  // SHADOWS (Subtle & Professional)
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-focus: 0 0 0 3px rgba(37, 99, 235, 0.2);
+
+  // OPACITY VARIATIONS
+  // Primary Blue Opacity
+  --primary-blue-opacity-05: rgba(37, 99, 235, 0.05);
+  --primary-blue-opacity-10: rgba(37, 99, 235, 0.1);
+
+  // Secondary Teal Opacity
+  --secondary-teal-opacity-10: rgba(13, 148, 136, 0.1);
+
+  // Black Opacity
+  --black-opacity-15: rgba(0, 0, 0, 0.15);
+
+  // SPACING (Using 8pt Grid System)
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+
+  // BORDER RADIUS (Moderate for Professional Look)
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  // TRANSITIONS
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+  --transition-slow: 0.3s ease;
+  --transition-all: all 0.2s ease;
+
+  // Z-INDEX
+  --z-fixed: 1000;
+
+  // DEPRECATED (Keep for backward compatibility)
+  --navy-blue: var(--primary-blue);
+  --blue-green: var(--secondary-teal);
+}
+
+// Dark Mode Theme
+[data-theme='dark'] {
+  // Primary Brand Colors (Dark Mode)
+  --primary-blue: #60a5fa;
+  --primary-blue-dark: #3b82f6;
+  --primary-blue-light: #93c5fd;
+  --primary-blue-lighter: #bfdbfe;
+  --primary-blue-lightest: #1e3a8a;
+
+  // Secondary Colors (Dark Mode)
+  --secondary-teal: #14b8a6;
+  --secondary-teal-dark: #0d9488;
+  --secondary-teal-light: #2dd4bf;
+
+  // Accent Colors (Dark Mode)
+  --accent-amber: #fbbf24;
+  --accent-amber-dark: #f59e0b;
+  --accent-amber-light: #fde68a;
+
+  // Neutral Education Colors (Dark Mode)
+  --slate-50: #1e293b;
+  --slate-100: #334155;
+  --slate-200: #475569;
+  --slate-300: #64748b;
+  --slate-400: #94a3b8;
+  --slate-700: #cbd5e1;
+  --slate-900: #f1f5f9;
+
+  // GRAYSCALE
+  --white: #0f172a;
+
+  // Error (Dark Mode)
+  --error: #f87171;
+
+  // BACKGROUND COLORS (Dark Mode)
+  --background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  --background-alt: #1e293b;
+  --background-card: #1e293b;
+  --background-card-hover: #334155;
+  --gradient-primary: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-teal) 100%);
+
+  // TEXT COLORS (Dark Mode)
+  --text-primary: var(--slate-900);
+  --text-secondary: var(--slate-700);
+  --text-white: var(--white);
+
+  // BORDER COLORS (Dark Mode)
+  --border-default: var(--slate-200);
+  --border-light: var(--slate-100);
+  --border-medium: var(--slate-300);
+  --border-dark: var(--slate-400);
+
+  // SHADOWS (Dark Mode - Lighter for visibility)
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --shadow-focus: 0 0 0 3px rgba(96, 165, 250, 0.4);
+
+  // OPACITY VARIATIONS (Dark Mode)
+  --primary-blue-opacity-05: rgba(96, 165, 250, 0.05);
+  --primary-blue-opacity-10: rgba(96, 165, 250, 0.1);
+  --secondary-teal-opacity-10: rgba(20, 184, 166, 0.1);
+  --black-opacity-15: rgba(255, 255, 255, 0.15);
+}

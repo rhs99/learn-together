@@ -1,13 +1,12 @@
 import { useEffect, useState, useCallback, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Box, Heading, Flex } from '@optiaxiom/react';
 import { Question, Answer } from '../../types';
 import AuthContext from '../../store/auth';
 import Util from '../../utils';
 import AnswerInput from '../../components/AnswerInput/AnswerInput';
 import QACard from '../../components/QACard/QACard';
-
-import './_index.scss';
 
 const QuestionDetail = () => {
   const [question, setQuestion] = useState<Question>();
@@ -52,22 +51,29 @@ const QuestionDetail = () => {
   }
 
   return (
-    <div className="cl-QuestionDetail">
-      <QACard item={question} clickableDetails={false} isQuestion={true} handleItemDelete={handleQuestionDelete} />
-      {isLoggedIn && !isOwner && (
-        <AnswerInput fetchAnswer={handleAnsPost} answer={{ _id: '', question: questionId || '', imageLocations: [] }} />
-      )}
-      <h5 className="ans-title">{`${answers.length} Answers`}</h5>
-      {answers.map((answer) => (
-        <QACard
-          key={answer._id}
-          item={answer}
-          clickableDetails={false}
-          isQuestion={false}
-          handleItemDelete={handleAnswerDelete}
-        />
-      ))}
-    </div>
+    <Box w="full" mx="auto" my="32" px="16" style={{ maxWidth: '1200px' }}>
+      <Flex flexDirection="column" gap="24">
+        <QACard item={question} clickableDetails={false} isQuestion={true} handleItemDelete={handleQuestionDelete} />
+        {isLoggedIn && !isOwner && (
+          <AnswerInput
+            fetchAnswer={handleAnsPost}
+            answer={{ _id: '', question: questionId || '', imageLocations: [] }}
+          />
+        )}
+        <Heading level="2" fontSize="xl" fontWeight="600" mb="16">
+          {`${answers.length} Answers`}
+        </Heading>
+        {answers.map((answer) => (
+          <QACard
+            key={answer._id}
+            item={answer}
+            clickableDetails={false}
+            isQuestion={false}
+            handleItemDelete={handleAnswerDelete}
+          />
+        ))}
+      </Flex>
+    </Box>
   );
 };
 

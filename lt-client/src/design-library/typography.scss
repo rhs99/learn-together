@@ -1,12 +1,15 @@
 // Typography System
-// Import Google Fonts
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+// Import Google Fonts with optimized loading
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap');
 
-// Font variables
+// Font variables with system font fallbacks
 :root {
-  --font-primary: 'Inter', sans-serif;
-  --font-heading: 'Poppins', sans-serif;
-  --font-mono: 'Fira Code', monospace;
+  --font-primary:
+    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  --font-heading:
+    'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  --font-mono:
+    'Fira Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono', 'Droid Sans Mono', 'Source Code Pro', monospace;
 
   // Font sizes
   --fs-xs: 0.75rem; // 12px
@@ -27,7 +30,6 @@
   --lh-loose: 2;
 
   // Font weights
-  --fw-light: 300;
   --fw-normal: 400;
   --fw-medium: 500;
   --fw-semibold: 600;

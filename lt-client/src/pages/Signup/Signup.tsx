@@ -3,6 +3,7 @@ import { FormEvent, useState } from 'react';
 import { Class } from '../../types';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
+import { Box, Heading, Field, Input, Button, Text, Select, SelectContent, SelectTrigger } from '@optiaxiom/react';
 
 import Util from '../../utils';
 
@@ -55,53 +56,82 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="cl-Signup">
-      <div className="signup-form-container">
-        <h1 className="header">Create an Account</h1>
-        <form onSubmit={handleSignup}>
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            name="username"
-            value={username}
-            onChange={(event) => setUsername(event.target.value)}
-            required
-          />
-          <label htmlFor="email">E-mail</label>
-          <input type="email" name="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            required
-          />
-          <label htmlFor="confirm-password">Confirm Password</label>
-          <input
-            type="password"
-            name="confirmPassword"
-            value={confirmPassword}
-            onChange={(event) => setConfirmPassword(event.target.value)}
-            required
-          />
-          {err && <span className="err">{err}</span>}
-          <label htmlFor="class">Class</label>
-          <select value={_class} onChange={(event) => setClass(event.target.value)} name="class">
-            <option value="">Select class</option>
-            {(classes as Class[]).map((_class) => (
-              <option value={_class._id} key={_class._id}>
-                {_class.name}
-              </option>
-            ))}
-          </select>
-          <button type="submit">Sign Up</button>
-        </form>
-        <div className="login-link">
-          Already have an account? <NavLink to="/users/login">Log In</NavLink>
-        </div>
-      </div>
-    </div>
+    <Box display="flex" justifyContent="center" alignItems="center" mt="40">
+      <Box
+        data-form-container
+        w="1/4"
+        p="32"
+        bg="bg.default"
+        rounded="lg"
+        shadow="lg"
+        border="1"
+        borderColor="border.default"
+        style={{ position: 'relative', overflow: 'hidden' }}
+      >
+        <Box
+          style={{
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '4px',
+            background: 'var(--gradient-primary)',
+          }}
+        />
+        <Heading level="1" fontSize="2xl" textAlign="center" mb="24">
+          Create an Account
+        </Heading>
+        <Box asChild>
+          <form onSubmit={handleSignup}>
+            <Field label="Username" required>
+              <Input value={username} onValueChange={setUsername} required />
+            </Field>
+
+            <Field label="E-mail" required>
+              <Input type="email" value={email} onValueChange={setEmail} required />
+            </Field>
+
+            <Field label="Password" required>
+              <Input type="password" value={password} onValueChange={setPassword} required />
+            </Field>
+
+            <Field label="Confirm Password" required error={err || undefined}>
+              <Input type="password" value={confirmPassword} onValueChange={setConfirmPassword} required />
+            </Field>
+
+            <Field label="Class">
+              <Select
+                value={_class}
+                onValueChange={setClass}
+                options={[
+                  { label: 'Select class', value: '' },
+                  ...(classes as Class[]).map((_class) => ({
+                    label: _class.name,
+                    value: _class._id,
+                  })),
+                ]}
+              >
+                <SelectTrigger placeholder="Select class" />
+                <SelectContent />
+              </Select>
+            </Field>
+
+            <Button type="submit" w="full" justifyContent="center">
+              Sign Up
+            </Button>
+          </form>
+        </Box>
+        <Box textAlign="center" mt="16">
+          <Text fontSize="sm" color="fg.secondary">
+            Already have an account?{' '}
+            <NavLink to="/users/login" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>
+              Log In
+            </NavLink>
+          </Text>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

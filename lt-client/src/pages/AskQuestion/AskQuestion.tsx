@@ -3,9 +3,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import QuestionInput from '../../components/QuestionInput/QuestionInput';
 import Util from '../../utils';
-import { Button } from '@optiaxiom/react';
-
-import './_index.scss';
+import { Box, Button, Heading, Text } from '@optiaxiom/react';
 
 const AskQuestion = () => {
   const { chapterId } = useParams();
@@ -22,23 +20,23 @@ const AskQuestion = () => {
   }, [chapterId]);
 
   return (
-    <div className="lt-AskQuestion">
-      <div className="question-header">
-        <div className="header-content">
-          <Button className="back-button" onClick={() => navigate(`/chapters/${chapterId}`)}>
-            ← Back to Chapter
-          </Button>
-          <h1>Ask a Question</h1>
-          <p className="subtitle">
-            {chapterName ? `Creating a new question in ${chapterName}` : 'Create a new question'}
-          </p>
-        </div>
-      </div>
+    <Box w="full" mx="auto" my="32" px="16" style={{ maxWidth: '1200px' }}>
+      <Box mb="32" p="24" bg="bg.default" rounded="xl" shadow="md">
+        <Button appearance="subtle" onClick={() => navigate(`/chapters/${chapterId}`)} mb="12">
+          ← Back to Chapter
+        </Button>
+        <Heading level="1" fontSize="3xl" fontWeight="700" mb="8">
+          Ask a Question
+        </Heading>
+        <Text fontSize="lg" color="fg.secondary">
+          {chapterName ? `Creating a new question in ${chapterName}` : 'Create a new question'}
+        </Text>
+      </Box>
 
-      <div className="content-wrapper">
+      <Box bg="bg.default" p="32" rounded="xl" shadow="md">
         <QuestionInput chapterId={chapterId as string} />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

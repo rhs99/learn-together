@@ -3,6 +3,7 @@ import { FormEvent, useState, useContext } from 'react';
 import Util from '../../utils';
 import { Class, HttpError } from '../../types';
 import AuthContext from '../../store/auth';
+import { Box, Heading, Field, Input, Button, Select, SelectContent, SelectTrigger } from '@optiaxiom/react';
 
 type AddSubjectProps = {
   classes: Class[];
@@ -40,37 +41,39 @@ const AddSubject = ({ classes }: AddSubjectProps) => {
   };
 
   return (
-    <div className="settings-form-container">
-      <h2 className="header">Add Subject</h2>
-      <form onSubmit={handleAddSubject}>
-        <label htmlFor="check-class">Class Name</label>
-        <select
-          value={classForSubject}
-          onChange={(event) => setClassForSubject(event.target.value)}
-          name="class"
-          required
-        >
-          <option value="">Select class</option>
-          {(classes as Class[]).map((_class) => (
-            <option value={_class._id} key={_class._id}>
-              {_class.name}
-            </option>
-          ))}
-        </select>
-        <label htmlFor="add-subject">Subject Name</label>
-        <input
-          type="text"
-          name="addSubject"
-          value={newSubject}
-          onChange={(event) => setNewSubject(event.target.value)}
-          required
-        />
-        {err && <span className="err">{err}</span>}
-        <button type="submit" className="settings-button">
-          Add
-        </button>
-      </form>
-    </div>
+    <Box className="settings-form-container">
+      <Heading level="2" fontSize="xl" mb="24">
+        Add Subject
+      </Heading>
+      <Box asChild>
+        <form onSubmit={handleAddSubject}>
+          <Field label="Class Name" required>
+            <Select
+              value={classForSubject}
+              onValueChange={setClassForSubject}
+              options={[
+                { label: 'Select class', value: '' },
+                ...(classes as Class[]).map((_class) => ({
+                  label: _class.name,
+                  value: _class._id,
+                })),
+              ]}
+            >
+              <SelectTrigger placeholder="Select class" />
+              <SelectContent />
+            </Select>
+          </Field>
+
+          <Field label="Subject Name" required error={err || undefined}>
+            <Input value={newSubject} onValueChange={setNewSubject} required />
+          </Field>
+
+          <Button type="submit" w="full" justifyContent="center">
+            Add
+          </Button>
+        </form>
+      </Box>
+    </Box>
   );
 };
 

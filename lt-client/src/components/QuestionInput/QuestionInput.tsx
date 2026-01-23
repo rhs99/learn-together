@@ -12,7 +12,7 @@ import FileUploader from '../FileUploader/FileUploader';
 import useFileUploader from '../../hooks/file-uploader';
 import useAlert from '../../hooks/use-alert';
 
-import { Button, Spinner } from '@optiaxiom/react';
+import { Box, Button, Flex, Spinner, Text } from '@optiaxiom/react';
 
 import './_index.scss';
 
@@ -117,31 +117,34 @@ const QuestionInput = (props: QuestionInputProps) => {
   }
 
   return (
-    <div className="cl-QuestionInput">
+    <Box className="cl-QuestionInput">
       {isLoading && <Spinner />}
-      <div className="description-heading">
-        <h3>Write Question Description</h3>
-      </div>
+
+      <Text fontSize="xl" fontWeight="600" mb="8">
+        Write Question Description
+      </Text>
       <QuillTextEditor onEditorReady={onEditorReady} />
-      <div>
-        <h4>Add Relevant Tags</h4>
-      </div>
-      <div className="tag-input-container">
+
+      <Flex flexDirection="column" gap="8" mt="16" mb="16">
+        <Text fontWeight="500" fontSize="md">
+          Add Relevant Tags
+        </Text>
         <TagInput
           suggestions={existingTags.map((tag) => ({ _id: tag._id, name: tag.name }))}
           onTagsChange={onTagsChange}
+          initialTags={tags}
         />
-      </div>
+      </Flex>
       <FileUploader handleFileChange={handleFileChange} className="file-upload" />
-      <div className="btn-container">
+      <Flex className="btn-container" flexDirection="row" justifyContent="flex-end" gap="8" mt="16">
         <Button onClick={handleClose} appearance="danger">
           Close
         </Button>
         <Button onClick={handleSave} appearance="primary">
           Save
         </Button>
-      </div>
-    </div>
+      </Flex>
+    </Box>
   );
 };
 

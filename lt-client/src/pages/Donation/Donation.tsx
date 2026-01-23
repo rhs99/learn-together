@@ -5,7 +5,7 @@ import axios from 'axios';
 import Util from '../../utils';
 import AuthContext from '../../store/auth';
 import { DonationInfo } from '../../types';
-import { RadioGroup, Radio } from '@optiaxiom/react';
+import { RadioGroup, Radio, Input, DateInput, Field, Button, Box, Heading } from '@optiaxiom/react';
 
 import './_index.scss';
 
@@ -62,59 +62,73 @@ const DonationPage = () => {
   };
 
   return (
-    <div className="cl-Donation">
-      <div className="donation-form-container">
-        <h1 className="header">Make a Donation</h1>
-        <form onSubmit={handleDonation}>
-          <label htmlFor="donationDate">Date of Donation</label>
-          <input
-            type="date"
-            name="donationDate"
-            value={donationDate}
-            onChange={(event) => setDonationDate(event.target.value)}
-            required
-          />
+    <Box display="flex" justifyContent="center" alignItems="center" mt="40">
+      <Box
+        data-donation-container
+        w="1/4"
+        p="32"
+        bg="bg.default"
+        rounded="lg"
+        shadow="lg"
+        border="1"
+        borderColor="border.default"
+        style={{ position: 'relative', overflow: 'hidden' }}
+      >
+        <Box
+          style={{
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '4px',
+            background: 'var(--gradient-primary)',
+          }}
+        />
+        <Heading level="1" fontSize="2xl" textAlign="center" mb="24">
+          Make a Donation
+        </Heading>
+        <Box asChild>
+          <form onSubmit={handleDonation}>
+            <Field label="Date of Donation" required>
+              <DateInput value={donationDate} onValueChange={setDonationDate} required />
+            </Field>
 
-          <label htmlFor="amount">Amount</label>
-          <input
-            type="number"
-            name="amount"
-            min={0}
-            value={amount === 0 ? '' : amount}
-            onChange={(event) => setAmount(Number(event.target.value))}
-            required
-          />
+            <Field label="Amount" required>
+              <Input
+                type="number"
+                appearance="number"
+                value={amount === 0 ? '' : amount.toString()}
+                onValueChange={(value) => setAmount(Number(value))}
+                required
+              />
+            </Field>
 
-          <label>Select your Payment Method</label>
-          <RadioGroup value={method} onChange={onValueChange} className="payment-method-radio">
-            {availableMethods.map((option) => (
-              <Radio key={option._id} value={option.name} className="radio-option">
-                {option.name}
-              </Radio>
-            ))}
-          </RadioGroup>
+            <Field label="Select your Payment Method">
+              <RadioGroup value={method} onChange={onValueChange}>
+                {availableMethods.map((option) => (
+                  <Radio key={option._id} value={option.name}>
+                    {option.name}
+                  </Radio>
+                ))}
+              </RadioGroup>
+            </Field>
 
-          <label htmlFor="transactionID">Transaction ID</label>
-          <input
-            type="text"
-            name="transactionID"
-            value={transactionID}
-            onChange={(event) => setTransactionID(event.target.value)}
-            required
-          />
+            <Field label="Transaction ID" required>
+              <Input value={transactionID} onValueChange={setTransactionID} required />
+            </Field>
 
-          <label htmlFor="contactInfo">Contact Information (optional)</label>
-          <input
-            type="text"
-            name="contactInfo"
-            min={0}
-            value={contactInfo}
-            onChange={(event) => setContactInfo(event.target.value)}
-          />
-          <button type="submit">Make Donation</button>
-        </form>
-      </div>
-    </div>
+            <Field label="Contact Information (optional)">
+              <Input value={contactInfo} onValueChange={setContactInfo} />
+            </Field>
+
+            <Button type="submit" w="full" justifyContent="center">
+              Make Donation
+            </Button>
+          </form>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

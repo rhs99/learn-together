@@ -4,8 +4,7 @@ import { Answer } from '../../types';
 import Util from '../../utils';
 import QACard from '../../components/QACard/QACard';
 import axios from 'axios';
-
-import './_index.scss';
+import { Box } from '@optiaxiom/react';
 
 const AnswerPage = () => {
   const [answer, setAnswer] = useState<Answer>();
@@ -28,9 +27,9 @@ const AnswerPage = () => {
   }
 
   return (
-    <div className="cl-AnswerPage">
+    <Box w="full" mx="auto" my="32" px="16" style={{ maxWidth: '1200px' }}>
       <QACard item={answer} handleItemDelete={handleAnswerDelete} isQuestion={false} clickableDetails={false} />
-    </div>
+    </Box>
   );
 };
 
