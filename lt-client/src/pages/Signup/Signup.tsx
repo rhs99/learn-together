@@ -103,6 +103,7 @@ const SignupPage = () => {
                 required
                 addonAfter={
                   <Button
+                    type="button"
                     appearance="subtle"
                     icon={showPassword ? <MdVisibilityOff /> : <MdVisibility />}
                     onClick={() => setShowPassword(!showPassword)}
@@ -121,6 +122,7 @@ const SignupPage = () => {
                 required
                 addonAfter={
                   <Button
+                    type="button"
                     appearance="subtle"
                     icon={showConfirmPassword ? <MdVisibilityOff /> : <MdVisibility />}
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
