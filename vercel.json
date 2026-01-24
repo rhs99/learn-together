@@ -4,13 +4,12 @@
   "outputDirectory": "lt-client/dist",
   "installCommand": "cd lt-client && npm install",
   "devCommand": "cd lt-client && npm start",
-  "routes": [
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
     {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/((?!assets/).*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [
