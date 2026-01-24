@@ -52,7 +52,7 @@ const Navigation = () => {
       return;
     }
 
-    const socket = new WebSocket(`ws://localhost:5000?userName=${currUserName}`);
+    const socket = new WebSocket(`${Util.CONSTANTS.WEBSOCKET_URL}?userName=${currUserName}`);
 
     socket.onopen = () => {
       console.log('Connected to WebSocket server');

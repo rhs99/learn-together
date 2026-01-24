@@ -6,3 +6,9 @@ data
 # Logs
 lt-server/logs/
 *.log
+
+lt-client/build
+lt-client/dist
+
+# Vercel
+.vercel
