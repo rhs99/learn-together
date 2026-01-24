@@ -127,4 +127,20 @@ logger.stream = {
     },
 };
 
-module.exports = logger;
+// Console.log wrapper when USE_CONSOLE_LOG is enabled
+if (process.env.USE_CONSOLE_LOG === 'true') {
+    const consoleLogger = {
+        error: (...args) => console.log('[ERROR]', ...args),
+        warn: (...args) => console.log('[WARN]', ...args),
+        info: (...args) => console.log('[INFO]', ...args),
+        http: (...args) => console.log('[HTTP]', ...args),
+        debug: (...args) => console.log('[DEBUG]', ...args),
+        stream: {
+            write: (message) => console.log('[HTTP]', message.trim()),
+        },
+    };
+
+    module.exports = consoleLogger;
+} else {
+    module.exports = logger;
+}
