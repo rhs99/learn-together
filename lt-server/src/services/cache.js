@@ -12,13 +12,11 @@ class CacheService {
     async init() {
         if (!Config.CACHE_ENABLED) {
             logger.info('Cache is disabled via CACHE_ENABLED environment variable');
-            console.log('Cache is disabled via CACHE_ENABLED environment variable');
             return;
         }
 
         try {
             logger.info('Initializing Redis client', { host: Config.REDIS_HOST, port: Config.REDIS_PORT });
-            console.log(`Initializing Redis client at ${Config.REDIS_HOST}:${Config.REDIS_PORT}`);
 
             this.client = createClient({
                 url: `redis://${Config.REDIS_HOST}:${Config.REDIS_PORT}`,
@@ -26,26 +24,22 @@ class CacheService {
 
             this.client.on('error', (err) => {
                 logger.error('Redis connection error', { error: err.message });
-                console.log('Redis connection error:', err);
                 this.isConnected = false;
             });
 
             this.client.on('connect', () => {
                 logger.info('Successfully connected to Redis', { host: Config.REDIS_HOST, port: Config.REDIS_PORT });
-                console.log('Successfully connected to Redis');
                 this.isConnected = true;
             });
 
             this.client.on('disconnect', () => {
                 logger.warn('Redis client disconnected');
-                console.log('Redis client disconnected');
                 this.isConnected = false;
             });
 
             await this.client.connect();
         } catch (error) {
             logger.error('Failed to initialize Redis client', { error: error.message, stack: error.stack });
-            console.log('Failed to initialize Redis client:', error);
             this.isConnected = false;
         }
     }
