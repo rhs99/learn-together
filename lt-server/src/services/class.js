@@ -48,6 +48,7 @@ const getClasses = async () => {
 
     if (cachedClasses) {
         logger.debug('Classes found in cache', { count: cachedClasses.length });
+        console.log('Classes found in cache', { count: cachedClasses.length });
         return cachedClasses.map((classData) => new Class(classData));
     }
 
