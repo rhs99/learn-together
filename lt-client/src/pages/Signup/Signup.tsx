@@ -4,6 +4,7 @@ import { Class } from '../../types';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
 import { Box, Heading, Field, Input, Button, Text, Select, SelectContent, SelectTrigger } from '@optiaxiom/react';
+import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 
 import Util from '../../utils';
 
@@ -22,6 +23,8 @@ const SignupPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [_class, setClass] = useState('');
   const [err, setErr] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const classes = useLoaderData();
   const navigate = useNavigate();
@@ -92,12 +95,42 @@ const SignupPage = () => {
               <Input type="email" value={email} onValueChange={setEmail} required />
             </Field>
 
-            <Field label="Password" required>
-              <Input type="password" value={password} onValueChange={setPassword} required />
+            <Field label="Password" required description="Must be at least 6 characters long">
+              <Input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onValueChange={setPassword}
+                required
+                addonAfter={
+                  <Button
+                    type="button"
+                    appearance="subtle"
+                    icon={showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                    onClick={() => setShowPassword(!showPassword)}
+                    rounded="full"
+                    size="sm"
+                  />
+                }
+              />
             </Field>
 
             <Field label="Confirm Password" required error={err || undefined}>
-              <Input type="password" value={confirmPassword} onValueChange={setConfirmPassword} required />
+              <Input
+                type={showConfirmPassword ? 'text' : 'password'}
+                value={confirmPassword}
+                onValueChange={setConfirmPassword}
+                required
+                addonAfter={
+                  <Button
+                    type="button"
+                    appearance="subtle"
+                    icon={showConfirmPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    rounded="full"
+                    size="sm"
+                  />
+                }
+              />
             </Field>
 
             <Field label="Class">
