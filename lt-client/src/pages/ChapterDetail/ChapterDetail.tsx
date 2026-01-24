@@ -20,7 +20,8 @@ const ChapterDetail = () => {
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [sortBy, setSortBy] = useState<string>('time');
   const [sortOrder, setSortOrder] = useState<string>('desc');
-  const [paginationInfo, setPaginationInfo] = useState({ currPage: 1, totalPage: 1 });
+  const [currPage, setCurrPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
   const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([]);
   const [filterBy, setFilterBy] = useState('all');
   const [isLoading, setIsLoading] = useState(true);
@@ -42,7 +43,7 @@ const ChapterDetail = () => {
       sortBy,
       sortOrder,
       filterBy,
-      pageNumber: paginationInfo.currPage,
+      pageNumber: currPage,
       pageSize: PAGE_SIZE,
     };
 
@@ -66,12 +67,7 @@ const ChapterDetail = () => {
       .get(URL, config)
       .then(({ data }) => {
         setQuestions(data.paginatedResults);
-        setPaginationInfo((prev) => {
-          return {
-            ...prev,
-            totalPage: Math.ceil(data.totalCount / PAGE_SIZE),
-          };
-        });
+        setTotalPage(Math.ceil(data.totalCount / PAGE_SIZE));
       })
       .catch(() => {
         onAlert('Something went wrong!', 'danger');
@@ -79,7 +75,7 @@ const ChapterDetail = () => {
       .finally(() => {
         setIsLoading(false);
       });
-  }, [selectedTags, chapterId, sortBy, sortOrder, filterBy, token, paginationInfo.currPage, isLoggedIn, onAlert]);
+  }, [selectedTags, chapterId, sortBy, sortOrder, filterBy, token, currPage, isLoggedIn, onAlert]);
 
   useEffect(() => {
     fetchQuestion();
@@ -182,15 +178,9 @@ const ChapterDetail = () => {
             <FilterOptions
               filterBy={filterBy}
               handleFilterOptionsChange={handleFilterOptionsChange}
-              fetchSortedData={fetchQuestion}
               disabled={!isLoggedIn}
             />
-            <SortOptions
-              sortBy={sortBy}
-              sortOrder={sortOrder}
-              handleSortOptionsChange={handleSortOptionsChange}
-              fetchSortedData={fetchQuestion}
-            />
+            <SortOptions sortBy={sortBy} sortOrder={sortOrder} handleSortOptionsChange={handleSortOptionsChange} />
           </Flex>
         </Flex>
 
@@ -222,18 +212,13 @@ const ChapterDetail = () => {
           </Flex>
         )}
 
-        {!isLoading && paginationInfo.totalPage > 1 && (
+        {!isLoading && totalPage > 1 && (
           <Flex flexDirection="row" justifyContent="center" mt="24">
             <Pagination
-              total={paginationInfo.totalPage}
-              page={paginationInfo.currPage}
+              total={totalPage}
+              page={currPage}
               onPageChange={(page) => {
-                setPaginationInfo((prev) => {
-                  return {
-                    ...prev,
-                    currPage: page,
-                  };
-                });
+                setCurrPage(page);
               }}
             />
           </Flex>

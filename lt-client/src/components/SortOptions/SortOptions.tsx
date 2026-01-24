@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import {
   Button,
   Tooltip,
@@ -16,14 +14,9 @@ type SortOptionsProps = {
   sortBy: string;
   sortOrder: string;
   handleSortOptionsChange: (option: string, val: string) => void;
-  fetchSortedData: () => void;
 };
 
-const SortOptions = ({ sortBy, sortOrder, handleSortOptionsChange, fetchSortedData }: SortOptionsProps) => {
-  useEffect(() => {
-    fetchSortedData();
-  }, [fetchSortedData, sortBy, sortOrder]);
-
+const SortOptions = ({ sortBy, sortOrder, handleSortOptionsChange }: SortOptionsProps) => {
   const handleSortByClick = (value: string) => {
     handleSortOptionsChange('sortBy', value);
   };

@@ -1,18 +1,12 @@
-import { useEffect } from 'react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@optiaxiom/react';
 
 type FilterOptionsProps = {
   filterBy: string;
   handleFilterOptionsChange: (value: string) => void;
-  fetchSortedData: () => void;
   disabled: boolean;
 };
 
-const FilterOptions = ({ filterBy, handleFilterOptionsChange, fetchSortedData, disabled }: FilterOptionsProps) => {
-  useEffect(() => {
-    fetchSortedData();
-  }, [fetchSortedData, filterBy]);
-
+const FilterOptions = ({ filterBy, handleFilterOptionsChange, disabled }: FilterOptionsProps) => {
   const handleFilterByClick = (value: string) => {
     handleFilterOptionsChange(value);
   };
