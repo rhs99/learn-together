@@ -9,3 +9,6 @@ lt-server/logs/
 
 lt-client/build
 lt-client/dist
+
+# Vercel
+.vercel
