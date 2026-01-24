@@ -39,10 +39,22 @@ if (process.env.NODE_ENV !== 'test') {
     app.use(requestLogger);
 }
 
-// Allow all origins (CORS disabled for development)
+const allowedOrigins = process.env.CLIENT_URL
+    ? process.env.CLIENT_URL.split(',').map((url) => url.trim())
+    : ['http://localhost:3000'];
+
 app.use(
     cors({
-        origin: true,
+        origin: (origin, callback) => {
+            if (!origin) return callback(null, true);
+
+            if (allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                logger.warn('CORS blocked request from unauthorized origin', { origin });
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
         credentials: true,
     }),
 );
