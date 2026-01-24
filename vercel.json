@@ -4,10 +4,13 @@
   "outputDirectory": "lt-client/dist",
   "installCommand": "cd lt-client && npm install",
   "devCommand": "cd lt-client && npm start",
-  "rewrites": [
+  "routes": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ],
   "headers": [
