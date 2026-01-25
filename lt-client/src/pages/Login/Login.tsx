@@ -5,6 +5,7 @@ import Util from '../../utils';
 import AuthContext from '../../store/auth';
 import { NavLink } from 'react-router-dom';
 import { Box, Heading, Field, Input, Button, Text, Link } from '@optiaxiom/react';
+import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 
 import './_index.scss';
 
@@ -12,6 +13,7 @@ function LoginPage() {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [err, setErr] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
 
@@ -76,7 +78,22 @@ function LoginPage() {
             </Field>
 
             <Field label="Password" required error={err ? 'Invalid Credentials' : undefined}>
-              <Input type="password" value={password} onValueChange={setPassword} required />
+              <Input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onValueChange={setPassword}
+                required
+                addonAfter={
+                  <Button
+                    type="button"
+                    appearance="subtle"
+                    icon={showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                    onClick={() => setShowPassword(!showPassword)}
+                    rounded="full"
+                    size="sm"
+                  />
+                }
+              />
             </Field>
 
             {err && (
