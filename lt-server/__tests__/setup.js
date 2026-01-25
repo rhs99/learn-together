@@ -18,13 +18,16 @@ delete process.env.SUPABASE_ANON_KEY;
 
 // Mock Config module to return test configuration without environment variables
 jest.mock('../src/config', () => ({
+    NODE_ENV: 'test',
     CLIENT_URL: 'http://localhost:3000',
+    SECRET_KEY: 'test-secret-key-for-jwt-signing',
     SUPABASE_URL: 'http://mock-supabase-url',
     SUPABASE_ANON_KEY: 'mock-anon-key',
     SUPABASE_SERVICE_ROLE_KEY: 'mock-service-role-key',
     SUPABASE_STORAGE_BUCKET: 'mock-test-bucket',
     REDIS_HOST: 'localhost',
     REDIS_PORT: 6379,
+    CACHE_ENABLED: false,
 }));
 
 // Mock Supabase client to prevent any real API calls

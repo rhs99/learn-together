@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
+const Config = require('../../src/config');
 
-const SECRET_KEY = process.env.SECRET_KEY || 'test-secret-key';
+const SECRET_KEY = Config.SECRET_KEY || 'test-secret-key';
 
 const createTestToken = (payload, secret = SECRET_KEY) => {
     return jwt.sign(payload, secret, { expiresIn: '1h' });

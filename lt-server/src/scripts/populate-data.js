@@ -3,10 +3,10 @@ const Class = require('../models/class');
 const Subject = require('../models/subject');
 const Chapter = require('../models/chapter');
 const User = require('../models/user');
+const Config = require('../config');
 
 // Use Remote MongoDB if USE_REMOTE_DB is true, Docker MongoDB otherwise
-const useRemoteDB = process.env.USE_REMOTE_DB === 'true';
-const DB_URL = useRemoteDB ? process.env.REMOTE_MONGODB_URI : process.env.MONGODB_URI;
+const DB_URL = Config.USE_REMOTE_DB ? Config.REMOTE_MONGODB_URI : Config.MONGODB_URI;
 
 const classData = [{ name: '6' }, { name: '7' }, { name: '8' }, { name: '9-10' }, { name: '11-12' }];
 
@@ -100,11 +100,11 @@ async function createClasses() {
 async function getAdminUser() {
     try {
         const admin = await User.findOne({
-            email: process.env.ADMIN_EMAIL,
+            email: Config.ADMIN_EMAIL,
         }).exec();
 
         if (!admin) {
-            console.log(`Admin user with email ${process.env.ADMIN_EMAIL} not found. Please run setup.js first.`);
+            console.log(`Admin user with email ${Config.ADMIN_EMAIL} not found. Please run setup.js first.`);
             throw new Error('Admin user not found. Please run setup.js first.');
         }
 

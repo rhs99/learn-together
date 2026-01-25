@@ -5,7 +5,7 @@ const nodemailer = require('nodemailer');
 const Config = require('../config');
 const logger = require('../config/logger');
 
-const privateKey = process.env.SECRET_KEY;
+const privateKey = Config.SECRET_KEY;
 
 const supabase = createClient(Config.SUPABASE_URL, Config.SUPABASE_SERVICE_ROLE_KEY);
 
@@ -27,18 +27,18 @@ const verityToken = (token) => {
 const sendEmail = async (email, subject, text) => {
     try {
         const transporter = nodemailer.createTransport({
-            host: process.env.ADMIN_EMAIL_HOST,
-            port: process.env.ADMIN_EMAIL_PORT,
-            service: process.env.ADMIN_EMAIL_SERVICE,
+            host: Config.ADMIN_EMAIL_HOST,
+            port: Config.ADMIN_EMAIL_PORT,
+            service: Config.ADMIN_EMAIL_SERVICE,
             secure: true,
             auth: {
-                user: process.env.ADMIN_EMAIL,
-                pass: process.env.ADMIN_EMAIL_PASS,
+                user: Config.ADMIN_EMAIL,
+                pass: Config.ADMIN_EMAIL_PASS,
             },
         });
 
         await transporter.sendMail({
-            from: process.env.ADMIN_EMAIL,
+            from: Config.ADMIN_EMAIL,
             to: email,
             subject: subject,
             text: text,

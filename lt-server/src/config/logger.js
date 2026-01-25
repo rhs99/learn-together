@@ -1,6 +1,7 @@
 const winston = require('winston');
 const DailyRotateFile = require('winston-daily-rotate-file');
 const path = require('path');
+const Config = require('../config');
 
 const logLevels = {
     error: 0,
@@ -56,7 +57,7 @@ const logsDir = path.join(__dirname, '../../logs');
 
 const transports = [];
 
-if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
+if (Config.NODE_ENV !== 'production' && Config.NODE_ENV !== 'test') {
     transports.push(
         new winston.transports.Console({
             level: 'debug',
@@ -65,7 +66,7 @@ if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
     );
 }
 
-if (process.env.NODE_ENV === 'test') {
+if (Config.NODE_ENV === 'test') {
     transports.push(
         new winston.transports.Console({
             silent: true,
@@ -73,7 +74,7 @@ if (process.env.NODE_ENV === 'test') {
     );
 }
 
-if (process.env.NODE_ENV !== 'test') {
+if (Config.NODE_ENV !== 'test') {
     transports.push(
         new DailyRotateFile({
             filename: path.join(logsDir, 'error-%DATE%.log'),
@@ -113,11 +114,11 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 const logger = winston.createLogger({
-    level: process.env.LOG_LEVEL || (process.env.NODE_ENV === 'production' ? 'info' : 'debug'),
+    level: Config.LOG_LEVEL,
     levels: logLevels,
     format: logFormat,
     transports,
-    silent: process.env.NODE_ENV === 'test',
+    silent: Config.NODE_ENV === 'test',
     exitOnError: false,
 });
 
@@ -128,7 +129,7 @@ logger.stream = {
 };
 
 // Console.log wrapper when USE_CONSOLE_LOG is enabled
-if (process.env.USE_CONSOLE_LOG === 'true') {
+if (Config.USE_CONSOLE_LOG) {
     const consoleLogger = {
         error: (...args) => console.log('[ERROR]', ...args),
         warn: (...args) => console.log('[WARN]', ...args),
