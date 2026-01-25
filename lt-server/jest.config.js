@@ -1,4 +1,6 @@
-const isDocker = process.env.DOCKER_ENV === 'true';
+const Config = require('./src/config');
+
+const isDocker = Config.DOCKER_ENV;
 
 module.exports = {
   testEnvironment: 'node',

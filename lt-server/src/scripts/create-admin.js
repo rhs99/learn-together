@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const Privilege = require('../models/privilege');
 const User = require('../models/user');
+const Config = require('../config');
 
 // Use Remote MongoDB if USE_REMOTE_DB is true, Docker MongoDB otherwise
-const useRemoteDB = process.env.USE_REMOTE_DB === 'true';
-const DB_URL = useRemoteDB ? process.env.REMOTE_MONGODB_URI : process.env.MONGODB_URI;
+const DB_URL = Config.USE_REMOTE_DB ? Config.REMOTE_MONGODB_URI : Config.MONGODB_URI;
 
 const createAdminPrivilege = async () => {
     try {
@@ -55,18 +55,18 @@ const setup = async () => {
         const adminPrivilege = await createAdminPrivilege();
 
         console.log('Creating super user with credentials:');
-        console.log(`- Username: ${process.env.ADMIN_USERNAME}`);
-        console.log(`- Email: ${process.env.ADMIN_EMAIL}`);
+        console.log(`- Username: ${Config.ADMIN_USERNAME}`);
+        console.log(`- Email: ${Config.ADMIN_EMAIL}`);
 
         // Check if admin user already exists
-        const existingAdmin = await User.findOne({ email: process.env.ADMIN_EMAIL });
+        const existingAdmin = await User.findOne({ email: Config.ADMIN_EMAIL });
         if (existingAdmin) {
-            console.log(`Admin user with email ${process.env.ADMIN_EMAIL} already exists, skipping creation`);
+            console.log(`Admin user with email ${Config.ADMIN_EMAIL} already exists, skipping creation`);
         } else {
             const superUser = new User({
-                userName: process.env.ADMIN_USERNAME,
-                email: process.env.ADMIN_EMAIL,
-                password: process.env.ADMIN_PASSWORD,
+                userName: Config.ADMIN_USERNAME,
+                email: Config.ADMIN_EMAIL,
+                password: Config.ADMIN_PASSWORD,
                 privileges: [adminPrivilege._id],
             });
             await superUser.save();
@@ -96,17 +96,23 @@ const setup = async () => {
 
 // Check if required environment variables are present
 const checkEnvVariables = () => {
-    const requiredVars = ['ADMIN_USERNAME', 'ADMIN_EMAIL', 'ADMIN_PASSWORD'];
+    const requiredVars = [
+        { name: 'ADMIN_USERNAME', value: Config.ADMIN_USERNAME },
+        { name: 'ADMIN_EMAIL', value: Config.ADMIN_EMAIL },
+        { name: 'ADMIN_PASSWORD', value: Config.ADMIN_PASSWORD },
+    ];
+
     // Check for at least one database URI
-    if (!process.env.MONGODB_URI && !process.env.REMOTE_MONGODB_URI) {
-        requiredVars.push('MONGODB_URI or REMOTE_MONGODB_URI');
+    if (!Config.MONGODB_URI && !Config.REMOTE_MONGODB_URI) {
+        requiredVars.push({ name: 'MONGODB_URI or REMOTE_MONGODB_URI', value: null });
     }
-    const missingVars = requiredVars.filter((varName) => !process.env[varName]);
+
+    const missingVars = requiredVars.filter((v) => !v.value);
 
     if (missingVars.length > 0) {
         console.error('Error: Missing required environment variables:');
-        missingVars.forEach((varName) => {
-            console.error(`- ${varName}`);
+        missingVars.forEach((v) => {
+            console.error(`- ${v.name}`);
         });
         console.error('Please make sure these variables are defined in your .env file');
         process.exit(1);

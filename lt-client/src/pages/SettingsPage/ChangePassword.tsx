@@ -4,12 +4,16 @@ import Util from '../../utils';
 import { HttpError } from '../../types';
 import AuthContext from '../../store/auth';
 import { Box, Heading, Field, Input, Button } from '@optiaxiom/react';
+import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 
 const ChangePassword = () => {
   const [prevPassword, setPrevPassword] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [err, setErr] = useState('');
+  const [showPrevPassword, setShowPrevPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const authCtx = useContext(AuthContext);
 
@@ -52,15 +56,60 @@ const ChangePassword = () => {
       <Box asChild>
         <form onSubmit={handleChangePassword}>
           <Field label="Previous Password" required>
-            <Input type="password" value={prevPassword} onValueChange={setPrevPassword} required />
+            <Input
+              type={showPrevPassword ? 'text' : 'password'}
+              value={prevPassword}
+              onValueChange={setPrevPassword}
+              required
+              addonAfter={
+                <Button
+                  type="button"
+                  appearance="subtle"
+                  icon={showPrevPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                  onClick={() => setShowPrevPassword(!showPrevPassword)}
+                  rounded="full"
+                  size="sm"
+                />
+              }
+            />
           </Field>
 
           <Field label="New Password" required>
-            <Input type="password" value={password} onValueChange={setPassword} required />
+            <Input
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onValueChange={setPassword}
+              required
+              addonAfter={
+                <Button
+                  type="button"
+                  appearance="subtle"
+                  icon={showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                  onClick={() => setShowPassword(!showPassword)}
+                  rounded="full"
+                  size="sm"
+                />
+              }
+            />
           </Field>
 
           <Field label="Confirm New Password" required error={err || undefined}>
-            <Input type="password" value={confirmPassword} onValueChange={setConfirmPassword} required />
+            <Input
+              type={showConfirmPassword ? 'text' : 'password'}
+              value={confirmPassword}
+              onValueChange={setConfirmPassword}
+              required
+              addonAfter={
+                <Button
+                  type="button"
+                  appearance="subtle"
+                  icon={showConfirmPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  rounded="full"
+                  size="sm"
+                />
+              }
+            />
           </Field>
 
           <Button type="submit" w="full" justifyContent="center">

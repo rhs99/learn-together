@@ -10,6 +10,7 @@ if (process.env.NODE_ENV !== 'test') {
     require('dotenv').config();
 }
 
+const Config = require('./config');
 const logger = require('./config/logger');
 const { requestLogger, errorLogger } = require('./middleware/logging');
 
@@ -28,36 +29,41 @@ const paymentMethod = require('./routes/paymentMethod');
 const donation = require('./routes/donation');
 const handleError = require('./common/handleError');
 
-if (process.env.NODE_ENV !== 'test') {
+if (Config.NODE_ENV !== 'test') {
     require('./services/cache');
 }
 
 const app = express();
 
 // Request logging middleware (should be early in middleware stack)
-if (process.env.NODE_ENV !== 'test') {
+if (Config.NODE_ENV !== 'test') {
     app.use(requestLogger);
 }
 
-const allowedOrigins = process.env.CLIENT_URL
-    ? process.env.CLIENT_URL.split(',').map((url) => url.trim())
+const allowedOrigins = Config.CLIENT_URL
+    ? Config.CLIENT_URL.split(',').map((url) => url.trim())
     : ['http://localhost:3000'];
 
-app.use(
-    cors({
-        origin: (origin, callback) => {
-            if (!origin) return callback(null, true);
+if (Config.NODE_ENV === 'development') {
+    app.use(cors());
+} else {
+    app.use(
+        cors({
+            origin: (origin, callback) => {
+                if (!origin) return callback(null, true);
 
-            if (allowedOrigins.includes(origin)) {
-                callback(null, true);
-            } else {
-                logger.warn('CORS blocked request from unauthorized origin', { origin });
-                callback(new Error('Not allowed by CORS'));
-            }
-        },
-        credentials: true,
-    }),
-);
+                if (allowedOrigins.includes(origin)) {
+                    callback(null, true);
+                } else {
+                    logger.warn('CORS blocked request from unauthorized origin', { origin });
+                    callback(new Error('Not allowed by CORS'));
+                }
+            },
+            credentials: true,
+        }),
+    );
+}
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -85,7 +91,7 @@ app.use((err, req, res, next) => {
 const server = http.createServer(app);
 
 let wss;
-if (process.env.NODE_ENV !== 'test') {
+if (Config.NODE_ENV !== 'test') {
     wss = new WebSocket.Server({ server });
 
     wss.on('connection', (socket, req) => {
@@ -109,7 +115,7 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 const connectDB = async (url, dbName) => {
-    const isTest = process.env.NODE_ENV === 'test';
+    const isTest = Config.NODE_ENV === 'test';
 
     if (isTest) {
         if (!dbName.includes('test')) {
@@ -120,7 +126,7 @@ const connectDB = async (url, dbName) => {
     }
 
     if (!isTest) {
-        const dbType = process.env.USE_REMOTE_DB === 'true' ? 'Remote' : 'Docker';
+        const dbType = Config.USE_REMOTE_DB ? 'Remote' : 'Docker';
         logger.info('Database selection', { dbType, dbName });
     }
 
@@ -143,11 +149,11 @@ const connectDB = async (url, dbName) => {
 };
 
 const startServer = (port) => {
-    const PORT = port || process.env.PORT;
+    const PORT = port || Config.PORT;
     return new Promise((resolve, reject) => {
         try {
             server.listen(PORT, () => {
-                logger.info('Server started successfully', { port: PORT, environment: process.env.NODE_ENV });
+                logger.info('Server started successfully', { port: PORT, environment: Config.NODE_ENV });
                 resolve(server);
             });
         } catch (error) {
@@ -157,8 +163,8 @@ const startServer = (port) => {
     });
 };
 
-if (require.main === module && process.env.NODE_ENV !== 'test') {
-    const dbUrl = process.env.USE_REMOTE_DB === 'true' ? process.env.REMOTE_MONGODB_URI : process.env.MONGODB_URI;
+if (require.main === module && Config.NODE_ENV !== 'test') {
+    const dbUrl = Config.USE_REMOTE_DB ? Config.REMOTE_MONGODB_URI : Config.MONGODB_URI;
     const dbName = 'lt-db';
 
     connectDB(dbUrl, dbName)

@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
 const { connectDB, startServer } = require('./src/index');
+const Config = require('./src/config');
 
-const dbUrl = process.env.USE_REMOTE_DB === 'true'
-  ? process.env.REMOTE_MONGODB_URI
-  : process.env.MONGODB_URI;
+const dbUrl = Config.USE_REMOTE_DB
+  ? Config.REMOTE_MONGODB_URI
+  : Config.MONGODB_URI;
 const dbName = 'lt-db';
 
 connectDB(dbUrl, dbName)
