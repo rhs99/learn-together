@@ -1,5 +1,5 @@
 const Config = {
-    LT_HOST: process.env.LT_HOST || 'http://localhost:3000',
+    CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:3000',
 
     SUPABASE_URL: process.env.SUPABASE_URL,
     SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,

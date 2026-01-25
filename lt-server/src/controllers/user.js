@@ -94,7 +94,7 @@ const forgotPassword = async (req, res) => {
     }
 
     const token = Util.createTokenForPassword({ _id: user._id, email: user.email });
-    const resetLink = `${Config.LT_HOST}/users/reset-password/${user._id}/${token}`;
+    const resetLink = `${Config.CLIENT_URL}/users/reset-password/${user._id}/${token}`;
     sendEmail(user.email, 'Reset password', resetLink);
 
     logger.info('Password reset email sent', {
