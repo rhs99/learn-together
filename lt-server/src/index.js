@@ -40,29 +40,27 @@ if (Config.NODE_ENV !== 'test') {
     app.use(requestLogger);
 }
 
-const allowedOrigins = Config.CLIENT_URL
-    ? Config.CLIENT_URL.split(',').map((url) => url.trim())
-    : ['http://localhost:3000'];
+const allowedOrigins = Config.CLIENT_URL.split(',').map((url) => url.trim());
 
-if (Config.NODE_ENV === 'development') {
-    app.use(cors());
-} else {
-    app.use(
-        cors({
-            origin: (origin, callback) => {
-                if (!origin) return callback(null, true);
+// if (Config.NODE_ENV === 'development') {
+//     app.use(cors());
+// } else {
+app.use(
+    cors({
+        origin: (origin, callback) => {
+            if (!origin) return callback(null, true);
 
-                if (allowedOrigins.includes(origin)) {
-                    callback(null, true);
-                } else {
-                    logger.warn('CORS blocked request from unauthorized origin', { origin });
-                    callback(new Error('Not allowed by CORS'));
-                }
-            },
-            credentials: true,
-        }),
-    );
-}
+            if (allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                logger.warn('CORS blocked request from unauthorized origin', { origin });
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
+        credentials: true,
+    }),
+);
+// }
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
