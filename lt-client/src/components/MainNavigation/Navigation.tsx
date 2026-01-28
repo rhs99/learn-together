@@ -134,14 +134,14 @@ const Navigation = () => {
       className="lt-Navigation"
       display="flex"
       justifyContent="space-between"
+      alignItems="center"
       h="64"
       w="full"
       bg="bg.default"
       borderB="2"
       shadow="sm"
-      px="24"
     >
-      <Box display="flex" flexDirection="row" alignItems="center" gap="8">
+      <Box className="lt-Navigation__left" display="flex" flexDirection="row" alignItems="center">
         <NavLink
           to="/"
           className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? 'active' : 'idle')}
@@ -162,7 +162,7 @@ const Navigation = () => {
           Donate
         </NavLink>
       </Box>
-      <Box display="flex" flexDirection="row" alignItems="center" gap={isLoggedIn ? '12' : '8'}>
+      <Box className="lt-Navigation__right" display="flex" flexDirection="row" alignItems="center">
         <Button
           appearance="subtle"
           aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
@@ -187,7 +187,7 @@ const Navigation = () => {
           </NavLink>
         )}
         {isLoggedIn && (
-          <Box display="flex" flexDirection="row" gap="8">
+          <Box className="lt-Navigation__user-actions" display="flex" flexDirection="row">
             <Popover>
               <PopoverTrigger
                 aria-label="Notifications"
